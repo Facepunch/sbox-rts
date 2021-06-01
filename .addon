@@ -1,0 +1,20 @@
+{
+	"name": "RTS",
+	"version": "1.0",
+	"sharedassets": "*.*",
+
+	"depends": 
+	[
+		"base",
+		"rust"
+	],
+	
+	"gamemodes":
+	[
+		{
+			"name": "rts",
+			"title": "RTS",
+			"description": "A competitive real-time strategy game with support for up to 4 players."
+		}
+	]
+}
