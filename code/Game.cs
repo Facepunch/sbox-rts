@@ -1,7 +1,5 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RTS
@@ -9,40 +7,48 @@ namespace RTS
 	[Library( "rts", Title = "RTS" )]
 	partial class Game : Sandbox.Game
 	{
-		public Hud Hud { get; set; }
-
 		public static Game Instance
 		{
 			get => Current as Game;
 		}
 
 		[Net] public BaseRound Round { get; private set; }
-		
+
+		private Dictionary<string, BaseBuildable> _buildables;
 		private Dictionary<ulong, int> _ratings;
 		private BaseRound _lastRound;
-
-		[ServerVar( "rts_min_players", Help = "The minimum players required to start." )]
-		public static int MinPlayers { get; set; } = 2;
 
 		public Game()
 		{
 			if ( IsServer )
 			{
 				LoadRatings();
-				Hud = new();
+				_ = new Hud();
 			}
+
+			_buildables = new();
+
+			foreach ( var type in Library.GetAll<BaseBuildable>() )
+			{
+				var instance = Library.Create<BaseBuildable>( type );
+				_buildables.Add( instance.UniqueId, instance );
+				Log.Info( $"Adding {instance.UniqueId} to the available buildables." );
+			}
+		}
+
+		public T FindBuildable<T>( string name ) where T : BaseBuildable
+		{
+			if ( _buildables.TryGetValue( name, out var value ) )
+				return (value as T);
+
+			return null;
 		}
 		
 		public void UpdateRating( Player player )
 		{
 			var client = player.GetClientOwner();
 			_ratings[client.SteamId] = player.Elo.Rating;
-		}
-
-		public void SaveRatings()
-		{
-			//FileSystem.Mounted.WriteAllText( "data/rts/ratings.json", JsonSerializer.Serialize( _ratings ) );
-		}
+		} 
 
 		public void ChangeRound(BaseRound round)
 		{
@@ -69,13 +75,7 @@ namespace RTS
 
 		public override void DoPlayerSuicide( Client client )
 		{
-			if ( client.Pawn.LifeState == LifeState.Alive && Round?.CanPlayerSuicide == true )
-			{
-				// This simulates the player being killed.
-				client.Pawn.LifeState = LifeState.Dead;
-				client.Pawn.OnKilled();
-				OnKilled( client.Pawn );
-			}
+			// Do nothing. The player can't suicide in this mode.
 		}
 
 		public override void PostLevelLoaded()
@@ -87,10 +87,7 @@ namespace RTS
 
 		public override void OnKilled( Entity entity )
 		{
-			if ( entity is Player player )
-				Round?.OnPlayerKilled( player );
-
-			base.OnKilled( entity );
+			// Do nothing. The player cannot be killed in this mode.
 		}
 
 		public override void ClientDisconnect( Client client, NetworkDisconnectionReason reason )
@@ -113,7 +110,7 @@ namespace RTS
 
 			base.ClientJoined( client );
 		}
-		
+
 		private void OnSecond()
 		{
 			CheckMinimumPlayers();
@@ -144,7 +141,7 @@ namespace RTS
 
 		private void CheckMinimumPlayers()
 		{
-			if ( Client.All.Count >= MinPlayers)
+			if ( Client.All.Count >= 2 )
 			{
 				if ( Round is LobbyRound || Round == null )
 				{

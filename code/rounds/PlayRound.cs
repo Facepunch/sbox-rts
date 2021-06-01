@@ -11,7 +11,6 @@ namespace RTS
 	{
 		public override string RoundName => "PLAY";
 		public override int RoundDuration => 0;
-		public override bool CanPlayerSuicide => false;
 		public override bool ShowTimeLeft => true;
 
 		public List<Player> Spectators = new();

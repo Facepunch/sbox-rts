@@ -1,7 +1,4 @@
 ﻿using Sandbox;
-using Sandbox.Joints;
-using System;
-using System.Linq;
 using Gamelib.Elo;
 
 namespace RTS

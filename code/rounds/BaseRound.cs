@@ -11,7 +11,6 @@ namespace RTS
 	{
 		public virtual int RoundDuration => 0;
 		public virtual string RoundName => "";
-		public virtual bool CanPlayerSuicide => false;
 		public virtual bool ShowTimeLeft => false;
 		public virtual bool ShowRoundInfo => false;
 
@@ -58,8 +57,6 @@ namespace RTS
 
 		public virtual void OnPlayerJoin( Player player ) { }
 
-		public virtual void OnPlayerKilled( Player player ) { }
-
 		public virtual void OnPlayerLeave( Player player )
 		{
 			Players.Remove( player );
@@ -79,7 +76,7 @@ namespace RTS
 		{
 			if ( Host.IsServer )
 			{
-				if ( RoundEndTime > 0 && Sandbox.Time.Now >= RoundEndTime )
+				if ( RoundEndTime > 0 && Time.Now >= RoundEndTime )
 				{
 					RoundEndTime = 0f;
 					OnTimeUp();
