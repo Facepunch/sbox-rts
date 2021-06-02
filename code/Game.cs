@@ -14,7 +14,7 @@ namespace RTS
 
 		[Net] public BaseRound Round { get; private set; }
 
-		private Dictionary<string, BaseBuildable> _buildables;
+		private Dictionary<string, BaseItem> _buildables;
 		private Dictionary<ulong, int> _ratings;
 		private BaseRound _lastRound;
 
@@ -28,15 +28,15 @@ namespace RTS
 
 			_buildables = new();
 
-			foreach ( var type in Library.GetAll<BaseBuildable>() )
+			foreach ( var type in Library.GetAll<BaseItem>() )
 			{
-				var instance = Library.Create<BaseBuildable>( type );
+				var instance = Library.Create<BaseItem>( type );
 				_buildables.Add( instance.UniqueId, instance );
 				Log.Info( $"Adding {instance.UniqueId} to the available buildables." );
 			}
 		}
 
-		public T FindBuildable<T>( string name ) where T : BaseBuildable
+		public T FindBuildable<T>( string name ) where T : BaseItem
 		{
 			if ( _buildables.TryGetValue( name, out var value ) )
 				return (value as T);
