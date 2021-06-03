@@ -11,8 +11,8 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "models\\buildings\\terryfactory_future\\dmx\\mesh\\terryfactory.dmx"
-						import_translation = [ -175.0, 100.0, 0.0 ]
+						filename = "models/buildings/terryfactory_future/dmx/mesh/terryfactory.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
 						align_origin_x_type = "None"
@@ -33,12 +33,12 @@
 				[
 					{
 						_class = "PhysicsHullFile"
-						name = "terryfactory"
+						name = "headquarters"
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
 						recenter_on_parent_bone = false
-						offset_origin = [ -175.0, 100.0, 0.0 ]
+						offset_origin = [ 0.0, 0.0, 0.0 ]
 						offset_angles = [ 0.0, 0.0, 0.0 ]
 						filename = "models/buildings/terryfactory_future/dmx/mesh/terryfactory.dmx"
 						import_scale = 1.0
