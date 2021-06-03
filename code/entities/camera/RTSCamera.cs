@@ -7,7 +7,7 @@ namespace RTS
 	{
 		public float TargetFOV { get; set; } = 120f;
 		public float MinFOV { get; private set; } = 60f;
-		public float MaxFOV { get; private set; } = 120f;
+		public float MaxFOV { get; private set; } = 90f;
 
 		public override void Activated()
 		{

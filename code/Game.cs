@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,37 @@ namespace RTS
 		private Dictionary<string, BaseItem> _buildables;
 		private Dictionary<ulong, int> _ratings;
 		private BaseRound _lastRound;
+
+		[ServerCmd]
+		public static void SelectItems( string csv = null )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			caller.ClearSelection();
+
+			if ( string.IsNullOrEmpty( csv ) )
+				return;
+
+			var entities = csv.Split( ',', StringSplitOptions.TrimEntries )
+				.Select( i => FindByIndex( Convert.ToInt32( i ) ) );
+
+			foreach ( var entity in entities )
+			{
+				if ( entity is not ISelectableEntity selectable )
+					continue;
+
+				if ( caller.Selection.Count > 0 && !selectable.CanMultiSelect )
+					continue;
+
+				if ( selectable.Player == caller )
+				{
+					selectable.Select();
+				}
+			}
+		}
 
 		public Game()
 		{

@@ -42,7 +42,9 @@ namespace RTS
 						b.Position = spawnpoint.Position;
 						b.Player = player;
 
+						player.MakeSpectator( false );
 						player.LookAt( spawnpoint );
+
 						AddPlayer( player );
 					}
 					else

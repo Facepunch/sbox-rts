@@ -10,6 +10,7 @@ namespace RTS
 	{
 		public Player Player { get; set; }
 		public bool IsSelected { get; set; }
+		public bool CanMultiSelect { get; }
 		public void Select();
 		public void Deselect();
 		public void Highlight();

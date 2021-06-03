@@ -1,13 +1,21 @@
-﻿using Sandbox;
-using RTS.Buildings;
+﻿using RTS.Buildings;
+using Sandbox;
+using Steamworks.Data;
 
 namespace RTS
 {
 	public partial class BuildingEntity : ModelEntity, ISelectableEntity
 	{
+		public virtual bool CanMultiSelect => false;
+
 		[Net] public string BuildableId { get; set; }
 		[Net] public bool IsSelected { get; set; }
 		[Net] public Player Player { get; set; }
+
+		public BuildingEntity()
+		{
+			Transmit = TransmitType.Always;
+		}
 
 		public BaseBuilding GetBuilding()
 		{
@@ -19,7 +27,10 @@ namespace RTS
 			BuildableId = building.UniqueId;
 
 			if ( !string.IsNullOrEmpty( building.Model ) )
+			{
 				SetModel( building.Model );
+				SetupPhysicsFromModel( PhysicsMotionType.Static );
+			}
 		}
 
 		public void Select()
@@ -27,6 +38,7 @@ namespace RTS
 			if ( Player.IsValid() )
 			{
 				Player.Selection.Add( this );
+				IsSelected = true;
 			}
 		}
 
@@ -35,6 +47,7 @@ namespace RTS
 			if ( Player.IsValid() )
 			{
 				Player.Selection.Remove( this );
+				IsSelected = false;
 			}
 		}
 
@@ -48,9 +61,13 @@ namespace RTS
 			throw new System.NotImplementedException();
 		}
 
-		public BuildingEntity()
+		[Event.Tick.Client]
+		private void Tick()
 		{
-			Transmit = TransmitType.Always;
+			if ( IsSelected && Player.IsValid() && Player.IsLocalPawn )
+			{
+				DebugOverlay.Box( this, new Color( 0f, 0.8f, 0f, 1f ) );
+			}
 		}
 	}
 }

@@ -25,6 +25,22 @@ namespace RTS
 			IsSpectator = isSpectator;
 		}
 
+		public void ClearSelection()
+		{
+			Host.AssertServer();
+
+			for ( var i = Selection.Count - 1; i >= 0; i-- )
+			{
+				if ( Selection[i] is not ISelectableEntity selectable )
+					continue;
+
+				if ( selectable.IsSelected )
+					selectable.Deselect();
+			}
+
+			Selection.Clear();
+		}
+
 		public void LookAt( Entity other )
 		{
 			Position = Position.WithX( other.Position.x ).WithY( other.Position.y );
@@ -32,7 +48,7 @@ namespace RTS
 
 		public override void Simulate( Client client )
 		{
-			var zoomOutDistance = 500f;
+			var zoomOutDistance = 1500f;
 			var velocity = Vector3.Zero;
 			var panSpeed = 1000f;
 
@@ -49,7 +65,7 @@ namespace RTS
 				velocity.y -= panSpeed * Time.Delta;
 
 			Position = (Position + velocity).WithZ( zoomOutDistance );
-			Rotation = Rotation.LookAt( new Vector3(0.2f, 0f, -1f) );
+			Rotation = Rotation.LookAt( new Vector3(0.1f, 0f, -1f) );
 
 			base.Simulate( client );
 		}
