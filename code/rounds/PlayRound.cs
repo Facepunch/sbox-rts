@@ -1,9 +1,8 @@
-﻿using Sandbox;
+﻿using RTS.Buildings;
+using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RTS
 {
@@ -22,17 +21,34 @@ namespace RTS
 			base.OnPlayerJoin( player );
 		}
 		
-		public override void UpdatePlayerPosition( Player player )
-		{
-			player.Position = new Vector3( 0f, 0f, 350f );
-			player.Rotation = Rotation.LookAt( Vector3.Down );
-		}
-		
 		protected override void OnStart()
 		{
 			if ( Host.IsServer )
 			{
-				
+				var spawnpoints = Entity.All.OfType<SpawnPoint>().ToList();
+
+				foreach ( var player in Entity.All.OfType<Player>() )
+				{
+					if ( spawnpoints.Count > 0 )
+					{
+						var spawnpoint = spawnpoints[0];
+						spawnpoints.RemoveAt( 0 );
+
+						var b = new BuildingEntity();
+						b.SetBuilding( Game.Instance.FindBuildable<BaseBuilding>( "building.headquarters" ) );
+						b.RenderColor = player.TeamColor;
+						b.Position = spawnpoint.Position;
+						b.Player = player;
+
+						player.LookAt( spawnpoint );
+						AddPlayer( player );
+					}
+					else
+					{
+						player.MakeSpectator( true );
+						Spectators.Add( player );
+					}
+				}
 			}
 		}
 

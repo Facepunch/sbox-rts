@@ -10,12 +10,19 @@ namespace RTS.Buildings
 		public override string UniqueId => "building.headquarters";
 		public override string Description => "This is the heart of your empire. Protect it at all costs.";
 		public override int BuildTime => 60;
-		public override ResourceType Resource => ResourceType.Wood;
-		public override string Model => "models/buildings/headquarters.vmdl";
-		public override int Cost => 200;
+		public override Dictionary<ResourceType, int> Costs => new()
+		{
+			[ResourceType.Stone] = 1000,
+			[ResourceType.Metal] = 500
+		};
+		public override string Model => "models/buildings/headquarters_future/headquarters.vmdl";
 		public override List<string> Buildables => new()
 		{
-			"unit.naked"
+			"unit.worker",
+			"unit.scientist",
+			"tech.brewing",
+			"tech.clothing",
+			"tech.wheels"
 		};
 	}
 }

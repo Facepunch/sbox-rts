@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
 
 namespace RTS.Units
 {
@@ -9,7 +10,9 @@ namespace RTS.Units
 		public override string UniqueId => "unit.naked";
 		public override string Description => "An angry Terry who seeks only one thing: blood!";
 		public override int BuildTime => 60;
-		public override ResourceType Resource => ResourceType.Beer;
-		public override int Cost => 150;
+		public override Dictionary<ResourceType, int> Costs => new()
+		{
+			[ResourceType.Beer] = 150
+		};
 	}
 }

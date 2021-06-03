@@ -62,14 +62,6 @@ namespace RTS
 			Players.Remove( player );
 		}
 
-		public virtual void UpdatePlayerPosition( Player player )
-		{
-			var zoomOutDistance = 350f;
-
-			player.Position = new Vector3( 0f, 0f, zoomOutDistance );
-			player.Rotation = Rotation.LookAt( Vector3.Down );
-		}
-
 		public virtual void OnTick() { }
 
 		public virtual void OnSecond()

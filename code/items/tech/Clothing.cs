@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
 
 namespace RTS.Tech
 {
@@ -9,7 +10,9 @@ namespace RTS.Tech
 		public override string UniqueId => "tech.clothing";
 		public override string Description => "Unlocks some new, clad units for your empire.";
 		public override int BuildTime => 120;
-		public override ResourceType Resource => ResourceType.Beer;
-		public override int Cost => 200;
+		public override Dictionary<ResourceType, int> Costs => new()
+		{
+			[ResourceType.Beer] = 200
+		};
 	}
 }

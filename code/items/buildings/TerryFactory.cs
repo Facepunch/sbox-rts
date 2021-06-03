@@ -10,8 +10,11 @@ namespace RTS.Buildings
 		public override string UniqueId => "building.terryfactory";
 		public override string Description => "Allows you to train various basic Terrys.";
 		public override int BuildTime => 60;
-		public override ResourceType Resource => ResourceType.Wood;
-		public override int Cost => 200;
+		public override Dictionary<ResourceType, int> Costs => new()
+		{
+			[ResourceType.Stone] = 200
+		};
+		public override string Model => "models/buildings/terryfactory_future/terryfactory.vmdl";
 		public override List<string> Dependencies => new()
 		{
 			"construct.headquarters"

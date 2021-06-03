@@ -4,7 +4,7 @@
 	{
 		Stone = 0,
 		Beer = 1,
-		Wood = 2,
+		Metal = 2,
 		Plasma = 3
 	}
 }

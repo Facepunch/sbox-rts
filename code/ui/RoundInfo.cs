@@ -21,6 +21,8 @@ namespace RTS
 
 		public override void Tick()
 		{
+			SetClass( "hidden", true);
+
 			var player = Local.Pawn as Player;
 			if ( player == null ) return;
 
@@ -30,17 +32,11 @@ namespace RTS
 			var round = game.Round;
 			if ( round == null ) return;
 
-			if ( !round.ShowRoundInfo )
-			{
-				SetClass( "hidden", true );
-				return;
-			}
-			else
+			if ( round.ShowRoundInfo )
 			{
 				SetClass( "hidden", false );
+				RoundName.Text = round.RoundName;
 			}
-
-			RoundName.Text = round.RoundName;
 		}
 	}
 }

@@ -10,6 +10,7 @@ namespace RTS
     public class LobbyRound : BaseRound
 	{
 		public override string RoundName => "LOBBY";
+		public override bool ShowRoundInfo => true;
 
 		protected override void OnStart()
 		{
