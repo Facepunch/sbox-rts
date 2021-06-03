@@ -5,7 +5,9 @@ namespace RTS
 {
 	public partial class RTSCamera : Camera
 	{
-		public float TargetFieldOfView { get; set; }
+		public float TargetFOV { get; set; } = 120f;
+		public float MinFOV { get; private set; } = 60f;
+		public float MaxFOV { get; private set; } = 120f;
 
 		public override void Activated()
 		{
@@ -15,8 +17,8 @@ namespace RTS
 				Rot = player.Rotation;
 			}
 
-			TargetFieldOfView = 90f;
-			FieldOfView = 90f;
+			TargetFOV = MaxFOV;
+			FieldOfView = MaxFOV;
 
 			base.Activated();
 		}
@@ -25,7 +27,7 @@ namespace RTS
 		{
 			if ( Local.Pawn is Player player )
 			{
-				FieldOfView = FieldOfView.LerpTo( TargetFieldOfView, Time.Delta * 4f );
+				FieldOfView = FieldOfView.LerpTo( TargetFOV, Time.Delta * 4f );
 				Pos = Pos.LerpTo( player.Position, Time.Delta );
 				Rot = player.Rotation;
 			}
@@ -35,8 +37,8 @@ namespace RTS
 
 		public override void BuildInput( InputBuilder input )
 		{
-			TargetFieldOfView += (input.MouseWheel * 10f);
-			TargetFieldOfView = TargetFieldOfView.Clamp(60f, 120f );
+			TargetFOV += (input.MouseWheel * -10f);
+			TargetFOV = TargetFOV.Clamp( MinFOV, MaxFOV );
 
 			base.BuildInput( input );
 		}

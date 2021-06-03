@@ -1,4 +1,5 @@
-﻿using RTS.Buildings;
+﻿using Gamelib.Extensions;
+using RTS.Buildings;
 using Sandbox;
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,10 @@ namespace RTS
 		{
 			if ( Host.IsServer )
 			{
-				var spawnpoints = Entity.All.OfType<SpawnPoint>().ToList();
+				var spawnpoints = Entity.All.OfType<SpawnPoint>().ToList().Shuffle();
+				var players = Client.All.Select( ( client ) => client.Pawn as Player ).ToList();
 
-				foreach ( var player in Entity.All.OfType<Player>() )
+				foreach ( var player in players )
 				{
 					if ( spawnpoints.Count > 0 )
 					{
