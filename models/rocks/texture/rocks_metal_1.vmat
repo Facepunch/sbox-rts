@@ -1,0 +1,43 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "vr_simple.vfx"
+
+	//---- PBR ----
+	F_METALNESS_TEXTURE 1
+
+	//---- Ambient Occlusion ----
+	TextureAmbientOcclusion "materials/default/default_ao.tga"
+
+	//---- Color ----
+	g_flModelTintAmount "1.000"
+	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
+	TextureColor "models/rocks/texture/metal_1_color.png"
+
+	//---- Fade ----
+	g_flFadeExponent "1.000"
+
+	//---- Fog ----
+	g_bFogEnabled "1"
+
+	//---- Lighting ----
+	g_flDirectionalLightmapMinZ "0.050"
+	g_flDirectionalLightmapStrength "1.000"
+
+	//---- Metalness ----
+	TextureMetalness "[0.000000 0.000000 0.000000 0.000000]"
+
+	//---- Normal ----
+	TextureNormal "models/rocks/texture/rocks_1_normal.png"
+
+	//---- Roughness ----
+	TextureRoughness "[0.305882 0.290196 0.290196 0.000000]"
+
+	//---- Texture Coordinates ----
+	g_nScaleTexCoordUByModelScaleAxis "0"
+	g_nScaleTexCoordVByModelScaleAxis "0"
+	g_vTexCoordOffset "[0.000 0.000]"
+	g_vTexCoordScale "[1.000 1.000]"
+	g_vTexCoordScrollSpeed "[0.000 0.000]"
+}
