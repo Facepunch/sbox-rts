@@ -39,6 +39,9 @@ namespace RTS
 			{
 				Player.Selection.Add( this );
 				IsSelected = true;
+				GlowActive = true;
+				GlowState = GlowStates.GlowStateOn;
+				GlowColor = Player.TeamColor.WithAlpha( 0.5f );
 			}
 		}
 
@@ -48,6 +51,7 @@ namespace RTS
 			{
 				Player.Selection.Remove( this );
 				IsSelected = false;
+				GlowActive = false;
 			}
 		}
 
@@ -66,7 +70,7 @@ namespace RTS
 		{
 			if ( IsSelected && Player.IsValid() && Player.IsLocalPawn )
 			{
-				DebugOverlay.Box( this, new Color( 0f, 0.8f, 0f, 1f ) );
+				//DebugOverlay.Box( this, new Color( 0f, 0.8f, 0f, 1f ) );
 			}
 		}
 	}
