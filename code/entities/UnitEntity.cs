@@ -26,7 +26,6 @@ namespace RTS
 
 		public void MoveTo( Vector3 position )
 		{
-			Log.Info( "Receiving: " + position.ToString() );
 			Steer ??= new();
 			Steer.Target = position;
 		}
@@ -68,7 +67,7 @@ namespace RTS
 			SetupPhysicsFromCapsule( PhysicsMotionType.Keyframed, Capsule.FromHeightAndRadius( 72, 8 ) );
 
 			EnableHitboxes = true;
-			Speed = Rand.Float( 100f, 300f );
+			Speed = item.Speed;
 
 			base.OnItemChanged( item );
 		}

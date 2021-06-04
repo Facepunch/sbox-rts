@@ -46,7 +46,6 @@ namespace RTS
 				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
 				{
 					var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f ).Run();
-					Log.Info( "Sending: " + trace.EndPos );
 					Game.MoveToLocation( trace.EndPos.ToCSV() );
 				}
 			}

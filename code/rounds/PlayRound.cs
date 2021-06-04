@@ -43,10 +43,13 @@ namespace RTS
 						b.Player = player;
 						b.Item = Game.Instance.FindItem<BaseBuilding>( "building.headquarters" );
 
-						var c = new UnitEntity();
-						c.Position = (Vector3.Random * 200f).WithZ( spawnpoint.Position.z );
-						c.Player = player;
-						c.Item = Game.Instance.FindItem<BaseUnit>( "unit.scientist" );
+						for ( var i = 0; i < 100; i++ )
+						{
+							var c = new UnitEntity();
+							c.Position = (Vector3.Random * 200f).WithZ( spawnpoint.Position.z );
+							c.Player = player;
+							c.Item = Game.Instance.FindItem<BaseUnit>( "unit.scientist" );
+						}
 
 						player.MakeSpectator( false );
 						player.LookAt( spawnpoint );

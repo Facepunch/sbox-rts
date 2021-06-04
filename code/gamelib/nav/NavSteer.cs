@@ -1,7 +1,12 @@
-﻿namespace Gamelib.Nav
+﻿using Sandbox;
+
+namespace Gamelib.Nav
 {
 	public class NavSteer
 	{
+		public NavSteerOutput Output;
+		public Vector3 Target;
+
 		protected NavPath Path { get; private set; }
 
 		public NavSteer()
@@ -20,9 +25,6 @@
 
 			Output.Direction = (Output.Direction + Path.GetDirection( currentPosition )).Normal;
 		}
-
-		public Vector3 Target { get; set; }
-		public NavSteerOutput Output;
 
 		public struct NavSteerOutput
 		{

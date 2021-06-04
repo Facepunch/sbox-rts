@@ -7,14 +7,14 @@ namespace Gamelib.Nav
 	public class NavPath
 	{
 		public Vector3 TargetPosition { get; set; }
-		public List<Vector3> Points => new();
+		public List<Vector3> Points { get; set; } = new();
 		public bool IsEmpty => Points.Count <= 1;
 
 		public void Update( Vector3 from, Vector3 to )
 		{
 			var needsBuild = false;
 
-			if ( !TargetPosition.IsNearlyEqual( to, 5 ) )
+			if ( !TargetPosition.IsNearlyEqual( to, 5f ) )
 			{
 				TargetPosition = to;
 				needsBuild = true;
