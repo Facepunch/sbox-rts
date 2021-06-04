@@ -1,6 +1,8 @@
-﻿using Sandbox;
+﻿using RTS.Units;
+using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,9 +18,36 @@ namespace RTS
 
 		[Net] public BaseRound Round { get; private set; }
 
-		private Dictionary<string, BaseItem> _buildables;
+		private Dictionary<string, BaseItem> _itemTable;
 		private Dictionary<ulong, int> _ratings;
+		private List<BaseItem> _itemList;
 		private BaseRound _lastRound;
+
+		[ServerCmd]
+		public static void MoveToLocation( string csv )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var entries = csv.Split( ',', StringSplitOptions.TrimEntries )
+				.Select( i => Convert.ToSingle( i ) )
+				.ToList();
+
+			if ( entries.Count == 3 )
+			{
+				var position = new Vector3( entries[0], entries[1], entries[2] );
+
+				foreach ( var entity in caller.Selection )
+				{
+					if ( entity is UnitEntity unit )
+					{
+						unit.MoveTo( position );
+					}
+				}
+			}
+		}
 
 		[ServerCmd]
 		public static void SelectItems( string csv = null )
@@ -38,7 +67,7 @@ namespace RTS
 
 			foreach ( var entity in entities )
 			{
-				if ( entity is not ISelectableEntity selectable )
+				if ( entity is not ISelectable selectable )
 					continue;
 
 				if ( caller.Selection.Count > 0 && !selectable.CanMultiSelect )
@@ -59,20 +88,21 @@ namespace RTS
 				_ = new Hud();
 			}
 
-			_buildables = new();
-
-			foreach ( var type in Library.GetAll<BaseItem>() )
-			{
-				var instance = Library.Create<BaseItem>( type );
-				_buildables.Add( instance.UniqueId, instance );
-				Log.Info( $"Adding {instance.UniqueId} to the available buildables." );
-			}
+			BuildItemTable();
 		}
 
-		public T FindBuildable<T>( string name ) where T : BaseItem
+		public T FindItem<T>( string id ) where T : BaseItem
 		{
-			if ( _buildables.TryGetValue( name, out var value ) )
-				return (value as T);
+			if ( _itemTable.TryGetValue( id, out var item ) )
+				return (item as T);
+
+			return null;
+		}
+
+		public T FindItem<T>( uint id ) where T : BaseItem
+		{
+			if ( id < _itemList.Count )
+				return (_itemList[(int)id] as T);
 
 			return null;
 		}
@@ -142,6 +172,35 @@ namespace RTS
 			Round?.OnPlayerJoin( player );
 
 			base.ClientJoined( client );
+		}
+
+		private void BuildItemTable()
+		{
+			_itemTable = new();
+			_itemList = new();
+
+			var list = new List<BaseItem>();
+
+			foreach ( var type in Library.GetAll<BaseItem>() )
+			{
+				var item = Library.Create<BaseItem>( type );
+				list.Add( item );
+			}
+
+			// Sort alphabetically, this should result in the same index for client and server.
+			list.Sort( ( a, b ) => a.UniqueId.CompareTo( b.UniqueId ) );
+
+			for ( var i = 0; i < list.Count; i++ )
+			{
+				var item = list[i];
+
+				_itemTable.Add( item.UniqueId, item );
+				_itemList.Add( item );
+
+				item.NetworkId = (uint)i;
+
+				Log.Info( $"Adding {item.UniqueId} to the available items (id = {i})" );
+			}
 		}
 
 		private void OnSecond()

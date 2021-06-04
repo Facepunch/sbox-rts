@@ -4,75 +4,17 @@ using Steamworks.Data;
 
 namespace RTS
 {
-	public partial class BuildingEntity : ModelEntity, ISelectableEntity
+	public partial class BuildingEntity : ItemEntity<BaseBuilding>
 	{
-		public virtual bool CanMultiSelect => false;
-
-		[Net] public string BuildableId { get; set; }
-		[Net] public bool IsSelected { get; set; }
-		[Net] public Player Player { get; set; }
-
-		public BuildingEntity()
+		protected override void OnItemChanged( BaseBuilding item )
 		{
-			Transmit = TransmitType.Always;
-		}
-
-		public BaseBuilding GetBuilding()
-		{
-			return Game.Instance.FindBuildable<BaseBuilding>( BuildableId );
-		}
-
-		public void SetBuilding( BaseBuilding building )
-		{
-			BuildableId = building.UniqueId;
-
-			if ( !string.IsNullOrEmpty( building.Model ) )
+			if ( !string.IsNullOrEmpty( item.Model ) )
 			{
-				SetModel( building.Model );
+				SetModel( item.Model );
 				SetupPhysicsFromModel( PhysicsMotionType.Static );
 			}
-		}
 
-		public void Select()
-		{
-			if ( Player.IsValid() )
-			{
-				Player.Selection.Add( this );
-				IsSelected = true;
-				GlowActive = true;
-				GlowState = GlowStates.GlowStateOn;
-				GlowColor = Player.TeamColor.WithAlpha( 0.5f );
-			}
-		}
-
-		public void Deselect()
-		{
-			if ( Player.IsValid() )
-			{
-				Player.Selection.Remove( this );
-				IsSelected = false;
-				GlowActive = false;
-			}
-		}
-
-		public void Highlight()
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public void Unhighlight()
-		{
-			throw new System.NotImplementedException();
-		}
-
-		[Event.Tick.Client]
-		private void Tick()
-		{
-			if ( IsSelected && Player.IsValid() && Player.IsLocalPawn )
-			{
-				//DebugOverlay.Box( this, new Color( 0f, 0.8f, 0f, 1f ) );
-			}
+			base.OnItemChanged( item );
 		}
 	}
 }
-

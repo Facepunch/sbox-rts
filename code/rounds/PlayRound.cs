@@ -1,5 +1,6 @@
 ﻿using Gamelib.Extensions;
 using RTS.Buildings;
+using RTS.Units;
 using Sandbox;
 using System;
 using System.Collections.Generic;
@@ -37,10 +38,15 @@ namespace RTS
 						spawnpoints.RemoveAt( 0 );
 
 						var b = new BuildingEntity();
-						b.SetBuilding( Game.Instance.FindBuildable<BaseBuilding>( "building.headquarters" ) );
 						b.RenderColor = player.TeamColor;
 						b.Position = spawnpoint.Position;
 						b.Player = player;
+						b.Item = Game.Instance.FindItem<BaseBuilding>( "building.headquarters" );
+
+						var c = new UnitEntity();
+						c.Position = (Vector3.Random * 200f).WithZ( spawnpoint.Position.z );
+						c.Player = player;
+						c.Item = Game.Instance.FindItem<BaseUnit>( "unit.scientist" );
 
 						player.MakeSpectator( false );
 						player.LookAt( spawnpoint );

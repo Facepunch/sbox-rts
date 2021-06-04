@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RTS
 {
-	public interface ISelectableEntity
+	public interface ISelectable
 	{
 		public Player Player { get; set; }
 		public bool IsSelected { get; set; }

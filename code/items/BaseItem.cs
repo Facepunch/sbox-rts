@@ -5,6 +5,7 @@ namespace RTS
 {
     public abstract class BaseItem
 	{
+		public uint NetworkId { get; set; }
 		public virtual string Name => "";
 		public virtual string UniqueId => "";
 		public virtual string Description => "";

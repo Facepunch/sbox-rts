@@ -1,4 +1,5 @@
 ﻿
+using Gamelib.Extensions;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -33,11 +34,21 @@ namespace RTS
 		[Event.BuildInput]
 		private void BuildInput( InputBuilder builder )
 		{
-			if ( builder.Pressed(InputButton.Attack1) )
+			if ( builder.Pressed( InputButton.Attack1 ) )
 			{
 				StartSelection = Mouse.Position;
 				IsMultiSelect = false;
 				IsSelecting = true;
+			}
+
+			if ( builder.Released( InputButton.Attack2 ) )
+			{
+				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
+				{
+					var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f ).Run();
+					Log.Info( "Sending: " + trace.EndPos );
+					Game.MoveToLocation( trace.EndPos.ToCSV() );
+				}
 			}
 
 			if ( builder.Down( InputButton.Attack1 ) && IsSelecting )
@@ -62,18 +73,21 @@ namespace RTS
 			{
 				if ( IsMultiSelect )
 				{
-					var buildings = Entity.All.OfType<BuildingEntity>();
+					var selectable = Entity.All.OfType<ISelectable>();
 					var entities = new List<int>();
 
-					foreach ( var b in buildings )
+					foreach ( var b in selectable )
 					{
-						var screenScale = b.Position.ToScreen();
-						var screenX = Screen.Width * screenScale.x;
-						var screenY = Screen.Height * screenScale.y;
-
-						if ( SelectionRect.IsInside( new Rect( screenX, screenY, 1f, 1f ) ) )
+						if ( b is Entity entity )
 						{
-							entities.Add( b.NetworkIdent );
+							var screenScale = entity.Position.ToScreen();
+							var screenX = Screen.Width * screenScale.x;
+							var screenY = Screen.Height * screenScale.y;
+
+							if ( SelectionRect.IsInside( new Rect( screenX, screenY, 1f, 1f ) ) )
+							{
+								entities.Add( entity.NetworkIdent );
+							}
 						}
 					}
 

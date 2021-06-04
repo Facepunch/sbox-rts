@@ -18,5 +18,12 @@ namespace RTS.Units
 		{
 			"tech.clothing"
 		};
+		public override List<string> Clothing => new()
+		{
+			"models/citizen_clothes/jacket/labcoat.vmdl",
+			"models/citizen_clothes/gloves/gloves_workgloves.vmdl",
+			"models/citizen_clothes/trousers/trousers.lab.vmdl",
+			"models/citizen_clothes/shoes/shoes.workboots.vmdl",
+		};
 	}
 }
