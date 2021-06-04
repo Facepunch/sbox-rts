@@ -24,6 +24,29 @@ namespace RTS
 		private BaseRound _lastRound;
 
 		[ServerCmd]
+		public static void Attack( string id )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var targetId = Convert.ToInt32( id );
+			var target = FindByIndex( targetId );
+
+			if ( target.IsValid() )
+			{
+				foreach ( var entity in caller.Selection )
+				{
+					if ( entity is UnitEntity unit )
+					{
+						unit.Target = target;
+					}
+				}
+			}
+		}
+		
+		[ServerCmd]
 		public static void MoveToLocation( string csv )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;

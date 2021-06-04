@@ -7,10 +7,14 @@ namespace RTS
 {
 	public partial class UnitEntity : ItemEntity<BaseUnit>
 	{
+		[Net] public Weapon Weapon { get; private set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
+		public TimeSince LastAttackTime { get; set; }
+		public float Range { get; private set; }
 		public float Speed { get; private set; }
+		public Entity Target { get; set; }
 		public NavSteer Steer;
 
 		private Vector3 _inputVelocity;
@@ -26,6 +30,7 @@ namespace RTS
 
 		public void MoveTo( Vector3 position )
 		{
+			Target = null;
 			Steer ??= new();
 			Steer.Target = position;
 		}
@@ -62,12 +67,19 @@ namespace RTS
 				AttachClothing( clothes );
 			}
 
+			Speed = item.Speed;
 			EyePos = Position + Vector3.Up * 64;
 			CollisionGroup = CollisionGroup.Player;
+			EnableHitboxes = true;
+
 			SetupPhysicsFromCapsule( PhysicsMotionType.Keyframed, Capsule.FromHeightAndRadius( 72, 8 ) );
 
-			EnableHitboxes = true;
-			Speed = item.Speed;
+			if ( !string.IsNullOrEmpty( item.Weapon ) )
+			{
+				Weapon = Library.Create<Weapon>( item.Weapon );
+				Weapon.SetParent( this, true );
+				Weapon.Unit = this;
+			}
 
 			base.OnItemChanged( item );
 		}
@@ -116,34 +128,60 @@ namespace RTS
 		{
 			_inputVelocity = 0;
 
-			if ( Steer != null )
+			if ( !Target.IsValid() || Target.Position.Distance( Position ) < Range )
 			{
-				Steer.Tick( Position );
-
-				if ( !Steer.Output.Finished )
+				if ( Target.IsValid() )
 				{
-					var control = GroundEntity != null ? 200 : 10;
+					Steer.Target = Target.Position;
+				}
 
-					_inputVelocity = Steer.Output.Direction.Normal * Speed;
-					var vel = Steer.Output.Direction.WithZ( 0 ).Normal * Time.Delta * control;
-					Velocity = Velocity.AddClamped( vel, Speed );
+				if ( Steer != null )
+				{
+					Steer.Tick( Position );
 
-					SetAnimLookAt( "lookat_pos", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
-					SetAnimLookAt( "aimat_pos", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
-					SetAnimFloat( "aimat_weight", 0.5f );
+					if ( !Steer.Output.Finished )
+					{
+						var control = GroundEntity != null ? 200 : 10;
+
+						_inputVelocity = Steer.Output.Direction.Normal * Speed;
+						var vel = Steer.Output.Direction.WithZ( 0 ).Normal * Time.Delta * control;
+						Velocity = Velocity.AddClamped( vel, Speed );
+
+						SetAnimLookAt( "lookat_pos", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
+						SetAnimLookAt( "aimat_pos", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
+						SetAnimFloat( "aimat_weight", 0.5f );
+					}
+				}
+
+				Move( Time.Delta );
+
+				var walkVelocity = Velocity.WithZ( 0 );
+
+				if ( walkVelocity.Length > 1 )
+				{
+					var turnSpeed = walkVelocity.Length.LerpInverse( 0, 100, true );
+					var targetRotation = Rotation.LookAt( walkVelocity.Normal, Vector3.Up );
+					Rotation = Rotation.Lerp( Rotation, targetRotation, turnSpeed * Time.Delta * 3 );
 				}
 			}
-			
-			Move( Time.Delta );
-
-			var walkVelocity = Velocity.WithZ( 0 );
-
-			if ( walkVelocity.Length > 1 )
+			else
 			{
-				var turnSpeed = walkVelocity.Length.LerpInverse( 0, 100, true );
-				var targetRotation = Rotation.LookAt( walkVelocity.Normal, Vector3.Up );
+				var targetDirection = Target.Position - Position;
+				var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
+				var turnSpeed = targetDirection.Length.LerpInverse( 0, 100, true );
+
 				Rotation = Rotation.Lerp( Rotation, targetRotation, turnSpeed * Time.Delta * 3 );
+
+				if ( Weapon.IsValid() && Weapon.CanAttack() )
+				{
+					Weapon.Attack( Target );
+				}
 			}
+
+			if ( Weapon.IsValid() )
+				SetAnimInt( "holdtype", Weapon.HoldType );
+			else
+				SetAnimInt( "holdtype", 0 );
 
 			SetAnimBool( "b_grounded", true );
 			SetAnimBool( "b_noclip", false );

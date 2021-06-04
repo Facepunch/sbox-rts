@@ -46,7 +46,18 @@ namespace RTS
 				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
 				{
 					var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f ).Run();
-					Game.MoveToLocation( trace.EndPos.ToCSV() );
+
+					if ( trace.Entity.IsValid() && trace.Entity is ISelectable selectable )
+					{
+						if ( selectable.Player != Local.Pawn )
+						{
+							Game.Attack( ((Entity)selectable).NetworkIdent.ToString() );
+						}
+					}
+					else
+					{
+						Game.MoveToLocation( trace.EndPos.ToCSV() );
+					}
 				}
 			}
 
