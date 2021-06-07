@@ -1,6 +1,9 @@
-﻿using RTS.Buildings;
+﻿using Gamelib.Network;
+using RTS.Buildings;
 using Sandbox;
 using Steamworks.Data;
+using System;
+using System.Collections.Generic;
 
 namespace RTS
 {
@@ -9,8 +12,9 @@ namespace RTS
 		public virtual bool CanMultiSelect => false;
 
 		[Net] public uint ItemId { get; set; }
-		[Net] public bool IsSelected { get; set; }
 		[Net] public Player Player { get; set; }
+
+		public bool IsSelected => Tags.Has( "selected" );
 
 		public T Item
 		{
@@ -36,10 +40,7 @@ namespace RTS
 			if ( Player.IsValid() )
 			{
 				Player.Selection.Add( this );
-				IsSelected = true;
-				GlowActive = true;
-				GlowState = GlowStates.GlowStateOn;
-				GlowColor = Player.TeamColor.WithAlpha( 0.5f );
+				Tags.Add( "selected" );
 			}
 		}
 
@@ -48,19 +49,28 @@ namespace RTS
 			if ( Player.IsValid() )
 			{
 				Player.Selection.Remove( this );
-				IsSelected = false;
-				GlowActive = false;
+				Tags.Remove( "selected" );
 			}
 		}
 
-		public virtual void Highlight()
+		protected override void OnTagAdded( string tag )
 		{
-			throw new System.NotImplementedException();
+			if ( IsClient && tag == "selected" )
+			{
+				GlowActive = true;
+				GlowState = GlowStates.GlowStateOn;
+				GlowColor = Player.TeamColor.WithAlpha( 0.5f );
+			}
+
+			base.OnTagAdded( tag );
 		}
 
-		public virtual void Unhighlight()
+		protected override void OnTagRemoved( string tag )
 		{
-			throw new System.NotImplementedException();
+			if ( IsClient && tag == "selected" )
+				GlowActive = false;
+
+			base.OnTagRemoved( tag );
 		}
 
 		protected virtual void OnItemChanged( T item ) { }

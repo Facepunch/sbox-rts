@@ -6,6 +6,11 @@ namespace RTS
 {
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>
 	{
+		public BuildingEntity() : base()
+		{
+			Tags.Add( "building", "selectable" );
+		}
+
 		protected override void OnItemChanged( BaseBuilding item )
 		{
 			if ( !string.IsNullOrEmpty( item.Model ) )

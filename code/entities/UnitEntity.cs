@@ -18,6 +18,12 @@ namespace RTS
 		public NavSteer Steer;
 
 		private Vector3 _inputVelocity;
+		private float _wishSpeed;
+
+		public UnitEntity() : base()
+		{
+			Tags.Add( "unit", "selectable" );
+		}
 
 		public override void ClientSpawn()
 		{
@@ -128,7 +134,7 @@ namespace RTS
 		{
 			_inputVelocity = 0;
 
-			if ( !Target.IsValid() || Target.Position.Distance( Position ) < Range )
+			if ( !Target.IsValid() || Target.Position.Distance( Position ) > Range )
 			{
 				if ( Target.IsValid() )
 				{
@@ -161,16 +167,15 @@ namespace RTS
 				{
 					var turnSpeed = walkVelocity.Length.LerpInverse( 0, 100, true );
 					var targetRotation = Rotation.LookAt( walkVelocity.Normal, Vector3.Up );
-					Rotation = Rotation.Lerp( Rotation, targetRotation, turnSpeed * Time.Delta * 3 );
+					Rotation = Rotation.Lerp( Rotation, targetRotation, turnSpeed * Time.Delta * 5f );
 				}
 			}
 			else
 			{
 				var targetDirection = Target.Position - Position;
 				var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
-				var turnSpeed = targetDirection.Length.LerpInverse( 0, 100, true );
 
-				Rotation = Rotation.Lerp( Rotation, targetRotation, turnSpeed * Time.Delta * 3 );
+				Rotation = Rotation.Lerp( Rotation, targetRotation, Time.Delta * 30f );
 
 				if ( Weapon.IsValid() && Weapon.CanAttack() )
 				{
@@ -183,12 +188,14 @@ namespace RTS
 			else
 				SetAnimInt( "holdtype", 0 );
 
+			_wishSpeed = _wishSpeed.LerpTo( _inputVelocity.Length, 10f * Time.Delta );
+
 			SetAnimBool( "b_grounded", true );
 			SetAnimBool( "b_noclip", false );
 			SetAnimBool( "b_swim", false );
 			SetAnimFloat( "forward", Vector3.Dot( Rotation.Forward, _inputVelocity ) );
 			SetAnimFloat( "sideward", Vector3.Dot( Rotation.Right, _inputVelocity ) );
-			SetAnimFloat( "wishspeed", Speed );
+			SetAnimFloat( "wishspeed", _wishSpeed );
 			SetAnimFloat( "walkspeed_scale", 2.0f / 10.0f );
 			SetAnimFloat( "runspeed_scale", 2.0f / 320.0f );
 			SetAnimFloat( "duckspeed_scale", 2.0f / 80.0f );
