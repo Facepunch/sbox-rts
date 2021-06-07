@@ -14,7 +14,9 @@ namespace RTS
 		[Net] public uint ItemId { get; set; }
 		[Net] public Player Player { get; set; }
 
-		public bool IsSelected => Tags.Has( "selected" );
+		public bool IsSelected => Tags.Has( "Selected" );
+
+		public bool IsLocalPlayers => Player.IsValid() && Player.IsLocalPawn;
 
 		public T Item
 		{
@@ -40,7 +42,7 @@ namespace RTS
 			if ( Player.IsValid() )
 			{
 				Player.Selection.Add( this );
-				Tags.Add( "selected" );
+				Tags.Add( "Selected" );
 			}
 		}
 
@@ -49,13 +51,13 @@ namespace RTS
 			if ( Player.IsValid() )
 			{
 				Player.Selection.Remove( this );
-				Tags.Remove( "selected" );
+				Tags.Remove( "Selected" );
 			}
 		}
 
 		protected override void OnTagAdded( string tag )
 		{
-			if ( IsClient && tag == "selected" )
+			if ( IsLocalPlayers && tag == "Selected" )
 			{
 				GlowActive = true;
 				GlowState = GlowStates.GlowStateOn;
@@ -67,7 +69,7 @@ namespace RTS
 
 		protected override void OnTagRemoved( string tag )
 		{
-			if ( IsClient && tag == "selected" )
+			if ( IsLocalPlayers && tag == "Selected" )
 				GlowActive = false;
 
 			base.OnTagRemoved( tag );

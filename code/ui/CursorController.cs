@@ -45,7 +45,9 @@ namespace RTS
 			{
 				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
 				{
-					var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f ).Run();
+					var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f )
+						.Radius( 5f )
+						.Run();
 
 					if ( trace.Entity.IsValid() && trace.Entity is ISelectable selectable )
 					{

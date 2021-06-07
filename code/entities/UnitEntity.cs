@@ -12,6 +12,7 @@ namespace RTS
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
 		public TimeSince LastAttackTime { get; set; }
+		public bool FollowTarget { get; set; }
 		public float Range { get; private set; }
 		public float Speed { get; private set; }
 		public Entity Target { get; set; }
@@ -23,6 +24,14 @@ namespace RTS
 		public UnitEntity() : base()
 		{
 			Tags.Add( "unit", "selectable" );
+		}
+
+		public bool IsTargetInRange
+		{
+			get
+			{
+				return (Target.IsValid() && Target.Position.Distance( Position ) < Range);
+			}
 		}
 
 		public override void ClientSpawn()
@@ -39,6 +48,7 @@ namespace RTS
 			Target = null;
 			Steer ??= new();
 			Steer.Target = position;
+			FollowTarget = false;
 		}
 
 		public ModelEntity AttachClothing( string modelName )
@@ -61,6 +71,11 @@ namespace RTS
 			Clothing.Clear();
 		}
 
+		public bool IsEnemy( ISelectable other )
+		{
+			return (other.Player != Player);
+		}
+
 		protected override void OnItemChanged( BaseUnit item )
 		{
 			if ( !string.IsNullOrEmpty( item.Model ) )
@@ -74,6 +89,7 @@ namespace RTS
 			}
 
 			Speed = item.Speed;
+			Range = item.Range;
 			EyePos = Position + Vector3.Up * 64;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
@@ -129,16 +145,40 @@ namespace RTS
 			Velocity = move.Velocity;
 		}
 
+		private void FindTargetUnit()
+		{
+			var entities = Physics.GetEntitiesInSphere( Position, Range );
+			
+			foreach ( var entity in entities )
+			{
+				if ( entity is UnitEntity unit && IsEnemy( unit ) )
+				{
+					FollowTarget = false;
+					Target = unit;
+					return;
+				}
+			}
+
+			FollowTarget = false;
+			Target = null;
+		}
+
 		[Event.Tick.Server]
 		private void ServerTick()
 		{
 			_inputVelocity = 0;
 
-			if ( !Target.IsValid() || Target.Position.Distance( Position ) > Range )
+			var isTargetInRange = IsTargetInRange;
+
+			if ( !Target.IsValid() || !isTargetInRange )
 			{
-				if ( Target.IsValid() )
+				if ( Target.IsValid() && FollowTarget )
 				{
 					Steer.Target = Target.Position;
+				}
+				else if ( !IsSelected )
+				{
+					FindTargetUnit();
 				}
 
 				if ( Steer != null )

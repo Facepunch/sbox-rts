@@ -40,6 +40,7 @@ namespace RTS
 				{
 					if ( entity is UnitEntity unit )
 					{
+						unit.FollowTarget = true;
 						unit.Target = target;
 					}
 				}
