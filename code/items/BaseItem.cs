@@ -18,7 +18,7 @@ namespace RTS
 		{
 			foreach ( var v in Dependencies )
 			{
-				var dependency = Game.Instance.FindItem<BaseItem>( v );
+				var dependency = ItemManager.Instance.Find<BaseItem>( v );
 
 				if ( dependency == null )
 					throw new Exception( "Unable to locate item by id: " + v );

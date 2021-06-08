@@ -9,6 +9,7 @@ namespace RTS
 {
 	public class ItemCommand : Button
 	{
+		public ISelectable Selectable { get; private set; } 
 		public BaseItem Item { get; private set; }
 
 		public ItemCommand() : base()
@@ -22,7 +23,10 @@ namespace RTS
 
 			if ( eventName == "onclick" )
 			{
-				
+				if ( Selectable is BuildingEntity building )
+				{
+					ItemManager.Queue( building.NetworkIdent, Item.NetworkId );
+				}
 			}
 			else if ( eventName == "onmouseover" )
 			{
@@ -38,9 +42,112 @@ namespace RTS
 			base.OnEvent( eventName );
 		}
 
-		public void Update( BaseItem item )
+		public void Update( ISelectable selectable, BaseItem item )
 		{
+			Selectable = selectable;
 			Item = item;
+		}
+	}
+
+	public class ItemQueueButton : Button
+	{
+		public BuildingEntity Building { get; private set; }
+		public QueueItem QueueItem { get; private set; }
+		public Panel Countdown { get; private set; }
+
+		public ItemQueueButton() : base()
+		{
+			Countdown = Add.Panel( "countdown" );
+		}
+
+		public override void OnEvent( string eventName )
+		{
+			var tooltip = ItemTooltip.Instance;
+
+			if ( eventName == "onclick" )
+			{
+				ItemManager.Unqueue( Building.NetworkIdent, QueueItem.Id );
+			}
+			else if ( eventName == "onmouseover" )
+			{
+				tooltip.Update( QueueItem.Item );
+				tooltip.Hover( this );
+				tooltip.Show = true;
+			}
+			else if ( eventName == "onmouseout" )
+			{
+				tooltip.Show = false;
+			}
+
+			base.OnEvent( eventName );
+		}
+
+		public void Update( QueueItem queueItem, BuildingEntity building = null )
+		{
+			if ( QueueItem != null )
+				RemoveClass( QueueItem.Item.UniqueId.Replace( '.', '_' ) );
+
+			QueueItem = queueItem;
+			Building = building;
+
+			if ( QueueItem != null )
+				AddClass( QueueItem.Item.UniqueId.Replace( '.', '_' ) );
+		}
+
+		public override void Tick()
+		{
+			SetClass( "hidden", QueueItem == null );
+
+			if ( QueueItem != null )
+			{
+				if ( QueueItem.FinishTime > 0f )
+					Countdown.Style.Width = Length.Percent( 100f - ((100f / QueueItem.Item.BuildTime) * QueueItem.GetTimeLeft()) );
+				else
+					Countdown.Style.Width = Length.Percent( 100f );
+
+				Countdown.SetClass( "inactive", QueueItem.FinishTime == 0f );
+			}
+
+			base.Tick();
+		}
+	}
+
+	public class ItemQueueList : Panel
+	{
+		public BuildingEntity Building { get; private set; }
+		public List<ItemQueueButton> Buttons { get; private set; }
+
+		public ItemQueueList()
+		{
+			Buttons = new();
+
+			for ( var i = 0; i < 10; i++ )
+			{
+				Buttons.Add( AddChild<ItemQueueButton>() );
+			}
+		}
+
+		public void Update( BuildingEntity building )
+		{
+			Building = building;
+		}
+
+		public override void Tick()
+		{
+			SetClass( "hidden", Building == null );
+
+			if ( Building.IsValid() )
+			{
+				for ( var i = 0; i < 10; i++ )
+				{
+					if ( Building.Queue.Count > i )
+						Buttons[i].Update( Building.Queue[i], Building );
+					else
+						Buttons[i].Update(  null );
+				}
+			}
+
+			base.Tick();
 		}
 	}
 
@@ -73,13 +180,13 @@ namespace RTS
 
 			foreach ( var v in buildables )
 			{
-				var dependency = Game.Instance.FindItem<BaseItem>( v );
+				var dependency = ItemManager.Instance.Find<BaseItem>( v );
 
 				if ( dependency.HasDependencies( player ) )
 				{
 					var button = AddChild<ItemCommand>( v.Replace( '.', '_' ) );
 
-					button.Update( dependency );
+					button.Update( Item, dependency );
 
 					Buttons.Add( button );
 				}
@@ -94,6 +201,7 @@ namespace RTS
 		public Label Health { get; private set; }
 		public Label Kills { get; private set; }
 		public ISelectable Item { get; private set; }
+		public ItemQueueList QueueList { get; private set; }
 
 
 		public ItemInformation()
@@ -102,6 +210,7 @@ namespace RTS
 			Desc = Add.Label( "", "desc" );
 			Health = Add.Label( "", "health" );
 			Kills = Add.Label( "", "kills" );
+			QueueList = AddChild<ItemQueueList>();
 		}
 
 		public void Update( ISelectable item )
@@ -139,6 +248,8 @@ namespace RTS
 
 			Name.Text = data.Name;
 			Desc.Text = data.Description;
+
+			QueueList.Update( entity );
 		}
 
 		private void UpdateUnit( UnitEntity entity ) 
@@ -147,6 +258,8 @@ namespace RTS
 
 			Name.Text = data.Name;
 			Desc.Text = data.Description;
+
+			QueueList.Update( null );
 		}
 	}
 

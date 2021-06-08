@@ -23,7 +23,7 @@ namespace RTS
 		{
 			get
 			{
-				return Game.Instance.FindItem<T>( ItemId );
+				return ItemManager.Instance.Find<T>( ItemId );
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace RTS
 		{
 			Host.AssertServer();
 
-			var item = Game.Instance.FindItem<T>( itemId );
+			var item = ItemManager.Instance.Find<T>( itemId );
 
 			Player = player;
 			ItemId = item.NetworkId;

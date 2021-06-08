@@ -53,12 +53,12 @@ namespace RTS
 					{
 						if ( selectable.Player != Local.Pawn )
 						{
-							Game.Attack( ((Entity)selectable).NetworkIdent.ToString() );
+							ItemManager.Attack( ((Entity)selectable).NetworkIdent.ToString() );
 						}
 					}
 					else
 					{
-						Game.MoveToLocation( trace.EndPos.ToCSV() );
+						ItemManager.MoveToLocation( trace.EndPos.ToCSV() );
 					}
 				}
 			}
@@ -105,16 +105,16 @@ namespace RTS
 
 					var list = string.Join( ",", entities );
 
-					Game.SelectItems( list );
+					ItemManager.Select( list );
 				}
 				else
 				{
 					var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f ).EntitiesOnly().Run();
 
 					if ( trace.Entity.IsValid() )
-						Game.SelectItems( trace.Entity.NetworkIdent.ToString() );
+						ItemManager.Select( trace.Entity.NetworkIdent.ToString() );
 					else
-						Game.SelectItems();
+						ItemManager.Select();
 				}
 
 				IsSelecting = false;

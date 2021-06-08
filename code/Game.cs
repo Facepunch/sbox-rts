@@ -16,122 +16,23 @@ namespace RTS
 			get => Current as Game;
 		}
 
+		[Net] public float ServerTime { get; private set; }
 		[Net] public BaseRound Round { get; private set; }
 
-		private Dictionary<string, BaseItem> _itemTable;
 		private Dictionary<ulong, int> _ratings;
-		private List<BaseItem> _itemList;
-
 		private BaseRound _lastRound;
-
-		[ServerCmd]
-		public static void Attack( string id )
-		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
-
-			if ( !caller.IsValid() || caller.IsSpectator )
-				return;
-
-			var targetId = Convert.ToInt32( id );
-			var target = FindByIndex( targetId );
-
-			if ( target.IsValid() )
-			{
-				foreach ( var entity in caller.Selection )
-				{
-					if ( entity is UnitEntity unit )
-					{
-						unit.FollowTarget = true;
-						unit.Target = target;
-					}
-				}
-			}
-		}
-		
-		[ServerCmd]
-		public static void MoveToLocation( string csv )
-		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
-
-			if ( !caller.IsValid() || caller.IsSpectator )
-				return;
-
-			var entries = csv.Split( ',', StringSplitOptions.TrimEntries )
-				.Select( i => Convert.ToSingle( i ) )
-				.ToList();
-
-			if ( entries.Count == 3 )
-			{
-				var position = new Vector3( entries[0], entries[1], entries[2] );
-
-				foreach ( var entity in caller.Selection )
-				{
-					if ( entity is UnitEntity unit )
-					{
-						unit.MoveTo( position );
-					}
-				}
-			}
-		}
-
-		[ServerCmd]
-		public static void SelectItems( string csv = null )
-		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
-
-			if ( !caller.IsValid() || caller.IsSpectator )
-				return;
-
-			caller.ClearSelection();
-
-			if ( string.IsNullOrEmpty( csv ) )
-				return;
-
-			var entities = csv.Split( ',', StringSplitOptions.TrimEntries )
-				.Select( i => FindByIndex( Convert.ToInt32( i ) ) );
-
-			foreach ( var entity in entities )
-			{
-				if ( entity is not ISelectable selectable )
-					continue;
-
-				if ( caller.Selection.Count > 0 && !selectable.CanMultiSelect )
-					continue;
-
-				if ( selectable.Player == caller )
-				{
-					selectable.Select();
-				}
-			}
-		}
 
 		public Game()
 		{
 			if ( IsServer )
 			{
 				LoadRatings();
+
+				_ = new ItemManager();
 				_ = new Hud();
 			}
-
-			BuildItemTable();
 		}
 
-		public T FindItem<T>( string id ) where T : BaseItem
-		{
-			if ( _itemTable.TryGetValue( id, out var item ) )
-				return (item as T);
-
-			return null;
-		}
-
-		public T FindItem<T>( uint id ) where T : BaseItem
-		{
-			if ( id < _itemList.Count )
-				return (_itemList[(int)id] as T);
-
-			return null;
-		}
-		
 		public void UpdateRating( Player player )
 		{
 			var client = player.GetClientOwner();
@@ -199,35 +100,6 @@ namespace RTS
 			base.ClientJoined( client );
 		}
 
-		private void BuildItemTable()
-		{
-			_itemTable = new();
-			_itemList = new();
-
-			var list = new List<BaseItem>();
-
-			foreach ( var type in Library.GetAll<BaseItem>() )
-			{
-				var item = Library.Create<BaseItem>( type );
-				list.Add( item );
-			}
-
-			// Sort alphabetically, this should result in the same index for client and server.
-			list.Sort( ( a, b ) => a.UniqueId.CompareTo( b.UniqueId ) );
-
-			for ( var i = 0; i < list.Count; i++ )
-			{
-				var item = list[i];
-
-				_itemTable.Add( item.UniqueId, item );
-				_itemList.Add( item );
-
-				item.NetworkId = (uint)i;
-
-				Log.Info( $"Adding {item.UniqueId} to the available items (id = {i})" );
-			}
-		}
-
 		private void OnSecond()
 		{
 			CheckMinimumPlayers();
@@ -248,6 +120,10 @@ namespace RTS
 					_lastRound = Round;
 					_lastRound.Start();
 				}
+			}
+			else
+			{
+				ServerTime = Time.Now;
 			}
 		}
 

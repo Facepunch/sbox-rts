@@ -35,4 +35,13 @@
 
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ui\ItemTooltip.scss">
+      <DependentUpon>ItemTooltip.cs</DependentUpon>
+    </None>
+    <None Update="ui\SelectedItem.scss">
+      <DependentUpon>SelectedItem.cs</DependentUpon>
+    </None>
+  </ItemGroup>
+
 </Project>
