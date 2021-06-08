@@ -18,7 +18,7 @@ namespace RTS.Buildings
 		public override string Model => "models/buildings/pub_future/pub.vmdl";
 		public override List<string> Dependencies => new()
 		{
-			"construct.headquarters",
+			"building.headquarters",
 			"tech.brewing"
 		};
 	}

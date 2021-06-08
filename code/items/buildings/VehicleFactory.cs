@@ -18,8 +18,8 @@ namespace RTS.Buildings
 		public override string Model => "models/buildings/vehiclefactory_future/vehiclefactory.vmdl";
 		public override List<string> Dependencies => new()
 		{
-			"construct.headquarters",
-			"construct.terryfactory",
+			"building.headquarters",
+			"building.terryfactory",
 			"tech.wheels"
 		};
 		public override List<string> Buildables => new()

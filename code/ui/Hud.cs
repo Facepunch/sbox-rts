@@ -20,11 +20,13 @@ namespace RTS
 
 			RootPanel.StyleSheet.Load( "/ui/Hud.scss" );
 
+			RootPanel.AddChild<CursorController>();
 			RootPanel.AddChild<RoundInfo>();
+			RootPanel.AddChild<SelectedItem>();
+			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();
 			RootPanel.AddChild<ChatBox>();
 			RootPanel.AddChild<LoadingScreen>();
-			RootPanel.AddChild<CursorController>();
 		}
 	}
 }

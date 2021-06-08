@@ -8,9 +8,10 @@ namespace RTS
 {
 	public interface ISelectable
 	{
-		public Player Player { get; set; }
+		public Player Player { get; }
 		public bool IsSelected { get; }
 		public bool CanMultiSelect { get; }
+		public float Health { get; set; }
 		public void Select();
 		public void Deselect();
 	}

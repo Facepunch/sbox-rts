@@ -9,27 +9,3 @@
 		display: none;
 	}
 }
-
-.header {
-	align-items: center;
-	justify-content: center;
-	position: absolute;
-	top: 64px;
-	left: 0;
-	right: 0;
-	pointer-events: none;
-}
-
-.footer {
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-end;
-	padding-left: 10%;
-	padding-right: 10%;
-	position: absolute;
-	bottom: 64px;
-	left: 0;
-	right: 0;
-	pointer-events: none;
-	height: 60px;
-}

@@ -1,0 +1,86 @@
+﻿selecteditem {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    pointer-events: auto;
+    bottom: 32px;
+
+    .left {
+        bottom: 32px;
+        width: 40%;
+        height: 250px;
+
+        itemmultidisplay {
+            background-color: rgba(0 128 0 0.5);
+            width: 100%;
+
+            &.hidden {
+                display: none;
+            }
+        }
+
+        iteminformation {
+            background-color: rgba(0 128 0 0.5);
+            flex-direction: column;
+            display: flex;
+            padding: 16px;
+            width: 100%;
+
+            .name {
+                font-size: 20px;
+                color: white;
+            }
+
+            .desc {
+                font-size: 16px;
+                color: white;
+            }
+
+            .health {
+                font-size: 20px;
+                color: white;
+            }
+
+            .kills {
+                font-size: 20px;
+                color: white;
+
+                &.hidden {
+                    display: none;
+                }
+            }
+
+            &.hidden {
+                display: none;
+            }
+        }
+    }
+
+    .right {
+        bottom: 32px;
+        width: 25%;
+        height: 250px;
+
+        itemcommandlist {
+            background-color: rgba(0 0 0 0.5);
+            padding: 16px;
+            width: 100%;
+
+            itemcommand {
+                width: 50px;
+                height: 50px;
+                background-color: aqua;
+                border-radius: 4px;
+
+                &:hover {
+                    background-color: black;
+                }
+            }
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

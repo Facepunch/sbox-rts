@@ -8,6 +8,7 @@ namespace RTS
 	public partial class UnitEntity : ItemEntity<BaseUnit>
 	{
 		[Net] public Weapon Weapon { get; private set; }
+		[Net] public int Kills { get; set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
@@ -90,6 +91,7 @@ namespace RTS
 
 			Speed = item.Speed;
 			Range = item.Range;
+			Health = item.MaxHealth;
 			EyePos = Position + Vector3.Up * 64;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
@@ -215,11 +217,14 @@ namespace RTS
 				var targetDirection = Target.Position - Position;
 				var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
 
-				Rotation = Rotation.Lerp( Rotation, targetRotation, Time.Delta * 30f );
+				Rotation = Rotation.Lerp( Rotation, targetRotation, Time.Delta * 15f );
 
-				if ( Weapon.IsValid() && Weapon.CanAttack() )
+				if ( Rotation.Distance( targetRotation ).AlmostEqual( 0f, 0.1f ) )
 				{
-					Weapon.Attack( Target );
+					if ( Weapon.IsValid() && Weapon.CanAttack() )
+					{
+						Weapon.Attack( Target );
+					}
 				}
 			}
 

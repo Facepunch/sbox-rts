@@ -4,6 +4,7 @@ using Sandbox;
 using Steamworks.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RTS
 {
@@ -12,9 +13,9 @@ namespace RTS
 		public virtual bool CanMultiSelect => false;
 
 		[Net] public uint ItemId { get; set; }
-		[Net] public Player Player { get; set; }
+		[Net] public Player Player { get; private set; }
 
-		public bool IsSelected => Tags.Has( "Selected" );
+		public bool IsSelected => Tags.Has( "selected" );
 
 		public bool IsLocalPlayers => Player.IsValid() && Player.IsLocalPawn;
 
@@ -24,12 +25,6 @@ namespace RTS
 			{
 				return Game.Instance.FindItem<T>( ItemId );
 			}
-
-			set
-			{
-				ItemId = value.NetworkId;
-				OnItemChanged( value );
-			}
 		}
 
 		public ItemEntity()
@@ -37,12 +32,25 @@ namespace RTS
 			Transmit = TransmitType.Always;
 		}
 
+		public void Assign( Player player, string itemId )
+		{
+			Host.AssertServer();
+
+			var item = Game.Instance.FindItem<T>( itemId );
+
+			Player = player;
+			ItemId = item.NetworkId;
+
+			OnItemChanged( item );
+			OnPlayerAssigned( player );
+		}
+
 		public virtual void Select()
 		{
 			if ( Player.IsValid() )
 			{
 				Player.Selection.Add( this );
-				Tags.Add( "Selected" );
+				Tags.Add( "selected" );
 			}
 		}
 
@@ -51,17 +59,19 @@ namespace RTS
 			if ( Player.IsValid() )
 			{
 				Player.Selection.Remove( this );
-				Tags.Remove( "Selected" );
+				Tags.Remove( "selected" );
 			}
 		}
 
 		protected override void OnTagAdded( string tag )
 		{
-			if ( IsLocalPlayers && tag == "Selected" )
+			if ( IsLocalPlayers && tag == "selected" )
 			{
 				GlowActive = true;
 				GlowState = GlowStates.GlowStateOn;
 				GlowColor = Player.TeamColor.WithAlpha( 0.5f );
+
+				SelectedItem.Instance.Update( Player.Selection.Select( i => (i as ISelectable) ).ToList() );
 			}
 
 			base.OnTagAdded( tag );
@@ -69,11 +79,16 @@ namespace RTS
 
 		protected override void OnTagRemoved( string tag )
 		{
-			if ( IsLocalPlayers && tag == "Selected" )
+			if ( IsLocalPlayers && tag == "selected" )
+			{
 				GlowActive = false;
+				SelectedItem.Instance.Update( Player.Selection.Select( i => (i as ISelectable) ).ToList() );
+			}
 
 			base.OnTagRemoved( tag );
 		}
+
+		protected virtual void OnPlayerAssigned( Player player) { }
 
 		protected virtual void OnItemChanged( T item ) { }
 	}

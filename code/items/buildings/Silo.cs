@@ -18,7 +18,7 @@ namespace RTS.Buildings
 		public override string Model => "models/buildings/silo_future/silo.vmdl";
 		public override List<string> Dependencies => new()
 		{
-			"construct.headquarters"
+			"building.headquarters"
 		};
 	}
 }

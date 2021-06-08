@@ -1,0 +1,40 @@
+﻿itemtooltip {
+    position: absolute;
+    background-color: rgba(0 0 0 0.5);
+    pointer-events: none;
+    flex-direction: column;
+    display: flex;
+    padding: 16px;
+    color: white;
+    transform: translateX(-50%) translateY(-100%);
+    left: 0px;
+    top: 0px;
+
+    .name {
+        font-size: 20px;
+    }
+
+    .desc {
+        font-size: 16px;
+    }
+
+    itemresourcecost {
+        .icon {
+            background-color: white;
+            width: 24px;
+            height: 24px;
+        }
+
+        .cost {
+            color: white;
+        }
+
+        &.hidden {
+            display: none;
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

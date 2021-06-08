@@ -6,6 +6,7 @@ namespace RTS
 {
 	public partial class Player : Entity
 	{
+		[Net, Local] public List<uint> Dependencies { get; set; }
 		[Net, Local] public List<Entity> Selection { get; set; }
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
@@ -18,6 +19,7 @@ namespace RTS
 			TeamColor = Color.Random;
 			Transmit = TransmitType.Always;
 			Selection = new List<Entity>();
+			Dependencies = new List<uint>();
 		}
 
 		public void MakeSpectator( bool isSpectator )

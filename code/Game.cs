@@ -21,6 +21,7 @@ namespace RTS
 		private Dictionary<string, BaseItem> _itemTable;
 		private Dictionary<ulong, int> _ratings;
 		private List<BaseItem> _itemList;
+
 		private BaseRound _lastRound;
 
 		[ServerCmd]

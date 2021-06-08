@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 
 namespace RTS
@@ -12,5 +13,21 @@ namespace RTS
 		public virtual int BuildTime => 0;
 		public virtual Dictionary<ResourceType, int> Costs => new();
 		public virtual List<string> Dependencies => new();
+
+		public bool HasDependencies( Player player )
+		{
+			foreach ( var v in Dependencies )
+			{
+				var dependency = Game.Instance.FindItem<BaseItem>( v );
+
+				if ( dependency == null )
+					throw new Exception( "Unable to locate item by id: " + v );
+
+				if ( !player.Dependencies.Contains( dependency.NetworkId ) )
+					return false;
+			}
+
+			return true;
+		}
 	}
 }

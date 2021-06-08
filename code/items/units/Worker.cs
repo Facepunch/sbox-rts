@@ -14,5 +14,18 @@ namespace RTS.Units
 		{
 			[ResourceType.Beer] = 50
 		};
+		public override List<string> Buildables => new()
+		{
+			"building.headquarters",
+			"building.brewery",
+			"building.pub",
+			"building.silo",
+			"building.terryfactory",
+			"building.vehiclefactory"
+		};
+		public override List<string> Clothing => new()
+		{
+			"models/citizen_clothes/hat/hat_hardhat.vmdl"
+		};
 	}
 }
