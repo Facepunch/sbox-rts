@@ -43,7 +43,7 @@ namespace RTS
 						b.Assign( player, "building.headquarters" );
 
 						var c = new UnitEntity();
-						c.Position = Vector3.Random * 50f; //spawnpoint.Position;
+						c.Position = (Vector3.Random * 50f).WithZ( spawnpoint.Position.z ); //spawnpoint.Position;
 						c.Assign( player, "unit.worker" );
 
 						player.MakeSpectator( false );
