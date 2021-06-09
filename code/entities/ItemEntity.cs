@@ -32,17 +32,24 @@ namespace RTS
 			Transmit = TransmitType.Always;
 		}
 
-		public void Assign( Player player, string itemId )
+		public void Assign( Player player, T item )
 		{
 			Host.AssertServer();
-
-			var item = ItemManager.Instance.Find<T>( itemId );
 
 			Player = player;
 			ItemId = item.NetworkId;
 
 			OnItemChanged( item );
 			OnPlayerAssigned( player );
+		}
+
+		public void Assign( Player player, string itemId )
+		{
+			Host.AssertServer();
+
+			var item = ItemManager.Instance.Find<T>( itemId );
+
+			Assign( player, item );
 		}
 
 		public virtual void Select()
@@ -61,6 +68,11 @@ namespace RTS
 				Player.Selection.Remove( this );
 				Tags.Remove( "selected" );
 			}
+		}
+
+		public virtual bool CanSelect()
+		{
+			return true;
 		}
 
 		protected override void OnTagAdded( string tag )

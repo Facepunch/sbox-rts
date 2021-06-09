@@ -1,4 +1,5 @@
-﻿using RTS.Units;
+﻿using RTS.Buildings;
+using RTS.Units;
 using Sandbox;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,49 @@ namespace RTS
 	{
 		public static ItemManager Instance { get; private set; }
 
-		private Dictionary<string, BaseItem> _itemTable;
-		private List<BaseItem> _itemList;
+		public Dictionary<string, BaseItem> Table { get; private set; }
+		public List<BaseItem> List { get; private set; }
+		public GhostBuilding Ghost { get; private set; }
 
 		public ItemManager()
 		{
 			Instance = this;
 			Transmit = TransmitType.Always;
 			BuildItemTable();
+		}
+
+		[ServerCmd]
+		public static void StartBuilding( int workerId, uint itemId )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var item = Instance.Find<BaseBuilding>( itemId );
+
+			if ( FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct )
+			{
+				if ( worker.Player == caller && worker.Item.Buildables.Contains( item.UniqueId ) )
+				{
+					// This is a bit shit isn't it.
+					var ghost = new GhostBuilding();
+					ghost.SetWorkerAndBuilding( worker, item );
+
+					var trace = ghost.GetPlacementTrace( ConsoleSystem.Caller );
+					var valid = ghost.IsPlacementValid( trace );
+					ghost.Delete();
+
+					if ( valid )
+					{
+						var building = new BuildingEntity();
+						building.Assign( caller, item );
+						building.StartConstruction();
+						building.Position = trace.EndPos;
+						worker.Construct( building );
+					}
+				}
+			}
 		}
 
 		[ServerCmd]
@@ -30,12 +66,12 @@ namespace RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var item = ItemManager.Instance.Find<BaseItem>( itemId );
+			var item = Instance.Find<BaseItem>( itemId );
 
 			if ( FindByIndex( entityId ) is BuildingEntity building )
 			{
 				if ( building.Player == caller )
-					building.StartBuild( item );
+					building.StartQueueItem( item );
 			}
 		}
 
@@ -50,7 +86,7 @@ namespace RTS
 			if ( FindByIndex( entityId ) is BuildingEntity building )
 			{
 				if ( building.Player == caller )
-					building.StopBuild( queueId );
+					building.StopQueueItem( queueId );
 			}
 		}
 
@@ -71,8 +107,33 @@ namespace RTS
 				{
 					if ( entity is UnitEntity unit )
 					{
-						unit.FollowTarget = true;
-						unit.Target = target;
+						unit.Attack( target );
+					}
+				}
+			}
+		}
+
+		[ServerCmd]
+		public static void Construct( string id )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var targetId = Convert.ToInt32( id );
+			var target = FindByIndex( targetId );
+
+			if ( target.IsValid() && target is BuildingEntity building )
+			{
+				if ( building.IsUnderConstruction && building.Player == caller )
+				{
+					foreach ( var entity in caller.Selection )
+					{
+						if ( entity is UnitEntity unit && unit.CanConstruct )
+						{
+							unit.Construct( building );
+						}
 					}
 				}
 			}
@@ -137,7 +198,7 @@ namespace RTS
 
 		public T Find<T>( string id ) where T : BaseItem
 		{
-			if ( _itemTable.TryGetValue( id, out var item ) )
+			if ( Table.TryGetValue( id, out var item ) )
 				return (item as T);
 
 			return null;
@@ -145,16 +206,54 @@ namespace RTS
 
 		public T Find<T>( uint id ) where T : BaseItem
 		{
-			if ( id < _itemList.Count )
-				return (_itemList[(int)id] as T);
+			if ( id < List.Count )
+				return (List[(int)id] as T);
 
 			return null;
+		}
+
+		public void CreateGhost( UnitEntity worker, BaseBuilding building )
+		{
+			if ( Ghost.IsValid() ) Ghost.Delete();
+
+			Ghost = new GhostBuilding();
+			Ghost.SetWorkerAndBuilding( worker, building );
+
+			ClientTick();
+		}
+
+		[Event.Tick.Client]
+		private void ClientTick()
+		{
+			if ( !Ghost.IsValid() ) return;
+
+			if ( !Ghost.Worker.IsValid() )
+			{
+				Ghost.Delete();
+				return;
+			}
+
+			var trace = Ghost.GetPlacementTrace( Local.Client );
+			var valid = Ghost.IsPlacementValid( trace );
+
+			Ghost.Position = trace.EndPos;
+
+			if ( valid )
+				Ghost.GlowColor = Color.Green;
+			else
+				Ghost.GlowColor = Color.Red;
+
+			if ( valid && Local.Client.Input.Down( InputButton.Attack1 ) )
+			{
+				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId );
+				Ghost.Delete();
+			}
 		}
 		
 		private void BuildItemTable()
 		{
-			_itemTable = new();
-			_itemList = new();
+			Table = new();
+			List = new();
 
 			var list = new List<BaseItem>();
 
@@ -171,8 +270,8 @@ namespace RTS
 			{
 				var item = list[i];
 
-				_itemTable.Add( item.UniqueId, item );
-				_itemList.Add( item );
+				Table.Add( item.UniqueId, item );
+				List.Add( item );
 
 				item.NetworkId = (uint)i;
 

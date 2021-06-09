@@ -2,6 +2,7 @@
 using RTS.Units;
 using System.Collections.Generic;
 using Gamelib.Nav;
+using RTS.Buildings;
 
 namespace RTS
 {
@@ -13,10 +14,10 @@ namespace RTS
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
 		public TimeSince LastAttackTime { get; set; }
-		public bool FollowTarget { get; set; }
+		public bool FollowTarget { get; private set; }
 		public float Range { get; private set; }
 		public float Speed { get; private set; }
-		public Entity Target { get; set; }
+		public Entity Target { get; private set; }
 		public NavSteer Steer;
 
 		private Vector3 _inputVelocity;
@@ -35,6 +36,8 @@ namespace RTS
 			}
 		}
 
+		public bool CanConstruct => Item.CanConstruct;
+
 		public override void ClientSpawn()
 		{
 			Circle = new();
@@ -44,11 +47,32 @@ namespace RTS
 			base.ClientSpawn();
 		}
 
+		public void Attack( Entity target )
+		{
+			Target = target;
+			FollowTarget = true;
+		}
+
 		public void MoveTo( Vector3 position )
 		{
 			Target = null;
 			Steer ??= new();
 			Steer.Target = position;
+			FollowTarget = false;
+		}
+
+		public void Construct( BuildingEntity building )
+		{
+			Target = building;
+			Steer ??= new();
+			Steer.Target = building.Position;
+			FollowTarget = true;
+		}
+
+		public void ClearTarget()
+		{
+			Steer = null;
+			Target = null;
 			FollowTarget = false;
 		}
 
@@ -221,7 +245,24 @@ namespace RTS
 
 				if ( Rotation.Distance( targetRotation ).AlmostEqual( 0f, 0.1f ) )
 				{
-					if ( Weapon.IsValid() && Weapon.CanAttack() )
+					if ( Target is BuildingEntity building && building.Player == Player )
+					{
+						if ( building.IsUnderConstruction )
+						{
+							building.Health += (building.Item.MaxHealth / building.Item.BuildTime * Time.Delta);
+							building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
+
+							if ( building.Health == building.Item.MaxHealth )
+								building.FinishConstruction();
+							else
+								building.UpdateConstruction();
+						}
+						else
+						{
+							ClearTarget();
+						}
+					}
+					else if ( Weapon.IsValid() && Weapon.CanAttack() )
 					{
 						Weapon.Attack( Target );
 					}

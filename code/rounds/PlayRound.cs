@@ -37,11 +37,6 @@ namespace RTS
 						var spawnpoint = spawnpoints[0];
 						spawnpoints.RemoveAt( 0 );
 
-						var b = new BuildingEntity();
-						b.RenderColor = player.TeamColor;
-						b.Position = spawnpoint.Position;
-						b.Assign( player, "building.headquarters" );
-
 						var c = new UnitEntity();
 						c.Position = (Vector3.Random * 50f).WithZ( spawnpoint.Position.z ); //spawnpoint.Position;
 						c.Assign( player, "unit.worker" );

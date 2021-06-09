@@ -1,5 +1,6 @@
 ﻿
 using RTS.Buildings;
+using RTS.Units;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -23,10 +24,10 @@ namespace RTS
 
 			if ( eventName == "onclick" )
 			{
-				if ( Selectable is BuildingEntity building )
-				{
-					ItemManager.Queue( building.NetworkIdent, Item.NetworkId );
-				}
+				if ( Selectable is UnitEntity unit && Item is BaseBuilding building )
+					ItemManager.Instance.CreateGhost( unit, building );
+				else
+					ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
 			}
 			else if ( eventName == "onmouseover" )
 			{

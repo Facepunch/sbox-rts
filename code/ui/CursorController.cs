@@ -52,9 +52,9 @@ namespace RTS
 					if ( trace.Entity.IsValid() && trace.Entity is ISelectable selectable )
 					{
 						if ( selectable.Player != Local.Pawn )
-						{
 							ItemManager.Attack( ((Entity)selectable).NetworkIdent.ToString() );
-						}
+						else if ( selectable is BuildingEntity building && building.IsUnderConstruction )
+							ItemManager.Construct( ((Entity)selectable).NetworkIdent.ToString() );
 					}
 					else
 					{
@@ -90,7 +90,7 @@ namespace RTS
 
 					foreach ( var b in selectable )
 					{
-						if ( b is Entity entity )
+						if ( b is Entity entity && b.CanSelect() )
 						{
 							var screenScale = entity.Position.ToScreen();
 							var screenX = Screen.Width * screenScale.x;
@@ -111,7 +111,7 @@ namespace RTS
 				{
 					var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f ).EntitiesOnly().Run();
 
-					if ( trace.Entity.IsValid() )
+					if ( trace.Entity is ISelectable selectable && selectable.CanSelect() )
 						ItemManager.Select( trace.Entity.NetworkIdent.ToString() );
 					else
 						ItemManager.Select();

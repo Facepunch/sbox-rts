@@ -8,6 +8,7 @@ namespace RTS
 {
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>
 	{
+		[Net] public bool IsUnderConstruction { get; private set; }
 		public uint LastQueueId { get; set; }
 		public List<QueueItem> Queue { get; set; }
 
@@ -23,6 +24,8 @@ namespace RTS
 
 			if ( !player.Dependencies.Contains( item.NetworkId ) )
 				player.Dependencies.Add( item.NetworkId );
+
+			RenderColor = player.TeamColor;
 
 			base.OnPlayerAssigned( player );
 		}
@@ -40,7 +43,36 @@ namespace RTS
 			base.OnItemChanged( item );
 		}
 
-		public void StartBuild( BaseItem item )
+		public void UpdateConstruction()
+		{
+			Host.AssertServer();
+
+			RenderAlpha = 0.25f + (0.75f / Item.MaxHealth) * Health;
+			GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
+		}
+
+		public void FinishConstruction()
+		{
+			Host.AssertServer();
+
+			IsUnderConstruction = false;
+			RenderAlpha = 1f;
+			GlowActive = false;
+			Health = Item.MaxHealth;
+		}
+
+		public void StartConstruction()
+		{
+			Host.AssertServer();
+
+			IsUnderConstruction = true;
+			RenderAlpha = 0.25f;
+			GlowActive = true;
+			GlowColor = Color.Red;
+			Health = 1f;
+		}
+
+		public void StartQueueItem( BaseItem item )
 		{
 			Host.AssertServer();
 
@@ -63,7 +95,7 @@ namespace RTS
 			}
 		}
 
-		public void StopBuild( uint queueId )
+		public void StopQueueItem( uint queueId )
 		{
 			Host.AssertServer();
 
@@ -90,6 +122,11 @@ namespace RTS
 			}
 		}
 
+		public override bool CanSelect()
+		{
+			return !IsUnderConstruction;
+		}
+
 		[Event.Tick.Server]
 		public virtual void ServerTick()
 		{
@@ -99,13 +136,13 @@ namespace RTS
 
 				if ( firstItem.FinishTime > 0f && Game.Instance.ServerTime >= firstItem.FinishTime )
 				{
-					OnBuildCompleted( firstItem );
-					StopBuild( firstItem.Id );
+					OnQueueItemCompleted( firstItem );
+					StopQueueItem( firstItem.Id );
 				}
 			}
 		}
 
-		protected virtual void OnBuildCompleted( QueueItem queueItem )
+		protected virtual void OnQueueItemCompleted( QueueItem queueItem )
 		{
 
 		}
