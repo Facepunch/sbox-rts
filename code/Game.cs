@@ -29,6 +29,7 @@ namespace RTS
 				LoadRatings();
 
 				_ = new ItemManager();
+				_ = new FogManager();
 				_ = new Hud();
 			}
 		}
@@ -120,6 +121,19 @@ namespace RTS
 					_lastRound = Round;
 					_lastRound.Start();
 				}
+
+				FogManager.Instance.Clear();
+
+				foreach ( var unit in Entity.All.OfType<UnitEntity>() )
+				{
+					if ( unit.Player == Local.Pawn )
+					{
+						FogManager.Instance.AddVisibility( unit.Position, 300f );
+					}
+				}
+
+				FogManager.Instance.Texture.Update( FogManager.Instance.Data );
+				FogManager.Instance.Fog.FogMaterial.OverrideTexture( "Color", FogManager.Instance.Texture );
 			}
 			else
 			{
