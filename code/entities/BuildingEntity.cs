@@ -1,8 +1,10 @@
 ﻿using RTS.Buildings;
+using RTS.Tech;
 using Sandbox;
 using Steamworks.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RTS
 {
@@ -20,11 +22,6 @@ namespace RTS
 
 		protected override void OnPlayerAssigned( Player player )
 		{
-			var item = Item;
-
-			if ( !player.Dependencies.Contains( item.NetworkId ) )
-				player.Dependencies.Add( item.NetworkId );
-
 			RenderColor = player.TeamColor;
 
 			base.OnPlayerAssigned( player );
@@ -43,6 +40,19 @@ namespace RTS
 			base.OnItemChanged( item );
 		}
 
+		protected override void OnDestroy()
+		{
+			if ( IsServer )
+			{
+				var others = Player.GetBuildings( Item );
+
+				if ( others.Count == 0 )
+					Player.RemoveDependency( Item );
+			}
+
+			base.OnDestroy();
+		}
+
 		public void UpdateConstruction()
 		{
 			Host.AssertServer();
@@ -54,6 +64,8 @@ namespace RTS
 		public void FinishConstruction()
 		{
 			Host.AssertServer();
+
+			Player.AddDependency( Item );
 
 			IsUnderConstruction = false;
 			RenderAlpha = 1f;
@@ -144,7 +156,10 @@ namespace RTS
 
 		protected virtual void OnQueueItemCompleted( QueueItem queueItem )
 		{
-
+			if ( queueItem.Item is BaseTech )
+			{
+				Player.AddDependency( queueItem.Item );
+			}
 		}
 
 		[ClientRpc]

@@ -9,7 +9,7 @@ namespace RTS.Buildings
 		public override string Name => "Headquarters";
 		public override string UniqueId => "building.headquarters";
 		public override string Description => "This is the heart of your empire. Protect it at all costs.";
-		public override int BuildTime => 60;
+		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 1000,

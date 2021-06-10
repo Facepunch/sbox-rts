@@ -9,7 +9,7 @@ namespace RTS.Buildings
 		public override string Name => "Silo";
 		public override string UniqueId => "building.silo";
 		public override string Description => "Acts as a deposit point for resources.";
-		public override int BuildTime => 60;
+		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 200,

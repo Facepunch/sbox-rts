@@ -21,7 +21,8 @@ namespace RTS.Buildings
 		};
 		public override List<string> Buildables => new()
 		{
-			"unit.naked"
+			"unit.naked",
+			"unit.assault"
 		};
 	}
 }

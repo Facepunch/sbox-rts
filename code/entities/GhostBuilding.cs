@@ -6,6 +6,7 @@ namespace RTS
 {
 	public partial class GhostBuilding : ModelEntity
 	{
+		public static Material BlueprintMaterial => Material.Load( "materials/rts/blueprint.vmat" );
 		public BaseBuilding Building { get; private set; }
 		public UnitEntity Worker{ get; private set; }
 
@@ -18,7 +19,7 @@ namespace RTS
 		{
 			SetModel( building.Model );
 
-			RenderAlpha = 0.75f;
+			RenderAlpha = 0.5f;
 
 			GlowActive = true;
 			GlowColor = Color.Green;
@@ -26,6 +27,21 @@ namespace RTS
 
 			Building = building;
 			Worker = worker;
+
+			if ( IsClient )
+				SceneObject.SetMaterialOverride( BlueprintMaterial );
+		}
+
+		public void ShowValid()
+		{
+			RenderColor = Color.White;
+			GlowColor = Color.Green;
+		}
+
+		public void ShowInvalid()
+		{
+			RenderColor = Color.Red;
+			GlowColor = Color.Red;
 		}
 
 		public TraceResult GetPlacementTrace( Client client )

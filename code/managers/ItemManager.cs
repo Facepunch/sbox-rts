@@ -239,13 +239,17 @@ namespace RTS
 			Ghost.Position = trace.EndPos;
 
 			if ( valid )
-				Ghost.GlowColor = Color.Green;
+				Ghost.ShowValid();
 			else
-				Ghost.GlowColor = Color.Red;
+				Ghost.ShowInvalid();
 
-			if ( valid && Local.Client.Input.Down( InputButton.Attack1 ) )
+			if ( valid && Local.Client.Input.Released( InputButton.Attack1 ) )
 			{
 				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId );
+				Ghost.Delete();
+			}
+			else if ( Local.Client.Input.Released( InputButton.Attack2 ) )
+			{
 				Ghost.Delete();
 			}
 		}

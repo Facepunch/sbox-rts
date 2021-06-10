@@ -1,6 +1,9 @@
 ﻿using Sandbox;
 using Gamelib.Elo;
 using System.Collections.Generic;
+using RTS.Buildings;
+using System.Linq;
+using RTS.Units;
 
 namespace RTS
 {
@@ -22,9 +25,31 @@ namespace RTS
 			Dependencies = new List<uint>();
 		}
 
+		public List<UnitEntity> GetUnits( BaseUnit unit)
+		{
+			return All.OfType<UnitEntity>().Where( i => i.Player == this && i.Item == unit ).ToList();
+		}
+
+		public List<BuildingEntity> GetBuildings( BaseBuilding building )
+		{
+			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item == building ).ToList();
+		}
+
 		public void MakeSpectator( bool isSpectator )
 		{
 			IsSpectator = isSpectator;
+		}
+
+		public void RemoveDependency( BaseItem item )
+		{
+			if ( Dependencies.Contains( item.NetworkId ) )
+				Dependencies.Remove( item.NetworkId );
+		}
+
+		public void AddDependency( BaseItem item )
+		{
+			if ( !Dependencies.Contains( item.NetworkId ) )
+				Dependencies.Add( item.NetworkId );
 		}
 
 		public void ClearSelection()

@@ -41,7 +41,7 @@ namespace RTS
 				IsSelecting = true;
 			}
 
-			if ( builder.Released( InputButton.Attack2 ) )
+			if ( builder.Released( InputButton.Attack2 ) && !ItemManager.Instance.Ghost.IsValid() )
 			{
 				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
 				{
