@@ -79,16 +79,16 @@ namespace RTS
 			var velocity = Vector3.Zero;
 			var panSpeed = 1000f;
 
-			if ( client.Input.Down( InputButton.Forward ) )
+			if ( Input.Down( InputButton.Forward ) )
 				velocity.x += panSpeed * Time.Delta;
 
-			if ( client.Input.Down( InputButton.Back ) )
+			if ( Input.Down( InputButton.Back ) )
 				velocity.x -= panSpeed * Time.Delta;
 
-			if ( client.Input.Down( InputButton.Left ) )
+			if ( Input.Down( InputButton.Left ) )
 				velocity.y += panSpeed * Time.Delta;
 
-			if ( client.Input.Down( InputButton.Right ) )
+			if ( Input.Down( InputButton.Right ) )
 				velocity.y -= panSpeed * Time.Delta;
 
 			Position = (Position + velocity).WithZ( zoomOutDistance );

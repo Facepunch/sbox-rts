@@ -1,4 +1,5 @@
-﻿using RTS.Buildings;
+﻿using Gamelib.Extensions;
+using RTS.Buildings;
 using RTS.Units;
 using Sandbox;
 using System;
@@ -25,7 +26,7 @@ namespace RTS
 		}
 
 		[ServerCmd]
-		public static void StartBuilding( int workerId, uint itemId )
+		public static void StartBuilding( int workerId, uint itemId, string cursorAim )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -42,7 +43,7 @@ namespace RTS
 					var ghost = new GhostBuilding();
 					ghost.SetWorkerAndBuilding( worker, item );
 
-					var trace = ghost.GetPlacementTrace( ConsoleSystem.Caller );
+					var trace = ghost.GetPlacementTrace( ConsoleSystem.Caller, cursorAim.ToVector3() );
 					var valid = ghost.IsPlacementValid( trace );
 					ghost.Delete();
 
@@ -233,7 +234,8 @@ namespace RTS
 				return;
 			}
 
-			var trace = Ghost.GetPlacementTrace( Local.Client );
+			var cursorAim = Input.CursorAim;
+			var trace = Ghost.GetPlacementTrace( Local.Client, cursorAim );
 			var valid = Ghost.IsPlacementValid( trace );
 
 			Ghost.Position = trace.EndPos;
@@ -243,12 +245,12 @@ namespace RTS
 			else
 				Ghost.ShowInvalid();
 
-			if ( valid && Local.Client.Input.Released( InputButton.Attack1 ) )
+			if ( valid && Input.Released( InputButton.Attack1 ) )
 			{
-				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId );
+				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorAim.ToCSV() );
 				Ghost.Delete();
 			}
-			else if ( Local.Client.Input.Released( InputButton.Attack2 ) )
+			else if ( Input.Released( InputButton.Attack2 ) )
 			{
 				Ghost.Delete();
 			}
