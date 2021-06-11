@@ -10,7 +10,7 @@ namespace RTS
 
 		public Fog()
 		{
-			MapSize = 10000f;
+			MapSize = 5000f;
 			RenderBounds = new BBox( new Vector3( -MapSize, -MapSize ), new Vector3( MapSize, MapSize ) );
 		}
 

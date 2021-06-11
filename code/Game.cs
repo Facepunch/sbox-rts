@@ -128,8 +128,7 @@ namespace RTS
 					_lastRound.Start();
 				}
 
-				if ( Time.Tick % 10 == 0 )
-					FogManager.Instance.Update();
+				FogManager.Instance.Update();
 			}
 			else
 			{

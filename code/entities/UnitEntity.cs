@@ -3,10 +3,11 @@ using RTS.Units;
 using System.Collections.Generic;
 using Gamelib.Nav;
 using RTS.Buildings;
+using System.Linq;
 
 namespace RTS
 {
-	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer
+	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable
 	{
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float Range { get; private set; }
@@ -44,7 +45,10 @@ namespace RTS
 			Circle.SetParent( this );
 			Circle.LocalPosition = Vector3.Zero;
 
-			FogManager.Instance.AddViewer( this );
+			if ( Player.IsValid() && Player.IsLocalPawn )
+				FogManager.Instance.AddViewer( this );
+			else
+				FogManager.Instance.AddCullable( this );
 
 			base.ClientSpawn();
 		}
@@ -78,6 +82,12 @@ namespace RTS
 			FollowTarget = false;
 		}
 
+		public void MakeVisible( bool isVisible )
+		{
+			EnableDrawing = isVisible;
+			Circle.EnableDrawing = isVisible;
+		}
+
 		public ModelEntity AttachClothing( string modelName )
 		{
 			var entity = new ModelEntity();
@@ -108,6 +118,7 @@ namespace RTS
 			if ( IsClient )
 			{
 				FogManager.Instance.RemoveViewer( this );
+				FogManager.Instance.RemoveCullable( this );
 			}
 
 			base.OnDestroy();

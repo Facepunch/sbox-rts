@@ -11,27 +11,44 @@ namespace RTS
 {
 	public partial class FogManager : Entity
 	{
+		internal class FogViewer
+		{
+			public IFogViewer Object;
+			public Vector3 LastPosition;
+		}
+
+		internal class FogCullable
+		{
+			public IFogCullable Object;
+			public bool IsVisible;
+		}
+
 		public static FogManager Instance { get; private set; }
 
-		public readonly List<IFogViewer> Viewers;
 		public readonly Texture Texture;
 		public readonly int Resolution;
 		public readonly byte[] Data;
 		public Fog Fog { get; private set; }
 
+		private readonly List<FogCullable> _cullables;
+		private readonly List<FogViewer> _viewers;
+
 		public FogManager()
 		{
 			Instance = this;
 			Transmit = TransmitType.Always;
-			Viewers = new List<IFogViewer>();
-			Resolution = 1024;
+			Resolution = 2048;
 			//Data = new byte[Resolution * Resolution * 4];
 			Data = new byte[Resolution * Resolution];
 
+			_cullables = new List<FogCullable>();
+			_viewers = new List<FogViewer>();
+
 			if ( IsClient )
 			{
-				Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 )
-				.Finish();
+				Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
+
+				Clear( Color32.Black );
 
 				Fog = new Fog
 				{
@@ -40,44 +57,88 @@ namespace RTS
 				};
 
 				Fog.FogMaterial.OverrideTexture( "Color", Texture );
-
-				for ( var i = 0; i < 100; i++ )
-				{
-					var v = new DebugViewer();
-					v.Range = Rand.Float( 10f, 100f );
-					v.Position = Vector3.Random * 1000f;
-					AddViewer( v );
-				}
 			}
 		}
 
 		public void Update()
 		{
-			Clear( Color32.Black );
+			FogCullable cullable;
 
-			for ( var i = 0; i < Viewers.Count; i++ )
+			for ( var i = 0; i < _cullables.Count; i++ )
 			{
-				var viewer = Viewers[i];
+				cullable = _cullables[i];
+				cullable.IsVisible = false;
+				cullable.Object.MakeVisible( false );
+			}
 
-				if ( viewer is not UnitEntity )
+			for ( var i = 0; i < _viewers.Count; i++ )
+			{
+				var viewer = _viewers[i];
+				var position = viewer.Object.Position;
+				var range = viewer.Object.Range;
+
+				PunchHole( viewer.LastPosition, range, 200 );
+				PunchHole( position, range, 0 );
+
+				viewer.LastPosition = position;
+
+				for ( var j = 0; j < _cullables.Count; j++ )
 				{
-					viewer.Position += new Vector3( Rand.Float( -1f, 1f ) * 10f, Rand.Float( -1f, 1f ) * 10f );
-				}
+					cullable = _cullables[j];
 
-				AddVisibility( viewer.Position, viewer.Range );
+					if ( cullable.IsVisible ) continue;
+
+					if ( cullable.Object.Position.Distance( position ) <= range / 2f )
+					{
+						cullable.Object.MakeVisible( true );
+						cullable.IsVisible = true;
+					}
+				}
 			}
 
 			Texture.Update( Data );
 		}
 
+		public void AddCullable( IFogCullable cullable )
+		{
+			_cullables.Add( new FogCullable()
+			{
+				IsVisible = false,
+				Object = cullable
+			} );
+		}
+
+		public void RemoveCullable( IFogCullable cullable )
+		{
+			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			{
+				if ( _cullables[i].Object == cullable )
+				{
+					_cullables.RemoveAt( i );
+					break;
+				}
+			}
+		}
+
 		public void AddViewer( IFogViewer viewer )
 		{
-			Viewers.Add( viewer );
+			_viewers.Add( new FogViewer()
+			{
+				LastPosition = viewer.Position,
+				Object = viewer
+			} );
 		}
 
 		public void RemoveViewer( IFogViewer viewer )
 		{
-			Viewers.Remove( viewer );
+			for ( var i = _viewers.Count - 1; i >= 0; i-- )
+			{
+				if ( _viewers[i].Object == viewer )
+				{
+					_viewers.RemoveAt( i );
+					break;
+				}
+			}
 		}
 
 		public void Clear( Color32 color )
@@ -103,7 +164,7 @@ namespace RTS
 			}
 		}
 
-		public void AddVisibility( Vector3 location, float range )
+		public void PunchHole( Vector3 location, float range, byte alpha )
 		{
 			var pixelScale = (Resolution / Fog.MapSize);
 			var radius = ((range * pixelScale) / 2f).CeilToInt();
@@ -131,10 +192,10 @@ namespace RTS
 				g = px - y;
 				h = py - x;
 
-				if ( b != pb ) FillLine( b, a, c );
-				if ( d != pd ) FillLine( d, a, c );
-				if ( f != b ) FillLine( f, e, g );
-				if ( h != d && h != f ) FillLine( h, e, g );
+				if ( b != pb ) FillLine( b, a, c, alpha );
+				if ( d != pd ) FillLine( d, a, c, alpha );
+				if ( f != b ) FillLine( f, e, g, alpha );
+				if ( h != d && h != f ) FillLine( h, e, g, alpha );
 
 				pb = b;
 				pd = d;
@@ -146,7 +207,7 @@ namespace RTS
 			}
 		}
 
-		private void FillLine( int y, int x1, int x2 )
+		private void FillLine( int y, int x1, int x2, byte alpha )
 		{
 			var w = Texture.Width;
 			var h = Texture.Height;
@@ -160,7 +221,7 @@ namespace RTS
 			{
 				var index = ((y * Resolution) + x) * 1;// 4;
 
-				Data[index + 0] = 0;
+				Data[index + 0] = alpha;
 				//Data[index + 1] = 0;
 				//Data[index + 2] = 0;
 				//Data[index + 3] = 0;

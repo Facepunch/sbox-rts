@@ -9,7 +9,9 @@ namespace RTS
 
 		public override void DoRender( SceneObject sceneObject  )
 		{
-			Render.SetLighting( sceneObject );
+			if ( !EnableDrawing ) return;
+
+			//Render.SetLighting( sceneObject );
 
 			var vertexBuffer = Render.GetDynamicVB( true );
 			var circleSize = 30f;
