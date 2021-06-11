@@ -6,7 +6,7 @@ namespace RTS
 	{
 		public Material FogMaterial = Material.Load( "materials/rts/fog.vmat" );
 		public Texture Texture { get; set; }
-		public float MapSize { get; private set; }
+		public readonly float MapSize;
 
 		public Fog()
 		{

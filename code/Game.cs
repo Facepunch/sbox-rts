@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace RTS
 {
+	public class DebugViewer : IFogViewer
+	{
+		public float Range { get; set; }
+		public Vector3 Position { get; set; }
+	}
+
 	[Library( "rts", Title = "RTS" )]
 	partial class Game : Sandbox.Game
 	{
@@ -122,18 +128,8 @@ namespace RTS
 					_lastRound.Start();
 				}
 
-				FogManager.Instance.Clear();
-
-				foreach ( var unit in Entity.All.OfType<UnitEntity>() )
-				{
-					if ( unit.Player == Local.Pawn )
-					{
-						FogManager.Instance.AddVisibility( unit.Position, 300f );
-					}
-				}
-
-				FogManager.Instance.Texture.Update( FogManager.Instance.Data );
-				FogManager.Instance.Fog.FogMaterial.OverrideTexture( "Color", FogManager.Instance.Texture );
+				if ( Time.Tick % 10 == 0 )
+					FogManager.Instance.Update();
 			}
 			else
 			{

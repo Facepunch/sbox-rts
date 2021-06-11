@@ -6,16 +6,16 @@ using RTS.Buildings;
 
 namespace RTS
 {
-	public partial class UnitEntity : ItemEntity<BaseUnit>
+	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer
 	{
 		[Net] public Weapon Weapon { get; private set; }
+		[Net] public float Range { get; private set; }
 		[Net] public int Kills { get; set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
 		public TimeSince LastAttackTime { get; set; }
 		public bool FollowTarget { get; private set; }
-		public float Range { get; private set; }
 		public float Speed { get; private set; }
 		public Entity Target { get; private set; }
 		public NavSteer Steer;
@@ -43,6 +43,8 @@ namespace RTS
 			Circle = new();
 			Circle.SetParent( this );
 			Circle.LocalPosition = Vector3.Zero;
+
+			FogManager.Instance.AddViewer( this );
 
 			base.ClientSpawn();
 		}
@@ -99,6 +101,16 @@ namespace RTS
 		public bool IsEnemy( ISelectable other )
 		{
 			return (other.Player != Player);
+		}
+
+		protected override void OnDestroy()
+		{
+			if ( IsClient )
+			{
+				FogManager.Instance.RemoveViewer( this );
+			}
+
+			base.OnDestroy();
 		}
 
 		protected override void OnItemChanged( BaseUnit item )

@@ -12,42 +12,93 @@ namespace RTS
 	public partial class FogManager : Entity
 	{
 		public static FogManager Instance { get; private set; }
-		
-		public Texture Texture { get; private set; }
-		public int Resolution { get; private set; }
-		public byte[] Data { get; private set; }
+
+		public readonly List<IFogViewer> Viewers;
+		public readonly Texture Texture;
+		public readonly int Resolution;
+		public readonly byte[] Data;
 		public Fog Fog { get; private set; }
 
 		public FogManager()
 		{
 			Instance = this;
 			Transmit = TransmitType.Always;
+			Viewers = new List<IFogViewer>();
 			Resolution = 1024;
-			Data = new byte[Resolution * Resolution * 4];
+			//Data = new byte[Resolution * Resolution * 4];
+			Data = new byte[Resolution * Resolution];
 
 			if ( IsClient )
 			{
-				Texture = Texture.Create( Resolution, Resolution )
+				Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 )
 				.Finish();
 
-				Fog = new Fog();
-				Fog.Texture = Texture;
-				Fog.Position = Vector3.Zero;
+				Fog = new Fog
+				{
+					Texture = Texture,
+					Position = Vector3.Zero
+				};
+
+				Fog.FogMaterial.OverrideTexture( "Color", Texture );
+
+				for ( var i = 0; i < 100; i++ )
+				{
+					var v = new DebugViewer();
+					v.Range = Rand.Float( 10f, 100f );
+					v.Position = Vector3.Random * 1000f;
+					AddViewer( v );
+				}
 			}
 		}
 
-		public void Clear()
+		public void Update()
 		{
+			Clear( Color32.Black );
+
+			for ( var i = 0; i < Viewers.Count; i++ )
+			{
+				var viewer = Viewers[i];
+
+				if ( viewer is not UnitEntity )
+				{
+					viewer.Position += new Vector3( Rand.Float( -1f, 1f ) * 10f, Rand.Float( -1f, 1f ) * 10f );
+				}
+
+				AddVisibility( viewer.Position, viewer.Range );
+			}
+
+			Texture.Update( Data );
+		}
+
+		public void AddViewer( IFogViewer viewer )
+		{
+			Viewers.Add( viewer );
+		}
+
+		public void RemoveViewer( IFogViewer viewer )
+		{
+			Viewers.Remove( viewer );
+		}
+
+		public void Clear( Color32 color )
+		{
+			// Cache these because they're properties and it'll be slow otherwise.
+			//var r = color.r;
+			//var g = color.g;
+			//var b = color.b;
+			var a = color.a;
+
 			for ( int x = 0; x < Resolution; x++ )
 			{
 				for ( int y = 0; y < Resolution; y++ )
 				{
-					var index = ((x * Resolution) + y) * 4;
+					var index = ((x * Resolution) + y) * 1;// 4;
 
-					Data[index + 0] = 0;
-					Data[index + 1] = 0;
-					Data[index + 2] = 0;
-					Data[index + 3] = 255;
+					Data[index + 0] = 255;
+					//Data[index + 0] = r;
+					//Data[index + 1] = g;
+					//Data[index + 2] = b;
+					//Data[index + 3] = a;
 				}
 			}
 		}
@@ -107,12 +158,12 @@ namespace RTS
 
 			for ( int x = x1; x <= x2; x++ )
 			{
-				var index = ((y * Resolution) + x) * 4;
+				var index = ((y * Resolution) + x) * 1;// 4;
 
 				Data[index + 0] = 0;
-				Data[index + 1] = 0;
-				Data[index + 2] = 0;
-				Data[index + 3] = 0;
+				//Data[index + 1] = 0;
+				//Data[index + 2] = 0;
+				//Data[index + 3] = 0;
 			}
 		}
 	}
