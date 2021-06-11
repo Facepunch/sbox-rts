@@ -17,8 +17,10 @@ namespace RTS
 		public UnitCircle Circle { get; private set; }
 		public TimeSince LastAttackTime { get; set; }
 		public bool FollowTarget { get; private set; }
+		public float TargetAlpha { get; private set; }
 		public float Speed { get; private set; }
 		public Entity Target { get; private set; }
+
 		public NavSteer Steer;
 
 		private Vector3 _inputVelocity;
@@ -84,8 +86,7 @@ namespace RTS
 
 		public void MakeVisible( bool isVisible )
 		{
-			EnableDrawing = isVisible;
-			Circle.EnableDrawing = isVisible;
+			TargetAlpha = isVisible ? 1f : 0f;
 		}
 
 		public ModelEntity AttachClothing( string modelName )
@@ -319,6 +320,24 @@ namespace RTS
 					Circle.Color = Color.White;
 				else
 					Circle.Color = Player.TeamColor;
+			}
+
+			if ( !IsLocalPlayers )
+			{
+				RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, Time.Delta );
+
+				for ( var i = 0; i < Children.Count; i++ )
+				{
+					if ( Children[i] is ModelEntity child )
+					{
+						child.RenderAlpha = child.RenderAlpha.LerpTo( TargetAlpha, Time.Delta );
+					}
+				}
+
+				if ( Circle.IsValid() )
+				{
+					Circle.Alpha = Circle.Alpha.LerpTo( TargetAlpha, Time.Delta * 4f );
+				}
 			}
 		}
 	}

@@ -37,9 +37,9 @@ namespace RTS
 						var spawnpoint = spawnpoints[0];
 						spawnpoints.RemoveAt( 0 );
 
-						var c = new UnitEntity();
-						c.Position = (Vector3.Random * 50f).WithZ( spawnpoint.Position.z ); //spawnpoint.Position;
-						c.Assign( player, "unit.worker" );
+						var worker = new UnitEntity();
+						worker.Position = spawnpoint.Position + (Vector3.Random * 20f).WithZ( spawnpoint.Position.z );
+						worker.Assign( player, "unit.worker" );
 
 						player.MakeSpectator( false );
 						player.LookAt( spawnpoint );

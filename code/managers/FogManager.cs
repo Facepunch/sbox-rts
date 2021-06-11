@@ -71,16 +71,21 @@ namespace RTS
 				cullable.Object.MakeVisible( false );
 			}
 
+			// Our first pass will create the seen history map.
+			for ( var i = 0; i < _viewers.Count; i++ )
+			{
+				var viewer = _viewers[i];
+				PunchHole( viewer.LastPosition, viewer.Object.Range, 200 );
+			}
+
+			// Our second pass will show what is currently visible.
 			for ( var i = 0; i < _viewers.Count; i++ )
 			{
 				var viewer = _viewers[i];
 				var position = viewer.Object.Position;
 				var range = viewer.Object.Range;
 
-				PunchHole( viewer.LastPosition, range, 200 );
 				PunchHole( position, range, 0 );
-
-				viewer.LastPosition = position;
 
 				for ( var j = 0; j < _cullables.Count; j++ )
 				{
@@ -94,6 +99,8 @@ namespace RTS
 						cullable.IsVisible = true;
 					}
 				}
+
+				viewer.LastPosition = position;
 			}
 
 			Texture.Update( Data );

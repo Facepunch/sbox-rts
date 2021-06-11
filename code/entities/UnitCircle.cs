@@ -6,12 +6,11 @@ namespace RTS
 	{
 		public Material CircleMaterial = Material.Load( "materials/rts/unit_circle.vmat" );
 		public Color Color { get; set; }
+		public float Alpha { get; set; } = 1f;
 
 		public override void DoRender( SceneObject sceneObject  )
 		{
 			if ( !EnableDrawing ) return;
-
-			//Render.SetLighting( sceneObject );
 
 			var vertexBuffer = Render.GetDynamicVB( true );
 			var circleSize = 30f;
@@ -23,6 +22,7 @@ namespace RTS
 
 			vertexBuffer.AddQuad( a, b, c, d );
 
+			Render.Set( "Opacity", Alpha );
 			Render.Set( "Color", Color );
 
 			vertexBuffer.Draw( CircleMaterial );
