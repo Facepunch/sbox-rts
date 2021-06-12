@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Linq;
 
 namespace RTS
 {
@@ -6,26 +7,33 @@ namespace RTS
 	{
 		public Material FogMaterial = Material.Load( "materials/rts/fog.vmat" );
 		public Texture Texture { get; set; }
-		public readonly float MapSize;
 
-		public Fog()
+		public override void DoRender( SceneObject sceneObject )
 		{
-			MapSize = 5000f;
-			RenderBounds = new BBox( new Vector3( -MapSize, -MapSize ), new Vector3( MapSize, MapSize ) );
-		}
+			var bounds = FogBounds.Instance;
 
-		public override void DoRender( SceneObject sceneObject  )
-		{
+			if ( !bounds.IsValid() ) return;
+
 			var vertexBuffer = Render.GetDynamicVB( true );
-			var halfMapSize = MapSize / 2f;
 
-			var a = new Vertex( Position + new Vector3( -halfMapSize, -halfMapSize, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
-			var b = new Vertex( Position + new Vector3( halfMapSize, -halfMapSize, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
-			var c = new Vertex( Position + new Vector3( halfMapSize, halfMapSize, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 1, 1, 0, 0 ) );
-			var d = new Vertex( Position + new Vector3( -halfMapSize, halfMapSize, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 0, 1, 0, 0 ) );
+			var a = new Vertex( FogBounds.TopLeft, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
+			var b = new Vertex( FogBounds.TopRight, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
+			var c = new Vertex( FogBounds.BottomRight, Vector3.Up, Vector3.Right, new Vector4( 1, 1, 0, 0 ) );
+			var d = new Vertex( FogBounds.BottomLeft, Vector3.Up, Vector3.Right, new Vector4( 0, 1, 0, 0 ) );
 
 			vertexBuffer.AddQuad( a, b, c, d );
 			vertexBuffer.Draw( FogMaterial );
+		}
+
+		[Event.Tick.Client]
+		private void ClientTick()
+		{
+			var bounds = FogBounds.Instance;
+
+			if ( bounds.IsValid() )
+			{
+				RenderBounds = bounds.CollisionBounds;
+			}
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace RTS
 		{
 			Instance = this;
 			Transmit = TransmitType.Always;
-			Resolution = 2048;
+			Resolution = 256;
 			//Data = new byte[Resolution * Resolution * 4];
 			Data = new byte[Resolution * Resolution];
 
@@ -154,7 +154,7 @@ namespace RTS
 			//var r = color.r;
 			//var g = color.g;
 			//var b = color.b;
-			var a = color.a;
+			//var a = color.a;
 
 			for ( int x = 0; x < Resolution; x++ )
 			{
@@ -173,10 +173,11 @@ namespace RTS
 
 		public void PunchHole( Vector3 location, float range, byte alpha )
 		{
-			var pixelScale = (Resolution / Fog.MapSize);
+			var pixelScale = (Resolution / FogBounds.Size);
+			var origin = location - FogBounds.Origin;
 			var radius = ((range * pixelScale) / 2f).CeilToInt();
-			var px = (location.x * pixelScale).CeilToInt() + (Resolution / 2);
-			var py = (location.y * pixelScale).CeilToInt() + (Resolution / 2);
+			var px = (origin.x * pixelScale).CeilToInt() + (Resolution / 2);
+			var py = (origin.y * pixelScale).CeilToInt() + (Resolution / 2);
 
 			if ( px + radius < 0 || px - radius >= Texture.Width || py + radius < 0 || py - radius >= Texture.Height )
 				return;
