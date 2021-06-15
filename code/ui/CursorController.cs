@@ -134,7 +134,7 @@ namespace RTS
 			{
 				var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f ).EntitiesOnly().Run();
 
-				if ( trace.Entity is ResourceEntity resource )
+				if ( trace.Entity is ResourceEntity resource && resource.HasBeenSeen )
 				{
 					ItemTooltip.Instance.Update( resource );
 					ItemTooltip.Instance.Hover( trace.Entity );

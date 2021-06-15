@@ -19,6 +19,7 @@ namespace RTS
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
 		public TimeSince LastAttackTime { get; set; }
+		public bool HasBeenSeen { get; set; }
 		public bool FollowTarget { get; private set; }
 		public float TargetAlpha { get; private set; }
 		public float Speed { get; private set; }

@@ -64,7 +64,7 @@ namespace RTS
 		{
 			FogCullable cullable;
 
-			for ( var i = 0; i < _cullables.Count; i++ )
+			for ( var i = _cullables.Count - 1; i >= 0; i-- )
 			{
 				cullable = _cullables[i];
 				cullable.IsVisible = false;
@@ -87,7 +87,7 @@ namespace RTS
 
 				PunchHole( position, range, 0 );
 
-				for ( var j = 0; j < _cullables.Count; j++ )
+				for ( var j = _cullables.Count - 1; j >= 0; j-- )
 				{
 					cullable = _cullables[j];
 
@@ -95,6 +95,7 @@ namespace RTS
 
 					if ( cullable.Object.Position.Distance( position ) <= range / 2f )
 					{
+						cullable.Object.HasBeenSeen = true;
 						cullable.Object.MakeVisible( true );
 						cullable.IsVisible = true;
 					}

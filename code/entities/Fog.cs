@@ -12,8 +12,6 @@ namespace RTS
 		{
 			var bounds = FogBounds.Instance;
 
-			if ( true ) return;
-
 			if ( !bounds.IsValid() ) return;
 
 			var vertexBuffer = Render.GetDynamicVB( true );
