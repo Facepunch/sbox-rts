@@ -49,12 +49,23 @@ namespace RTS
 						.Radius( 5f )
 						.Run();
 
-					if ( trace.Entity.IsValid() && trace.Entity is ISelectable selectable )
+					if ( trace.Entity is ISelectable selectable )
 					{
 						if ( selectable.Player != Local.Pawn )
+						{
 							ItemManager.Attack( ((Entity)selectable).NetworkIdent.ToString() );
-						else if ( selectable is BuildingEntity building && building.IsUnderConstruction )
-							ItemManager.Construct( ((Entity)selectable).NetworkIdent.ToString() );
+						}
+						else if ( selectable is BuildingEntity building  )
+						{
+							if ( building.IsUnderConstruction )
+								ItemManager.Construct( ((Entity)selectable).NetworkIdent.ToString() );
+							else if ( building.CanDepositResources )
+								ItemManager.Deposit( ((Entity)selectable).NetworkIdent.ToString() );
+						}
+					}
+					else if ( trace.Entity is ResourceEntity resource)
+					{
+						ItemManager.Gather( resource.NetworkIdent.ToString() );
 					}
 					else
 					{

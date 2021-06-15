@@ -28,7 +28,7 @@ namespace RTS
 			if ( Local.Pawn is Player player )
 			{
 				FieldOfView = FieldOfView.LerpTo( TargetFOV, Time.Delta * 4f );
-				Pos = Pos.LerpTo( player.Position, Time.Delta );
+				Pos = Pos.LerpTo( player.Position, Time.Delta * 4f );
 				Rot = player.Rotation;
 			}
 

@@ -176,7 +176,7 @@ namespace RTS
 				UpdateCommands( building.Item.Buildables );
 		}
 
-		private void UpdateCommands( List<string> buildables )
+		private void UpdateCommands( HashSet<string> buildables )
 		{
 			var player = Local.Pawn as Player;
 

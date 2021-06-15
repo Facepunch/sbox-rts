@@ -20,7 +20,7 @@ metadata
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	stock(integer) : "Stock" :  : "How much of this resource there is to take."
+	stock(integer) : "Stock" :  : "How much of this resource there is left to take."
 
 ]
 
@@ -46,7 +46,7 @@ metadata
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	stock(integer) : "Stock" :  : "How much of this resource there is to take."
+	stock(integer) : "Stock" :  : "How much of this resource there is left to take."
 
 ]
 
@@ -64,7 +64,7 @@ metadata
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	stock(integer) : "Stock" :  : "How much of this resource there is to take."
+	stock(integer) : "Stock" :  : "How much of this resource there is left to take."
 
 ]
 

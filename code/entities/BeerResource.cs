@@ -8,6 +8,14 @@ namespace RTS
 	[Hammer.Model]
 	public partial class BeerResource : ResourceEntity
 	{
-		
+		public override ResourceType Resource => ResourceType.Beer;
+
+		public override void Spawn()
+		{
+			if ( string.IsNullOrEmpty( GetModelName() ) )
+				SetModel( "models/barrels/square_wooden_box_gold.vmdl" );
+
+			base.Spawn();
+		}
 	}
 }

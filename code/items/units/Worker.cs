@@ -15,7 +15,13 @@ namespace RTS.Units
 		{
 			[ResourceType.Beer] = 50
 		};
-		public override List<string> Buildables => new()
+		public override HashSet<ResourceType> Gatherables => new()
+		{
+			ResourceType.Stone,
+			ResourceType.Metal,
+			ResourceType.Beer
+		};
+		public override HashSet<string> Buildables => new()
 		{
 			"building.headquarters",
 			"building.brewery",
@@ -24,7 +30,7 @@ namespace RTS.Units
 			"building.terryfactory",
 			"building.vehiclefactory"
 		};
-		public override List<string> Clothing => new()
+		public override HashSet<string> Clothing => new()
 		{
 			"models/citizen_clothes/hat/hat_hardhat.vmdl"
 		};

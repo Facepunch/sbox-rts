@@ -4,7 +4,8 @@ namespace RTS.Buildings
 {
     public abstract class BaseBuilding : BaseItem
 	{
-		public virtual List<string> Buildables => new();
+		public virtual HashSet<string> Buildables => new();
+		public virtual bool CanDepositResources => false;
 		public virtual float MaxHealth => 100f;
 		public virtual string Model => "";
 	}

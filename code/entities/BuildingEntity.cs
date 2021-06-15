@@ -15,6 +15,8 @@ namespace RTS
 		public uint LastQueueId { get; set; }
 		public List<QueueItem> Queue { get; set; }
 
+		public bool CanDepositResources => Item.CanDepositResources;
+
 		public BuildingEntity() : base()
 		{
 			Tags.Add( "building", "selectable" );

@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using Gamelib.Nav;
 using RTS.Buildings;
 using System.Linq;
+using System;
+using Gamelib.Extensions;
 
 namespace RTS
 {
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable
 	{
+		public Dictionary<ResourceType, int> Carrying { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
-		[Net] public float Range { get; private set; }
+		[Net] public float LineOfSight { get; private set; }
 		[Net] public int Kills { get; set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();
@@ -20,26 +23,72 @@ namespace RTS
 		public float TargetAlpha { get; private set; }
 		public float Speed { get; private set; }
 		public Entity Target { get; private set; }
+		public TimeSince LastGatherTime { get; private set; }
+		public ResourceEntity LastResourceEntity { get; private set; }
+		public ResourceType LastResourceType { get; private set; }
+		public Vector3 LastResourcePosition { get; private set; }
+		public Vector3 InputVelocity { get; private set; }
+		public float TargetRange { get; private set; }
+		public float WishSpeed { get; private set; }
 
 		public NavSteer Steer;
-
-		private Vector3 _inputVelocity;
-		private float _wishSpeed;
 
 		public UnitEntity() : base()
 		{
 			Tags.Add( "unit", "selectable" );
-		}
 
-		public bool IsTargetInRange
-		{
-			get
+			if ( IsServer )
 			{
-				return (Target.IsValid() && Target.Position.Distance( Position ) < Range);
+				Carrying = new();
 			}
 		}
 
 		public bool CanConstruct => Item.CanConstruct;
+
+		public bool CanGather( ResourceType type )
+		{
+			return Item.Gatherables.Contains( type );
+		}
+
+		public bool IsTargetInRange()
+		{
+			if ( !Target.IsValid() ) return false;
+
+			if ( Target is ModelEntity entity )
+			{
+				// We can try to see if our range overlaps the bounding box of the target.
+				var targetBounds = entity.CollisionBounds + entity.Position;
+
+				if ( targetBounds.Overlaps( Position, TargetRange ) )
+					return true;
+			}
+
+			return (Target.IsValid() && Target.Position.Distance( Position ) < TargetRange);
+		}
+
+		public bool TakeFrom( ResourceEntity resource )
+		{
+			if ( resource.Stock <= 0 ) return false;
+
+			if ( Carrying.TryGetValue( resource.Resource, out var carrying ) )
+			{
+				if ( carrying < resource.MaxCarry )
+					Carrying[resource.Resource] += 1;
+				else
+					return false;
+			}
+			else
+			{
+				Carrying[resource.Resource] = 1;
+			}
+
+			resource.Stock -= 1;
+
+			if ( resource.Stock <= 0 )
+				resource.Delete();
+
+			return true;
+		}
 
 		public override void ClientSpawn()
 		{
@@ -58,6 +107,7 @@ namespace RTS
 		public void Attack( Entity target )
 		{
 			Target = target;
+			TargetRange = Item.AttackRange;
 			FollowTarget = true;
 		}
 
@@ -69,12 +119,34 @@ namespace RTS
 			FollowTarget = false;
 		}
 
+		public void Deposit( BuildingEntity building )
+		{
+			Target = building;
+			Steer ??= new();
+			Steer.Target = building.Position;
+			FollowTarget = true;
+			TargetRange = Item.InteractRange;
+		}
+
+		public void Gather( ResourceEntity resource)
+		{
+			Target = resource;
+			Steer ??= new();
+			Steer.Target = resource.Position;
+			FollowTarget = true;
+			TargetRange = Item.InteractRange;
+			LastResourceType = resource.Resource;
+			LastResourceEntity = resource;
+			LastResourcePosition = resource.Position;
+		}
+
 		public void Construct( BuildingEntity building )
 		{
 			Target = building;
 			Steer ??= new();
 			Steer.Target = building.Position;
 			FollowTarget = true;
+			TargetRange = Item.InteractRange;
 		}
 
 		public void ClearTarget()
@@ -138,9 +210,9 @@ namespace RTS
 			}
 
 			Speed = item.Speed;
-			Range = item.Range;
 			Health = item.MaxHealth;
 			EyePos = Position + Vector3.Up * 64;
+			LineOfSight = item.LineOfSight;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
 
@@ -192,9 +264,9 @@ namespace RTS
 					move.Position = tr.EndPos;
 				}
 
-				move.Velocity -= _inputVelocity;
+				move.Velocity -= InputVelocity;
 				move.ApplyFriction( tr.Surface.Friction * 200.0f, timeDelta );
-				move.Velocity += _inputVelocity;
+				move.Velocity += InputVelocity;
 			}
 			else
 			{
@@ -206,30 +278,77 @@ namespace RTS
 			Velocity = move.Velocity;
 		}
 
+		private void FindTargetResource()
+		{
+			// If our last resource entity is valid just use that.
+			if ( LastResourceEntity.IsValid() )
+			{
+				Gather( LastResourceEntity );
+				return;
+			}
+
+			var entities = Physics.GetEntitiesInSphere( LastResourcePosition, 1000f );
+
+			foreach ( var entity in entities )
+			{
+				if ( entity is ResourceEntity resource && resource.Resource == LastResourceType )
+				{
+					Gather( resource );
+					return;
+				}
+			}
+
+			ClearTarget();
+		}
+
+		private void FindResourceDepo()
+		{
+			var buildings = Player.GetBuildings().Where( i => i.Item.CanDepositResources );
+			var closestDepo = (BuildingEntity)null;
+			var closestDistance = 0f;
+
+			foreach ( var depo in buildings )
+			{
+				var distance = depo.Position.Distance( Position );
+
+				if ( !closestDepo.IsValid() || distance < closestDistance )
+				{
+					closestDepo = depo;
+					closestDistance = distance;
+				}
+			}
+
+			if ( closestDepo.IsValid() )
+				Deposit( closestDepo );
+			else
+				ClearTarget();
+		}
+
 		private void FindTargetUnit()
 		{
-			var entities = Physics.GetEntitiesInSphere( Position, Range );
+			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRange );
 			
 			foreach ( var entity in entities )
 			{
 				if ( entity is UnitEntity unit && IsEnemy( unit ) )
 				{
 					FollowTarget = false;
+					TargetRange = Item.AttackRange;
 					Target = unit;
+
 					return;
 				}
 			}
 
-			FollowTarget = false;
-			Target = null;
+			ClearTarget();
 		}
 
 		[Event.Tick.Server]
 		private void ServerTick()
 		{
-			_inputVelocity = 0;
+			InputVelocity = 0;
 
-			var isTargetInRange = IsTargetInRange;
+			var isTargetInRange = IsTargetInRange();
 
 			if ( !Target.IsValid() || !isTargetInRange )
 			{
@@ -239,7 +358,10 @@ namespace RTS
 				}
 				else if ( !IsSelected )
 				{
-					FindTargetUnit();
+					if ( Target is ResourceEntity )
+						FindTargetResource();
+					else
+						FindTargetUnit();
 				}
 
 				if ( Steer != null )
@@ -250,7 +372,7 @@ namespace RTS
 					{
 						var control = GroundEntity != null ? 200 : 10;
 
-						_inputVelocity = Steer.Output.Direction.Normal * Speed;
+						InputVelocity = Steer.Output.Direction.Normal * Speed;
 						var vel = Steer.Output.Direction.WithZ( 0 ).Normal * Time.Delta * control;
 						Velocity = Velocity.AddClamped( vel, Speed );
 
@@ -288,13 +410,47 @@ namespace RTS
 							building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
 
 							if ( building.Health == building.Item.MaxHealth )
+							{
 								building.FinishConstruction();
+								ClearTarget();
+							}
 							else
+							{
 								building.UpdateConstruction();
+							}
+						}
+						else if ( building.CanDepositResources )
+						{
+							foreach ( var kv in Carrying )
+							{
+								Player.GiveResource( kv.Key, kv.Value );
+							}
+
+							Carrying.Clear();
+
+							FindTargetResource();
 						}
 						else
 						{
 							ClearTarget();
+						}
+					}
+					else if ( Target is ResourceEntity resource )
+					{
+						if ( LastGatherTime >= resource.GatherTime )
+						{
+							TakeFrom( resource );
+
+							LastGatherTime = 0;
+
+							if ( Carrying.TryGetValue( resource.Resource, out var carrying ) )
+							{
+								if ( carrying >= resource.MaxCarry )
+								{
+									// We're full, let's deposit that shit.
+									FindResourceDepo();
+								}
+							}
 						}
 					}
 					else if ( Weapon.IsValid() && Weapon.CanAttack() )
@@ -309,14 +465,14 @@ namespace RTS
 			else
 				SetAnimInt( "holdtype", 0 );
 
-			_wishSpeed = _wishSpeed.LerpTo( _inputVelocity.Length, 10f * Time.Delta );
+			WishSpeed = WishSpeed.LerpTo( InputVelocity.Length, 10f * Time.Delta );
 
 			SetAnimBool( "b_grounded", true );
 			SetAnimBool( "b_noclip", false );
 			SetAnimBool( "b_swim", false );
-			SetAnimFloat( "forward", Vector3.Dot( Rotation.Forward, _inputVelocity ) );
-			SetAnimFloat( "sideward", Vector3.Dot( Rotation.Right, _inputVelocity ) );
-			SetAnimFloat( "wishspeed", _wishSpeed );
+			SetAnimFloat( "forward", Vector3.Dot( Rotation.Forward, InputVelocity ) );
+			SetAnimFloat( "sideward", Vector3.Dot( Rotation.Right, InputVelocity ) );
+			SetAnimFloat( "wishspeed", WishSpeed );
 			SetAnimFloat( "walkspeed_scale", 2.0f / 10.0f );
 			SetAnimFloat( "runspeed_scale", 2.0f / 320.0f );
 			SetAnimFloat( "duckspeed_scale", 2.0f / 80.0f );

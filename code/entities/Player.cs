@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using RTS.Buildings;
 using System.Linq;
 using RTS.Units;
+using System;
 
 namespace RTS
 {
@@ -14,6 +15,7 @@ namespace RTS
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
 		[Net] public Color TeamColor { get; set; }
+		[Net] public List<int> Resources { get; private set; } = new();
 
 		public Player()
 		{
@@ -21,6 +23,7 @@ namespace RTS
 			Camera = new RTSCamera();
 			TeamColor = Color.Random;
 			Transmit = TransmitType.Always;
+			Resources = new List<int>();
 			Selection = new List<Entity>();
 			Dependencies = new List<uint>();
 		}
@@ -33,6 +36,57 @@ namespace RTS
 		public List<BuildingEntity> GetBuildings( BaseBuilding building )
 		{
 			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item == building ).ToList();
+		}
+
+		public List<BuildingEntity> GetBuildings()
+		{
+			return All.OfType<BuildingEntity>().Where( i => i.Player == this ).ToList();
+		}
+
+		public void ClearResources()
+		{
+			Resources.Clear();
+		}
+
+		public int GetResource( ResourceType type )
+		{
+			if ( Resources == null ) return 0;
+			if ( Resources.Count <= (int)type ) return 0;
+			return Resources[(int)type];
+		}
+
+		public bool SetResource( ResourceType type, int amount )
+		{
+			if ( !Host.IsServer ) return false;
+			if ( Resources == null ) return false;
+
+			while ( Resources.Count <= (int)type )
+			{
+				Resources.Add( 0 );
+			}
+
+			Resources[(int)type] = amount;
+			return true;
+		}
+
+		public bool GiveResource( ResourceType type, int amount )
+		{
+			if ( !Host.IsServer ) return false;
+			if ( Resources == null ) return false;
+
+			SetResource( type, GetResource( type ) + amount );
+			return true;
+		}
+
+		public int TakeResource( ResourceType type, int amount )
+		{
+			if ( Resources == null ) return 0;
+
+			var available = GetResource( type );
+			amount = Math.Min( available, amount );
+
+			SetResource( type, available - amount );
+			return amount;
 		}
 
 		public void MakeSpectator( bool isSpectator )

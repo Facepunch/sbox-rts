@@ -75,7 +75,7 @@ namespace RTS
 			for ( var i = 0; i < _viewers.Count; i++ )
 			{
 				var viewer = _viewers[i];
-				PunchHole( viewer.LastPosition, viewer.Object.Range, 200 );
+				PunchHole( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
 			}
 
 			// Our second pass will show what is currently visible.
@@ -83,7 +83,7 @@ namespace RTS
 			{
 				var viewer = _viewers[i];
 				var position = viewer.Object.Position;
-				var range = viewer.Object.Range;
+				var range = viewer.Object.LineOfSight;
 
 				PunchHole( position, range, 0 );
 

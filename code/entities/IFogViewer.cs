@@ -9,6 +9,6 @@ namespace RTS
 	public interface IFogViewer
 	{
 		public Vector3 Position { get; set; }
-		public float Range { get; }
+		public float LineOfSight { get; }
 	}
 }

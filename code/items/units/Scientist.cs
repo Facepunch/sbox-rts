@@ -14,11 +14,15 @@ namespace RTS.Units
 		{
 			[ResourceType.Beer] = 150
 		};
-		public override List<string> Dependencies => new()
+		public override HashSet<ResourceType> Gatherables => new()
+		{
+			ResourceType.Plasma
+		};
+		public override HashSet<string> Dependencies => new()
 		{
 			"tech.clothing"
 		};
-		public override List<string> Clothing => new()
+		public override HashSet<string> Clothing => new()
 		{
 			"models/citizen_clothes/jacket/labcoat.vmdl",
 			"models/citizen_clothes/gloves/gloves_workgloves.vmdl",

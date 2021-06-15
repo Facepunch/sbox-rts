@@ -9,6 +9,7 @@ namespace RTS.Buildings
 		public override string Name => "Silo";
 		public override string UniqueId => "building.silo";
 		public override string Description => "Acts as a deposit point for resources.";
+		public override bool CanDepositResources => true;
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
@@ -16,7 +17,7 @@ namespace RTS.Buildings
 			[ResourceType.Metal] = 100
 		};
 		public override string Model => "models/buildings/silo_future/silo.vmdl";
-		public override List<string> Dependencies => new()
+		public override HashSet<string> Dependencies => new()
 		{
 			"building.headquarters"
 		};

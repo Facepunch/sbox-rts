@@ -15,11 +15,11 @@ namespace RTS.Buildings
 			[ResourceType.Stone] = 200
 		};
 		public override string Model => "models/buildings/terryfactory_future/terryfactory.vmdl";
-		public override List<string> Dependencies => new()
+		public override HashSet<string> Dependencies => new()
 		{
 			"building.headquarters"
 		};
-		public override List<string> Buildables => new()
+		public override HashSet<string> Buildables => new()
 		{
 			"unit.naked",
 			"unit.assault"

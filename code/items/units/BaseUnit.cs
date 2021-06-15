@@ -6,12 +6,15 @@ namespace RTS.Units
 	{
 		public virtual float MaxHealth => 100f;
 		public virtual string Model => "models/citizen/citizen.vmdl";
-		public virtual List<string> Clothing => new();
+		public virtual HashSet<string> Clothing => new();
 		public virtual bool CanConstruct => false;
+		public virtual HashSet<ResourceType> Gatherables => new();
 		public virtual float Speed => 200f;
-		public virtual float Range => 600f;
+		public virtual float LineOfSight => 600f;
+		public virtual float AttackRange => 600f;
+		public virtual float InteractRange => 10f;
 		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";
-		public virtual List<string> Buildables => new();
+		public virtual HashSet<string> Buildables => new();
 	}
 }

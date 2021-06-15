@@ -16,7 +16,7 @@ namespace RTS.Buildings
 			[ResourceType.Metal] = 200
 		};
 		public override string Model => "models/buildings/brewery_future/brewery.vmdl";
-		public override List<string> Dependencies => new()
+		public override HashSet<string> Dependencies => new()
 		{
 			"building.headquarters",
 			"tech.brewing"

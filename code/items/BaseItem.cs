@@ -12,7 +12,7 @@ namespace RTS
 		public virtual string Description => "";
 		public virtual int BuildTime => 0;
 		public virtual Dictionary<ResourceType, int> Costs => new();
-		public virtual List<string> Dependencies => new();
+		public virtual HashSet<string> Dependencies => new();
 
 		public bool HasDependencies( Player player )
 		{

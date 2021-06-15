@@ -107,9 +107,52 @@ namespace RTS
 				foreach ( var entity in caller.Selection )
 				{
 					if ( entity is UnitEntity unit )
-					{
 						unit.Attack( target );
+				}
+			}
+		}
+
+		[ServerCmd]
+		public static void Deposit( string id )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var targetId = Convert.ToInt32( id );
+			var target = FindByIndex( targetId );
+
+			if ( target.IsValid() && target is BuildingEntity building )
+			{
+				foreach ( var entity in caller.Selection )
+				{
+					if ( entity is UnitEntity unit && building.Player == caller )
+					{
+						if ( building.CanDepositResources )
+							unit.Deposit( building );
 					}
+				}
+			}
+		}
+
+		[ServerCmd]
+		public static void Gather( string id )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var targetId = Convert.ToInt32( id );
+			var target = FindByIndex( targetId );
+
+			if ( target.IsValid() && target is ResourceEntity resource )
+			{
+				foreach ( var entity in caller.Selection )
+				{
+					if ( entity is UnitEntity unit && unit.CanGather( resource.Resource )  )
+						unit.Gather( resource );
 				}
 			}
 		}
@@ -132,9 +175,7 @@ namespace RTS
 					foreach ( var entity in caller.Selection )
 					{
 						if ( entity is UnitEntity unit && unit.CanConstruct )
-						{
 							unit.Construct( building );
-						}
 					}
 				}
 			}
@@ -159,9 +200,7 @@ namespace RTS
 				foreach ( var entity in caller.Selection )
 				{
 					if ( entity is UnitEntity unit )
-					{
 						unit.MoveTo( position );
-					}
 				}
 			}
 		}
@@ -191,9 +230,7 @@ namespace RTS
 					continue;
 
 				if ( selectable.Player == caller )
-				{
 					selectable.Select();
-				}
 			}
 		}
 
