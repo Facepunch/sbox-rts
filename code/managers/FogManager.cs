@@ -37,7 +37,7 @@ namespace RTS
 		{
 			Instance = this;
 			Transmit = TransmitType.Always;
-			Resolution = 256;
+			Resolution = 1024;
 			//Data = new byte[Resolution * Resolution * 4];
 			Data = new byte[Resolution * Resolution];
 

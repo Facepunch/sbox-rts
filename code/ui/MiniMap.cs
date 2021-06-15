@@ -10,13 +10,16 @@ namespace RTS
 	{
 		public Image Image;
 		public Texture Texture;
+		public SceneCapture Capture;
 
 		public MiniMap()
 		{
 			StyleSheet.Load( "/ui/MiniMap.scss" );
 
-			// TODO: I don't think we can do this properly yet.
-			//Texture = new TextureRTBuilder().Size( 1024, 1024 ).Finish();
+			/*
+			Capture = SceneCapture.Create( "minimap", 1024, 1024 );
+			Capture.World = SceneWorld.Current;
+			*/
 
 			Image = Add.Image( "", "texture" );
 		}
