@@ -9,6 +9,8 @@ namespace RTS
 	public class MetalResource : ResourceEntity
 	{
 		public override ResourceType Resource => ResourceType.Metal;
+		public override string Description => "You can mine this to gather Metal for your empire.";
+		public override string Name => "Metal Ore";
 
 		public override void Spawn()
 		{

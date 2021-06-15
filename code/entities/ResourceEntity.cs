@@ -6,6 +6,8 @@ namespace RTS
 	public partial class ResourceEntity : ModelEntity
 	{
 		public virtual ResourceType Resource => ResourceType.Stone;
+		public virtual string Description => "";
+		public virtual string Name => "";
 		public virtual float GatherTime => 1f;
 		public virtual int MaxCarry => 10;
 

@@ -34,11 +34,11 @@ namespace RTS
 			{
 				tooltip.Update( Item );
 				tooltip.Hover( this );
-				tooltip.Show = true;
+				tooltip.Show();
 			}
 			else if ( eventName == "onmouseout" )
 			{
-				tooltip.Show = false;
+				tooltip.Hide();
 			}
 
 			base.OnEvent( eventName );
@@ -74,11 +74,11 @@ namespace RTS
 			{
 				tooltip.Update( QueueItem.Item );
 				tooltip.Hover( this );
-				tooltip.Show = true;
+				tooltip.Show();
 			}
 			else if ( eventName == "onmouseout" )
 			{
-				tooltip.Show = false;
+				tooltip.Hide();
 			}
 
 			base.OnEvent( eventName );

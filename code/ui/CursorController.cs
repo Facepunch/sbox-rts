@@ -130,6 +130,17 @@ namespace RTS
 
 				IsSelecting = false;
 			}
+			else
+			{
+				var trace = Trace.Ray( builder.Position, builder.Position + builder.CursorAim * 2000f ).EntitiesOnly().Run();
+
+				if ( trace.Entity is ResourceEntity resource )
+				{
+					ItemTooltip.Instance.Update( resource );
+					ItemTooltip.Instance.Hover( trace.Entity );
+					ItemTooltip.Instance.Show( 0.5f );
+				}
+			}
 		}
 	}
 }

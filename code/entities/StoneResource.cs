@@ -9,6 +9,8 @@ namespace RTS
 	public partial class StoneResource : ResourceEntity
 	{
 		public override ResourceType Resource => ResourceType.Stone;
+		public override string Description => "You can mine this to gather Stone for your empire.";
+		public override string Name => "Rocks";
 
 		public override void Spawn()
 		{

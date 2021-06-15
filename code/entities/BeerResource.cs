@@ -9,6 +9,8 @@ namespace RTS
 	public partial class BeerResource : ResourceEntity
 	{
 		public override ResourceType Resource => ResourceType.Beer;
+		public override string Description => "You can find Beer for your empire in this cache.";
+		public override string Name => "Beer Cache";
 
 		public override void Spawn()
 		{
