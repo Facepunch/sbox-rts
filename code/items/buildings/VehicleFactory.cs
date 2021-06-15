@@ -9,7 +9,7 @@ namespace RTS.Buildings
 		public override string Name => "Vehicle Factory";
 		public override string UniqueId => "building.vehiclefactory";
 		public override string Description => "Allows you to train various types of vehicle.";
-		public override int BuildTime => 120;
+		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 500,
@@ -24,7 +24,7 @@ namespace RTS.Buildings
 		};
 		public override List<string> Buildables => new()
 		{
-			
+			"unit.scout"
 		};
 	}
 }

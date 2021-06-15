@@ -1,0 +1,17 @@
+﻿minimap {
+    position: absolute;
+    width: 100%;
+    pointer-events: auto;
+    bottom: 32px;
+    left: 32px;
+
+    &.hidden {
+        display: none;
+    }
+
+    .texture {
+        background-color: black;
+        width: 200px;
+        height: 200px;
+    }
+}

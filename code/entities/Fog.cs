@@ -32,7 +32,10 @@ namespace RTS
 
 			if ( bounds.IsValid() )
 			{
-				RenderBounds = bounds.CollisionBounds;
+				var doubleSize = bounds.CollisionBounds;
+				doubleSize.Mins *= 2f;
+				doubleSize.Maxs *= 2f;
+				RenderBounds = doubleSize;
 			}
 		}
 	}

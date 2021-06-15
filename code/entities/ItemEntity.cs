@@ -82,8 +82,6 @@ namespace RTS
 				GlowActive = true;
 				GlowState = GlowStates.GlowStateOn;
 				GlowColor = Player.TeamColor.WithAlpha( 0.5f );
-
-				SelectedItem.Instance.Update( Player.Selection.Select( i => (i as ISelectable) ).ToList() );
 			}
 
 			base.OnTagAdded( tag );
@@ -94,7 +92,6 @@ namespace RTS
 			if ( IsLocalPlayers && tag == "selected" )
 			{
 				GlowActive = false;
-				SelectedItem.Instance.Update( Player.Selection.Select( i => (i as ISelectable) ).ToList() );
 			}
 
 			base.OnTagRemoved( tag );

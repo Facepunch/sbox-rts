@@ -1,9 +1,6 @@
 ﻿
 using Sandbox;
 using Sandbox.UI;
-using Sandbox.UI.Construct;
-using System;
-using System.Threading.Tasks;
 
 namespace RTS
 {
@@ -22,6 +19,7 @@ namespace RTS
 
 			RootPanel.AddChild<CursorController>();
 			RootPanel.AddChild<RoundInfo>();
+			RootPanel.AddChild<MiniMap>();
 			RootPanel.AddChild<SelectedItem>();
 			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();

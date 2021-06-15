@@ -10,6 +10,7 @@ namespace RTS.Units
 		public virtual bool CanConstruct => false;
 		public virtual float Speed => 200f;
 		public virtual float Range => 600f;
+		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";
 		public virtual List<string> Buildables => new();
 	}

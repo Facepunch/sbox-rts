@@ -1,5 +1,6 @@
 ﻿using RTS.Buildings;
 using RTS.Tech;
+using RTS.Units;
 using Sandbox;
 using Steamworks.Data;
 using System;
@@ -107,6 +108,28 @@ namespace RTS
 			}
 		}
 
+		public void SpawnUnit( BaseUnit unit )
+		{
+			var entity = new UnitEntity();
+			entity.Assign( Player, unit );
+
+			if ( unit.UseRenderColor )
+				entity.RenderColor = Player.TeamColor;
+
+			var buildingMaxSize = CollisionBounds.Size.Length;
+			var availablePoint = NavMesh.GetPointWithinRadius( Position, buildingMaxSize * 0.5f, buildingMaxSize );
+
+			// TODO: What we should do is have various attachments to buildings for spawn points that cannot be blocked.
+			if ( availablePoint.HasValue )
+			{
+				entity.Position = availablePoint.Value;
+			}
+			else
+			{
+				Log.Error( "Unable to find a location for the unit " + unit.Name + " to spawn!" );
+			}
+		}
+
 		public void StopQueueItem( uint queueId )
 		{
 			Host.AssertServer();
@@ -156,9 +179,13 @@ namespace RTS
 
 		protected virtual void OnQueueItemCompleted( QueueItem queueItem )
 		{
-			if ( queueItem.Item is BaseTech )
+			if ( queueItem.Item is BaseTech tech )
 			{
-				Player.AddDependency( queueItem.Item );
+				Player.AddDependency( tech );
+			}
+			else if ( queueItem.Item is BaseUnit unit )
+			{
+				SpawnUnit( unit );
 			}
 		}
 

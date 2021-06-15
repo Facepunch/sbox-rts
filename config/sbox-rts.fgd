@@ -9,7 +9,7 @@
 // 
 // RTS.FogBounds : Sandbox.ModelEntity 
 // 
-@SolidClass = fog_bounds : ""
+@PointClass = fog_bounds : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 ]
@@ -17,7 +17,7 @@
 // 
 // RTS.Pistol : RTS.Weapon 
 // 
-@SolidClass = weapon_pistol : ""
+@PointClass = weapon_pistol : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 ]

@@ -8,12 +8,6 @@ using System.Threading.Tasks;
 
 namespace RTS
 {
-	public class DebugViewer : IFogViewer
-	{
-		public float Range { get; set; }
-		public Vector3 Position { get; set; }
-	}
-
 	[Library( "rts", Title = "RTS" )]
 	partial class Game : Sandbox.Game
 	{

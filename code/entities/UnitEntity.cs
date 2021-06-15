@@ -149,8 +149,19 @@ namespace RTS
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
 			{
 				Weapon = Library.Create<Weapon>( item.Weapon );
-				Weapon.SetParent( this, true );
 				Weapon.Unit = this;
+
+				var attachment = GetAttachment( "weapon", true );
+				
+				if ( attachment.HasValue )
+				{
+					Weapon.SetParent( this );
+					Weapon.Position = attachment.Value.Position;
+				}
+				else
+				{
+					Weapon.SetParent( this, true );
+				}
 			}
 
 			base.OnItemChanged( item );
