@@ -30,6 +30,7 @@
 					{
 						_class = "PhysicsMeshFile"
 						name = "pine_01"
+						disabled = true
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
@@ -45,6 +46,15 @@
 							exclude_by_default = false
 							exception_list = [  ]
 						}
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "default"
+						collision_prop = "default"
+						origin = [ -12.11529, -2.56386, 178.347305 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 37.771244, 32.955849, 357.694611 ]
 					},
 				]
 			},
