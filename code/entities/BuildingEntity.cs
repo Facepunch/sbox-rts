@@ -9,9 +9,10 @@ using System.Linq;
 
 namespace RTS
 {
-	public partial class BuildingEntity : ItemEntity<BaseBuilding>
+	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer
 	{
 		[Net] public bool IsUnderConstruction { get; private set; }
+		[Net] public float LineOfSight { get; private set; }
 		public uint LastQueueId { get; set; }
 		public List<QueueItem> Queue { get; set; }
 
@@ -21,39 +22,6 @@ namespace RTS
 		{
 			Tags.Add( "building", "selectable" );
 			Queue = new();
-		}
-
-		protected override void OnPlayerAssigned( Player player )
-		{
-			RenderColor = player.TeamColor;
-
-			base.OnPlayerAssigned( player );
-		}
-
-		protected override void OnItemChanged( BaseBuilding item )
-		{
-			if ( !string.IsNullOrEmpty( item.Model ) )
-			{
-				SetModel( item.Model );
-				SetupPhysicsFromModel( PhysicsMotionType.Static );
-			}
-
-			Health = item.MaxHealth;
-
-			base.OnItemChanged( item );
-		}
-
-		protected override void OnDestroy()
-		{
-			if ( IsServer )
-			{
-				var others = Player.GetBuildings( Item );
-
-				if ( others.Count == 0 )
-					Player.RemoveDependency( Item );
-			}
-
-			base.OnDestroy();
 		}
 
 		public void UpdateConstruction()
@@ -74,6 +42,8 @@ namespace RTS
 			RenderAlpha = 1f;
 			GlowActive = false;
 			Health = Item.MaxHealth;
+
+			AddAsFogViewer( To.Single( Player ) );
 		}
 
 		public void StartConstruction()
@@ -191,6 +161,44 @@ namespace RTS
 			}
 		}
 
+		protected override void OnPlayerAssigned( Player player )
+		{
+			RenderColor = player.TeamColor;
+
+			base.OnPlayerAssigned( player );
+		}
+
+		protected override void OnItemChanged( BaseBuilding item )
+		{
+			if ( !string.IsNullOrEmpty( item.Model ) )
+			{
+				SetModel( item.Model );
+				SetupPhysicsFromModel( PhysicsMotionType.Static );
+			}
+
+			LineOfSight = item.MinLineOfSight + CollisionBounds.Size.Length;
+			Health = item.MaxHealth;
+
+			base.OnItemChanged( item );
+		}
+
+		protected override void OnDestroy()
+		{
+			if ( IsServer )
+			{
+				var others = Player.GetBuildings( Item );
+
+				if ( others.Count == 0 )
+					Player.RemoveDependency( Item );
+			}
+			else
+			{
+				FogManager.Instance.RemoveViewer( this );
+			}
+
+			base.OnDestroy();
+		}
+
 		[ClientRpc]
 		private void StartQueueItem( uint queueId, float finishTime )
 		{
@@ -202,6 +210,12 @@ namespace RTS
 					return;
 				}
 			}
+		}
+
+		[ClientRpc]
+		private void AddAsFogViewer()
+		{
+			FogManager.Instance.AddViewer( this );
 		}
 
 		[ClientRpc]

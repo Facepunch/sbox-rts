@@ -43,6 +43,33 @@ namespace RTS
 			return All.OfType<BuildingEntity>().Where( i => i.Player == this ).ToList();
 		}
 
+		public bool CanAffordItem( BaseItem item )
+		{
+			foreach ( var kv in item.Costs )
+			{
+				if ( GetResource( kv.Key ) < kv.Value )
+					return false;
+			}
+
+			return true;
+		}
+
+		public void GiveResourcesForItem( BaseItem item )
+		{
+			foreach ( var kv in item.Costs )
+			{
+				GiveResource( kv.Key, kv.Value );
+			}
+		}
+
+		public void TakeResourcesForItem( BaseItem item )
+		{
+			foreach ( var kv in item.Costs )
+			{
+				TakeResource( kv.Key, kv.Value );
+			}
+		}
+
 		public void ClearResources()
 		{
 			Resources.Clear();

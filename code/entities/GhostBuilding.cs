@@ -8,7 +8,7 @@ namespace RTS
 	{
 		public static Material BlueprintMaterial => Material.Load( "materials/rts/blueprint.vmat" );
 		public BaseBuilding Building { get; private set; }
-		public UnitEntity Worker{ get; private set; }
+		public UnitEntity Worker { get; private set; }
 
 		public GhostBuilding()
 		{
@@ -58,10 +58,19 @@ namespace RTS
 
 		public bool IsPlacementValid( TraceResult trace )
 		{
-			var bbox = CollisionBounds + trace.EndPos;
-			var entities = Physics.GetEntitiesInBox( bbox ).Where( i => i != this );
+			if ( !Worker.IsValid() ) return false;
+
+			var position = trace.EndPos;
+			var bounds = CollisionBounds + position;
+			var entities = Physics.GetEntitiesInBox( bounds ).Where( i => i != this );
+
+			if ( IsClient && !FogManager.Instance.IsAreaSeen( position ) )
+				return false;
 
 			if ( entities.Count() > 0 )
+				return false;
+
+			if ( position.Distance( Worker.Position ) > Worker.Item.ConstructRange )
 				return false;
 
 			var verticality = trace.Normal.Dot( Vector3.Up );

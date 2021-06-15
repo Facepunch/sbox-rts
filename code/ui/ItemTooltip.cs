@@ -17,7 +17,7 @@ namespace RTS
 		public ItemResourceCost()
 		{
 			Icon = Add.Panel( "icon" );
-			Cost = Add.Label( "cost" );
+			Cost = Add.Label( "", "cost" );
 		}
 
 		public void Update( ResourceType type, int cost )

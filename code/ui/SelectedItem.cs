@@ -26,9 +26,14 @@ namespace RTS
 			if ( eventName == "onclick" )
 			{
 				if ( Selectable is UnitEntity unit && Item is BaseBuilding building )
-					ItemManager.Instance.CreateGhost( unit, building );
+				{
+					if ( Local.Pawn is Player player && player.CanAffordItem( building ) )
+						ItemManager.Instance.CreateGhost( unit, building );
+				}
 				else
+				{
 					ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
+				}
 			}
 			else if ( eventName == "onmouseover" )
 			{

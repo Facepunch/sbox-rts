@@ -149,6 +149,20 @@ namespace RTS
 			}
 		}
 
+		public bool IsAreaSeen( Vector3 location )
+		{
+			var pixelScale = (Resolution / FogBounds.Size);
+			var origin = location - FogBounds.Origin;
+			var x = (origin.x * pixelScale).CeilToInt() + (Resolution / 2);
+			var y = (origin.y * pixelScale).CeilToInt() + (Resolution / 2);
+			var i = ((y * Resolution) + x) * 1;
+
+			if ( i <= 0 || i > Resolution * Resolution )
+				return false;
+
+			return (Data[i] <= 200);
+		}
+
 		public void Clear( Color32 color )
 		{
 			// Cache these because they're properties and it'll be slow otherwise.

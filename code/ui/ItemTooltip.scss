@@ -27,11 +27,12 @@
 
         .cost {
             color: red;
+            font-weight: bold;
         }
 
         &.affordable {
             .cost {
-                color: green;
+                color: white;
             }
         }
 

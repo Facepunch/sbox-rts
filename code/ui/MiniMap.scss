@@ -2,7 +2,7 @@
     position: absolute;
     width: 100%;
     pointer-events: auto;
-    bottom: 32px;
+    bottom: 64px;
     left: 32px;
 
     &.hidden {
@@ -10,8 +10,8 @@
     }
 
     .texture {
-        background-color: black;
-        width: 200px;
-        height: 200px;
+        background-color: white;
+        width: 250px;
+        height: 250px;
     }
 }

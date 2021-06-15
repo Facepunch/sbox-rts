@@ -11,6 +11,7 @@ namespace RTS.Units
 		public virtual HashSet<ResourceType> Gatherables => new();
 		public virtual float Speed => 200f;
 		public virtual float LineOfSight => 600f;
+		public virtual float ConstructRange => 1500f;
 		public virtual float AttackRange => 600f;
 		public virtual float InteractRange => 10f;
 		public virtual bool UseRenderColor => false;
