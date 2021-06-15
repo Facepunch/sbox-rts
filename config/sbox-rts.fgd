@@ -7,15 +7,23 @@
 ]
 
 // 
+// RTS.FogBounds : Sandbox.ModelEntity 
+// 
+@PointClass = fog_bounds : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+]
+
+// 
 // RTS.BeerResource : RTS.ResourceEntity 
 // 
-@PointClass  editormodel( "models/barrels/square_wooden_box_gold.vmdl" )  model() 
+@PointClass  model() 
 metadata
 {
 }
 = resource_beer : ""
 [
-	model(studio) [report]: "World Model"
+	model(studio) [report]: "World Model" : "models/barrels/square_wooden_box_gold.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins."
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
@@ -25,24 +33,34 @@ metadata
 ]
 
 // 
-// RTS.FogBounds : Sandbox.ModelEntity 
-// 
-@PointClass = fog_bounds : ""
-[
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-]
-
-// 
 // RTS.MetalResource : RTS.ResourceEntity 
 // 
-@PointClass  editormodel( "models/metal/metal_large_00.vmdl" )  model() 
+@PointClass  model() 
 metadata
 {
 }
 = resource_metal : ""
 [
-	model(studio) [report]: "World Model"
-	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins."
+	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Metal" : "Some models have multiple versions of their textures, called skins."
+	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
+	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	stock(integer) : "Stock" :  : "How much of this resource there is left to take."
+
+]
+
+// 
+// RTS.PlasmaResource : RTS.ResourceEntity 
+// 
+@PointClass  model() 
+metadata
+{
+}
+= resource_plasma : ""
+[
+	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Plasma" : "Some models have multiple versions of their textures, called skins."
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
@@ -53,14 +71,14 @@ metadata
 // 
 // RTS.StoneResource : RTS.ResourceEntity 
 // 
-@PointClass  editormodel( "models/rocks/rock_large_00.vmdl" )  model() 
+@PointClass  model() 
 metadata
 {
 }
 = resource_stone : ""
 [
-	model(studio) [report]: "World Model"
-	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins."
+	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Rock" : "Some models have multiple versions of their textures, called skins."
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
