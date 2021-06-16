@@ -16,7 +16,7 @@ Layer0
 	TextureAmbientOcclusion "materials/default/default_ao.tga"
 
 	//---- Color ----
-	g_flModelTintAmount "1.000"
+	g_flModelTintAmount "0.950"
 	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
 	TextureColor "models/vehicles/recovery_truck/matrerial/truck1_color.png"
 	TextureTintMask "models/vehicles/recovery_truck/matrerial/truck1_mask.png"
