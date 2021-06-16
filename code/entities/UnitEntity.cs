@@ -492,22 +492,23 @@ namespace RTS
 					Circle.Color = Player.TeamColor;
 			}
 
-			if ( !IsLocalPlayers )
+			if ( IsLocalPlayers ) return;
+
+			var lerpSpeed = Time.Delta * 8f;
+
+			RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, lerpSpeed );
+
+			for ( var i = 0; i < Children.Count; i++ )
 			{
-				RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, Time.Delta );
-
-				for ( var i = 0; i < Children.Count; i++ )
+				if ( Children[i] is ModelEntity child )
 				{
-					if ( Children[i] is ModelEntity child )
-					{
-						child.RenderAlpha = child.RenderAlpha.LerpTo( TargetAlpha, Time.Delta );
-					}
+					child.RenderAlpha = child.RenderAlpha.LerpTo( TargetAlpha, lerpSpeed );
 				}
+			}
 
-				if ( Circle.IsValid() )
-				{
-					Circle.Alpha = Circle.Alpha.LerpTo( TargetAlpha, Time.Delta * 4f );
-				}
+			if ( Circle.IsValid() )
+			{
+				Circle.Alpha = Circle.Alpha.LerpTo( TargetAlpha, lerpSpeed );
 			}
 		}
 	}

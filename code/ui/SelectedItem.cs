@@ -1,5 +1,6 @@
 ﻿
 using RTS.Buildings;
+using RTS.Tech;
 using RTS.Units;
 using Sandbox;
 using Sandbox.UI;
@@ -172,7 +173,7 @@ namespace RTS
 		{
 			Item = item;
 
-			Buttons.ForEach( b => b.Delete() );
+			Buttons.ForEach( b => b.Delete( true ) );
 			Buttons.Clear();
 
 			if ( item is UnitEntity unit )
@@ -189,7 +190,7 @@ namespace RTS
 			{
 				var dependency = ItemManager.Instance.Find<BaseItem>( v );
 
-				if ( dependency.HasDependencies( player ) )
+				if ( dependency.CanHave( player ) )
 				{
 					var button = AddChild<ItemCommand>( v.Replace( '.', '_' ) );
 
@@ -313,8 +314,6 @@ namespace RTS
 		public Panel Left { get; private set; }
 		public Panel Right { get; private set; }
 
-		private int _lastCollectionHash;
-
 		public SelectedItem()
 		{
 			StyleSheet.Load( "/ui/SelectedItem.scss" );
@@ -356,20 +355,8 @@ namespace RTS
 			{
 				if ( Local.Pawn is Player player )
 				{
-					// TODO: This is a bit slow but we can't know when the collection is updated.
 					var collection = player.Selection.Cast<ISelectable>().ToList();
-					var collectionHash = 0;
-
-					for ( var i = 0; i < collection.Count; i++ )
-					{
-						collectionHash += collection[i].NetworkIdent;
-					}
-
-					if ( collectionHash != _lastCollectionHash )
-					{
-						Update( collection );
-						_lastCollectionHash = collectionHash;
-					}
+					Update( collection );
 				}
 
 				if ( Items.Count > 0 )

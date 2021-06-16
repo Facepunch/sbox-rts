@@ -14,6 +14,11 @@ namespace RTS
 		public virtual Dictionary<ResourceType, int> Costs => new();
 		public virtual HashSet<string> Dependencies => new();
 
+		public bool Has( Player player )
+		{
+			return player.Dependencies.Contains( NetworkId );
+		}
+
 		public bool HasDependencies( Player player )
 		{
 			foreach ( var v in Dependencies )
@@ -28,6 +33,11 @@ namespace RTS
 			}
 
 			return true;
+		}
+
+		public virtual bool CanHave( Player player )
+		{
+			return HasDependencies( player );
 		}
 	}
 }
