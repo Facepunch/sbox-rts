@@ -38,6 +38,17 @@
 							},
 						]
 					},
+					{
+						_class = "MaterialGroup"
+						name = "Plasma"
+						remaps = 
+						[
+							{
+								from = "models/rocks/texture/rocks_1.vmat"
+								to = "models/rocks/texture/rocks_plasma_1.vmat"
+							},
+						]
+					},
 				]
 			},
 			{
@@ -84,6 +95,21 @@
 							exclude_by_default = false
 							exception_list = [  ]
 						}
+					},
+				]
+			},
+			{
+				_class = "AttachmentList"
+				children = 
+				[
+					{
+						_class = "Attachment"
+						name = "particles"
+						parent_bone = ""
+						relative_origin = [ 0.0, 0.0, 12.390041 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
 					},
 				]
 			},
