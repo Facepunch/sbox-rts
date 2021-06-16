@@ -6,12 +6,15 @@ using RTS.Buildings;
 using System.Linq;
 using System;
 using Gamelib.Extensions;
+using Sandbox.UI;
 
 namespace RTS
 {
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable
 	{
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
+		[Net] public float GatherProgress { get; private set; }
+		[Net] public bool IsGathering { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
 		[Net] public int Kills { get; set; }
@@ -28,10 +31,14 @@ namespace RTS
 		public ResourceEntity LastResourceEntity { get; private set; }
 		public ResourceType LastResourceType { get; private set; }
 		public Vector3 LastResourcePosition { get; private set; }
-		public ItemEntityContainer UI { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
 		public float TargetRange { get; private set; }
 		public float WishSpeed { get; private set; }
+
+		#region UI
+		public EntityHudBar HealthBar { get; private set; }
+		public EntityHudBar GatherBar { get; private set; }
+		#endregion
 
 		public NavSteer Steer;
 
@@ -104,16 +111,15 @@ namespace RTS
 			else
 				FogManager.Instance.AddCullable( this );
 
-			UI = ItemEntityDisplay.Instance.Create( this );
-
 			base.ClientSpawn();
 		}
 
-		public void Attack( Entity target )
+		public void Attack( Entity target, bool autoFollow = true )
 		{
 			Target = target;
 			TargetRange = Item.AttackRange;
-			FollowTarget = true;
+			FollowTarget = autoFollow;
+			IsGathering = false;
 		}
 
 		public void MoveTo( Vector3 position )
@@ -122,6 +128,7 @@ namespace RTS
 			Steer ??= new();
 			Steer.Target = position;
 			FollowTarget = false;
+			IsGathering = false;
 		}
 
 		public void Deposit( BuildingEntity building )
@@ -130,6 +137,7 @@ namespace RTS
 			Steer ??= new();
 			Steer.Target = building.Position;
 			FollowTarget = true;
+			IsGathering = false;
 			TargetRange = Item.InteractRange;
 		}
 
@@ -140,6 +148,7 @@ namespace RTS
 			Steer.Target = resource.Position;
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
+			IsGathering = false;
 			LastResourceType = resource.Resource;
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
@@ -147,11 +156,11 @@ namespace RTS
 
 		public void Construct( BuildingEntity building )
 		{
-			Log.Info( Item.InteractRange.ToString() );
 			Target = building;
 			Steer ??= new();
 			Steer.Target = building.Position;
 			FollowTarget = true;
+			IsGathering = false;
 			TargetRange = Item.InteractRange;
 		}
 
@@ -159,6 +168,7 @@ namespace RTS
 		{
 			Steer = null;
 			Target = null;
+			IsGathering = false;
 			FollowTarget = false;
 		}
 
@@ -199,8 +209,6 @@ namespace RTS
 			{
 				FogManager.Instance.RemoveViewer( this );
 				FogManager.Instance.RemoveCullable( this );
-
-				UI.Delete();
 			}
 
 			base.OnDestroy();
@@ -342,10 +350,7 @@ namespace RTS
 			{
 				if ( entity is UnitEntity unit && IsEnemy( unit ) )
 				{
-					FollowTarget = false;
-					TargetRange = Item.AttackRange;
-					Target = unit;
-
+					Attack( unit, false );
 					return;
 				}
 			}
@@ -414,54 +419,11 @@ namespace RTS
 				{
 					if ( Target is BuildingEntity building && building.Player == Player )
 					{
-						if ( building.IsUnderConstruction )
-						{
-							building.Health += (building.Item.MaxHealth / building.Item.BuildTime * Time.Delta);
-							building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
-
-							if ( building.Health == building.Item.MaxHealth )
-							{
-								building.FinishConstruction();
-								ClearTarget();
-							}
-							else
-							{
-								building.UpdateConstruction();
-							}
-						}
-						else if ( building.CanDepositResources )
-						{
-							foreach ( var kv in Carrying )
-							{
-								Player.GiveResource( kv.Key, kv.Value );
-							}
-
-							Carrying.Clear();
-
-							FindTargetResource();
-						}
-						else
-						{
-							ClearTarget();
-						}
+						TickConstruct( building );
 					}
 					else if ( Target is ResourceEntity resource )
 					{
-						if ( LastGatherTime >= resource.GatherTime )
-						{
-							TakeFrom( resource );
-
-							LastGatherTime = 0;
-
-							if ( Carrying.TryGetValue( resource.Resource, out var carrying ) )
-							{
-								if ( carrying >= resource.MaxCarry )
-								{
-									// We're full, let's deposit that shit.
-									FindResourceDepo();
-								}
-							}
-						}
+						TickGather( resource );
 					}
 					else if ( Weapon.IsValid() && Weapon.CanAttack() )
 					{
@@ -488,10 +450,58 @@ namespace RTS
 			SetAnimFloat( "duckspeed_scale", 2.0f / 80.0f );
 		}
 
-		[Event.Frame]
-		private void ClientFrame()
+		private void TickConstruct( BuildingEntity building )
 		{
-			if ( EnableDrawing ) UI.Update();
+			if ( building.IsUnderConstruction )
+			{
+				building.Health += (building.Item.MaxHealth / building.Item.BuildTime * Time.Delta);
+				building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
+
+				if ( building.Health == building.Item.MaxHealth )
+				{
+					building.FinishConstruction();
+					ClearTarget();
+				}
+				else
+				{
+					building.UpdateConstruction();
+				}
+			}
+			else if ( building.CanDepositResources )
+			{
+				foreach ( var kv in Carrying )
+				{
+					Player.GiveResource( kv.Key, kv.Value );
+				}
+
+				Carrying.Clear();
+
+				FindTargetResource();
+			}
+			else
+			{
+				ClearTarget();
+			}
+		}
+
+		private void TickGather( ResourceEntity resource )
+		{
+			if ( LastGatherTime < resource.GatherTime ) return;
+
+			TakeFrom( resource );
+
+			LastGatherTime = 0;
+			IsGathering = true;
+
+			if ( !Carrying.TryGetValue( resource.Resource, out var carrying ) )
+				return;
+
+			GatherProgress = (1f / resource.MaxCarry) * carrying;
+
+			if ( carrying < resource.MaxCarry ) return;
+
+			// We're full, let's deposit that shit.
+			FindResourceDepo();
 		}
 
 		[Event.Tick.Client]
@@ -525,6 +535,43 @@ namespace RTS
 			}
 
 			EnableDrawing = (RenderAlpha > 0f);
+		}
+
+		protected override void AddHudComponents()
+		{
+			HealthBar = UI.AddChild<EntityHudBar>( "health" );
+
+			if ( IsLocalPlayers )
+				GatherBar = UI.AddChild<EntityHudBar>( "gather" );
+
+			base.AddHudComponents();
+		}
+
+		protected override void UpdateHudComponents()
+		{
+			if ( Health <= MaxHealth * 0.9f )
+			{
+				HealthBar.Foreground.Style.Width = Length.Fraction( Health / MaxHealth );
+				HealthBar.Foreground.Style.Dirty();
+				HealthBar.SetClass( "hidden", false );
+			}
+			else
+			{
+				HealthBar.SetClass( "hidden", true );
+			}
+
+			if ( IsGathering && IsLocalPlayers )
+			{
+				GatherBar.Foreground.Style.Width = Length.Fraction( GatherProgress );
+				GatherBar.Foreground.Style.Dirty();
+				GatherBar.SetClass( "hidden", false );
+			}
+			else
+			{
+				GatherBar?.SetClass( "hidden", true );
+			}
+
+			base.UpdateHudComponents();
 		}
 	}
 }

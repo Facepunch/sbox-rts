@@ -15,6 +15,8 @@ namespace RTS
 		public override void Spawn()
 		{
 			Effect = Particles.Create( "particles/plasma/plasma_effect.vpcf", this, "particles" );
+
+			base.Spawn();
 		}
 
 		protected override void OnDestroy()

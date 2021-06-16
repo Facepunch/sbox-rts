@@ -55,8 +55,6 @@ namespace RTS
 
 			if ( cached == amount ) return;
 
-			Log.Info( "Lerping " + type + " to " + amount );
-
 			Resources[type].LerpTo( amount, 1f );
 
 			Cache[type] = amount;

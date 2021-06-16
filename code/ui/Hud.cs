@@ -18,7 +18,7 @@ namespace RTS
 			RootPanel.StyleSheet.Load( "/ui/Hud.scss" );
 
 			RootPanel.AddChild<CursorController>();
-			RootPanel.AddChild<ItemEntityDisplay>();
+			RootPanel.AddChild<EntityHud>();
 			RootPanel.AddChild<RoundInfo>();
 			RootPanel.AddChild<MiniMap>();
 			RootPanel.AddChild<ResourceDisplay>();
