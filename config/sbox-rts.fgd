@@ -24,7 +24,7 @@ metadata
 = resource_beer : ""
 [
 	model(studio) [report]: "World Model" : "models/barrels/square_wooden_box_gold.vmdl"
-	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins."
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
@@ -42,7 +42,7 @@ metadata
 = resource_metal : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
-	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Metal" : "Some models have multiple versions of their textures, called skins."
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Metal" : "Some models have multiple versions of their textures, called skins." 
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
@@ -60,7 +60,7 @@ metadata
 = resource_plasma : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
-	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Plasma" : "Some models have multiple versions of their textures, called skins."
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Plasma" : "Some models have multiple versions of their textures, called skins." 
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
@@ -78,7 +78,7 @@ metadata
 = resource_stone : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
-	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Rock" : "Some models have multiple versions of their textures, called skins."
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Rock" : "Some models have multiple versions of their textures, called skins." 
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."

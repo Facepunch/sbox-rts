@@ -13,7 +13,7 @@ namespace RTS.Units
 		public virtual float LineOfSight => 600f;
 		public virtual float ConstructRange => 1500f;
 		public virtual float AttackRange => 600f;
-		public virtual float InteractRange => 10f;
+		public virtual float InteractRange => 80f;
 		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";
 		public virtual HashSet<string> Buildables => new();

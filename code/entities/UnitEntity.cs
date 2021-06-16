@@ -94,6 +94,7 @@ namespace RTS
 		public override void ClientSpawn()
 		{
 			Circle = new();
+			Circle.Size = CollisionBounds.Size.Length * 0.8f;
 			Circle.SetParent( this );
 			Circle.LocalPosition = Vector3.Zero;
 
@@ -143,6 +144,7 @@ namespace RTS
 
 		public void Construct( BuildingEntity building )
 		{
+			Log.Info( Item.InteractRange.ToString() );
 			Target = building;
 			Steer ??= new();
 			Steer.Target = building.Position;

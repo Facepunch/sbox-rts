@@ -1,0 +1,43 @@
+﻿resourcedisplay {
+    background-color: rgba( 0 0 0 0.6 );
+    position: absolute;
+    border-radius: 8px;
+    pointer-events: auto;
+    padding: 24px;
+    top: 32px;
+    left: 32px;
+
+    &.hidden {
+        display: none;
+    }
+}
+
+itemresourcevalue {
+    margin-right: 32px;
+    display: flex;
+    align-items: center;
+
+    .icon {
+        background-color: white;
+        margin-right: 16px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .label {
+        color: #EEE;
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    &.lerping {
+        .label {
+            font-size: 28px;
+            color: white;
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

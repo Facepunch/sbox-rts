@@ -9,21 +9,75 @@ using System.Linq;
 
 namespace RTS
 {
-	public class ItemResourceCost : Panel
+	public class ItemResourceValue : Panel
 	{
 		public Panel Icon { get; private set; }
-		public Label Cost { get; set; }
-
-		public ItemResourceCost()
+		public Label Label { get; set; }
+		public int NumericValue
 		{
-			Icon = Add.Panel( "icon" );
-			Cost = Add.Label( "", "cost" );
+			get
+			{
+				return Convert.ToInt32( Label.Text );
+			}
+
+			set
+			{
+				_lerpToStartValue = value;
+				_lerpToEndValue = value;
+				Label.Text = value.ToString();
+			}
 		}
 
-		public void Update( ResourceType type, int cost )
+		private int _lerpToEndValue;
+		private int _lerpToStartValue;
+		private float _lerpToDuration;
+		private RealTimeUntil _lerpToEndTime;
+
+		public ItemResourceValue()
+		{
+			Icon = Add.Panel( "icon" );
+			Label = Add.Label( "", "label" );
+		}
+
+		public void LerpTo( int value, float duration )
+		{
+			_lerpToEndValue = value;
+			_lerpToEndTime = duration;
+			_lerpToDuration = duration;
+		}
+
+		public void Update( ResourceType type, int value )
 		{
 			Icon.AddClass( type.ToString().ToLower() );
-			Cost.Text = cost.ToString();
+			NumericValue = value;
+		}
+
+		public override void Tick()
+		{
+			UpdateLerp();
+
+			base.Tick();
+		}
+
+		private void UpdateLerp()
+		{
+			if ( _lerpToStartValue == _lerpToEndValue )
+			{
+				SetClass( "lerping", false );
+				return;
+			}
+
+			var fraction = Easing.EaseInOut( ((_lerpToDuration - _lerpToEndTime) / _lerpToDuration).Clamp( 0f, 1f ) );
+
+			if ( fraction == 1f )
+			{
+				NumericValue = _lerpToEndValue;
+				return;
+			}
+
+			Label.Text = MathF.Ceiling( _lerpToStartValue + ((_lerpToEndValue - _lerpToStartValue) * fraction) ).ToString();
+
+			SetClass( "lerping", true );
 		}
 	}
 
@@ -36,7 +90,7 @@ namespace RTS
 		public float HideTime { get; private set; }
 		public bool IsShowing { get; private set; }
 		public object Target { get; private set; }
-		public Dictionary<ResourceType, ItemResourceCost> Costs { get; private set; }
+		public Dictionary<ResourceType, ItemResourceValue> Costs { get; private set; }
 
 		public ItemTooltip()
 		{
@@ -87,7 +141,7 @@ namespace RTS
 			{
 				if ( kv.Key == entity.Resource )
 				{
-					kv.Value.Cost.Text = entity.Stock.ToString();
+					kv.Value.Label.Text = entity.Stock.ToString();
 					kv.Value.SetClass( "affordable", true );
 					kv.Value.SetClass( "hidden", false );
 				}
@@ -109,7 +163,7 @@ namespace RTS
 			{
 				if ( item.Costs.TryGetValue( kv.Key, out var cost ) )
 				{
-					kv.Value.Cost.Text = cost.ToString();
+					kv.Value.Label.Text = cost.ToString();
 					kv.Value.SetClass( "affordable", player.GetResource( kv.Key ) >= cost );
 					kv.Value.SetClass( "hidden", false );
 				}
@@ -158,7 +212,7 @@ namespace RTS
 
 		private void AddResource( ResourceType type )
 		{
-			var cost = AddChild<ItemResourceCost>();
+			var cost = AddChild<ItemResourceValue>();
 			cost.Update( type, 0 );
 			Costs.Add( type, cost );
 		}

@@ -41,10 +41,16 @@ namespace RTS
 						worker.Position = spawnpoint.Position + (Vector3.Random * 20f).WithZ( spawnpoint.Position.z );
 						worker.Assign( player, "unit.worker" );
 
+						/*
 						player.SetResource( ResourceType.Stone, 1000 );
 						player.SetResource( ResourceType.Metal, 500 );
 						player.SetResource( ResourceType.Beer, 200 );
 						player.SetResource( ResourceType.Plasma, 0 );
+						*/
+						player.SetResource( ResourceType.Stone, 99999 );
+						player.SetResource( ResourceType.Metal, 99999 );
+						player.SetResource( ResourceType.Beer, 99999 );
+						player.SetResource( ResourceType.Plasma, 99999 );
 
 						player.MakeSpectator( false );
 						player.LookAt( spawnpoint );

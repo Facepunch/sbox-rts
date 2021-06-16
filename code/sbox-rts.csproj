@@ -39,6 +39,9 @@
     <None Update="ui\ItemTooltip.scss">
       <DependentUpon>ItemTooltip.cs</DependentUpon>
     </None>
+    <None Update="ui\MiniMap - Copy.scss">
+      <DependentUpon>MiniMap.cs</DependentUpon>
+    </None>
     <None Update="ui\MiniMap.scss">
       <DependentUpon>MiniMap.cs</DependentUpon>
     </None>

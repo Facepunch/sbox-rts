@@ -20,6 +20,7 @@ namespace RTS
 			RootPanel.AddChild<CursorController>();
 			RootPanel.AddChild<RoundInfo>();
 			RootPanel.AddChild<MiniMap>();
+			RootPanel.AddChild<ResourceDisplay>();
 			RootPanel.AddChild<SelectedItem>();
 			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();

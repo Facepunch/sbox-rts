@@ -22,6 +22,15 @@ namespace RTS
 		private Dictionary<ulong, int> _ratings;
 		private BaseRound _lastRound;
 
+		[ServerCmd("rts_test")]
+		public static void Test()
+		{
+			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			{
+				caller.GiveResource( ResourceType.Stone, Rand.Int( -1000, 1000 ) );
+			}
+		}
+
 		public Game()
 		{
 			if ( IsServer )

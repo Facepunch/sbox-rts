@@ -29,7 +29,7 @@ namespace RTS
 			SetClass( "hidden", true);
 
 			var player = Local.Pawn as Player;
-			if ( player == null ) return;
+			if ( player == null || player.IsSpectator ) return;
 
 			var game = Game.Instance;
 			if ( game == null ) return;
