@@ -28,6 +28,7 @@ namespace RTS
 		public ResourceEntity LastResourceEntity { get; private set; }
 		public ResourceType LastResourceType { get; private set; }
 		public Vector3 LastResourcePosition { get; private set; }
+		public ItemEntityContainer UI { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
 		public float TargetRange { get; private set; }
 		public float WishSpeed { get; private set; }
@@ -103,6 +104,8 @@ namespace RTS
 			else
 				FogManager.Instance.AddCullable( this );
 
+			UI = ItemEntityDisplay.Instance.Create( this );
+
 			base.ClientSpawn();
 		}
 
@@ -162,6 +165,7 @@ namespace RTS
 		public void MakeVisible( bool isVisible )
 		{
 			TargetAlpha = isVisible ? 1f : 0f;
+			UI?.SetVisible( isVisible );
 		}
 
 		public ModelEntity AttachClothing( string modelName )
@@ -195,6 +199,8 @@ namespace RTS
 			{
 				FogManager.Instance.RemoveViewer( this );
 				FogManager.Instance.RemoveCullable( this );
+
+				UI?.Delete();
 			}
 
 			base.OnDestroy();
@@ -214,6 +220,7 @@ namespace RTS
 
 			Speed = item.Speed;
 			Health = item.MaxHealth;
+			MaxHealth = item.MaxHealth;
 			EyePos = Position + Vector3.Up * 64;
 			LineOfSight = item.LineOfSight;
 			CollisionGroup = CollisionGroup.Player;
@@ -491,6 +498,8 @@ namespace RTS
 				else
 					Circle.Color = Player.TeamColor;
 			}
+
+			if ( UI?.IsVisible ?? false ) UI?.Update();
 
 			if ( IsLocalPlayers ) return;
 

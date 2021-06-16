@@ -14,6 +14,7 @@ namespace RTS
 
 		[Net] public uint ItemId { get; set; }
 		[Net] public Player Player { get; private set; }
+		[Net] public float MaxHealth { get; set; }
 
 		public bool IsSelected => Tags.Has( "selected" );
 

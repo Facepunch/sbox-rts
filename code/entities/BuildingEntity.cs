@@ -177,6 +177,7 @@ namespace RTS
 			}
 
 			LineOfSight = item.MinLineOfSight + CollisionBounds.Size.Length;
+			MaxHealth = item.MaxHealth;
 			Health = item.MaxHealth;
 
 			base.OnItemChanged( item );
