@@ -165,7 +165,7 @@ namespace RTS
 		public void MakeVisible( bool isVisible )
 		{
 			TargetAlpha = isVisible ? 1f : 0f;
-			UI?.SetVisible( isVisible );
+			UI.SetVisible( isVisible );
 		}
 
 		public ModelEntity AttachClothing( string modelName )
@@ -200,7 +200,7 @@ namespace RTS
 				FogManager.Instance.RemoveViewer( this );
 				FogManager.Instance.RemoveCullable( this );
 
-				UI?.Delete();
+				UI.Delete();
 			}
 
 			base.OnDestroy();
@@ -488,6 +488,12 @@ namespace RTS
 			SetAnimFloat( "duckspeed_scale", 2.0f / 80.0f );
 		}
 
+		[Event.Frame]
+		private void ClientFrame()
+		{
+			if ( EnableDrawing ) UI.Update();
+		}
+
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
@@ -498,8 +504,6 @@ namespace RTS
 				else
 					Circle.Color = Player.TeamColor;
 			}
-
-			if ( UI?.IsVisible ?? false ) UI?.Update();
 
 			if ( IsLocalPlayers ) return;
 
@@ -519,6 +523,8 @@ namespace RTS
 			{
 				Circle.Alpha = Circle.Alpha.LerpTo( TargetAlpha, lerpSpeed );
 			}
+
+			EnableDrawing = (RenderAlpha > 0f);
 		}
 	}
 }

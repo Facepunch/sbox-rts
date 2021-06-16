@@ -43,17 +43,25 @@ namespace RTS
 
 		public void Update()
 		{
-			var position = Selectable.Position.ToScreen();
+			var position = (Selectable.Position + Vector3.Up * 40f).ToScreen();
 
 			if ( position.z < 0 )
 				return;
 
-			Health.Foreground.Style.Width = Length.Fraction( Selectable.Health / Selectable.MaxHealth );
+			position *= new Vector3( Screen.Width, Screen.Height ) * ScaleFromScreen;
 
-			Log.Info( position.ToString() );
+			if ( Selectable.Health <= Selectable.MaxHealth * 0.9f )
+			{
+				Health.Foreground.Style.Width = Length.Fraction( Selectable.Health / Selectable.MaxHealth );
+				Health.SetClass( "hidden", false );
+			}
+			else
+			{
+				Health.SetClass( "hidden", true );
+			}
 
-			Style.Left = Length.Fraction( position.x );
-			Style.Top = Length.Fraction( position.y );
+			Style.Left = Length.Pixels( position.x );
+			Style.Top = Length.Pixels( position.y - 32 );
 			Style.Dirty();
 		}
 	}
