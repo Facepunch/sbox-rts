@@ -13,11 +13,11 @@ namespace RTS
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable
 	{
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
-		[Net] public float GatherProgress { get; private set; }
-		[Net] public bool IsGathering { get; private set; }
+		[Net, Local] public float GatherProgress { get; private set; }
+		[Net, Local] public bool IsGathering { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
-		[Net] public int Kills { get; set; }
+		[Net, Local] public int Kills { get; set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
@@ -391,9 +391,9 @@ namespace RTS
 						var vel = Steer.Output.Direction.WithZ( 0 ).Normal * Time.Delta * control;
 						Velocity = Velocity.AddClamped( vel, Speed );
 
-						SetAnimLookAt( "lookat_pos", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
-						SetAnimLookAt( "aimat_pos", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
-						SetAnimFloat( "aimat_weight", 0.5f );
+						SetAnimLookAt( "aim_head", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
+						SetAnimLookAt( "aim_body", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
+						SetAnimFloat( "aim_body_weight", 0.25f );
 					}
 				}
 
@@ -403,9 +403,7 @@ namespace RTS
 
 				if ( walkVelocity.Length > 1 )
 				{
-					var turnSpeed = walkVelocity.Length.LerpInverse( 0, 100, true );
-					var targetRotation = Rotation.LookAt( walkVelocity.Normal, Vector3.Up );
-					Rotation = Rotation.Lerp( Rotation, targetRotation, turnSpeed * Time.Delta * 5f );
+					Rotation = Rotation.LookAt( walkVelocity.Normal, Vector3.Up );
 				}
 			}
 			else

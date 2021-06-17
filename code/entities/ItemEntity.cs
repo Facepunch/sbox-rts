@@ -37,6 +37,7 @@ namespace RTS
 		{
 			Host.AssertServer();
 
+			Owner = player;
 			Player = player;
 			ItemId = item.NetworkId;
 
