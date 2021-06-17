@@ -5,6 +5,7 @@ using RTS.Buildings;
 using System.Linq;
 using RTS.Units;
 using System;
+using Gamelib.Extensions;
 
 namespace RTS
 {
@@ -155,7 +156,7 @@ namespace RTS
 
 		public void LookAt( Entity other )
 		{
-			Position = Position.WithX( other.Position.x ).WithY( other.Position.y );
+			Position = other.Position.WithZ( 0f );
 		}
 
 		public override void Simulate( Client client )
@@ -164,21 +165,25 @@ namespace RTS
 			var velocity = Vector3.Zero;
 			var panSpeed = zoomOutDistance;
 
-			Rotation = Rotation.LookAt( new Vector3( 0.5f, 0.5f, -1f ) );
-
 			if ( Input.Down( InputButton.Forward ) )
-				velocity += Rotation.Forward * panSpeed * Time.Delta;
+				velocity += EyeRot.Forward.WithZ(0f) * panSpeed * Time.Delta;
 
 			if ( Input.Down( InputButton.Back ) )
-				velocity += Rotation.Backward * panSpeed * Time.Delta;
+				velocity += EyeRot.Backward.WithZ( 0f ) * panSpeed * Time.Delta;
 
 			if ( Input.Down( InputButton.Left ) )
-				velocity += Rotation.Left * panSpeed * Time.Delta;
+				velocity += EyeRot.Left * panSpeed * Time.Delta;
 
 			if ( Input.Down( InputButton.Right ) )
-				velocity += Rotation.Right * panSpeed * Time.Delta;
+				velocity += EyeRot.Right * panSpeed * Time.Delta;
 
-			Position = (Position + velocity).WithZ( zoomOutDistance );
+			Position = (Position + velocity);
+			EyePos = Position + Vector3.Backward * zoomOutDistance * 0.5f;
+			EyePos += Vector3.Left * zoomOutDistance * 0.5f;
+			EyePos += Vector3.Up * zoomOutDistance;
+
+			var difference = Position - EyePos;
+			EyeRot = Rotation.LookAt( difference, Vector3.Up );
 
 			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
 			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );

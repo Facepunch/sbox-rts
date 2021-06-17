@@ -9,8 +9,8 @@ namespace RTS
 		{
 			if ( Local.Pawn is Player player )
 			{
-				Pos = player.Position;
-				Rot = player.Rotation;
+				Pos = player.EyePos;
+				Rot = player.EyeRot;
 			}
 
 			FieldOfView = 60f;
@@ -22,8 +22,8 @@ namespace RTS
 		{
 			if ( Local.Pawn is Player player )
 			{
-				Pos = Pos.LerpTo( player.Position, Time.Delta * 4f );
-				Rot = player.Rotation;
+				Pos = Pos.LerpTo( player.EyePos, Time.Delta * 4f );
+				Rot = player.EyeRot;
 			}
 
 			Viewer = null;

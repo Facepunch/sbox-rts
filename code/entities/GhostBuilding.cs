@@ -1,4 +1,5 @@
-﻿using RTS.Buildings;
+﻿using Gamelib.Extensions;
+using RTS.Buildings;
 using Sandbox;
 using System.Linq;
 
@@ -66,11 +67,11 @@ namespace RTS
 		public TraceResult GetPlacementTrace( Client client, Vector3 cursorAim )
 		{
 			if ( IsServer )
-				return Trace.Ray( client.Pawn.EyePos, client.Pawn.EyePos + cursorAim * 10000f )
+				return TraceExtension.RayDirection( client.Pawn.EyePos, cursorAim )
 					.WorldOnly()
 					.Run();
 			else
-				return Trace.Ray( CurrentView.Position, CurrentView.Position + cursorAim * 10000f )
+				return TraceExtension.RayDirection( CurrentView.Position, cursorAim )
 					.WorldOnly()
 					.Run();
 		}
