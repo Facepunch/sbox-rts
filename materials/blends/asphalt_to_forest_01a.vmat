@@ -1,0 +1,59 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "blend.vfx"
+
+	//---- Enable Ambient Occlusion ----
+	F_ENABLE_AMBIENT_OCCLUSION 1
+
+	//---- Enable Tint Masks ----
+	F_ENABLE_TINT_MASKS 1
+
+	//---- Color ----
+	g_flModelTintAmount "1.000"
+	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
+
+	//---- Fade ----
+	g_flFadeExponent "1.000"
+
+	//---- Fog ----
+	g_bFogEnabled "1"
+
+	//---- Lighting ----
+	g_flDirectionalLightmapMinZ "0.050"
+	g_flDirectionalLightmapStrength "1.000"
+
+	//---- Mask ----
+	TextureMask "textures/floor/floor_asphalt_blend_mask.tga"
+
+	//---- Material A ----
+	g_flMetalnessA "0.000"
+	TextureAmbientOcclusionA "textures/floor/floor_slick_asphalt_ao.tga"
+	TextureColorA "textures/floor/floor_slick_asphalt_color.tga"
+	TextureNormalA "textures/floor/floor_slick_asphalt_normal.tga"
+	TextureRoughnessA "textures/floor/floor_slick_asphalt_rough.tga"
+	TextureTintMaskA "textures/floor/floor_slick_asphalt_mask.tga"
+
+	//---- Material B ----
+	g_flMetalnessB "0.000"
+	g_vTexCoordScale2 "[1.000 1.000]"
+	TextureAmbientOcclusionB "textures/floor/floor_slick_asphalt_ao.tga"
+	TextureColorB "textures/texturesource/terrain4_forest_color.tga"
+	TextureNormalB "textures/texturesource/terrain4_forest_normal.tga"
+	TextureRoughnessB "textures/floor/floor_slick_asphalt_rough.tga"
+	TextureTintMaskB "[0.000000 0.000000 0.000000 0.000000]"
+
+	//---- Texture Coordinates ----
+	g_nScaleTexCoordUByModelScaleAxis "0"
+	g_nScaleTexCoordVByModelScaleAxis "0"
+	g_vTexCoordOffset "[0.000 0.000]"
+	g_vTexCoordScale "[1.000 1.000]"
+	g_vTexCoordScrollSpeed "[0.000 0.000]"
+
+	SystemAttributes
+	{
+		WorldMappingWidth "128"
+		WorldMappingHeight "128"
+	}
+}
