@@ -20,11 +20,15 @@ namespace RTS
 		public bool IsSelected => Tags.Has( "selected" );
 		public bool IsLocalPlayers => Player.IsValid() && Player.IsLocalPawn;
 
+		private T _itemCache;
+
 		public T Item
 		{
 			get
 			{
-				return ItemManager.Instance.Find<T>( ItemId );
+				if ( _itemCache == null )
+					_itemCache = ItemManager.Instance.Find<T>( ItemId );
+				return _itemCache;
 			}
 		}
 

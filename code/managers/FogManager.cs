@@ -216,6 +216,11 @@ namespace RTS
 				cullable.Object.MakeVisible( false );
 			}
 
+			if ( Local.Pawn is Player player )
+			{
+				PunchHole( player.StartPosition, player.StartLineOfSight, 200 );
+			}
+
 			// Our first pass will create the seen history map.
 			for ( var i = 0; i < _viewers.Count; i++ )
 			{

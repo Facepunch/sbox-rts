@@ -52,6 +52,9 @@ namespace RTS
 						player.SetResource( ResourceType.Beer, 99999 );
 						player.SetResource( ResourceType.Plasma, 99999 );
 
+						player.StartLineOfSight = 2500f;
+						player.StartPosition = spawnpoint.Position;
+
 						player.MakeSpectator( false );
 						player.LookAt( spawnpoint );
 
