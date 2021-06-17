@@ -316,8 +316,6 @@ namespace RTS
 					return;
 				}
 			}
-
-			ClearTarget();
 		}
 
 		private void FindResourceDepo()
@@ -355,8 +353,6 @@ namespace RTS
 					return;
 				}
 			}
-
-			ClearTarget();
 		}
 
 		[Event.Tick.Server]
@@ -376,7 +372,7 @@ namespace RTS
 				{
 					if ( Target is ResourceEntity )
 						FindTargetResource();
-					else
+					else if ( Weapon.IsValid() )
 						FindTargetUnit();
 				}
 
