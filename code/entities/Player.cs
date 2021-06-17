@@ -14,6 +14,7 @@ namespace RTS
 		[Net, Local] public List<Entity> Selection { get; set; }
 		[Net, Local] public Vector3 StartPosition { get; set; }
 		[Net, Local] public float StartLineOfSight { get; set; }
+		[Net, Local, Predicted] public float ZoomLevel { get; set; }
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
 		[Net] public Color TeamColor { get; set; }
@@ -23,9 +24,9 @@ namespace RTS
 		{
 			Elo = new();
 			Camera = new RTSCamera();
-			TeamColor = Color.Random;
 			Transmit = TransmitType.Always;
 			Resources = new List<int>();
+			ZoomLevel = 1f;
 			Selection = new List<Entity>();
 			Dependencies = new List<uint>();
 		}
@@ -121,6 +122,7 @@ namespace RTS
 		public void MakeSpectator( bool isSpectator )
 		{
 			IsSpectator = isSpectator;
+			EnableFog( To.Single( this ), !isSpectator );
 		}
 
 		public void RemoveDependency( BaseItem item )
@@ -158,26 +160,39 @@ namespace RTS
 
 		public override void Simulate( Client client )
 		{
-			var zoomOutDistance = 1500f;
+			var zoomOutDistance = 5000f - (ZoomLevel * 3000f);
 			var velocity = Vector3.Zero;
-			var panSpeed = 1000f;
+			var panSpeed = zoomOutDistance;
+
+			Rotation = Rotation.LookAt( new Vector3( 0.5f, 0.5f, -1f ) );
 
 			if ( Input.Down( InputButton.Forward ) )
-				velocity.x += panSpeed * Time.Delta;
+				velocity += Rotation.Forward * panSpeed * Time.Delta;
 
 			if ( Input.Down( InputButton.Back ) )
-				velocity.x -= panSpeed * Time.Delta;
+				velocity += Rotation.Backward * panSpeed * Time.Delta;
 
 			if ( Input.Down( InputButton.Left ) )
-				velocity.y += panSpeed * Time.Delta;
+				velocity += Rotation.Left * panSpeed * Time.Delta;
 
 			if ( Input.Down( InputButton.Right ) )
-				velocity.y -= panSpeed * Time.Delta;
+				velocity += Rotation.Right * panSpeed * Time.Delta;
 
 			Position = (Position + velocity).WithZ( zoomOutDistance );
-			Rotation = Rotation.LookAt( new Vector3(0.1f, 0f, -1f) );
+
+			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
+			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
 			base.Simulate( client );
+		}
+
+		[ClientRpc]
+		private void EnableFog( bool shouldEnable )
+		{
+			if ( shouldEnable )
+				FogManager.Instance.Show();
+			else
+				FogManager.Instance.Hide();
 		}
 	}
 }

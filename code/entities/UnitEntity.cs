@@ -12,6 +12,7 @@ namespace RTS
 {
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable
 	{
+		public override bool HasSelectionGlow => false;
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
 		[Net, Local] public float GatherProgress { get; private set; }
 		[Net, Local] public bool IsGathering { get; private set; }

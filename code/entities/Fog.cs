@@ -10,9 +10,10 @@ namespace RTS
 
 		public override void DoRender( SceneObject sceneObject )
 		{
+			var manager = FogManager.Instance;
 			var bounds = FogBounds.Instance;
 
-			if ( !bounds.IsValid() ) return;
+			if ( !bounds.IsValid() || !manager.IsActive ) return;
 
 			var vertexBuffer = Render.GetDynamicVB( true );
 

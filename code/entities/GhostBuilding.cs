@@ -66,11 +66,11 @@ namespace RTS
 		public TraceResult GetPlacementTrace( Client client, Vector3 cursorAim )
 		{
 			if ( IsServer )
-				return Trace.Ray( client.Pawn.EyePos, client.Pawn.EyePos + cursorAim * 2000f )
+				return Trace.Ray( client.Pawn.EyePos, client.Pawn.EyePos + cursorAim * 10000f )
 					.WorldOnly()
 					.Run();
 			else
-				return Trace.Ray( CurrentView.Position, CurrentView.Position + cursorAim * 2000f )
+				return Trace.Ray( CurrentView.Position, CurrentView.Position + cursorAim * 10000f )
 					.WorldOnly()
 					.Run();
 		}

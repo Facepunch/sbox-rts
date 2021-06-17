@@ -28,6 +28,7 @@ namespace RTS
 		public readonly Texture Texture;
 		public readonly int Resolution;
 		public readonly byte[] Data;
+		public bool IsActive { get; private set; }
 		public Fog Fog { get; private set; }
 
 		private readonly List<FogCullable> _cullables;
@@ -38,7 +39,6 @@ namespace RTS
 			Instance = this;
 			Transmit = TransmitType.Always;
 			Resolution = 1024;
-			//Data = new byte[Resolution * Resolution * 4];
 			Data = new byte[Resolution * Resolution];
 
 			_cullables = new List<FogCullable>();
@@ -48,7 +48,7 @@ namespace RTS
 			{
 				Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
 
-				Clear( Color32.Black );
+				Clear();
 
 				Fog = new Fog
 				{
@@ -58,6 +58,17 @@ namespace RTS
 
 				Fog.FogMaterial.OverrideTexture( "Color", Texture );
 			}
+		}
+
+		public void Show()
+		{
+			IsActive = true;
+			Clear();
+		}
+
+		public void Hide()
+		{
+			IsActive = false;
 		}
 
 		public void AddCullable( IFogCullable cullable )
@@ -116,25 +127,16 @@ namespace RTS
 			return (Data[i] <= 200);
 		}
 
-		public void Clear( Color32 color )
+		public void Clear()
 		{
-			// Cache these because they're properties and it'll be slow otherwise.
-			//var r = color.r;
-			//var g = color.g;
-			//var b = color.b;
-			//var a = color.a;
 
 			for ( int x = 0; x < Resolution; x++ )
 			{
 				for ( int y = 0; y < Resolution; y++ )
 				{
-					var index = ((x * Resolution) + y) * 1;// 4;
+					var index = ((x * Resolution) + y) * 1;
 
 					Data[index + 0] = 255;
-					//Data[index + 0] = r;
-					//Data[index + 1] = g;
-					//Data[index + 2] = b;
-					//Data[index + 3] = a;
 				}
 			}
 		}
@@ -195,18 +197,17 @@ namespace RTS
 
 			for ( int x = x1; x <= x2; x++ )
 			{
-				var index = ((y * Resolution) + x) * 1;// 4;
+				var index = ((y * Resolution) + x) * 1;
 
 				Data[index + 0] = alpha;
-				//Data[index + 1] = 0;
-				//Data[index + 2] = 0;
-				//Data[index + 3] = 0;
 			}
 		}
 
 		[Event.Tick.Client]
 		private void Tick()
 		{
+			if ( !IsActive ) return;
+
 			FogCullable cullable;
 
 			for ( var i = _cullables.Count - 1; i >= 0; i-- )

@@ -11,6 +11,7 @@ namespace RTS
 	public abstract partial class ItemEntity<T> : AnimEntity, ISelectable where T : BaseItem
 	{
 		public virtual bool CanMultiSelect => false;
+		public virtual bool HasSelectionGlow => true;
 
 		[Net] public uint ItemId { get; set; }
 		[Net] public Player Player { get; private set; }
@@ -118,7 +119,7 @@ namespace RTS
 
 		protected override void OnTagAdded( string tag )
 		{
-			if ( IsLocalPlayers && tag == "selected" )
+			if ( HasSelectionGlow && IsLocalPlayers && tag == "selected" )
 			{
 				GlowActive = true;
 				GlowState = GlowStates.GlowStateOn;
@@ -130,7 +131,7 @@ namespace RTS
 
 		protected override void OnTagRemoved( string tag )
 		{
-			if ( IsLocalPlayers && tag == "selected" )
+			if ( HasSelectionGlow && IsLocalPlayers && tag == "selected" )
 			{
 				GlowActive = false;
 			}

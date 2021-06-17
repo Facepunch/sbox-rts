@@ -29,11 +29,24 @@ namespace RTS
 			{
 				var spawnpoints = Entity.All.OfType<SpawnPoint>().ToList().Shuffle();
 				var players = Client.All.Select( ( client ) => client.Pawn as Player ).ToList();
+				var colors = new List<Color>
+				{
+					Color.Red,
+					Color.Blue,
+					Color.Green,
+					Color.Cyan,
+					Color.Magenta,
+					Color.Orange,
+					Color.Yellow
+				};
 
 				foreach ( var player in players )
 				{
 					if ( spawnpoints.Count > 0 )
 					{
+						player.TeamColor = colors[0];
+						colors.RemoveAt( 0 );
+
 						var spawnpoint = spawnpoints[0];
 						spawnpoints.RemoveAt( 0 );
 
