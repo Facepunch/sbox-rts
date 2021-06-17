@@ -60,53 +60,6 @@ namespace RTS
 			}
 		}
 
-		public void Update()
-		{
-			FogCullable cullable;
-
-			for ( var i = _cullables.Count - 1; i >= 0; i-- )
-			{
-				cullable = _cullables[i];
-				cullable.IsVisible = false;
-				cullable.Object.MakeVisible( false );
-			}
-
-			// Our first pass will create the seen history map.
-			for ( var i = 0; i < _viewers.Count; i++ )
-			{
-				var viewer = _viewers[i];
-				PunchHole( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
-			}
-
-			// Our second pass will show what is currently visible.
-			for ( var i = 0; i < _viewers.Count; i++ )
-			{
-				var viewer = _viewers[i];
-				var position = viewer.Object.Position;
-				var range = viewer.Object.LineOfSight;
-
-				PunchHole( position, range, 0 );
-
-				for ( var j = _cullables.Count - 1; j >= 0; j-- )
-				{
-					cullable = _cullables[j];
-
-					if ( cullable.IsVisible ) continue;
-
-					if ( cullable.Object.Position.Distance( position ) <= range / 2f )
-					{
-						cullable.Object.HasBeenSeen = true;
-						cullable.Object.MakeVisible( true );
-						cullable.IsVisible = true;
-					}
-				}
-
-				viewer.LastPosition = position;
-			}
-
-			Texture.Update( Data );
-		}
-
 		public void AddCullable( IFogCullable cullable )
 		{
 			_cullables.Add( new FogCullable()
@@ -249,6 +202,59 @@ namespace RTS
 				//Data[index + 2] = 0;
 				//Data[index + 3] = 0;
 			}
+		}
+
+		[Event.Tick.Client]
+		private void Tick()
+		{
+			FogCullable cullable;
+
+			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			{
+				cullable = _cullables[i];
+				cullable.IsVisible = false;
+				cullable.Object.MakeVisible( false );
+			}
+
+			if ( Local.Pawn is Player player )
+			{
+				PunchHole( player.StartPosition, player.StartLineOfSight, 200 );
+			}
+
+			// Our first pass will create the seen history map.
+			for ( var i = 0; i < _viewers.Count; i++ )
+			{
+				var viewer = _viewers[i];
+				PunchHole( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
+			}
+
+			// Our second pass will show what is currently visible.
+			for ( var i = 0; i < _viewers.Count; i++ )
+			{
+				var viewer = _viewers[i];
+				var position = viewer.Object.Position;
+				var range = viewer.Object.LineOfSight;
+
+				PunchHole( position, range, 0 );
+
+				for ( var j = _cullables.Count - 1; j >= 0; j-- )
+				{
+					cullable = _cullables[j];
+
+					if ( cullable.IsVisible ) continue;
+
+					if ( cullable.Object.Position.Distance( position ) <= range / 2f )
+					{
+						cullable.Object.HasBeenSeen = true;
+						cullable.Object.MakeVisible( true );
+						cullable.IsVisible = true;
+					}
+				}
+
+				viewer.LastPosition = position;
+			}
+
+			Texture.Update( Data );
 		}
 	}
 }

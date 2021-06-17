@@ -48,6 +48,9 @@
     <None Update="ui\SelectedItem.scss">
       <DependentUpon>SelectedItem.cs</DependentUpon>
     </None>
+    <None Update="ui\EntityHud.scss">
+      <DependentUpon>EntityHud.cs</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>

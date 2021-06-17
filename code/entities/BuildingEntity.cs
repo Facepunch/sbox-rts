@@ -2,6 +2,7 @@
 using RTS.Tech;
 using RTS.Units;
 using Sandbox;
+using Sandbox.UI;
 using Steamworks.Data;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,11 @@ namespace RTS
 		[Net] public float LineOfSight { get; private set; }
 		public uint LastQueueId { get; set; }
 		public List<QueueItem> Queue { get; set; }
-
 		public bool CanDepositResources => Item.CanDepositResources;
+
+		#region UI
+		public EntityHudBar HealthBar { get; private set; }
+		#endregion
 
 		public BuildingEntity() : base()
 		{
@@ -177,6 +181,7 @@ namespace RTS
 			}
 
 			LineOfSight = item.MinLineOfSight + CollisionBounds.Size.Length;
+			MaxHealth = item.MaxHealth;
 			Health = item.MaxHealth;
 
 			base.OnItemChanged( item );
@@ -241,6 +246,29 @@ namespace RTS
 			};
 
 			Queue.Add( queueItem );
+		}
+
+		protected override void AddHudComponents()
+		{
+			HealthBar = UI.AddChild<EntityHudBar>( "health" );
+
+			base.AddHudComponents();
+		}
+
+		protected override void UpdateHudComponents()
+		{
+			if ( Health <= MaxHealth * 0.9f || IsUnderConstruction )
+			{
+				HealthBar.Foreground.Style.Width = Length.Fraction( Health / MaxHealth );
+				HealthBar.Foreground.Style.Dirty();
+				HealthBar.SetClass( "hidden", false );
+			}
+			else
+			{
+				HealthBar.SetClass( "hidden", true );
+			}
+
+			base.UpdateHudComponents();
 		}
 	}
 }

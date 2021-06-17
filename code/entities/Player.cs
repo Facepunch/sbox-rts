@@ -12,10 +12,12 @@ namespace RTS
 	{
 		[Net, Local] public List<uint> Dependencies { get; set; }
 		[Net, Local] public List<Entity> Selection { get; set; }
+		[Net, Local] public Vector3 StartPosition { get; set; }
+		[Net, Local] public float StartLineOfSight { get; set; }
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
 		[Net] public Color TeamColor { get; set; }
-		[Net] public List<int> Resources { get; private set; } = new();
+		[Net] public List<int> Resources { get; private set; }
 
 		public Player()
 		{

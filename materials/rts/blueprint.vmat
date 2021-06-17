@@ -47,4 +47,10 @@ Layer0
 	//---- Translucent ----
 	g_flOpacityScale "0.500"
 	TextureTranslucency "materials/default/default_trans.tga"
+
+	DynamicParams
+	{
+		g_vColorTint "TintColor"
+		g_flOpacityScale "Translucency"
+	}
 }

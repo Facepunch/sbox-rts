@@ -14,16 +14,21 @@ namespace RTS
 
 		[Net] public uint ItemId { get; set; }
 		[Net] public Player Player { get; private set; }
+		[Net] public float MaxHealth { get; set; }
+		public EntityHudAnchor UI { get; private set; }
 
 		public bool IsSelected => Tags.Has( "selected" );
-
 		public bool IsLocalPlayers => Player.IsValid() && Player.IsLocalPawn;
+
+		private T _itemCache;
 
 		public T Item
 		{
 			get
 			{
-				return ItemManager.Instance.Find<T>( ItemId );
+				if ( _itemCache == null )
+					_itemCache = ItemManager.Instance.Find<T>( ItemId );
+				return _itemCache;
 			}
 		}
 
@@ -36,6 +41,7 @@ namespace RTS
 		{
 			Host.AssertServer();
 
+			Owner = player;
 			Player = player;
 			ItemId = item.NetworkId;
 
@@ -73,6 +79,41 @@ namespace RTS
 		public virtual bool CanSelect()
 		{
 			return true;
+		}
+
+		public override void ClientSpawn()
+		{
+			UI = EntityHud.Instance.Create( this );
+
+			AddHudComponents();
+
+			base.ClientSpawn();
+		}
+
+		[Event.Frame]
+		protected void UpdateHudAnchor()
+		{
+			if ( IsClient && ShouldUpdateHud() )
+			{
+				UpdateHudComponents();
+				UI.UpdatePosition();
+			}
+		}
+
+		protected virtual void AddHudComponents() { }
+
+		protected virtual void UpdateHudComponents() { }
+
+		protected virtual bool ShouldUpdateHud()
+		{
+			return EnableDrawing;
+		}
+
+		protected override void OnDestroy()
+		{
+			if ( IsClient ) UI.Delete();
+
+			base.OnDestroy();
 		}
 
 		protected override void OnTagAdded( string tag )

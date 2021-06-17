@@ -6,20 +6,35 @@ namespace Gamelib.Extensions
 {
 	public static class ListExtension
 	{
-		public static List<T> Shuffle<T>( this List<T> ts )
+		public static List<T> Shuffle<T>( this List<T> self )
 		{
-			var count = ts.Count;
+			var count = self.Count;
 			var last = count - 1;
 
 			for ( var i = 0; i < last; ++i )
 			{
 				var r = Rand.Int( i, last );
-				var tmp = ts[i];
-				ts[i] = ts[r];
-				ts[r] = tmp;
+				var tmp = self[i];
+				self[i] = self[r];
+				self[r] = tmp;
 			}
 
-			return ts;
+			return self;
+		}
+
+		private readonly static int HashCodeSeed = 17;
+		private readonly static int HashCodeMultiplier = 23;
+
+		public static int GetItemsHashCode<T>( this List<T> self )
+		{
+			var hashCode = HashCodeSeed;
+
+			for ( int index = 0; index < self.Count; index++ )
+			{
+				hashCode = hashCode * HashCodeMultiplier + self[index].GetHashCode();
+			}
+
+			return hashCode;
 		}
 	}
 }

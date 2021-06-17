@@ -1,0 +1,46 @@
+﻿entityhud {
+    position: absolute;
+    pointer-events: none;
+    top: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+
+    entityhudanchor {
+        position: absolute;
+        transform: translateX(-50%) translateY(-100%);
+
+        &.hidden {
+            display: none;
+        }
+
+        entityhudbar {
+            border: 1px black solid;
+            background-color: black;
+            width: 50px;
+            height: 6px;
+
+            .foreground {
+                background-color: white;
+                width: 100%;
+                height: 100%;
+            }
+
+            &.hidden {
+                display: none;
+            }
+
+            &.health {
+                .foreground {
+                    background-color: greenyellow;
+                }
+            }
+
+            &.gather {
+                .foreground {
+                    background-color: steelblue;
+                }
+            }
+        }
+    }
+}

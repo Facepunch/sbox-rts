@@ -130,8 +130,6 @@ namespace RTS
 					_lastRound = Round;
 					_lastRound.Start();
 				}
-
-				FogManager.Instance.Update();
 			}
 			else
 			{

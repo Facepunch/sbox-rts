@@ -1,4 +1,5 @@
 ﻿
+using Gamelib.Extensions;
 using RTS.Buildings;
 using RTS.Tech;
 using RTS.Units;
@@ -314,6 +315,8 @@ namespace RTS
 		public Panel Left { get; private set; }
 		public Panel Right { get; private set; }
 
+		private int _oldSelectedHashCode;
+
 		public SelectedItem()
 		{
 			StyleSheet.Load( "/ui/SelectedItem.scss" );
@@ -356,7 +359,13 @@ namespace RTS
 				if ( Local.Pawn is Player player )
 				{
 					var collection = player.Selection.Cast<ISelectable>().ToList();
-					Update( collection );
+					var hashCode = collection.GetItemsHashCode();
+
+					if ( _oldSelectedHashCode != hashCode )
+					{
+						Update( collection );
+						_oldSelectedHashCode = hashCode;
+					}
 				}
 
 				if ( Items.Count > 0 )

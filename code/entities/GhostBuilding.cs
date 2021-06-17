@@ -7,6 +7,7 @@ namespace RTS
 	public partial class GhostBuilding : ModelEntity
 	{
 		public static Material BlueprintMaterial => Material.Load( "materials/rts/blueprint.vmat" );
+		public GhostBounds BoundsEntity { get; private set; }
 		public BaseBuilding Building { get; private set; }
 		public UnitEntity Worker { get; private set; }
 
@@ -29,17 +30,35 @@ namespace RTS
 			Worker = worker;
 
 			if ( IsClient )
+			{
 				SceneObject.SetMaterialOverride( BlueprintMaterial );
+
+				if ( IsClient )
+				{
+					BoundsEntity = new GhostBounds();
+					BoundsEntity.RenderBounds = CollisionBounds * 1.25f;
+					BoundsEntity.SetParent( this );
+					BoundsEntity.Position = Position;
+					BoundsEntity.Color = Color.Green;
+					BoundsEntity.Alpha = 0.05f;
+				}
+			}
 		}
 
 		public void ShowValid()
 		{
+			if ( BoundsEntity.IsValid() )
+				BoundsEntity.Color = Color.Green;
+
 			RenderColor = Color.White;
 			GlowColor = Color.Green;
 		}
 
 		public void ShowInvalid()
 		{
+			if ( BoundsEntity.IsValid() )
+				BoundsEntity.Color = Color.Red;
+
 			RenderColor = Color.Red;
 			GlowColor = Color.Red;
 		}
@@ -61,8 +80,8 @@ namespace RTS
 			if ( !Worker.IsValid() ) return false;
 
 			var position = trace.EndPos;
-			var bounds = CollisionBounds + position;
-			var entities = Physics.GetEntitiesInBox( bounds ).Where( i => i != this );
+			var bounds = CollisionBounds * 1.25f;
+			var entities = Physics.GetEntitiesInBox( bounds + position ).Where( i => i != this );
 
 			if ( IsClient && !FogManager.Instance.IsAreaSeen( position ) )
 				return false;
@@ -73,9 +92,29 @@ namespace RTS
 			if ( position.Distance( Worker.Position ) > Worker.Item.ConstructRange )
 				return false;
 
+			var groundBounds = bounds;
+			groundBounds.Mins = groundBounds.Mins.WithZ( 0f );
+			groundBounds.Maxs = groundBounds.Maxs.WithZ( 1f );
+
+			var worldTrace = Trace.Ray( position + Vector3.Up, position + Vector3.Up )
+				.WorldOnly()
+				.Size( groundBounds )
+				.Run();
+
+			if ( worldTrace.Hit )
+				return false;
+
 			var verticality = trace.Normal.Dot( Vector3.Up );
 
 			return (verticality >= 0.9f);
+		}
+
+		protected override void OnDestroy()
+		{
+			if ( BoundsEntity.IsValid() )
+				BoundsEntity.Delete();
+
+			base.OnDestroy();
 		}
 	}
 }
