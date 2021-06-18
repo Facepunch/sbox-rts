@@ -13,7 +13,7 @@ namespace RTS.Units
 		public override bool UseRenderColor => true;
 		public override float LineOfSight => 1000f;
 		public override float Speed => 500f;
-		public override int BuildTime => 10;
+		public override int BuildTime => 2;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 150,

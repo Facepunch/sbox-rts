@@ -45,7 +45,7 @@ namespace RTS
 			{
 				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
 				{
-					var trace = TraceExtension.RayDirection( builder.Position, builder.CursorAim )
+					var trace = TraceExtension.RayDirection( builder.CursorOrigin, builder.CursorAim )
 						.Radius( 5f )
 						.Run();
 
@@ -120,7 +120,7 @@ namespace RTS
 				}
 				else
 				{
-					var trace = TraceExtension.RayDirection( builder.Position, builder.CursorAim ).EntitiesOnly().Run();
+					var trace = TraceExtension.RayDirection( builder.CursorOrigin, builder.CursorAim ).EntitiesOnly().Run();
 
 					if ( trace.Entity is ISelectable selectable && selectable.CanSelect() )
 						ItemManager.Select( trace.Entity.NetworkIdent.ToString() );
@@ -132,7 +132,7 @@ namespace RTS
 			}
 			else
 			{
-				var trace = TraceExtension.RayDirection( builder.Position, builder.CursorAim ).EntitiesOnly().Run();
+				var trace = TraceExtension.RayDirection( builder.CursorOrigin, builder.CursorAim ).EntitiesOnly().Run();
 
 				if ( trace.Entity is ResourceEntity resource && resource.HasBeenSeen )
 				{

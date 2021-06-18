@@ -163,7 +163,7 @@ namespace RTS
 		{
 			var zoomOutDistance = 5000f - (ZoomLevel * 3000f);
 			var velocity = Vector3.Zero;
-			var panSpeed = zoomOutDistance;
+			var panSpeed = 2000f + (ZoomLevel * 3000f);
 
 			if ( Input.Down( InputButton.Forward ) )
 				velocity += EyeRot.Forward.WithZ(0f) * panSpeed * Time.Delta;
@@ -185,7 +185,7 @@ namespace RTS
 			var difference = Position - EyePos;
 			EyeRot = Rotation.LookAt( difference, Vector3.Up );
 
-			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
+			ZoomLevel += Input.MouseWheel * Time.Delta * -10f;
 			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
 			base.Simulate( client );

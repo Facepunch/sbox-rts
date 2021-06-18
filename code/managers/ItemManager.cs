@@ -2,6 +2,7 @@
 using RTS.Buildings;
 using RTS.Units;
 using Sandbox;
+using Sandbox.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,16 +18,19 @@ namespace RTS
 		public Dictionary<string, BaseItem> Table { get; private set; }
 		public List<BaseItem> List { get; private set; }
 		public GhostBuilding Ghost { get; private set; }
+		public Dictionary<uint,Texture> Icons { get; private set; }
 
 		public ItemManager()
 		{
 			Instance = this;
 			Transmit = TransmitType.Always;
+			Icons = new();
+
 			BuildItemTable();
 		}
 
 		[ServerCmd]
-		public static void StartBuilding( int workerId, uint itemId, string cursorAim )
+		public static void StartBuilding( int workerId, uint itemId, string cursorOrigin, string cursorAim )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -43,7 +47,7 @@ namespace RTS
 					var ghost = new GhostBuilding();
 					ghost.SetWorkerAndBuilding( worker, item );
 
-					var trace = ghost.GetPlacementTrace( ConsoleSystem.Caller, cursorAim.ToVector3() );
+					var trace = ghost.GetPlacementTrace( ConsoleSystem.Caller, cursorOrigin.ToVector3(), cursorAim.ToVector3() );
 					var valid = ghost.IsPlacementValid( trace );
 					ghost.Delete();
 
@@ -279,8 +283,9 @@ namespace RTS
 				return;
 			}
 
+			var cursorOrigin = Input.CursorOrigin;
 			var cursorAim = Input.CursorAim;
-			var trace = Ghost.GetPlacementTrace( Local.Client, cursorAim );
+			var trace = Ghost.GetPlacementTrace( Local.Client, cursorOrigin, cursorAim );
 			var valid = Ghost.IsPlacementValid( trace );
 
 			Ghost.Position = trace.EndPos;
@@ -292,7 +297,7 @@ namespace RTS
 
 			if ( valid && Input.Released( InputButton.Attack1 ) )
 			{
-				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorAim.ToCSV() );
+				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorOrigin.ToCSV(), cursorAim.ToCSV() );
 				Ghost.Delete();
 			}
 			else if ( Input.Released( InputButton.Attack2 ) )

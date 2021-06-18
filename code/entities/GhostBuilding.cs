@@ -64,14 +64,14 @@ namespace RTS
 			GlowColor = Color.Red;
 		}
 
-		public TraceResult GetPlacementTrace( Client client, Vector3 cursorAim )
+		public TraceResult GetPlacementTrace( Client client, Vector3 cursorOrigin, Vector3 cursorAim )
 		{
 			if ( IsServer )
-				return TraceExtension.RayDirection( client.Pawn.EyePos, cursorAim )
+				return TraceExtension.RayDirection( cursorOrigin, cursorAim )
 					.WorldOnly()
 					.Run();
 			else
-				return TraceExtension.RayDirection( CurrentView.Position, cursorAim )
+				return TraceExtension.RayDirection( cursorOrigin, cursorAim )
 					.WorldOnly()
 					.Run();
 		}

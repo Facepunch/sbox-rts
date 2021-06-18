@@ -10,6 +10,7 @@ namespace RTS
 		public virtual string Name => "";
 		public virtual string UniqueId => "";
 		public virtual string Description => "";
+		public virtual Texture Icon => null;
 		public virtual int BuildTime => 0;
 		public virtual Dictionary<ResourceType, int> Costs => new();
 		public virtual HashSet<string> Dependencies => new();

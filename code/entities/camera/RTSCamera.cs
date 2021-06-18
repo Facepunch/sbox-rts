@@ -13,7 +13,8 @@ namespace RTS
 				Rot = player.EyeRot;
 			}
 
-			FieldOfView = 60f;
+			FieldOfView = 0f;
+			Ortho = true;
 
 			base.Activated();
 		}
@@ -22,6 +23,7 @@ namespace RTS
 		{
 			if ( Local.Pawn is Player player )
 			{
+				OrthoSize = 1 + (player.ZoomLevel * 2f);
 				Pos = Pos.LerpTo( player.EyePos, Time.Delta * 4f );
 				Rot = player.EyeRot;
 			}

@@ -96,6 +96,14 @@ namespace RTS
 			base.ClientDisconnect( client, reason );
 		}
 
+		public override CameraSetup BuildCamera( CameraSetup camSetup )
+		{
+			camSetup.ZNear = 0f;
+			camSetup.ZFar = 1f;
+
+			return base.BuildCamera( camSetup );
+		}
+
 		public override void ClientJoined( Client client )
 		{
 			var player = new Player();
