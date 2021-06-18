@@ -23,7 +23,7 @@ namespace RTS
 		{
 			if ( Local.Pawn is Player player )
 			{
-				OrthoSize = 1 + (player.ZoomLevel * 2f);
+				OrthoSize = 1f + (player.ZoomLevel * 2f);
 				Pos = Pos.LerpTo( player.EyePos, Time.Delta * 4f );
 				Rot = player.EyeRot;
 			}
