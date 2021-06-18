@@ -11,7 +11,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "models\\buildings\\silo_future\\dmx\\mesh\\silo.dmx"
+						filename = "models/buildings/research_lab/dmx/mesh/silo.dmx"
 						import_translation = [ 0.0, -195.0, 248.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -40,7 +40,7 @@
 						recenter_on_parent_bone = false
 						offset_origin = [ 0.0, -195.0, 248.0 ]
 						offset_angles = [ 0.0, 0.0, 0.0 ]
-						filename = "models/buildings/silo_future/dmx/mesh/silo.dmx"
+						filename = "models/buildings/research_lab/dmx/mesh/silo.dmx"
 						import_scale = 1.0
 						faceMergeAngle = 10.0
 						maxHullVertices = 0
