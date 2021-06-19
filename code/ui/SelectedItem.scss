@@ -12,7 +12,7 @@
         height: 250px;
 
         itemmultidisplay {
-            background-color: rgba(0 128 0 0.5);
+            background-color: rgba(0 0 0 0.8);
             width: 100%;
 
             &.hidden {
@@ -21,28 +21,31 @@
         }
 
         iteminformation {
-            background-color: rgba(0 128 0 0.5);
+            background-color: rgba(0 0 0 0.8);
             flex-direction: column;
             display: flex;
             padding: 16px;
             width: 100%;
 
             .name {
-                font-size: 20px;
+                font-size: 24px;
                 color: white;
             }
 
             .desc {
-                font-size: 16px;
+                margin-top: 8px;
+                font-size: 20px;
                 color: white;
             }
 
             .health {
+                margin-top: 8px;
                 font-size: 20px;
                 color: white;
             }
 
             .kills {
+                margin-top: 8px;
                 font-size: 20px;
                 color: white;
 
@@ -57,6 +60,7 @@
                     height: 50px;
                     background-color: aqua;
                     border-radius: 4px;
+                    margin-right: 4px;
 
                     .countdown {
                         background-color: rgba(255 255 255 0.5);
@@ -66,12 +70,12 @@
                         height: 100%;
 
                         &.inactive {
-                            background-color: rgba(0 0 0 0.5);
+                            opacity: 0.8;
                         }
                     }
 
                     &:hover {
-                        background-color: aquamarine;
+                        border: 2px solid aquamarine;
                     }
 
                     &.hidden {
@@ -105,9 +109,10 @@
                 height: 50px;
                 background-color: aqua;
                 border-radius: 4px;
+                margin-right: 4px;
 
                 &:hover {
-                    background-color: black;
+                    border: 2px solid aquamarine;
                 }
             }
         }

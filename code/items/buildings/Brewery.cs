@@ -8,6 +8,7 @@ namespace RTS.Buildings
 	{
 		public override string Name => "Brewery";
 		public override string UniqueId => "building.brewery";
+		public override Texture Icon => Texture.Load( "textures/rts/icons/brewery.png" );
 		public override string Description => "Assign up to 4 workers to generate Beer over time.";
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()

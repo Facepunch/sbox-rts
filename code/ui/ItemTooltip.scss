@@ -3,6 +3,7 @@
     background-color: rgba(0 0 0 0.5);
     pointer-events: none;
     flex-direction: column;
+    border-radius: 8px;
     pixel-snap: 0;
     display: flex;
     padding: 16px;
@@ -34,7 +35,8 @@
         margin-top: 4px;
 
         .icon {
-            background-color: white;
+            background-image: url( /textures/rts/icons/population.png );
+            background-size: 100%;
             margin-right: 4px;
             width: 24px;
             height: 24px;

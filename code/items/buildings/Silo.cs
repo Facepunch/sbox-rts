@@ -9,6 +9,7 @@ namespace RTS.Buildings
 		public override string Name => "Silo";
 		public override string UniqueId => "building.silo";
 		public override string Description => "Acts as a deposit point for resources.";
+		public override Texture Icon => Texture.Load( "textures/rts/icons/silo.png" );
 		public override bool CanDepositResources => true;
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()

@@ -9,6 +9,7 @@ namespace RTS.Units
 		public override string Name => "Scientist";
 		public override string UniqueId => "unit.scientist";
 		public override string Description => "Extracts plasma for advanced technology, constructions and units.";
+		public override Texture Icon => Texture.Load( "textures/rts/icons/scientist.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

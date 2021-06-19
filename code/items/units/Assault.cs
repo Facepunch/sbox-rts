@@ -9,6 +9,7 @@ namespace RTS.Units
 		public override string Name => "Assault";
 		public override string UniqueId => "unit.assault";
 		public override string Description => "A basic Terry armed with only a pistol.";
+		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

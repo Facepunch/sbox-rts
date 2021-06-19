@@ -11,14 +11,15 @@
 
     .population {
         .icon {
-            background-color: white;
+            background-image: url( /textures/rts/icons/population.png );
+            background-size: 100%;
             margin-right: 16px;
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
         }
 
         .label {
-            font-size: 24px;
+            font-size: 32px;
             color: white;
 
             &.full {

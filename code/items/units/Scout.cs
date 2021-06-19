@@ -10,6 +10,7 @@ namespace RTS.Units
 		public override string UniqueId => "unit.scout";
 		public override string Model => "models/vehicles/humvee/humvee.vmdl";
 		public override string Description => "A basic vehicle good for scouting large areas.";
+		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
 		public override bool UseRenderColor => true;
 		public override float LineOfSight => 1000f;
 		public override float Speed => 500f;

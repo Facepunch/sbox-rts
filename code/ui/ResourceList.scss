@@ -20,19 +20,19 @@ itemresourcevalue {
     .icon {
         background-color: white;
         margin-right: 16px;
-        width: 24px;
-        height: 24px;
+        width: 32px;
+        height: 32px;
     }
 
     .label {
         color: #EEE;
         font-weight: bold;
-        font-size: 24px;
+        font-size: 32px;
     }
 
     &.lerping {
         .label {
-            font-size: 28px;
+            font-size: 34px;
             color: white;
         }
     }

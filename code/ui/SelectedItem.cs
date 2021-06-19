@@ -54,6 +54,17 @@ namespace RTS
 		{
 			Selectable = selectable;
 			Item = item;
+
+			if ( item.Icon != null )
+			{
+				Style.Background = new PanelBackground
+				{
+					SizeX = Length.Percent( 100f ),
+					SizeY = Length.Percent( 100f ),
+					Texture = item.Icon
+				};
+				Style.Dirty();
+			}
 		}
 	}
 
@@ -99,7 +110,21 @@ namespace RTS
 			Building = building;
 
 			if ( QueueItem != null )
-				AddClass( QueueItem.Item.UniqueId.Replace( '.', '_' ) );
+			{
+				var item = QueueItem.Item;
+
+				AddClass( item.UniqueId.Replace( '.', '_' ) );
+
+				if ( item.Icon != null )
+				{
+					Style.Background = new PanelBackground
+					{
+						SizeX = Length.Percent( 100f ),
+						SizeY = Length.Percent( 100f ),
+						Texture = item.Icon
+					};
+				}	 
+			}
 		}
 
 		public override void Tick()
@@ -257,6 +282,9 @@ namespace RTS
 			Name.Text = data.Name;
 			Desc.Text = data.Description;
 
+			Name.Style.FontColor = data.Color;
+			Name.Style.Dirty();
+
 			QueueList.Update( entity );
 		}
 
@@ -266,6 +294,9 @@ namespace RTS
 
 			Name.Text = data.Name;
 			Desc.Text = data.Description;
+
+			Name.Style.FontColor = data.Color;
+			Name.Style.Dirty();
 
 			QueueList.Update( null );
 		}

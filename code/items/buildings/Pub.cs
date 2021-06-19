@@ -8,6 +8,7 @@ namespace RTS.Buildings
 	{
 		public override string Name => "Pub";
 		public override string UniqueId => "building.pub";
+		public override Texture Icon => Texture.Load( "textures/rts/icons/pub.png" );
 		public override string Description => "Increases the maximum population of your empire.";
 		public override uint PopulationBoost => 6;
 		public override int BuildTime => 10;

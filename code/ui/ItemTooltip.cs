@@ -49,7 +49,20 @@ namespace RTS
 
 		public void Update( ResourceType type, int value )
 		{
-			Icon.AddClass( type.ToString().ToLower() );
+			var icon = type.GetIcon();
+
+			if ( icon != null )
+			{
+				Icon.Style.Background = new PanelBackground
+				{
+					SizeX = Length.Percent( 100f ),
+					SizeY = Length.Percent( 100f ),
+					Texture = icon
+				};
+
+				Icon.Style.Dirty();
+			}
+
 			NumericValue = value;
 		}
 
@@ -141,7 +154,7 @@ namespace RTS
 
 		public void Update( ResourceEntity entity )
 		{
-			Name.Style.FontColor = entity.Color;
+			Name.Style.FontColor = entity.Resource.GetColor();
 			Name.Style.Dirty();
 
 			Name.Text = entity.Name;

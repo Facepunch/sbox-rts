@@ -8,6 +8,7 @@ namespace RTS.Units
 	{
 		public override string Name => "Worker";
 		public override string UniqueId => "unit.worker";
+		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
 		public override bool CanConstruct => true;
 		public override string Description => "Gathers Wood, Stone and Beer for your empire and constructs buildings.";
 		public override int BuildTime => 30;
