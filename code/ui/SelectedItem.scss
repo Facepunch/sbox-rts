@@ -54,7 +54,36 @@
                 }
             }
 
+            itemoccupantlist {
+                background-color: rgba(255 106 0 0.05);
+                border-radius: 6px;
+                margin-top: 8px;
+                padding: 8px;
+
+                itemoccupantbutton {
+                    width: 50px;
+                    height: 50px;
+                    background-color: rgb(128 128 128 0.2);
+                    border-radius: 4px;
+                    margin-right: 4px;
+
+                    &:hover {
+                        border: 2px solid red;
+                    }
+
+                    &.hidden {
+                        display: none;
+                    }
+                }
+
+                &.hidden {
+                    display: none;
+                }
+            }
+
             itemqueuelist {
+                margin-top: 8px;
+
                 itemqueuebutton {
                     width: 50px;
                     height: 50px;

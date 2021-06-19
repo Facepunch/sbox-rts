@@ -12,6 +12,7 @@ namespace RTS
 {
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer
 	{
+		[Net] public List<UnitEntity> Occupants { get; private set; }
 		[Net] public bool IsUnderConstruction { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
@@ -20,6 +21,7 @@ namespace RTS
 		public List<QueueItem> Queue { get; set; }
 		public float NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
+		public bool CanOccupyUnits => Occupants.Count < Item.MaxOccupants;
 
 		#region UI
 		public EntityHudBar HealthBar { get; private set; }
@@ -28,7 +30,9 @@ namespace RTS
 		public BuildingEntity() : base()
 		{
 			Tags.Add( "building", "selectable" );
-			Queue = new();
+
+			Occupants = new List<UnitEntity>();
+			Queue = new List<QueueItem>();
 		}
 
 		public void UpdateConstruction()
@@ -44,6 +48,31 @@ namespace RTS
 			if ( !Target.IsValid() ) return false;
 
 			return (Target.IsValid() && Target.Position.Distance( Position ) < Item.AttackRange);
+		}
+
+		public bool OccupyUnit( UnitEntity unit )
+		{
+			Host.AssertServer();
+
+			if ( CanOccupyUnits )
+			{
+				unit.OnEnterBuilding( this );
+				Occupants.Add( unit );
+				return true;
+			} 
+
+			return false;
+		}
+
+		public void EvictUnit( UnitEntity unit )
+		{
+			Host.AssertServer();
+
+			if ( Occupants.Contains( unit ) )
+			{
+				unit.OnLeaveBuilding( this );
+				Occupants.Remove( unit );
+			}
 		}
 
 		public void Attack( Entity target )
@@ -107,6 +136,18 @@ namespace RTS
 			}
 		}
 
+		public void PlaceNear( UnitEntity unit )
+		{
+			var buildingMaxSize = CollisionBounds.Size.Length;
+			var availablePoint = NavMesh.GetPointWithinRadius( Position, buildingMaxSize * 0.5f, buildingMaxSize );
+
+			// TODO: What we should do is have various attachments to buildings for spawn points that cannot be blocked.
+			if ( availablePoint.HasValue )
+			{
+				unit.Position = availablePoint.Value;
+			}
+		}
+
 		public void SpawnUnit( BaseUnit unit )
 		{
 			var entity = new UnitEntity();
@@ -115,18 +156,7 @@ namespace RTS
 			if ( unit.UseRenderColor )
 				entity.RenderColor = Player.TeamColor;
 
-			var buildingMaxSize = CollisionBounds.Size.Length;
-			var availablePoint = NavMesh.GetPointWithinRadius( Position, buildingMaxSize * 0.5f, buildingMaxSize );
-
-			// TODO: What we should do is have various attachments to buildings for spawn points that cannot be blocked.
-			if ( availablePoint.HasValue )
-			{
-				entity.Position = availablePoint.Value;
-			}
-			else
-			{
-				Log.Error( "Unable to find a location for the unit " + unit.Name + " to spawn!" );
-			}
+			PlaceNear( entity );
 		}
 
 		public BaseItem UnqueueItem( uint queueId )

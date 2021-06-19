@@ -111,15 +111,14 @@ namespace RTS
 		}
 
 		[ServerCmd]
-		public static void Attack( string id )
+		public static void Attack( int id )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var targetId = Convert.ToInt32( id );
-			var target = FindByIndex( targetId );
+			var target = FindByIndex( id );
 
 			if ( target.IsValid() )
 			{
@@ -132,21 +131,70 @@ namespace RTS
 		}
 
 		[ServerCmd]
-		public static void Deposit( string id )
+		public static void Evict( int buildingId, int unitId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var targetId = Convert.ToInt32( id );
-			var target = FindByIndex( targetId );
+			var building = FindByIndex( buildingId ) as BuildingEntity;
+			var unit = FindByIndex( unitId ) as UnitEntity;
+
+			if ( building.IsValid() && unit.IsValid() )
+			{
+				if ( unit.Player != caller || building.Player != caller )
+					return;
+
+				if ( unit.IsInsideBuilding )
+				{
+					building.EvictUnit( unit );
+				}
+			}
+		}
+
+		[ServerCmd]
+		public static void Occupy( int id )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var target = FindByIndex( id ) as BuildingEntity;
+
+			if ( target.IsValid() )
+			{
+				if ( target.Player != caller ) return;
+				if ( !target.CanOccupyUnits ) return;
+
+				foreach ( var entity in caller.Selection )
+				{
+					if ( entity is UnitEntity unit && unit.Item.CanEnterBuildings )
+					{
+						unit.Occupy( target );
+					}
+				}
+			}
+		}
+
+		[ServerCmd]
+		public static void Deposit( int id )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var target = FindByIndex( id );
 
 			if ( target.IsValid() && target is BuildingEntity building )
 			{
+				if ( building.Player != caller ) return;
+
 				foreach ( var entity in caller.Selection )
 				{
-					if ( entity is UnitEntity unit && building.Player == caller )
+					if ( entity is UnitEntity unit )
 					{
 						if ( building.CanDepositResources )
 							unit.Deposit( building );
@@ -156,15 +204,14 @@ namespace RTS
 		}
 
 		[ServerCmd]
-		public static void Gather( string id )
+		public static void Gather( int id )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var targetId = Convert.ToInt32( id );
-			var target = FindByIndex( targetId );
+			var target = FindByIndex( id );
 
 			if ( target.IsValid() && target is ResourceEntity resource )
 			{
@@ -177,15 +224,14 @@ namespace RTS
 		}
 
 		[ServerCmd]
-		public static void Construct( string id )
+		public static void Construct( int id )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var targetId = Convert.ToInt32( id );
-			var target = FindByIndex( targetId );
+			var target = FindByIndex( id );
 
 			if ( target.IsValid() && target is BuildingEntity building )
 			{

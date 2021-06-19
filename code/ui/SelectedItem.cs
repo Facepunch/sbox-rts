@@ -63,8 +63,130 @@ namespace RTS
 					SizeY = Length.Percent( 100f ),
 					Texture = item.Icon
 				};
+
 				Style.Dirty();
 			}
+		}
+	}
+
+	public class ItemOccupantButton : Button
+	{
+		public BuildingEntity Building { get; private set; }
+		public UnitEntity Unit { get; private set; }
+
+		public override void OnEvent( string eventName )
+		{
+			var tooltip = ItemTooltip.Instance;
+
+			if ( !Unit.IsValid() )
+			{
+				base.OnEvent( eventName );
+				return;
+			}
+
+			if ( eventName == "onclick" )
+			{
+				ItemManager.Evict( Building.NetworkIdent, Unit.NetworkIdent );
+			}
+			else if ( eventName == "onmouseover" )
+			{
+				tooltip.Update( Unit.Item, true );
+				tooltip.Hover( this );
+				tooltip.Show();
+			}
+			else if ( eventName == "onmouseout" )
+			{
+				tooltip.Hide();
+			}
+
+			base.OnEvent( eventName );
+		}
+
+		public void Update( BuildingEntity building = null, UnitEntity unit = null )
+		{
+			Style.Background = null;
+
+			Building = building;
+			Unit = unit;
+
+			if ( unit.IsValid() )
+			{
+				var item = unit.Item;
+
+				if ( item.Icon != null )
+				{
+					Style.Background = new PanelBackground
+					{
+						SizeX = Length.Percent( 100f ),
+						SizeY = Length.Percent( 100f ),
+						Texture = item.Icon
+					};
+				}
+			}
+
+			Style.Dirty();
+		}
+
+		public override void Tick()
+		{
+			SetClass( "hidden", !Building.IsValid() );
+		}
+	}
+
+	public class ItemOccupantList : Panel
+	{
+		public BuildingEntity Building { get; private set; }
+		public List<ItemOccupantButton> Buttons { get; private set; }
+
+		public ItemOccupantList()
+		{
+			Buttons = new();
+
+			for ( var i = 0; i < 10; i++ )
+			{
+				Buttons.Add( AddChild<ItemOccupantButton>() );
+			}
+		}
+
+		public void Update( BuildingEntity building )
+		{
+			Building = building;
+		}
+
+		public override void Tick()
+		{
+			SetClass( "hidden", Building == null );
+
+			if ( Building.IsValid() )
+			{
+				if ( Building.Item.MaxOccupants > 0 )
+				{
+					var occupants = Building.Occupants;
+					var occupantsCount = occupants.Count;
+					var buildingItem = Building.Item;
+
+					for ( var i = 0; i < 10; i++ )
+					{
+						if ( buildingItem.MaxOccupants > i )
+						{
+							if ( occupantsCount > i )
+								Buttons[i].Update( Building, occupants[i] );
+							else
+								Buttons[i].Update( Building );
+						}
+						else
+						{
+							Buttons[i].Update( null );
+						}
+					}
+				}
+				else
+				{
+					SetClass( "hidden", true );
+				}
+			}
+
+			base.Tick();
 		}
 	}
 
@@ -123,6 +245,8 @@ namespace RTS
 						SizeY = Length.Percent( 100f ),
 						Texture = item.Icon
 					};
+
+					Style.Dirty();
 				}	 
 			}
 		}
@@ -235,6 +359,7 @@ namespace RTS
 		public Label Kills { get; private set; }
 		public ISelectable Item { get; private set; }
 		public ItemQueueList QueueList { get; private set; }
+		public ItemOccupantList OccupantList { get; private set; }
 
 
 		public ItemInformation()
@@ -244,6 +369,7 @@ namespace RTS
 			Health = Add.Label( "", "health" );
 			Kills = Add.Label( "", "kills" );
 			QueueList = AddChild<ItemQueueList>();
+			OccupantList = AddChild<ItemOccupantList>();
 		}
 
 		public void Update( ISelectable item )
@@ -286,6 +412,7 @@ namespace RTS
 			Name.Style.Dirty();
 
 			QueueList.Update( entity );
+			OccupantList.Update( entity );
 		}
 
 		private void UpdateUnit( UnitEntity entity ) 

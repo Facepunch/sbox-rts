@@ -177,7 +177,7 @@ namespace RTS
 			Population.SetClass( "hidden", true );
 		}
 
-		public void Update( BaseItem item )
+		public void Update( BaseItem item, bool hideCosts = false )
 		{
 			var player = Local.Pawn as Player;
 
@@ -187,17 +187,22 @@ namespace RTS
 			Name.Text = item.Name;
 			Desc.Text = item.Description;
 
-			foreach ( var kv in Costs )
+			CostContainer.SetClass( "hidden", hideCosts );
+
+			if ( !hideCosts )
 			{
-				if ( item.Costs.TryGetValue( kv.Key, out var cost ) )
+				foreach ( var kv in Costs )
 				{
-					kv.Value.Label.Text = cost.ToString();
-					kv.Value.SetClass( "affordable", player.GetResource( kv.Key ) >= cost );
-					kv.Value.SetClass( "hidden", false );
-				}
-				else
-				{
-					kv.Value.SetClass( "hidden", true );
+					if ( item.Costs.TryGetValue( kv.Key, out var cost ) )
+					{
+						kv.Value.Label.Text = cost.ToString();
+						kv.Value.SetClass( "affordable", player.GetResource( kv.Key ) >= cost );
+						kv.Value.SetClass( "hidden", false );
+					}
+					else
+					{
+						kv.Value.SetClass( "hidden", true );
+					}
 				}
 			}
 

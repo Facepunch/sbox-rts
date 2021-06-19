@@ -9,6 +9,7 @@ namespace RTS.Units
 		public virtual string Model => "models/citizen/citizen.vmdl";
 		public virtual HashSet<string> Clothing => new();
 		public virtual bool CanConstruct => false;
+		public virtual bool CanEnterBuildings => false;
 		public virtual HashSet<ResourceType> Gatherables => new();
 		public virtual float Speed => 200f;
 		public virtual float LineOfSight => 600f;

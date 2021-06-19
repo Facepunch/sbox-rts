@@ -53,19 +53,23 @@ namespace RTS
 					{
 						if ( selectable.Player != Local.Pawn )
 						{
-							ItemManager.Attack( ((Entity)selectable).NetworkIdent.ToString() );
+							ItemManager.Attack( ((Entity)selectable).NetworkIdent );
 						}
 						else if ( selectable is BuildingEntity building  )
 						{
+							var selectedNetworkId = ((Entity)selectable).NetworkIdent;
+
 							if ( building.IsUnderConstruction )
-								ItemManager.Construct( ((Entity)selectable).NetworkIdent.ToString() );
+								ItemManager.Construct( selectedNetworkId );
 							else if ( building.CanDepositResources )
-								ItemManager.Deposit( ((Entity)selectable).NetworkIdent.ToString() );
+								ItemManager.Deposit( selectedNetworkId );
+							else if ( building.CanOccupyUnits )
+								ItemManager.Occupy( selectedNetworkId );
 						}
 					}
 					else if ( trace.Entity is ResourceEntity resource)
 					{
-						ItemManager.Gather( resource.NetworkIdent.ToString() );
+						ItemManager.Gather( resource.NetworkIdent );
 					}
 					else
 					{

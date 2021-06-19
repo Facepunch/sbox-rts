@@ -11,6 +11,7 @@ namespace RTS.Buildings
 		public override Texture Icon => Texture.Load( "textures/rts/icons/pub.png" );
 		public override string Description => "Increases the maximum population of your empire.";
 		public override uint PopulationBoost => 6;
+		public override uint MaxOccupants => 3;
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

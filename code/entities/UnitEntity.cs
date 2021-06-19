@@ -16,6 +16,7 @@ namespace RTS
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
 		[Net, Local] public float GatherProgress { get; private set; }
 		[Net, Local] public bool IsGathering { get; private set; }
+		[Net, Local] public bool IsInsideBuilding { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
 		[Net, Local] public int Kills { get; set; }
@@ -118,56 +119,66 @@ namespace RTS
 
 		public void Attack( Entity target, bool autoFollow = true )
 		{
+			ResetTarget();
+
 			Target = target;
 			TargetRange = Item.AttackRange;
 			FollowTarget = autoFollow;
-			IsGathering = false;
+
 			OnTargetChanged();
 		}
 
 		public void MoveTo( Vector3 position )
 		{
-			Target = null;
-			Steer ??= new( this );
-			Steer.Target = position;
-			FollowTarget = false;
-			IsGathering = false;
+			ResetTarget( position);
 			OnTargetChanged();
 		}
 
+		public void Occupy( BuildingEntity building )
+		{
+			ResetTarget( building.Position );
+
+			Target = building;
+			FollowTarget = true;
+			TargetRange = Item.InteractRange;
+
+			OnTargetChanged();
+		}
+
+
 		public void Deposit( BuildingEntity building )
 		{
+			ResetTarget( building.Position );
+
 			Target = building;
-			Steer ??= new( this );
-			Steer.Target = building.Position;
 			FollowTarget = true;
-			IsGathering = false;
 			TargetRange = Item.InteractRange;
+
 			OnTargetChanged();
 		}
 
 		public void Gather( ResourceEntity resource)
 		{
+			ResetTarget( resource.Position );
+
 			Target = resource;
-			Steer ??= new( this );
-			Steer.Target = resource.Position;
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
-			IsGathering = false;
 			LastResourceType = resource.Resource;
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
+
 			OnTargetChanged();
 		}
 
 		public void Construct( BuildingEntity building )
 		{
+			ResetTarget( building.Position );
+
 			Target = building;
-			Steer ??= new( this );
-			Steer.Target = building.Position;
 			FollowTarget = true;
-			IsGathering = false;
 			TargetRange = Item.InteractRange;
+
 			OnTargetChanged();
 		}
 
@@ -218,6 +229,23 @@ namespace RTS
 		{
 			Clothing.ForEach( ( entity ) => entity.Delete() );
 			Clothing.Clear();
+		}
+
+		public virtual void OnEnterBuilding( BuildingEntity building )
+		{
+			Deselect();
+			SetParent( this );
+			IsInsideBuilding = true;
+			EnableDrawing = false;
+			EnableAllCollisions = false;
+		}
+
+		public virtual void OnLeaveBuilding( BuildingEntity building )
+		{
+			SetParent( null );
+			IsInsideBuilding = false;
+			EnableDrawing = true;
+			EnableAllCollisions = true;
 		}
 
 		protected override void OnDestroy()
@@ -319,6 +347,15 @@ namespace RTS
 			Velocity = move.Velocity;
 		}
 
+		private void ResetTarget( Vector3? position = null )
+		{
+			Target = null;
+			Steer ??= new( this );
+			Steer.Target = position.Value;
+			IsGathering = false;
+			FollowTarget = false;
+		}
+
 		private void FindTargetResource()
 		{
 			// If our last resource entity is valid just use that.
@@ -388,6 +425,7 @@ namespace RTS
 			{
 				if ( Target.IsValid() && FollowTarget )
 				{
+					Steer ??= new( this );
 					Steer.Target = Target.Position;
 				}
 				else if ( !IsSelected )
@@ -440,7 +478,14 @@ namespace RTS
 				{
 					if ( Target is BuildingEntity building && building.Player == Player )
 					{
-						TickConstruct( building );
+						if ( building.IsUnderConstruction )
+							TickConstruct( building );
+						else if ( building.CanDepositResources )
+							DepositResources();
+						else if ( building.CanOccupyUnits )
+							TickOccupy( building );
+						else
+							ClearTarget();
 					}
 					else if ( Target is ResourceEntity resource )
 					{
@@ -471,40 +516,39 @@ namespace RTS
 			SetAnimFloat( "duckspeed_scale", 2.0f / 80.0f );
 		}
 
+		private void TickOccupy( BuildingEntity building )
+		{
+			if ( building.OccupyUnit( this ) ) ClearTarget();
+		}
+
+		private void DepositResources()
+		{
+			foreach ( var kv in Carrying )
+			{
+				Player.GiveResource( kv.Key, kv.Value );
+			}
+
+			Carrying.Clear();
+
+			FindTargetResource();
+		}
+
 		private void TickConstruct( BuildingEntity building )
 		{
-			if ( building.IsUnderConstruction )
-			{
-				building.Health += (building.MaxHealth / building.Item.BuildTime * Time.Delta);
-				building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
+			building.Health += (building.MaxHealth / building.Item.BuildTime * Time.Delta);
+			building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
 
-				SpinSpeed = (building.MaxHealth / building.Health) * 200f;
+			SpinSpeed = (building.MaxHealth / building.Health) * 200f;
 				
-				if ( building.Health == building.Item.MaxHealth )
-				{
-					LookAtEntity( building );
-					building.FinishConstruction();
-					ClearTarget();
-				}
-				else
-				{
-					building.UpdateConstruction();
-				}
-			}
-			else if ( building.CanDepositResources )
+			if ( building.Health == building.Item.MaxHealth )
 			{
-				foreach ( var kv in Carrying )
-				{
-					Player.GiveResource( kv.Key, kv.Value );
-				}
-
-				Carrying.Clear();
-
-				FindTargetResource();
+				LookAtEntity( building );
+				building.FinishConstruction();
+				ClearTarget();
 			}
 			else
 			{
-				ClearTarget();
+				building.UpdateConstruction();
 			}
 		}
 
@@ -531,12 +575,22 @@ namespace RTS
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
+			if ( IsInsideBuilding )
+			{
+				Circle.EnableDrawing = false;
+				EnableDrawing = false;
+
+				return;
+			}
+
 			if ( Circle.IsValid() && Player.IsValid() )
 			{
 				if ( Player.IsLocalPawn && IsSelected )
 					Circle.Color = Color.White;
 				else
 					Circle.Color = Player.TeamColor;
+
+				Circle.EnableDrawing = true;
 			}
 
 			if ( IsLocalPlayers ) return;
