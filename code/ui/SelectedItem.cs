@@ -426,6 +426,7 @@ namespace RTS
 			Name.Style.Dirty();
 
 			QueueList.Update( null );
+			OccupantList.Update( null );
 		}
 	}
 
