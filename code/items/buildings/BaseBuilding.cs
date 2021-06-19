@@ -4,7 +4,7 @@ namespace RTS.Buildings
 {
     public abstract class BaseBuilding : BaseItem
 	{
-		public override Color Color => Color.Magenta;
+		public override Color Color => new Color( 0.8f, 0.8f, 0.8f );
 		public virtual HashSet<string> Buildables => new();
 		public virtual bool CanDepositResources => false;
 		public virtual float MinLineOfSight => 200f;

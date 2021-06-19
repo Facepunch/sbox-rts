@@ -1,6 +1,6 @@
 ﻿itemtooltip {
     position: absolute;
-    background-color: rgba(0 0 0 0.5);
+    background-color: rgba(0 0 0 0.7);
     pointer-events: none;
     flex-direction: column;
     border-radius: 8px;
@@ -14,10 +14,11 @@
 
     .name {
         font-size: 20px;
+        font-weight: bold;
     }
 
     .desc {
-        font-size: 16px;
+        font-size: 18px;
         max-width: 400px;
         margin-top: 8px;
     }
