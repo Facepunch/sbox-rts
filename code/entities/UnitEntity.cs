@@ -33,6 +33,7 @@ namespace RTS
 		public ResourceType LastResourceType { get; private set; }
 		public Vector3 LastResourcePosition { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
+		public float? SpinSpeed { get; private set; }
 		public float TargetRange { get; private set; }
 		public float WishSpeed { get; private set; }
 
@@ -121,31 +122,34 @@ namespace RTS
 			TargetRange = Item.AttackRange;
 			FollowTarget = autoFollow;
 			IsGathering = false;
+			OnTargetChanged();
 		}
 
 		public void MoveTo( Vector3 position )
 		{
 			Target = null;
-			Steer ??= new();
+			Steer ??= new( this );
 			Steer.Target = position;
 			FollowTarget = false;
 			IsGathering = false;
+			OnTargetChanged();
 		}
 
 		public void Deposit( BuildingEntity building )
 		{
 			Target = building;
-			Steer ??= new();
+			Steer ??= new( this );
 			Steer.Target = building.Position;
 			FollowTarget = true;
 			IsGathering = false;
 			TargetRange = Item.InteractRange;
+			OnTargetChanged();
 		}
 
 		public void Gather( ResourceEntity resource)
 		{
 			Target = resource;
-			Steer ??= new();
+			Steer ??= new( this );
 			Steer.Target = resource.Position;
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
@@ -153,16 +157,18 @@ namespace RTS
 			LastResourceType = resource.Resource;
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
+			OnTargetChanged();
 		}
 
 		public void Construct( BuildingEntity building )
 		{
 			Target = building;
-			Steer ??= new();
+			Steer ??= new( this );
 			Steer.Target = building.Position;
 			FollowTarget = true;
 			IsGathering = false;
 			TargetRange = Item.InteractRange;
+			OnTargetChanged();
 		}
 
 		public void ClearTarget()
@@ -171,6 +177,20 @@ namespace RTS
 			Target = null;
 			IsGathering = false;
 			FollowTarget = false;
+			OnTargetChanged();
+		}
+
+		public float LookAtEntity( Entity target, float? interpolation = null )
+		{
+			var targetDirection = target.Position - Position;
+			var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
+
+			if ( interpolation.HasValue )
+				Rotation = Rotation.Lerp( Rotation, targetRotation, interpolation.Value );
+			else
+				Rotation = targetRotation;
+
+			return Rotation.Distance( targetRotation );
 		}
 
 		public void MakeVisible( bool isVisible )
@@ -412,10 +432,14 @@ namespace RTS
 			{
 				var targetDirection = Target.Position - Position;
 				var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
+				var lookAtDistance = 0f;
 
-				Rotation = Rotation.Lerp( Rotation, targetRotation, Time.Delta * 15f );
+				if ( SpinSpeed.HasValue )
+					Rotation = Rotation.FromYaw( Rotation.Yaw() + SpinSpeed.Value * Time.Delta );
+				else
+					lookAtDistance = LookAtEntity( Target, Time.Delta * 15f );
 
-				if ( Rotation.Distance( targetRotation ).AlmostEqual( 0f, 0.1f ) )
+				if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
 				{
 					if ( Target is BuildingEntity building && building.Player == Player )
 					{
@@ -454,11 +478,14 @@ namespace RTS
 		{
 			if ( building.IsUnderConstruction )
 			{
-				building.Health += (building.Item.MaxHealth / building.Item.BuildTime * Time.Delta);
+				building.Health += (building.MaxHealth / building.Item.BuildTime * Time.Delta);
 				building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
 
+				SpinSpeed = (building.MaxHealth / building.Health) * 200f;
+				
 				if ( building.Health == building.Item.MaxHealth )
 				{
+					LookAtEntity( building );
 					building.FinishConstruction();
 					ClearTarget();
 				}
@@ -535,6 +562,11 @@ namespace RTS
 			}
 
 			EnableDrawing = (RenderAlpha > 0f);
+		}
+
+		protected virtual void OnTargetChanged()
+		{
+			SpinSpeed = null;
 		}
 
 		protected override void OnPlayerAssigned( Player player )

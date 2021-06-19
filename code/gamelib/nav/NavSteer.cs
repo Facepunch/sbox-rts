@@ -5,12 +5,14 @@ namespace Gamelib.Nav
 	public class NavSteer
 	{
 		public NavSteerOutput Output;
+		public ModelEntity Agent;
 		public Vector3 Target;
 
 		protected NavPath Path { get; private set; }
 
-		public NavSteer()
+		public NavSteer( ModelEntity agent )
 		{
+			Agent = agent;
 			Path = new();
 		}
 
@@ -21,9 +23,24 @@ namespace Gamelib.Nav
 			Output.Finished = Path.IsEmpty;
 
 			if ( Output.Finished )
+			{
+				Output.Direction = Vector3.Zero;
 				return;
+			}
 
-			Output.Direction = (Output.Direction + Path.GetDirection( currentPosition )).Normal;
+			Output.Direction = Path.GetDirection( currentPosition );
+
+			var avoid = GetAvoidance( currentPosition );
+
+			if ( !avoid.IsNearlyZero() )
+			{
+				Output.Direction = (Output.Direction + avoid).Normal;
+			}
+		}
+
+		private Vector3 GetAvoidance( Vector3 position )
+		{
+			return Vector3.Zero;
 		}
 
 		public struct NavSteerOutput
