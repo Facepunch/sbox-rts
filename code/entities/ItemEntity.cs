@@ -38,6 +38,11 @@ namespace RTS
 			Transmit = TransmitType.Always;
 		}
 
+		public bool IsEnemy( ISelectable other )
+		{
+			return (other.Player != Player);
+		}
+
 		public void Assign( Player player, T item )
 		{
 			Host.AssertServer();

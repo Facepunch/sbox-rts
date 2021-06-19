@@ -11,5 +11,7 @@ namespace RTS.Buildings
 		public virtual uint PopulationBoost => 0;
 		public virtual float MaxHealth => 100f;
 		public virtual string Model => "";
+		public virtual float AttackRange => 600f;
+		public virtual string Weapon => "";
 	}
 }

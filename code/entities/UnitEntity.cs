@@ -219,11 +219,6 @@ namespace RTS
 			Clothing.Clear();
 		}
 
-		public bool IsEnemy( ISelectable other )
-		{
-			return (other.Player != Player);
-		}
-
 		protected override void OnDestroy()
 		{
 			if ( IsClient )
@@ -265,7 +260,7 @@ namespace RTS
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
 			{
 				Weapon = Library.Create<Weapon>( item.Weapon );
-				Weapon.Unit = this;
+				Weapon.Attacker = this;
 
 				var attachment = GetAttachment( "weapon", true );
 				
@@ -276,6 +271,7 @@ namespace RTS
 				}
 				else
 				{
+					Weapon.Position = Position;
 					Weapon.SetParent( this, true );
 				}
 			}
@@ -451,7 +447,7 @@ namespace RTS
 					}
 					else if ( Weapon.IsValid() && Weapon.CanAttack() )
 					{
-						Weapon.Attack( Target );
+						Weapon.Attack();
 					}
 				}
 			}
@@ -566,6 +562,9 @@ namespace RTS
 
 		protected virtual void OnTargetChanged()
 		{
+			if ( Weapon.IsValid() )
+				Weapon.Target = Target;
+
 			SpinSpeed = null;
 		}
 

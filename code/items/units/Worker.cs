@@ -11,7 +11,7 @@ namespace RTS.Units
 		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
 		public override bool CanConstruct => true;
 		public override string Description => "Gathers Wood, Stone and Beer for your empire and constructs buildings.";
-		public override int BuildTime => 30;
+		public override int BuildTime => 5;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 50
@@ -28,6 +28,7 @@ namespace RTS.Units
 			"building.brewery",
 			"building.pub",
 			"building.silo",
+			"building.turret",
 			"building.terryfactory",
 			"building.vehiclefactory"
 		};

@@ -6,31 +6,50 @@ namespace RTS
 {
 	public partial class Weapon : AnimEntity
 	{
-		[Net] public UnitEntity Unit { get; set; }
+		[Net] public ModelEntity Attacker { get; set; }
+		[Net] public Entity Target { get; set; }
 		public virtual bool IsMelee => false;
 		public virtual int BaseDamage => 10;
 		public virtual int HoldType => 1;
 		public virtual float FireRate => 1f;
 		public TimeSince LastAttack { get; set; }
 
-		public override void Spawn()
-		{
-			base.Spawn();
-
-			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
-		}
-
 		public virtual bool CanAttack()
 		{
 			return (LastAttack > FireRate);
 		}
 
-		public virtual void Attack( Entity target )
+		public virtual void Attack()
 		{
 			LastAttack = 0f;
 
 			ShootEffects();
-			ShootBullet( target, 0.05f, 1.5f, BaseDamage, 3.0f );
+			ShootBullet( 1.5f, BaseDamage, 3.0f );
+		}
+
+		public virtual Transform? GetMuzzle()
+		{
+			return GetAttachment( "muzzle", true );
+		}
+
+		public virtual Ray GetOriginAndDirection()
+		{
+			var attachment = GetMuzzle();
+
+			if ( attachment.HasValue )
+			{
+				var transform = attachment.Value;
+
+				return new Ray {
+					Origin = transform.Position,
+					Direction = Target.IsValid() ? (Target.Position - transform.Position).Normal : transform.Rotation.Forward.Normal
+				};
+			}
+
+			return new Ray {
+				Origin = Position,
+				Direction = Target.IsValid()? (Target.Position - Position).Normal : Rotation.Forward.Normal
+			};
 		}
 
 		[ClientRpc]
@@ -44,21 +63,19 @@ namespace RTS
 			}
 		}
 
-		public virtual void ShootBullet( Entity target, float spread, float force, float damage, float bulletSize )
+		public virtual void ShootBullet( float force, float damage, float bulletSize )
 		{
-			var forward = Unit.Rotation.Forward;
-			forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * spread * 0.25f;
-			forward = forward.Normal;
+			var ray = GetOriginAndDirection();
 
-			foreach ( var tr in TraceBullet( Position, target.WorldSpaceBounds.Center, bulletSize ) )
+			foreach ( var tr in TraceBullet( ray.Origin, Target.WorldSpaceBounds.Center, bulletSize ) )
 			{
 				tr.Surface.DoBulletImpact( tr );
 
-				if ( tr.Entity == target )
+				if ( tr.Entity == Target )
 				{
-					var damageInfo = DamageInfo.FromBullet( tr.EndPos, forward * 100 * force, damage )
+					var damageInfo = DamageInfo.FromBullet( tr.EndPos, tr.Direction * 100 * force, damage )
 						.UsingTraceResult( tr )
-						.WithAttacker( Unit )
+						.WithAttacker( Attacker )
 						.WithWeapon( this );
 
 					tr.Entity.TakeDamage( damageInfo );
@@ -68,12 +85,12 @@ namespace RTS
 
 		public virtual IEnumerable<TraceResult> TraceBullet( Vector3 start, Vector3 end, float radius = 2.0f )
 		{
-			bool InWater = Physics.TestPointContents( start, CollisionLayer.Water );
+			bool isInWater = Physics.TestPointContents( start, CollisionLayer.Water );
 
 			var tr = Trace.Ray( start, end )
 				.UseHitboxes()
-				.HitLayer( CollisionLayer.Water, !InWater )
-				.Ignore( Unit )
+				.HitLayer( CollisionLayer.Water, !isInWater )
+				.Ignore( Attacker )
 				.Ignore( this )
 				.Size( radius )
 				.Run();

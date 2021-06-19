@@ -162,7 +162,12 @@ namespace RTS
 
 			for ( var i = Selection.Count - 1; i >= 0; i-- )
 			{
-				if ( Selection[i] is not ISelectable selectable )
+				var entity = Selection[i];
+
+				if ( entity is not ISelectable selectable )
+					continue;
+
+				if ( !entity.IsValid() )
 					continue;
 
 				if ( selectable.IsSelected )

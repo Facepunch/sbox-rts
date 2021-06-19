@@ -94,3 +94,11 @@ metadata
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 ]
 
+// 
+// RTS.TurretGun : RTS.Weapon 
+// 
+@PointClass = weapon_turret_gun : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+]
+

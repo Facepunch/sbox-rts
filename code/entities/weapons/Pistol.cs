@@ -16,13 +16,13 @@ namespace RTS
 			SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 		}
 
-		public override void Attack( Entity target )
+		public override void Attack()
 		{
 			LastAttack = 0f;
 
 			ShootEffects();
 			PlaySound( "rust_pistol.shoot" );
-			ShootBullet( target, 0.05f, 1.5f, BaseDamage, 3.0f );
+			ShootBullet( 1.5f, BaseDamage, 3.0f );
 		}
 	}
 }

@@ -31,7 +31,8 @@ namespace Gamelib.Extensions
 
 			for ( int index = 0; index < self.Count; index++ )
 			{
-				hashCode = hashCode * HashCodeMultiplier + self[index].GetHashCode();
+				if ( self[index] != null )
+					hashCode = hashCode * HashCodeMultiplier + self[index].GetHashCode();
 			}
 
 			return hashCode;

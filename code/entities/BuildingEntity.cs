@@ -14,6 +14,8 @@ namespace RTS
 	{
 		[Net] public bool IsUnderConstruction { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
+		[Net] public Weapon Weapon { get; private set; }
+		[Net] public Entity Target { get; private set; }
 		public uint LastQueueId { get; set; }
 		public List<QueueItem> Queue { get; set; }
 		public bool CanDepositResources => Item.CanDepositResources;
@@ -34,6 +36,19 @@ namespace RTS
 
 			RenderAlpha = 0.25f + (0.75f / Item.MaxHealth) * Health;
 			GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
+		}
+
+		public bool IsTargetInRange()
+		{
+			if ( !Target.IsValid() ) return false;
+
+			return (Target.IsValid() && Target.Position.Distance( Position ) < Item.AttackRange);
+		}
+
+		public void Attack( Entity target )
+		{
+			Weapon.Target = target;
+			Target = target;
 		}
 
 		public void FinishConstruction()
@@ -158,6 +173,26 @@ namespace RTS
 					firstItem.Item.OnCreated( Player );
 				}
 			}
+
+			if ( Weapon.IsValid() && !IsUnderConstruction )
+			{
+				if ( Target.IsValid() )
+				{
+					if ( !IsTargetInRange() )
+					{
+						Weapon.Target = null;
+						Target = null;
+						return;
+					}
+
+					if ( Weapon.CanAttack() )
+						Weapon.Attack();
+				}
+				else
+				{
+					FindTargetUnit();
+				}
+			}
 		}
 
 		protected virtual void OnQueueItemCompleted( QueueItem queueItem )
@@ -191,6 +226,25 @@ namespace RTS
 			MaxHealth = item.MaxHealth;
 			Health = item.MaxHealth;
 
+			if ( !string.IsNullOrEmpty( item.Weapon ) )
+			{
+				Weapon = Library.Create<Weapon>( item.Weapon );
+				Weapon.Attacker = this;
+
+				var attachment = GetAttachment( "weapon", true );
+
+				if ( attachment.HasValue )
+				{
+					Weapon.SetParent( this );
+					Weapon.Position = attachment.Value.Position;
+				}
+				else
+				{
+					Weapon.Position = Position;
+					Weapon.SetParent( this, true );
+				}
+			}
+
 			base.OnItemChanged( item );
 		}
 
@@ -212,6 +266,20 @@ namespace RTS
 			}
 
 			base.OnDestroy();
+		}
+
+		private void FindTargetUnit()
+		{
+			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRange );
+
+			foreach ( var entity in entities )
+			{
+				if ( entity is UnitEntity unit )// && IsEnemy( unit ) )
+				{
+					Attack( unit );
+					return;
+				}
+			}
 		}
 
 		[ClientRpc]
