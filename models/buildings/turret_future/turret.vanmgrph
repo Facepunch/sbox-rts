@@ -97,7 +97,7 @@
 			{
 				_class = "CLookAtAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -199.0, 48.0 ]
+				m_vecPosition = [ -117.0, 51.0 ]
 				m_nNodeID = 
 				{
 					m_id = 204619005
@@ -120,7 +120,7 @@
 				m_lookatChainName = "aim"
 				m_attachmentName = "aim"
 				m_flYawLimit = 180.0
-				m_flPitchLimit = 10.0
+				m_flPitchLimit = 0.0
 				m_bResetBase = true
 				m_bLockWhenWaning = true
 				m_bUseHysteresis = false
@@ -145,7 +145,7 @@
 			{
 				_class = "CRootAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ 202.0, 56.0 ]
+				m_vecPosition = [ 440.0, 43.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1569685189

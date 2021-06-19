@@ -87,8 +87,6 @@ namespace RTS
 				.Ignore( this )
 				.Run();
 
-			Log.Info( trace.Entity.ToString() );
-
 			trace.Surface.DoBulletImpact( trace );
 
 			if ( trace.Entity == Target )
