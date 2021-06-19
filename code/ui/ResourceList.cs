@@ -6,14 +6,14 @@ using System;
 
 namespace RTS
 {
-	public class ResourceDisplay : Panel
+	public class ResourceList : Panel
 	{
 		public Dictionary<ResourceType, ItemResourceValue> Resources { get; private set; }
 		public Dictionary<ResourceType, int> Cache { get; private set; }
 
-		public ResourceDisplay()
+		public ResourceList()
 		{
-			StyleSheet.Load( "/ui/ResourceDisplay.scss" );
+			StyleSheet.Load( "/ui/ResourceList.scss" );
 
 			Cache = new();
 			Resources = new();

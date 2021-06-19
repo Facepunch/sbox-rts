@@ -211,6 +211,11 @@ namespace RTS
 				FogManager.Instance.RemoveViewer( this );
 				FogManager.Instance.RemoveCullable( this );
 			}
+			else
+			{
+				if ( Player.IsValid() )
+					Player.TakePopulation( Item.Population );
+			}
 
 			base.OnDestroy();
 		}
@@ -530,6 +535,11 @@ namespace RTS
 			}
 
 			EnableDrawing = (RenderAlpha > 0f);
+		}
+
+		protected override void OnPlayerAssigned( Player player )
+		{
+			base.OnPlayerAssigned( player );
 		}
 
 		protected override void AddHudComponents()

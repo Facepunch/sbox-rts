@@ -21,7 +21,8 @@ namespace RTS
 			RootPanel.AddChild<EntityHud>();
 			RootPanel.AddChild<RoundInfo>();
 			RootPanel.AddChild<MiniMap>();
-			RootPanel.AddChild<ResourceDisplay>();
+			RootPanel.AddChild<ResourceList>();
+			RootPanel.AddChild<PopulationCount>();
 			RootPanel.AddChild<SelectedItem>();
 			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();

@@ -15,6 +15,8 @@ namespace RTS
 		[Net, Local] public List<Entity> Selection { get; set; }
 		[Net, Local] public Vector3 StartPosition { get; set; }
 		[Net, Local] public float StartLineOfSight { get; set; }
+		[Net, Local] public uint MaxPopulation { get; set; }
+		[Net, Local] public uint Population { get; private set; }
 		[Net, Local, Predicted] public float ZoomLevel { get; set; }
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
@@ -30,6 +32,7 @@ namespace RTS
 			ZoomLevel = 1f;
 			Selection = new List<Entity>();
 			Dependencies = new List<uint>();
+			MaxPopulation = 8;
 		}
 
 		public List<UnitEntity> GetUnits( BaseUnit unit)
@@ -45,6 +48,21 @@ namespace RTS
 		public List<BuildingEntity> GetBuildings()
 		{
 			return All.OfType<BuildingEntity>().Where( i => i.Player == this ).ToList();
+		}
+
+		public void AddPopulation( uint population )
+		{
+			Population += population;
+		}
+
+		public void TakePopulation( uint population )
+		{
+			Population = Math.Max( Population - population, 0 );
+		}
+
+		public bool HasPopulationCapacity( uint population )
+		{
+			return (Population + population <= MaxPopulation);
 		}
 
 		public bool CanAffordItem( BaseItem item )

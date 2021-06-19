@@ -39,7 +39,7 @@ namespace RTS
 
 			var item = Instance.Find<BaseBuilding>( itemId );
 
-			if ( FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct && caller.CanAffordItem( item ) )
+			if ( FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct && item.CanCreate( caller ) )
 			{
 				if ( worker.Player == caller && worker.Item.Buildables.Contains( item.UniqueId ) )
 				{
@@ -77,10 +77,11 @@ namespace RTS
 
 			if ( FindByIndex( entityId ) is BuildingEntity building )
 			{
-				if ( building.Player == caller && caller.CanAffordItem( item ) )
+				if ( building.Player == caller && item.CanCreate( caller ) )
 				{
 					caller.TakeResourcesForItem( item );
-					building.StartQueueItem( item );
+					building.QueueItem( item );
+					item.OnQueued( caller );
 				}
 			}
 		}
@@ -97,8 +98,14 @@ namespace RTS
 			{
 				if ( building.Player == caller )
 				{
-					caller.GiveResourcesForItem( building.Item );
-					building.StopQueueItem( queueId );
+					var item = building.UnqueueItem( queueId );
+
+					if ( item != null )
+					{
+						caller.GiveResourcesForItem( item );
+						building.UnqueueItem( queueId );
+						item.OnUnqueued( caller );
+					}
 				}
 			}
 		}

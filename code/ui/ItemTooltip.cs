@@ -1,5 +1,6 @@
 ﻿
 using Gamelib.Extensions;
+using RTS.Units;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -90,6 +91,8 @@ namespace RTS
 		public float HideTime { get; private set; }
 		public bool IsShowing { get; private set; }
 		public object Target { get; private set; }
+		public PopulationLabel Population { get; private set; }
+		public Panel CostContainer { get; private set; }
 		public Dictionary<ResourceType, ItemResourceValue> Costs { get; private set; }
 
 		public ItemTooltip()
@@ -102,10 +105,14 @@ namespace RTS
 			Costs = new();
 			Instance = this;
 
+			CostContainer = Add.Panel( "costs" );
+
 			AddResource( ResourceType.Stone );
 			AddResource( ResourceType.Beer );
 			AddResource( ResourceType.Metal );
 			AddResource( ResourceType.Plasma );
+
+			Population = AddChild<PopulationLabel>( "population" );
 		}
 
 		public void Show( float hideTime = 0f )
@@ -134,6 +141,9 @@ namespace RTS
 
 		public void Update( ResourceEntity entity )
 		{
+			Name.Style.FontColor = entity.Color;
+			Name.Style.Dirty();
+
 			Name.Text = entity.Name;
 			Desc.Text = entity.Description;
 
@@ -150,11 +160,16 @@ namespace RTS
 					kv.Value.SetClass( "hidden", true );
 				}
 			}
+
+			Population.SetClass( "hidden", true );
 		}
 
 		public void Update( BaseItem item )
 		{
 			var player = Local.Pawn as Player;
+
+			Name.Style.FontColor = item.Color;
+			Name.Style.Dirty();
 
 			Name.Text = item.Name;
 			Desc.Text = item.Description;
@@ -171,6 +186,17 @@ namespace RTS
 				{
 					kv.Value.SetClass( "hidden", true );
 				}
+			}
+
+			if ( item is BaseUnit unit )
+			{
+				Population.Label.SetClass( "full", !player.HasPopulationCapacity( unit.Population ) );
+				Population.Label.Text = unit.Population.ToString();
+				Population.SetClass( "hidden", false );
+			}
+			else
+			{
+				Population.SetClass( "hidden", true );
 			}
 		}
 
@@ -212,7 +238,7 @@ namespace RTS
 
 		private void AddResource( ResourceType type )
 		{
-			var cost = AddChild<ItemResourceValue>();
+			var cost = CostContainer.AddChild<ItemResourceValue>();
 			cost.Update( type, 0 );
 			Costs.Add( type, cost );
 		}

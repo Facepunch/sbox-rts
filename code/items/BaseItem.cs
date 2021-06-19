@@ -10,6 +10,7 @@ namespace RTS
 		public virtual string Name => "";
 		public virtual string UniqueId => "";
 		public virtual string Description => "";
+		public virtual Color Color => Color.White;
 		public virtual Texture Icon => null;
 		public virtual int BuildTime => 0;
 		public virtual Dictionary<ResourceType, int> Costs => new();
@@ -34,6 +35,26 @@ namespace RTS
 			}
 
 			return true;
+		}
+
+		public virtual void OnQueued( Player player )
+		{
+
+		}
+
+		public virtual void OnUnqueued( Player player )
+		{
+
+		}
+
+		public virtual void OnCreated( Player player )
+		{
+
+		}
+
+		public virtual bool CanCreate( Player player )
+		{
+			return CanHave( player ) && player.CanAffordItem( this );
 		}
 
 		public virtual bool CanHave( Player player )

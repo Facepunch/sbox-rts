@@ -53,6 +53,7 @@ namespace RTS
 						var worker = new UnitEntity();
 						worker.Position = spawnpoint.Position + (Vector3.Random * 20f).WithZ( spawnpoint.Position.z );
 						worker.Assign( player, "unit.worker" );
+						player.AddPopulation( worker.Item.Population );
 
 						/*
 						player.SetResource( ResourceType.Stone, 1000 );

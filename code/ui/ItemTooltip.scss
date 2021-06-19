@@ -16,6 +16,42 @@
 
     .desc {
         font-size: 16px;
+        max-width: 400px;
+        margin-top: 8px;
+    }
+
+    .costs {
+        margin-top: 8px;
+        display: flex;
+
+        itemresourcevalue {
+            margin-right: 16px;
+        }
+    }
+
+    .population {
+        margin-top: 4px;
+
+        .icon {
+            background-color: white;
+            margin-right: 4px;
+            width: 24px;
+            height: 24px;
+        }
+
+        .label {
+            font-size: 17px;
+            font-weight: bold;
+            color: white;
+
+            &.full {
+                color: red;
+            }
+        }
+
+        &.hidden {
+            display: none;
+        }
     }
 
     &.hidden {
@@ -26,6 +62,7 @@
 itemresourcevalue {
     .icon {
         background-color: white;
+        margin-right: 4px;
         width: 24px;
         height: 24px;
     }

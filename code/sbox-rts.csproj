@@ -45,6 +45,12 @@
     <None Update="ui\MiniMap.scss">
       <DependentUpon>MiniMap.cs</DependentUpon>
     </None>
+    <None Update="ui\PopulationCount.scss">
+      <DependentUpon>PopulationCount.cs</DependentUpon>
+    </None>
+    <None Update="ui\ResourceList.scss">
+      <DependentUpon>ResourceList.cs</DependentUpon>
+    </None>
     <None Update="ui\SelectedItem.scss">
       <DependentUpon>SelectedItem.cs</DependentUpon>
     </None>

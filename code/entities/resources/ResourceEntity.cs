@@ -7,6 +7,7 @@ namespace RTS
 	{
 		public virtual ResourceType Resource => ResourceType.Stone;
 		public virtual string Description => "";
+		public virtual Color Color => Color.Gray;
 		public virtual string Name => "";
 		public virtual float GatherTime => 1f;
 		public virtual int MaxCarry => 10;

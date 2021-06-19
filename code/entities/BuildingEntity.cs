@@ -41,6 +41,7 @@ namespace RTS
 			Host.AssertServer();
 
 			Player.AddDependency( Item );
+			Player.MaxPopulation += Item.PopulationBoost;
 
 			IsUnderConstruction = false;
 			RenderAlpha = 1f;
@@ -61,7 +62,7 @@ namespace RTS
 			Health = 1f;
 		}
 
-		public void StartQueueItem( BaseItem item )
+		public void QueueItem( BaseItem item )
 		{
 			Host.AssertServer();
 
@@ -106,14 +107,17 @@ namespace RTS
 			}
 		}
 
-		public void StopQueueItem( uint queueId )
+		public BaseItem UnqueueItem( uint queueId )
 		{
 			Host.AssertServer();
+
+			BaseItem removedItem = default;
 
 			for ( var i = Queue.Count - 1; i >= 0; i-- )
 			{
 				if ( Queue[i].Id == queueId )
 				{
+					removedItem = Queue[i].Item;
 					Queue.RemoveAt( i );
 					break;
 				}
@@ -131,6 +135,8 @@ namespace RTS
 					StartQueueItem( To.Single( Player ), firstItem.Id, firstItem.FinishTime );
 				}
 			}
+
+			return removedItem;
 		}
 
 		public override bool CanSelect()
@@ -148,7 +154,8 @@ namespace RTS
 				if ( firstItem.FinishTime > 0f && Game.Instance.ServerTime >= firstItem.FinishTime )
 				{
 					OnQueueItemCompleted( firstItem );
-					StopQueueItem( firstItem.Id );
+					UnqueueItem( firstItem.Id );
+					firstItem.Item.OnCreated( Player );
 				}
 			}
 		}
@@ -195,6 +202,9 @@ namespace RTS
 
 				if ( others.Count == 0 )
 					Player.RemoveDependency( Item );
+
+				if ( Player.IsValid() )
+					Player.MaxPopulation -= Item.PopulationBoost;
 			}
 			else
 			{

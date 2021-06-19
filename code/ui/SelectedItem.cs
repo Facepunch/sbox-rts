@@ -24,18 +24,17 @@ namespace RTS
 		public override void OnEvent( string eventName )
 		{
 			var tooltip = ItemTooltip.Instance;
+			var player = (Local.Pawn as Player);
 
 			if ( eventName == "onclick" )
 			{
-				if ( Selectable is UnitEntity unit && Item is BaseBuilding building )
-				{
-					if ( Local.Pawn is Player player && player.CanAffordItem( building ) )
-						ItemManager.Instance.CreateGhost( unit, building );
-				}
+				if ( !Item.CanCreate( player ) )
+					return;
+
+				if ( Selectable is UnitEntity worker && Item is BaseBuilding building )
+					ItemManager.Instance.CreateGhost( worker, building );
 				else
-				{
 					ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
-				}
 			}
 			else if ( eventName == "onmouseover" )
 			{
