@@ -207,6 +207,7 @@ namespace RTS
 			entity.SetParent( this, true );
 			entity.EnableShadowInFirstPerson = true;
 			entity.EnableHideInFirstPerson = true;
+			entity.AddCollisionLayer( CollisionLayer.Debris );
 
 			Clothing.Add( entity );
 

@@ -22,7 +22,7 @@ namespace RTS
 
 			ShootEffects();
 			PlaySound( "rust_pistol.shoot" );
-			ShootBullet( 1.5f, BaseDamage, 3.0f );
+			ShootBullet( 1.5f, BaseDamage );
 		}
 	}
 }

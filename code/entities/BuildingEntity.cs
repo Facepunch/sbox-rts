@@ -18,6 +18,7 @@ namespace RTS
 		[Net] public Entity Target { get; private set; }
 		public uint LastQueueId { get; set; }
 		public List<QueueItem> Queue { get; set; }
+		public float NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
 
 		#region UI
@@ -47,8 +48,14 @@ namespace RTS
 
 		public void Attack( Entity target )
 		{
-			Weapon.Target = target;
 			Target = target;
+			OnTargetChanged();
+		}
+
+		public void ClearTarget()
+		{
+			Target = null;
+			OnTargetChanged();
 		}
 
 		public void FinishConstruction()
@@ -180,19 +187,25 @@ namespace RTS
 				{
 					if ( !IsTargetInRange() )
 					{
-						Weapon.Target = null;
-						Target = null;
+						ClearTarget();
 						return;
 					}
 
 					if ( Weapon.CanAttack() )
 						Weapon.Attack();
 				}
-				else
+
+				if ( Time.Now >= NextFindTarget )
 				{
 					FindTargetUnit();
 				}
 			}
+		}
+
+		protected virtual void OnTargetChanged()
+		{
+			if ( Weapon.IsValid() )
+				Weapon.Target = Target;
 		}
 
 		protected virtual void OnQueueItemCompleted( QueueItem queueItem )
@@ -241,7 +254,7 @@ namespace RTS
 				else
 				{
 					Weapon.Position = Position;
-					Weapon.SetParent( this, true );
+					Weapon.SetParent( this );
 				}
 			}
 
@@ -270,16 +283,17 @@ namespace RTS
 
 		private void FindTargetUnit()
 		{
-			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRange );
+			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRange )
+				.OfType<UnitEntity>()
+				.OrderBy( ( a ) => a.Position.Distance( Position ) )
+				.FirstOrDefault();
 
-			foreach ( var entity in entities )
+			if ( closestTarget.IsValid() )
 			{
-				if ( entity is UnitEntity unit )// && IsEnemy( unit ) )
-				{
-					Attack( unit );
-					return;
-				}
+				Attack( closestTarget );
 			}
+
+			NextFindTarget = Time.Now + 0.5f;
 		}
 
 		[ClientRpc]

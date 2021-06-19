@@ -6,9 +6,10 @@ namespace RTS
 	[Library("weapon_turret_gun")]
 	public partial class TurretGun : Weapon
 	{
-		public Rotation TargetRotation { get; private set; }
 		public override float FireRate => 3f;
 		public override int BaseDamage => 12;
+
+		public Vector3 TargetDirection { get; private set; }
 
 		public override void Attack()
 		{
@@ -16,23 +17,12 @@ namespace RTS
 
 			ShootEffects();
 			PlaySound( "rust_pistol.shoot" );
-			ShootBullet( 1.5f, BaseDamage, 3.0f );
+			ShootBullet( 1.5f, BaseDamage );
 		}
 
 		public override Transform? GetMuzzle()
 		{
 			return Attacker.GetAttachment( "muzzle", true );
-		}
-
-		public override bool CanAttack()
-		{
-			var targetDirection = Target.Position - Attacker.Position;
-			var idealRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
-
-			if ( !idealRotation.Distance( TargetRotation ).AlmostEqual( 0f, 1f ) )
-				return false;
-
-			return base.CanAttack();
 		}
 
 		[ClientRpc]
@@ -42,22 +32,18 @@ namespace RTS
 			
 			if ( Attacker.IsValid() )
 			{
-				//Particles.Create( "particles/pistol_muzzleflash.vpcf", this, "muzzle" );
+				Particles.Create( "particles/pistol_muzzleflash.vpcf", Attacker, "muzzle" );
 			}
 		}
 
-		[Event.Frame]
+		[Event.Tick]
 		private void UpdateTargetRotation()
 		{
 			if ( Target.IsValid() )
 			{
-				var targetDirection = Target.Position - Attacker.Position;
-				TargetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
+				TargetDirection = TargetDirection.LerpTo( (Target.Position - Attacker.Position).Normal, Time.Delta * 20f );
+				Attacker.SetAnimVector( "target", TargetDirection );
 			}
-
-			var gunBone = Attacker.GetBoneTransform( "gun", true );
-			gunBone.Rotation = Rotation.Lerp( gunBone.Rotation, TargetRotation, Time.Delta * 20f );
-			Attacker.SetBoneTransform( "gun", gunBone, true );
 		}
 	}
 }

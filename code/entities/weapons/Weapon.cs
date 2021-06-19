@@ -6,7 +6,7 @@ namespace RTS
 {
 	public partial class Weapon : AnimEntity
 	{
-		[Net] public ModelEntity Attacker { get; set; }
+		[Net] public AnimEntity Attacker { get; set; }
 		[Net] public Entity Target { get; set; }
 		public virtual bool IsMelee => false;
 		public virtual int BaseDamage => 10;
@@ -14,8 +14,22 @@ namespace RTS
 		public virtual float FireRate => 1f;
 		public TimeSince LastAttack { get; set; }
 
+		public virtual bool CanSeeTarget()
+		{
+			var aimRay = GetAimRay();
+			var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
+				.EntitiesOnly()
+				.HitLayer( CollisionLayer.Debris, false )
+				.Ignore( Attacker )
+				.Ignore( this )
+				.Run();
+
+			return (trace.Entity == Target);
+		}
+
 		public virtual bool CanAttack()
 		{
+			if ( !CanSeeTarget() ) return false;
 			return (LastAttack > FireRate);
 		}
 
@@ -24,7 +38,7 @@ namespace RTS
 			LastAttack = 0f;
 
 			ShootEffects();
-			ShootBullet( 1.5f, BaseDamage, 3.0f );
+			ShootBullet( 1.5f, BaseDamage );
 		}
 
 		public virtual Transform? GetMuzzle()
@@ -32,7 +46,7 @@ namespace RTS
 			return GetAttachment( "muzzle", true );
 		}
 
-		public virtual Ray GetOriginAndDirection()
+		public virtual Ray GetAimRay()
 		{
 			var attachment = GetMuzzle();
 
@@ -63,39 +77,29 @@ namespace RTS
 			}
 		}
 
-		public virtual void ShootBullet( float force, float damage, float bulletSize )
+		public virtual void ShootBullet( float force, float damage )
 		{
-			var ray = GetOriginAndDirection();
-
-			foreach ( var tr in TraceBullet( ray.Origin, Target.WorldSpaceBounds.Center, bulletSize ) )
-			{
-				tr.Surface.DoBulletImpact( tr );
-
-				if ( tr.Entity == Target )
-				{
-					var damageInfo = DamageInfo.FromBullet( tr.EndPos, tr.Direction * 100 * force, damage )
-						.UsingTraceResult( tr )
-						.WithAttacker( Attacker )
-						.WithWeapon( this );
-
-					tr.Entity.TakeDamage( damageInfo );
-				}
-			}
-		}
-
-		public virtual IEnumerable<TraceResult> TraceBullet( Vector3 start, Vector3 end, float radius = 2.0f )
-		{
-			bool isInWater = Physics.TestPointContents( start, CollisionLayer.Water );
-
-			var tr = Trace.Ray( start, end )
-				.UseHitboxes()
-				.HitLayer( CollisionLayer.Water, !isInWater )
+			var aimRay = GetAimRay();
+			var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
+				.EntitiesOnly()
+				.HitLayer( CollisionLayer.Debris, false )
 				.Ignore( Attacker )
 				.Ignore( this )
-				.Size( radius )
 				.Run();
 
-			yield return tr;
+			Log.Info( trace.Entity.ToString() );
+
+			trace.Surface.DoBulletImpact( trace );
+
+			if ( trace.Entity == Target )
+			{
+				var damageInfo = DamageInfo.FromBullet( trace.EndPos, trace.Direction * 100 * force, damage )
+					.UsingTraceResult( trace )
+					.WithAttacker( Attacker )
+					.WithWeapon( this );
+
+				trace.Entity.TakeDamage( damageInfo );
+			}
 		}
 	}
 }
