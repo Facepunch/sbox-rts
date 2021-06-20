@@ -199,9 +199,9 @@ namespace Facepunch.RTS
 
 		public override void Simulate( Client client )
 		{
-			var zoomOutDistance = 5000f - (ZoomLevel * 3000f);
+			var cameraConfig = RTS.Game.Config.Camera;
 			var velocity = Vector3.Zero;
-			var panSpeed = 2000f + (ZoomLevel * 3000f);
+			var panSpeed = cameraConfig.PanSpeed - (cameraConfig.PanSpeed * ZoomLevel * 0.6f);
 
 			if ( Input.Down( InputButton.Forward ) )
 				velocity += EyeRot.Forward.WithZ(0f) * panSpeed * Time.Delta;
@@ -216,14 +216,24 @@ namespace Facepunch.RTS
 				velocity += EyeRot.Right * panSpeed * Time.Delta;
 
 			Position = (Position + velocity);
-			EyePos = Position + Vector3.Backward * zoomOutDistance * 0.5f;
-			EyePos += Vector3.Left * zoomOutDistance * 0.5f;
-			EyePos += Vector3.Up * zoomOutDistance;
+
+			if ( cameraConfig.Ortho )
+			{
+				EyePos = Position + Vector3.Backward * cameraConfig.Backward;
+				EyePos += Vector3.Left * cameraConfig.Left;
+				EyePos += Vector3.Up * cameraConfig.Up;
+			}
+			else
+			{
+				EyePos = Position + Vector3.Backward * (cameraConfig.Backward - (cameraConfig.Backward * ZoomLevel * cameraConfig.ZoomScale));
+				EyePos += Vector3.Left * (cameraConfig.Left - (cameraConfig.Left * ZoomLevel * cameraConfig.ZoomScale));
+				EyePos += Vector3.Up * (cameraConfig.Up - (cameraConfig.Up * ZoomLevel * cameraConfig.ZoomScale));
+			}
 
 			var difference = Position - EyePos;
 			EyeRot = Rotation.LookAt( difference, Vector3.Up );
 
-			ZoomLevel += Input.MouseWheel * Time.Delta * -10f;
+			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
 			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
 			base.Simulate( client );
