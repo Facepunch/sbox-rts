@@ -32,12 +32,13 @@
 				children = 
 				[
 					{
-						_class = "PhysicsHullFromRender"
+						_class = "PhysicsShapeBox"
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
-						faceMergeAngle = 20.0
-						maxHullVertices = 32
+						origin = [ 4.064037, -1.525761, 46.323837 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 216.184341, 120.43895, 93.647675 ]
 					},
 				]
 			},
