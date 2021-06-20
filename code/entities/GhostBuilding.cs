@@ -84,7 +84,7 @@ namespace RTS
 			var bounds = CollisionBounds * 1.25f;
 			var entities = Physics.GetEntitiesInBox( bounds + position ).Where( i => i != this );
 
-			if ( IsClient && !FogManager.Instance.IsAreaSeen( position ) )
+			if ( IsClient && !Game.Fog.IsAreaSeen( position ) )
 				return false;
 
 			if ( entities.Count() > 0 )

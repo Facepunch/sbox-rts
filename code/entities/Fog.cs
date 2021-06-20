@@ -10,8 +10,8 @@ namespace RTS
 
 		public override void DoRender( SceneObject sceneObject )
 		{
-			var manager = FogManager.Instance;
-			var bounds = FogBounds.Instance;
+			var manager = Game.Fog;
+			var bounds = Game.Fog.Bounds;
 
 			if ( !bounds.IsValid() || !manager.IsActive ) return;
 

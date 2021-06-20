@@ -100,6 +100,8 @@ namespace RTS
 			Health = Item.MaxHealth;
 
 			AddAsFogViewer( To.Single( Player ) );
+
+			Game.Sound.Play( Player, "construction_complete" );
 		}
 
 		public void StartConstruction()
@@ -305,7 +307,7 @@ namespace RTS
 			}
 			else
 			{
-				FogManager.Instance.RemoveViewer( this );
+				Game.Fog.RemoveViewer( this );
 			}
 
 			base.OnDestroy();
@@ -343,7 +345,7 @@ namespace RTS
 		[ClientRpc]
 		private void AddAsFogViewer()
 		{
-			FogManager.Instance.AddViewer( this );
+			Game.Fog.AddViewer( this );
 		}
 
 		[ClientRpc]
@@ -364,7 +366,7 @@ namespace RTS
 		{
 			var queueItem = new QueueItem
 			{
-				Item = ItemManager.Instance.Find<BaseItem>( itemId ),
+				Item = Game.Item.Find<BaseItem>( itemId ),
 				Id = queueId
 			};
 

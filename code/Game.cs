@@ -16,11 +16,15 @@ namespace RTS
 			get => Current as Game;
 		}
 
+		public static SoundManager Sound => SoundManager.Instance;
+		public static ItemManager Item => ItemManager.Instance;
+		public static FogManager Fog => FogManager.Instance;
+
 		[Net] public float ServerTime { get; private set; }
 		[Net] public BaseRound Round { get; private set; }
 
-		private Dictionary<ulong, int> _ratings;
-		private BaseRound _lastRound;
+		public Dictionary<ulong, int> Ratings { get; private set; }
+		public BaseRound LastRound { get; private set; }
 
 		[ServerCmd("rts_test")]
 		public static void Test()
@@ -37,6 +41,7 @@ namespace RTS
 			{
 				LoadRatings();
 
+				_ = new SoundManager();
 				_ = new ItemManager();
 				_ = new FogManager();
 				_ = new Hud();
@@ -46,7 +51,7 @@ namespace RTS
 		public void UpdateRating( Player player )
 		{
 			var client = player.GetClientOwner();
-			_ratings[client.SteamId] = player.Elo.Rating;
+			Ratings[client.SteamId] = player.Elo.Rating;
 		} 
 
 		public void ChangeRound(BaseRound round)
@@ -100,7 +105,7 @@ namespace RTS
 		{
 			var player = new Player();
 
-			if ( _ratings.TryGetValue( client.SteamId, out var rating ) )
+			if ( Ratings.TryGetValue( client.SteamId, out var rating ) )
 				player.Elo.Rating = rating;
 
 			client.Pawn = player;
@@ -124,11 +129,11 @@ namespace RTS
 			if ( IsClient )
 			{
 				// We have to hack around this for now until we can detect changes in net variables.
-				if ( _lastRound != Round )
+				if ( LastRound != Round )
 				{
-					_lastRound?.Finish();
-					_lastRound = Round;
-					_lastRound.Start();
+					LastRound?.Finish();
+					LastRound = Round;
+					LastRound.Start();
 				}
 			}
 			else
@@ -139,7 +144,7 @@ namespace RTS
 
 		private void LoadRatings()
 		{
-			_ratings = FileSystem.Mounted.ReadJsonOrDefault<Dictionary<ulong, int>>( "data/rts/ratings.json" ) ?? new();
+			Ratings = FileSystem.Mounted.ReadJsonOrDefault<Dictionary<ulong, int>>( "data/rts/ratings.json" ) ?? new();
 		}
 
 		private void CheckMinimumPlayers()

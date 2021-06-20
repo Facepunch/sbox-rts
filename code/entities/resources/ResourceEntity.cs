@@ -21,14 +21,14 @@ namespace RTS
 		{
 			if ( isVisible )
 			{
-				FogManager.Instance.RemoveCullable( this );
+				Game.Fog.RemoveCullable( this );
 			}
 		}
 	
 
 		public override void ClientSpawn()
 		{
-			FogManager.Instance.AddCullable( this );
+			Game.Fog.AddCullable( this );
 
 			base.ClientSpawn();
 		}
@@ -49,7 +49,7 @@ namespace RTS
 		{
 			if ( IsClient )
 			{
-				FogManager.Instance.RemoveCullable( this );
+				Game.Fog.RemoveCullable( this );
 			}
 
 			base.OnDestroy();

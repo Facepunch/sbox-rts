@@ -29,6 +29,7 @@ namespace RTS
 		public readonly int Resolution;
 		public readonly byte[] Data;
 		public bool IsActive { get; private set; }
+		public FogBounds Bounds => FogBounds.Instance;
 		public Fog Fog { get; private set; }
 
 		private readonly List<FogCullable> _cullables;

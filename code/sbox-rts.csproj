@@ -23,40 +23,16 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<Analyzer Include="C:/Users/conna/Documents/Facepunch/sbox/game/bin/managed/Sandbox.Generator.dll" />
-		<Reference Include="C:/Users/conna/Documents/Facepunch/sbox/game/bin/managed/Sandbox.System.dll" />
-		<Reference Include="C:/Users/conna/Documents/Facepunch/sbox/game/bin/managed/Sandbox.Engine.dll" />
-		<Reference Include="C:/Users/conna/Documents/Facepunch/sbox/game/bin/managed/Sandbox.Game.dll" />
-		<Reference Include="C:/Users/conna/Documents/Facepunch/sbox/game/bin/managed/Sandbox.Hotload.dll" />
+		<Analyzer Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.Generator.dll"/>
+		<Reference Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.System.dll"/>
+		<Reference Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.Engine.dll"/>
+		<Reference Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.Game.dll"/>
+		<Reference Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.Hotload.dll"/>
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="C:\Users\conna\Documents\Facepunch\sbox\game\addons\base\code\base.csproj"></ProjectReference>
+    <ProjectReference Include="H:\Facepunch\sbox\game\addons\base\code\base.csproj"></ProjectReference>
 
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="ui\ItemTooltip.scss">
-      <DependentUpon>ItemTooltip.cs</DependentUpon>
-    </None>
-    <None Update="ui\MiniMap - Copy.scss">
-      <DependentUpon>MiniMap.cs</DependentUpon>
-    </None>
-    <None Update="ui\MiniMap.scss">
-      <DependentUpon>MiniMap.cs</DependentUpon>
-    </None>
-    <None Update="ui\PopulationCount.scss">
-      <DependentUpon>PopulationCount.cs</DependentUpon>
-    </None>
-    <None Update="ui\ResourceList.scss">
-      <DependentUpon>ResourceList.cs</DependentUpon>
-    </None>
-    <None Update="ui\SelectedItem.scss">
-      <DependentUpon>SelectedItem.cs</DependentUpon>
-    </None>
-    <None Update="ui\EntityHud.scss">
-      <DependentUpon>EntityHud.cs</DependentUpon>
-    </None>
   </ItemGroup>
 
 </Project>

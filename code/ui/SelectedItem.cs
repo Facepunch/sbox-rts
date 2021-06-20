@@ -28,11 +28,16 @@ namespace RTS
 
 			if ( eventName == "onclick" )
 			{
-				if ( !Item.CanCreate( player ) )
+				var status = Item.CanCreate( player );
+
+				if ( status != ItemCreateError.Success )
+				{
+					Game.Sound.Play( status );
 					return;
+				}
 
 				if ( Selectable is UnitEntity worker && Item is BaseBuilding building )
-					ItemManager.Instance.CreateGhost( worker, building );
+					Game.Item.CreateGhost( worker, building );
 				else
 					ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
 			}
@@ -337,7 +342,7 @@ namespace RTS
 
 			foreach ( var v in buildables )
 			{
-				var dependency = ItemManager.Instance.Find<BaseItem>( v );
+				var dependency = Game.Item.Find<BaseItem>( v );
 
 				if ( dependency.CanHave( player ) )
 				{

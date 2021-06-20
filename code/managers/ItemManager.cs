@@ -39,8 +39,10 @@ namespace RTS
 
 			var item = Instance.Find<BaseBuilding>( itemId );
 
-			if ( FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct && item.CanCreate( caller ) )
+			if ( FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct )
 			{
+				if ( item.CanCreate( caller ) != ItemCreateError.Success ) return;
+
 				if ( worker.Player == caller && worker.Item.Buildables.Contains( item.UniqueId ) )
 				{
 					// This is a bit shit isn't it.
@@ -77,7 +79,7 @@ namespace RTS
 
 			if ( FindByIndex( entityId ) is BuildingEntity building )
 			{
-				if ( building.Player == caller && item.CanCreate( caller ) )
+				if ( building.Player == caller && item.CanCreate( caller ) == ItemCreateError.Success )
 				{
 					caller.TakeResourcesForItem( item );
 					building.QueueItem( item );
@@ -122,10 +124,27 @@ namespace RTS
 
 			if ( target.IsValid() )
 			{
+				var hasUnitEntities = false;
+
 				foreach ( var entity in caller.Selection )
 				{
 					if ( entity is UnitEntity unit )
+					{
+						hasUnitEntities = true;
 						unit.Attack( target );
+					}
+				}
+
+				if ( hasUnitEntities )
+				{
+					var soundOptions = new string[]
+					{
+						"lets_go",
+						"lets_take_em_down",
+						"ready_to_destroy"
+					};
+
+					Game.Sound.Play( caller, Rand.FromArray( soundOptions ) );
 				}
 			}
 		}
@@ -237,10 +256,20 @@ namespace RTS
 			{
 				if ( building.IsUnderConstruction && building.Player == caller )
 				{
+					var willStartConstruction = false;
+
 					foreach ( var entity in caller.Selection )
 					{
 						if ( entity is UnitEntity unit && unit.CanConstruct )
+						{
+							willStartConstruction = true;
 							unit.Construct( building );
+						}
+					}
+
+					if ( willStartConstruction )
+					{
+						Game.Sound.Play( caller, "on_my_way" );
 					}
 				}
 			}
@@ -260,12 +289,27 @@ namespace RTS
 
 			if ( entries.Count == 3 )
 			{
+				var hasUnitEntities = false;
 				var position = new Vector3( entries[0], entries[1], entries[2] );
 
 				foreach ( var entity in caller.Selection )
 				{
 					if ( entity is UnitEntity unit )
+					{
+						hasUnitEntities = true;
 						unit.MoveTo( position );
+					}
+				}
+
+				if ( hasUnitEntities )
+				{
+					var soundOptions = new string[]
+					{
+						"lets_go",
+						"on_my_way"
+					};
+
+					Game.Sound.Play( caller, Rand.FromArray( soundOptions ) );
 				}
 			}
 		}
@@ -283,6 +327,7 @@ namespace RTS
 			if ( string.IsNullOrEmpty( csv ) )
 				return;
 
+			var hasUnitEntities = false;
 			var entities = csv.Split( ',', StringSplitOptions.TrimEntries )
 				.Select( i => FindByIndex( Convert.ToInt32( i ) ) );
 
@@ -295,7 +340,21 @@ namespace RTS
 					continue;
 
 				if ( selectable.Player == caller )
+				{
+					hasUnitEntities = (selectable is UnitEntity);
 					selectable.Select();
+				}
+			}
+
+			if ( hasUnitEntities )
+			{
+				var soundOptions = new string[]
+				{
+					"ready_lower_serious",
+					"tell_me_what_to_do"
+				};
+
+				Game.Sound.Play( caller, Rand.FromArray( soundOptions ) );
 			}
 		}
 

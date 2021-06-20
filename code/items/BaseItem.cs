@@ -25,7 +25,7 @@ namespace RTS
 		{
 			foreach ( var v in Dependencies )
 			{
-				var dependency = ItemManager.Instance.Find<BaseItem>( v );
+				var dependency = Game.Item.Find<BaseItem>( v );
 
 				if ( dependency == null )
 					throw new Exception( "Unable to locate item by id: " + v );
@@ -52,9 +52,16 @@ namespace RTS
 
 		}
 
-		public virtual bool CanCreate( Player player )
+		public virtual ItemCreateError CanCreate( Player player )
 		{
-			return CanHave( player ) && player.CanAffordItem( this );
+			if ( !CanHave( player ) ) return ItemCreateError.Unknown;
+
+			if ( !player.CanAffordItem( this, out var resource ) )
+			{
+				return resource.ToCreateError();
+			}
+
+			return ItemCreateError.Success;
 		}
 
 		public virtual bool CanHave( Player player )

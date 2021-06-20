@@ -110,9 +110,9 @@ namespace RTS
 			Circle.LocalPosition = Vector3.Zero;
 
 			if ( Player.IsValid() && Player.IsLocalPawn )
-				FogManager.Instance.AddViewer( this );
+				Game.Fog.AddViewer( this );
 			else
-				FogManager.Instance.AddCullable( this );
+				Game.Fog.AddCullable( this );
 
 			base.ClientSpawn();
 		}
@@ -252,8 +252,8 @@ namespace RTS
 		{
 			if ( IsClient )
 			{
-				FogManager.Instance.RemoveViewer( this );
-				FogManager.Instance.RemoveCullable( this );
+				Game.Fog.RemoveViewer( this );
+				Game.Fog.RemoveCullable( this );
 			}
 			else
 			{

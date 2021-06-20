@@ -31,10 +31,10 @@ namespace RTS.Units
 			player.TakePopulation( Population );
 		}
 
-		public override bool CanCreate( Player player )
+		public override ItemCreateError CanCreate( Player player )
 		{
 			if ( !player.HasPopulationCapacity( Population ) )
-				return false;
+				return ItemCreateError.NotEnoughPopulation;
 
 			return base.CanCreate( player );
 		}

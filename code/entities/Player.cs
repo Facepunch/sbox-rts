@@ -76,6 +76,21 @@ namespace RTS
 			return true;
 		}
 
+		public bool CanAffordItem( BaseItem item, out ResourceType missingResource )
+		{
+			foreach ( var kv in item.Costs )
+			{
+				if ( GetResource( kv.Key ) < kv.Value )
+				{
+					missingResource = kv.Key;
+					return false;
+				}
+			}
+
+			missingResource = default;
+			return true;
+		}
+
 		public void GiveResourcesForItem( BaseItem item )
 		{
 			foreach ( var kv in item.Costs )
@@ -218,9 +233,9 @@ namespace RTS
 		private void EnableFog( bool shouldEnable )
 		{
 			if ( shouldEnable )
-				FogManager.Instance.Show();
+				Game.Fog.Show();
 			else
-				FogManager.Instance.Hide();
+				Game.Fog.Hide();
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace RTS
 			get
 			{
 				if ( _itemCache == null )
-					_itemCache = ItemManager.Instance.Find<T>( ItemId );
+					_itemCache = Game.Item.Find<T>( ItemId );
 				return _itemCache;
 			}
 		}
@@ -59,7 +59,7 @@ namespace RTS
 		{
 			Host.AssertServer();
 
-			var item = ItemManager.Instance.Find<T>( itemId );
+			var item = Game.Item.Find<T>( itemId );
 
 			Assign( player, item );
 		}

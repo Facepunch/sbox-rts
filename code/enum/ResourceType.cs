@@ -29,6 +29,23 @@ namespace RTS
 			return null;
 		}
 
+		public static ItemCreateError ToCreateError( this ResourceType type )
+		{
+			if ( type == ResourceType.Stone )
+				return ItemCreateError.NotEnoughStone;
+
+			if ( type == ResourceType.Metal )
+				return ItemCreateError.NotEnoughMetal;
+
+			if ( type == ResourceType.Plasma )
+				return ItemCreateError.NotEnoughPlasma;
+
+			if ( type == ResourceType.Beer )
+				return ItemCreateError.NotEnoughBeer;
+
+			return default;
+		}
+
 		public static Texture GetIcon( this ResourceType type )
 		{
 			if ( type == ResourceType.Stone )
