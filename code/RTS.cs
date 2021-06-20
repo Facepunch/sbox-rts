@@ -7,6 +7,21 @@ namespace Facepunch.RTS
 	[Library( "rts", Title = "RTS" )]
 	public partial class RTS : Game
 	{
+		public struct CameraConfig
+		{
+			public bool Ortho;
+			public float PanSpeed;
+			public float ZoomScale;
+			public float FOV;
+			public float Backward;
+			public float Left;
+			public float Up;
+		}
+
+		public struct GameConfig
+		{
+			public CameraConfig Camera;
+		}
 
 		public static SoundManager Sound => SoundManager.Instance;
 		public static ItemManager Item => ItemManager.Instance;
@@ -15,23 +30,16 @@ namespace Facepunch.RTS
 
 		[Net] public float ServerTime { get; private set; }
 		[Net] public BaseRound Round { get; private set; }
+		[Net] public GameConfig Config { get; private set; }
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
 		public BaseRound LastRound { get; private set; }
-
-		[ServerCmd("rts_test")]
-		public static void Test()
-		{
-			if ( ConsoleSystem.Caller.Pawn is Player caller )
-			{
-				caller.GiveResource( ResourceType.Stone, Rand.Int( -1000, 1000 ) );
-			}
-		}
 
 		public RTS()
 		{
 			if ( IsServer )
 			{
+				LoadConfig();
 				LoadRatings();
 
 				_ = new SoundManager();
@@ -150,7 +158,40 @@ namespace Facepunch.RTS
 			else
 			{
 				ServerTime = Time.Now;
+				LoadConfig();
 			}
+		}
+
+		private void LoadConfig()
+		{
+			Config = new GameConfig
+			{
+				Camera = new CameraConfig
+				{
+					Ortho = true,
+					PanSpeed = 5000f,
+					ZoomScale = 2f,
+					Backward = 3000f,
+					Left = 3000f,
+					Up = 4000f
+				}
+			};
+
+			/*
+			Config = new GameConfig
+			{
+				Camera = new CameraConfig
+				{
+					Ortho = false,
+					PanSpeed = 5000f,
+					ZoomScale = 0.6f,
+					FOV = 60f,
+					Backward = 3000f,
+					Left = 3000f,
+					Up = 4000f
+				}
+			};
+			*/
 		}
 
 		private void LoadRatings()
