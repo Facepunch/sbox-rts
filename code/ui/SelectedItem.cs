@@ -21,38 +21,34 @@ namespace Facepunch.RTS
 
 		}
 
-		public override void OnEvent( string eventName )
+		protected override void OnClick( MousePanelEvent e )
 		{
-			var tooltip = ItemTooltip.Instance;
 			var player = (Local.Pawn as Player);
+			var status = Item.CanCreate( player );
 
-			if ( eventName == "onclick" )
+			if ( status != ItemCreateError.Success )
 			{
-				var status = Item.CanCreate( player );
-
-				if ( status != ItemCreateError.Success )
-				{
-					RTS.Sound.Play( status );
-					return;
-				}
-
-				if ( Selectable is UnitEntity worker && Item is BaseBuilding building )
-					RTS.Item.CreateGhost( worker, building );
-				else
-					ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
-			}
-			else if ( eventName == "onmouseover" )
-			{
-				tooltip.Update( Item );
-				tooltip.Hover( this );
-				tooltip.Show();
-			}
-			else if ( eventName == "onmouseout" )
-			{
-				tooltip.Hide();
+				RTS.Sound.Play( status );
+				return;
 			}
 
-			base.OnEvent( eventName );
+			if ( Selectable is UnitEntity worker && Item is BaseBuilding building )
+				RTS.Item.CreateGhost( worker, building );
+			else
+				ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
+		}
+
+		protected override void OnMouseOver( MousePanelEvent e )
+		{
+			var tooltip = RTS.Tooltip;
+			tooltip.Update( Item );
+			tooltip.Hover( this );
+			tooltip.Show();
+		}
+
+		protected override void OnMouseOut( MousePanelEvent e )
+		{
+			RTS.Tooltip.Hide();
 		}
 
 		public void Update( ISelectable selectable, BaseItem item )
@@ -79,32 +75,28 @@ namespace Facepunch.RTS
 		public BuildingEntity Building { get; private set; }
 		public UnitEntity Unit { get; private set; }
 
-		public override void OnEvent( string eventName )
+		protected override void OnClick( MousePanelEvent e )
 		{
-			var tooltip = ItemTooltip.Instance;
+			if ( !Unit.IsValid() ) return;
 
-			if ( !Unit.IsValid() )
-			{
-				base.OnEvent( eventName );
-				return;
-			}
+			ItemManager.Evict( Building.NetworkIdent, Unit.NetworkIdent );
+		}
 
-			if ( eventName == "onclick" )
-			{
-				ItemManager.Evict( Building.NetworkIdent, Unit.NetworkIdent );
-			}
-			else if ( eventName == "onmouseover" )
-			{
-				tooltip.Update( Unit.Item, true );
-				tooltip.Hover( this );
-				tooltip.Show();
-			}
-			else if ( eventName == "onmouseout" )
-			{
-				tooltip.Hide();
-			}
+		protected override void OnMouseOver( MousePanelEvent e )
+		{
+			if ( !Unit.IsValid() ) return;
 
-			base.OnEvent( eventName );
+			var tooltip = RTS.Tooltip;
+			tooltip.Update( Unit.Item, true );
+			tooltip.Hover( this );
+			tooltip.Show();
+		}
+
+		protected override void OnMouseOut( MousePanelEvent e )
+		{
+			if ( !Unit.IsValid() ) return;
+			
+			RTS.Tooltip.Hide();
 		}
 
 		public void Update( BuildingEntity building = null, UnitEntity unit = null )
@@ -206,26 +198,22 @@ namespace Facepunch.RTS
 			Countdown = Add.Panel( "countdown" );
 		}
 
-		public override void OnEvent( string eventName )
+		protected override void OnClick( MousePanelEvent e )
 		{
-			var tooltip = ItemTooltip.Instance;
+			ItemManager.Unqueue( Building.NetworkIdent, QueueItem.Id );
+		}
 
-			if ( eventName == "onclick" )
-			{
-				ItemManager.Unqueue( Building.NetworkIdent, QueueItem.Id );
-			}
-			else if ( eventName == "onmouseover" )
-			{
-				tooltip.Update( QueueItem.Item );
-				tooltip.Hover( this );
-				tooltip.Show();
-			}
-			else if ( eventName == "onmouseout" )
-			{
-				tooltip.Hide();
-			}
+		protected override void OnMouseOver( MousePanelEvent e )
+		{
+			var tooltip = RTS.Tooltip;
+			tooltip.Update( QueueItem.Item );
+			tooltip.Hover( this );
+			tooltip.Show();
+		}
 
-			base.OnEvent( eventName );
+		protected override void OnMouseOut( MousePanelEvent e )
+		{
+			RTS.Tooltip.Hide();
 		}
 
 		public void Update( QueueItem queueItem, BuildingEntity building = null )

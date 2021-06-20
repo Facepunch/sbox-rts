@@ -23,6 +23,7 @@ namespace Facepunch.RTS
 			public CameraConfig Camera;
 		}
 
+		public static ItemTooltip Tooltip => ItemTooltip.Instance;
 		public static SoundManager Sound => SoundManager.Instance;
 		public static ItemManager Item => ItemManager.Instance;
 		public static FogManager Fog => FogManager.Instance;
