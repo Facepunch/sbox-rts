@@ -2,7 +2,7 @@
 using Sandbox;
 using Sandbox.UI;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	[Library]
 	public partial class Hud : HudEntity<RootPanel>
@@ -26,7 +26,11 @@ namespace RTS
 			RootPanel.AddChild<SelectedItem>();
 			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();
-			RootPanel.AddChild<ChatBox>();
+
+			var chatBox = RootPanel.AddChild<ChatBox>();
+			chatBox.StyleSheet.Load( "/ui/Hud.scss" );
+
+			RootPanel.AddChild<ToastList>();
 			RootPanel.AddChild<LoadingScreen>();
 		}
 	}

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RTS.Buildings
+namespace Facepunch.RTS.Buildings
 {
     public abstract class BaseBuilding : BaseItem
 	{

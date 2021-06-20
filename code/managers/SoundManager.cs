@@ -1,11 +1,11 @@
 ﻿using Gamelib.Extensions;
-using RTS.Buildings;
+using Facepunch.RTS.Buildings;
 using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class SoundManager : Entity
 	{

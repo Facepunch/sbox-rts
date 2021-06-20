@@ -1,15 +1,15 @@
 ﻿
 using Gamelib.Extensions;
-using RTS.Buildings;
-using RTS.Tech;
-using RTS.Units;
+using Facepunch.RTS.Buildings;
+using Facepunch.RTS.Tech;
+using Facepunch.RTS.Units;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public class ItemCommand : Button
 	{
@@ -32,12 +32,12 @@ namespace RTS
 
 				if ( status != ItemCreateError.Success )
 				{
-					Game.Sound.Play( status );
+					RTS.Sound.Play( status );
 					return;
 				}
 
 				if ( Selectable is UnitEntity worker && Item is BaseBuilding building )
-					Game.Item.CreateGhost( worker, building );
+					RTS.Item.CreateGhost( worker, building );
 				else
 					ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
 			}
@@ -342,7 +342,7 @@ namespace RTS
 
 			foreach ( var v in buildables )
 			{
-				var dependency = Game.Item.Find<BaseItem>( v );
+				var dependency = RTS.Item.Find<BaseItem>( v );
 
 				if ( dependency.CanHave( player ) )
 				{
@@ -512,10 +512,10 @@ namespace RTS
 
 		public override void Tick()
 		{
-			if ( Game.Instance == null ) return;
+			if ( RTS.Game == null ) return;
 
 			var isHidden = true;
-			var round = Game.Instance.Round;
+			var round = RTS.Game.Round;
 
 			if ( round is PlayRound )
 			{

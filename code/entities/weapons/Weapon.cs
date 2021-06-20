@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class Weapon : AnimEntity
 	{

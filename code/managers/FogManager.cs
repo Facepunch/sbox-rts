@@ -1,5 +1,5 @@
-﻿using RTS.Buildings;
-using RTS.Units;
+﻿using Facepunch.RTS.Buildings;
+using Facepunch.RTS.Units;
 using Sandbox;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class FogManager : Entity
 	{

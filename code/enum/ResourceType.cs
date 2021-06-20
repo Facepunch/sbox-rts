@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public enum ResourceType
 	{

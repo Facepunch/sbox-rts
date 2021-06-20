@@ -1,12 +1,12 @@
 ﻿using Gamelib.Network;
-using RTS.Buildings;
+using Facepunch.RTS.Buildings;
 using Sandbox;
 using Steamworks.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public abstract partial class ItemEntity<T> : AnimEntity, ISelectable where T : BaseItem
 	{
@@ -28,7 +28,7 @@ namespace RTS
 			get
 			{
 				if ( _itemCache == null )
-					_itemCache = Game.Item.Find<T>( ItemId );
+					_itemCache = RTS.Item.Find<T>( ItemId );
 				return _itemCache;
 			}
 		}
@@ -59,7 +59,7 @@ namespace RTS
 		{
 			Host.AssertServer();
 
-			var item = Game.Item.Find<T>( itemId );
+			var item = RTS.Item.Find<T>( itemId );
 
 			Assign( player, item );
 		}

@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	[Library( "fog_bounds" )]
 	public partial class FogBounds : ModelEntity

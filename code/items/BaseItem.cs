@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RTS
+namespace Facepunch.RTS
 {
     public abstract class BaseItem
 	{
@@ -25,7 +25,7 @@ namespace RTS
 		{
 			foreach ( var v in Dependencies )
 			{
-				var dependency = Game.Item.Find<BaseItem>( v );
+				var dependency = RTS.Item.Find<BaseItem>( v );
 
 				if ( dependency == null )
 					throw new Exception( "Unable to locate item by id: " + v );

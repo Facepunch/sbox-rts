@@ -4,7 +4,7 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public class LoadingScreen : Panel
 	{
@@ -19,10 +19,10 @@ namespace RTS
 
 		public override void Tick()
 		{
-			if ( Game.Instance == null ) return;
+			if ( RTS.Game == null ) return;
 			
 			var isHidden = (Local.Pawn is Player player && player.Camera != null);
-			var round = Game.Instance.Round;
+			var round = RTS.Game.Round;
 
 			if ( round is PlayRound )
 			{

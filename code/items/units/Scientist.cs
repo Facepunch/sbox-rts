@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Sandbox;
 
-namespace RTS.Units
+namespace Facepunch.RTS.Units
 {
 	[Library]
 	public class Scientist : BaseUnit

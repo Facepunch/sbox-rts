@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class RTSCamera : Camera
 	{

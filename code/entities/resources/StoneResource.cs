@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	[Library( "resource_stone" )]
 	[Hammer.Model( Model = "models/rocks/rock_large_00.vmdl", MaterialGroup = "Rock" )]

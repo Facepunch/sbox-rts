@@ -4,7 +4,7 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public class RoundInfo : Panel
 	{
@@ -26,7 +26,7 @@ namespace RTS
 			var player = Local.Pawn as Player;
 			if ( player == null ) return;
 
-			var game = Game.Instance;
+			var game = RTS.Game;
 			if ( game == null ) return;
 
 			var round = game.Round;

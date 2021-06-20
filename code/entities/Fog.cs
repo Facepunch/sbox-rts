@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class Fog : RenderEntity
 	{
@@ -10,8 +10,8 @@ namespace RTS
 
 		public override void DoRender( SceneObject sceneObject )
 		{
-			var manager = Game.Fog;
-			var bounds = Game.Fog.Bounds;
+			var manager = RTS.Fog;
+			var bounds = RTS.Fog.Bounds;
 
 			if ( !bounds.IsValid() || !manager.IsActive ) return;
 

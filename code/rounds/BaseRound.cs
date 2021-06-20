@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RTS
+namespace Facepunch.RTS
 {
     public abstract partial class BaseRound : NetworkComponent
 	{

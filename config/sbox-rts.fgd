@@ -1,21 +1,23 @@
 // 
-// RTS.Game : Sandbox.Game 
+// Facepunch.RTS.RTS : Sandbox.Game 
 // 
 @PointClass = rts : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 ]
 
 // 
-// RTS.FogBounds : Sandbox.ModelEntity 
+// Facepunch.RTS.FogBounds : Sandbox.ModelEntity 
 // 
 @PointClass = fog_bounds : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 ]
 
 // 
-// RTS.BeerResource : RTS.ResourceEntity 
+// Facepunch.RTS.BeerResource : Facepunch.RTS.ResourceEntity 
 // 
 @PointClass  model() 
 metadata
@@ -28,12 +30,13 @@ metadata
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" :  : "How much of this resource there is left to take."
 
 ]
 
 // 
-// RTS.MetalResource : RTS.ResourceEntity 
+// Facepunch.RTS.MetalResource : Facepunch.RTS.ResourceEntity 
 // 
 @PointClass  model() 
 metadata
@@ -46,12 +49,13 @@ metadata
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" :  : "How much of this resource there is left to take."
 
 ]
 
 // 
-// RTS.PlasmaResource : RTS.ResourceEntity 
+// Facepunch.RTS.PlasmaResource : Facepunch.RTS.ResourceEntity 
 // 
 @PointClass  model() 
 metadata
@@ -64,12 +68,13 @@ metadata
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" :  : "How much of this resource there is left to take."
 
 ]
 
 // 
-// RTS.StoneResource : RTS.ResourceEntity 
+// Facepunch.RTS.StoneResource : Facepunch.RTS.ResourceEntity 
 // 
 @PointClass  model() 
 metadata
@@ -82,23 +87,26 @@ metadata
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
 	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" :  : "How much of this resource there is left to take."
 
 ]
 
 // 
-// RTS.Pistol : RTS.Weapon 
+// Facepunch.RTS.Pistol : Facepunch.RTS.Weapon 
 // 
 @PointClass = weapon_pistol : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 ]
 
 // 
-// RTS.TurretGun : RTS.Weapon 
+// Facepunch.RTS.TurretGun : Facepunch.RTS.Weapon 
 // 
 @PointClass = weapon_turret_gun : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 ]
 

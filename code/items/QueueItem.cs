@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RTS
+namespace Facepunch.RTS
 {
     public class QueueItem
 	{
@@ -12,7 +12,7 @@ namespace RTS
 
 		public void Start()
 		{
-			FinishTime = Game.Instance.ServerTime + Item.BuildTime;
+			FinishTime = RTS.Game.ServerTime + Item.BuildTime;
 		}
 
 		public float GetDuration()
@@ -22,7 +22,7 @@ namespace RTS
 
 		public float GetTimeLeft()
 		{
-			return Math.Max(FinishTime - Game.Instance.ServerTime, 0f);
+			return Math.Max(FinishTime - RTS.Game.ServerTime, 0f);
 		}
 	}
 }

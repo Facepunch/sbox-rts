@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class ResourceEntity : ModelEntity, IFogCullable
 	{
@@ -21,14 +21,14 @@ namespace RTS
 		{
 			if ( isVisible )
 			{
-				Game.Fog.RemoveCullable( this );
+				RTS.Fog.RemoveCullable( this );
 			}
 		}
 	
 
 		public override void ClientSpawn()
 		{
-			Game.Fog.AddCullable( this );
+			RTS.Fog.AddCullable( this );
 
 			base.ClientSpawn();
 		}
@@ -49,7 +49,7 @@ namespace RTS
 		{
 			if ( IsClient )
 			{
-				Game.Fog.RemoveCullable( this );
+				RTS.Fog.RemoveCullable( this );
 			}
 
 			base.OnDestroy();

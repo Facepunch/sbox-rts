@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public class CursorController : Panel
 	{
@@ -41,11 +41,11 @@ namespace RTS
 				IsSelecting = true;
 			}
 
-			if ( builder.Released( InputButton.Attack2 ) && !Game.Item.Ghost.IsValid() )
+			if ( builder.Released( InputButton.Attack2 ) && !RTS.Item.Ghost.IsValid() )
 			{
 				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
 				{
-					var trace = TraceExtension.RayDirection( builder.CursorOrigin, builder.CursorAim )
+					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction )
 						.Radius( 5f )
 						.Run();
 
@@ -124,7 +124,7 @@ namespace RTS
 				}
 				else
 				{
-					var trace = TraceExtension.RayDirection( builder.CursorOrigin, builder.CursorAim ).EntitiesOnly().Run();
+					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
 
 					if ( trace.Entity is ISelectable selectable && selectable.CanSelect() )
 						ItemManager.Select( trace.Entity.NetworkIdent.ToString() );
@@ -136,7 +136,7 @@ namespace RTS
 			}
 			else
 			{
-				var trace = TraceExtension.RayDirection( builder.CursorOrigin, builder.CursorAim ).EntitiesOnly().Run();
+				var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
 
 				if ( trace.Entity is ResourceEntity resource && resource.HasBeenSeen )
 				{

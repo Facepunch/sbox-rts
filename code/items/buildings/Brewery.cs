@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
 
-namespace RTS.Buildings
+namespace Facepunch.RTS.Buildings
 {
 	[Library]
 	public class Brewery : BaseBuilding

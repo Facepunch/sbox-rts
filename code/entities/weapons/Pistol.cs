@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	[Library("weapon_pistol")]
 	partial class Pistol : Weapon

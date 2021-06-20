@@ -4,7 +4,7 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public class EntityHudBar : Panel
 	{

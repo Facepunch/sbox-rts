@@ -1,14 +1,14 @@
 ﻿using Sandbox;
-using RTS.Units;
+using Facepunch.RTS.Units;
 using System.Collections.Generic;
 using Gamelib.Nav;
-using RTS.Buildings;
+using Facepunch.RTS.Buildings;
 using System.Linq;
 using System;
 using Gamelib.Extensions;
 using Sandbox.UI;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable
 	{
@@ -110,9 +110,9 @@ namespace RTS
 			Circle.LocalPosition = Vector3.Zero;
 
 			if ( Player.IsValid() && Player.IsLocalPawn )
-				Game.Fog.AddViewer( this );
+				RTS.Fog.AddViewer( this );
 			else
-				Game.Fog.AddCullable( this );
+				RTS.Fog.AddCullable( this );
 
 			base.ClientSpawn();
 		}
@@ -252,8 +252,8 @@ namespace RTS
 		{
 			if ( IsClient )
 			{
-				Game.Fog.RemoveViewer( this );
-				Game.Fog.RemoveCullable( this );
+				RTS.Fog.RemoveViewer( this );
+				RTS.Fog.RemoveCullable( this );
 			}
 			else
 			{

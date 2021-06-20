@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	[Library( "resource_beer" )]
 	[Hammer.Model( Model = "models/barrels/square_wooden_box_gold.vmdl" )]

@@ -1,9 +1,9 @@
 ﻿using Gamelib.Extensions;
-using RTS.Buildings;
+using Facepunch.RTS.Buildings;
 using Sandbox;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class GhostBuilding : ModelEntity
 	{
@@ -84,7 +84,7 @@ namespace RTS
 			var bounds = CollisionBounds * 1.25f;
 			var entities = Physics.GetEntitiesInBox( bounds + position ).Where( i => i != this );
 
-			if ( IsClient && !Game.Fog.IsAreaSeen( position ) )
+			if ( IsClient && !RTS.Fog.IsAreaSeen( position ) )
 				return false;
 
 			if ( entities.Count() > 0 )

@@ -4,7 +4,7 @@ using Sandbox.UI;
 using System.Collections.Generic;
 using System;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public class ResourceList : Panel
 	{
@@ -31,7 +31,7 @@ namespace RTS
 			var player = Local.Pawn as Player;
 			if ( player == null || player.IsSpectator ) return;
 
-			var game = Game.Instance;
+			var game = RTS.Game;
 			if ( game == null ) return;
 
 			var round = game.Round;

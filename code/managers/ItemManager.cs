@@ -1,6 +1,6 @@
 ﻿using Gamelib.Extensions;
-using RTS.Buildings;
-using RTS.Units;
+using Facepunch.RTS.Buildings;
+using Facepunch.RTS.Units;
 using Sandbox;
 using Sandbox.UI;
 using System;
@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class ItemManager : Entity
 	{
@@ -144,7 +144,7 @@ namespace RTS
 						"ready_to_destroy"
 					};
 
-					Game.Sound.Play( caller, Rand.FromArray( soundOptions ) );
+					RTS.Sound.Play( caller, Rand.FromArray( soundOptions ) );
 				}
 			}
 		}
@@ -269,7 +269,7 @@ namespace RTS
 
 					if ( willStartConstruction )
 					{
-						Game.Sound.Play( caller, "on_my_way" );
+						RTS.Sound.Play( caller, "on_my_way" );
 					}
 				}
 			}
@@ -309,7 +309,7 @@ namespace RTS
 						"on_my_way"
 					};
 
-					Game.Sound.Play( caller, Rand.FromArray( soundOptions ) );
+					RTS.Sound.Play( caller, Rand.FromArray( soundOptions ) );
 				}
 			}
 		}
@@ -354,7 +354,7 @@ namespace RTS
 					"tell_me_what_to_do"
 				};
 
-				Game.Sound.Play( caller, Rand.FromArray( soundOptions ) );
+				RTS.Sound.Play( caller, Rand.FromArray( soundOptions ) );
 			}
 		}
 
@@ -395,8 +395,8 @@ namespace RTS
 				return;
 			}
 
-			var cursorOrigin = Input.CursorOrigin;
-			var cursorAim = Input.CursorAim;
+			var cursorOrigin = Input.Cursor.Origin;
+			var cursorAim = Input.Cursor.Direction;
 			var trace = Ghost.GetPlacementTrace( Local.Client, cursorOrigin, cursorAim );
 			var valid = Ghost.IsPlacementValid( trace );
 

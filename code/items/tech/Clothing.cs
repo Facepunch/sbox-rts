@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
 
-namespace RTS.Tech
+namespace Facepunch.RTS.Tech
 {
 	[Library]
 	public class Clothing : BaseTech

@@ -1,24 +1,17 @@
-﻿using RTS.Units;
-using Sandbox;
-using System;
+﻿using Sandbox;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	[Library( "rts", Title = "RTS" )]
-	partial class Game : Sandbox.Game
+	public partial class RTS : Game
 	{
-		public static Game Instance
-		{
-			get => Current as Game;
-		}
 
 		public static SoundManager Sound => SoundManager.Instance;
 		public static ItemManager Item => ItemManager.Instance;
 		public static FogManager Fog => FogManager.Instance;
+		public static RTS Game { get; private set; }
 
 		[Net] public float ServerTime { get; private set; }
 		[Net] public BaseRound Round { get; private set; }
@@ -35,7 +28,7 @@ namespace RTS
 			}
 		}
 
-		public Game()
+		public RTS()
 		{
 			if ( IsServer )
 			{
@@ -46,6 +39,24 @@ namespace RTS
 				_ = new FogManager();
 				_ = new Hud();
 			}
+
+			Game = this;
+		}
+
+		public void ToastAll( string text, string icon = "" )
+		{
+			Toast( To.Everyone, text, icon );
+		}
+
+		public void Toast( Player player, string text, string icon = "" )
+		{
+			Toast( To.Single( player ), text, icon );
+		}
+		
+		[ClientRpc]
+		public void Toast( string text, string icon = "" )
+		{
+			ToastList.Instance.AddItem( text, Texture.Load( icon ) );
 		}
 
 		public void UpdateRating( Player player )

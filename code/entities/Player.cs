@@ -1,13 +1,13 @@
 ﻿using Sandbox;
 using Gamelib.Elo;
 using System.Collections.Generic;
-using RTS.Buildings;
+using Facepunch.RTS.Buildings;
 using System.Linq;
-using RTS.Units;
+using Facepunch.RTS.Units;
 using System;
 using Gamelib.Extensions;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class Player : Entity
 	{
@@ -233,9 +233,9 @@ namespace RTS
 		private void EnableFog( bool shouldEnable )
 		{
 			if ( shouldEnable )
-				Game.Fog.Show();
+				RTS.Fog.Show();
 			else
-				Game.Fog.Hide();
+				RTS.Fog.Hide();
 		}
 	}
 }

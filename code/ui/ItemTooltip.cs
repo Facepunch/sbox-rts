@@ -1,6 +1,6 @@
 ﻿
 using Gamelib.Extensions;
-using RTS.Units;
+using Facepunch.RTS.Units;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public class ItemResourceValue : Panel
 	{

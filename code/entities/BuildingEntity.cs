@@ -1,6 +1,6 @@
-﻿using RTS.Buildings;
-using RTS.Tech;
-using RTS.Units;
+﻿using Facepunch.RTS.Buildings;
+using Facepunch.RTS.Tech;
+using Facepunch.RTS.Units;
 using Sandbox;
 using Sandbox.UI;
 using Steamworks.Data;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer
 	{
@@ -101,7 +101,7 @@ namespace RTS
 
 			AddAsFogViewer( To.Single( Player ) );
 
-			Game.Sound.Play( Player, "construction_complete" );
+			RTS.Sound.Play( Player, "construction_complete" );
 		}
 
 		public void StartConstruction()
@@ -205,7 +205,7 @@ namespace RTS
 			{
 				var firstItem = Queue[0];
 
-				if ( firstItem.FinishTime > 0f && Game.Instance.ServerTime >= firstItem.FinishTime )
+				if ( firstItem.FinishTime > 0f && RTS.Game.ServerTime >= firstItem.FinishTime )
 				{
 					OnQueueItemCompleted( firstItem );
 					UnqueueItem( firstItem.Id );
@@ -307,7 +307,7 @@ namespace RTS
 			}
 			else
 			{
-				Game.Fog.RemoveViewer( this );
+				RTS.Fog.RemoveViewer( this );
 			}
 
 			base.OnDestroy();
@@ -345,7 +345,7 @@ namespace RTS
 		[ClientRpc]
 		private void AddAsFogViewer()
 		{
-			Game.Fog.AddViewer( this );
+			RTS.Fog.AddViewer( this );
 		}
 
 		[ClientRpc]
@@ -366,7 +366,7 @@ namespace RTS
 		{
 			var queueItem = new QueueItem
 			{
-				Item = Game.Item.Find<BaseItem>( itemId ),
+				Item = RTS.Item.Find<BaseItem>( itemId ),
 				Id = queueId
 			};
 

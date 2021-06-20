@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RTS
+namespace Facepunch.RTS
 {
 	public partial class StatsRound : BaseRound
 	{
@@ -24,7 +24,7 @@ namespace RTS
 
 		protected override void OnTimeUp()
 		{
-			Game.Instance.ChangeRound( new PlayRound() );
+			RTS.Game.ChangeRound( new PlayRound() );
 			base.OnTimeUp();
 		}
 	}

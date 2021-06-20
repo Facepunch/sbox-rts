@@ -1,12 +1,12 @@
 ﻿using Gamelib.Extensions;
-using RTS.Buildings;
-using RTS.Units;
+using Facepunch.RTS.Buildings;
+using Facepunch.RTS.Units;
 using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RTS
+namespace Facepunch.RTS
 {
     public partial class PlayRound : BaseRound
 	{

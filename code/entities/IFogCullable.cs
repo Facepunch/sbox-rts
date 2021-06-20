@@ -1,4 +1,4 @@
-﻿namespace RTS
+﻿namespace Facepunch.RTS
 {
 	public interface IFogCullable
 	{
