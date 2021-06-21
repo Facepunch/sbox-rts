@@ -13,8 +13,6 @@ namespace Facepunch.RTS
 	{
 		[Net, Local] public List<uint> Dependencies { get; set; }
 		[Net, Local] public List<Entity> Selection { get; set; }
-		[Net, Local] public Vector3 StartPosition { get; set; }
-		[Net, Local] public float StartLineOfSight { get; set; }
 		[Net, Local] public uint MaxPopulation { get; set; }
 		[Net, Local] public uint Population { get; private set; }
 		[Net, Local, Predicted] public float ZoomLevel { get; set; }
@@ -156,7 +154,6 @@ namespace Facepunch.RTS
 		public void MakeSpectator( bool isSpectator )
 		{
 			IsSpectator = isSpectator;
-			EnableFog( To.Single( this ), !isSpectator );
 		}
 
 		public void RemoveDependency( BaseItem item )
@@ -237,15 +234,6 @@ namespace Facepunch.RTS
 			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
 			base.Simulate( client );
-		}
-
-		[ClientRpc]
-		private void EnableFog( bool shouldEnable )
-		{
-			if ( shouldEnable )
-				RTS.Fog.Show();
-			else
-				RTS.Fog.Hide();
 		}
 	}
 }

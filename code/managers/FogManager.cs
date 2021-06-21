@@ -61,12 +61,33 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public void MakeVisible( Player player, Vector3 position, float range )
+		{
+			MakeVisible( To.Single( player ), position, range );
+		}
+
+		public void Clear( Player player )
+		{
+			Clear( To.Single( player ) );
+		}
+
+		public void Show( Player player )
+		{
+			Show( To.Single( player ) );
+		}
+
+		public void Hide( Player player )
+		{
+			Hide( To.Single( player ) );
+		}
+
+		[ClientRpc]
 		public void Show()
 		{
 			IsActive = true;
-			Clear();
 		}
 
+		[ClientRpc]
 		public void Hide()
 		{
 			IsActive = false;
@@ -128,6 +149,7 @@ namespace Facepunch.RTS
 			return (Data[i] <= 200);
 		}
 
+		[ClientRpc]
 		public void Clear()
 		{
 
@@ -140,6 +162,12 @@ namespace Facepunch.RTS
 					Data[index + 0] = 255;
 				}
 			}
+		}
+
+		[ClientRpc]
+		public void MakeVisible( Vector3 position, float range )
+		{
+			AddRange( position, range, 200 );
 		}
 
 		public void PunchHole( Vector3 location, float range, byte alpha )
@@ -204,6 +232,27 @@ namespace Facepunch.RTS
 			}
 		}
 
+		private void AddRange( Vector3 position, float range, byte alpha )
+		{
+			FogCullable cullable;
+
+			PunchHole( position, range, alpha );
+
+			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			{
+				cullable = _cullables[i];
+
+				if ( cullable.IsVisible ) continue;
+
+				if ( cullable.Object.Position.Distance( position ) <= range / 2f )
+				{
+					cullable.Object.HasBeenSeen = true;
+					cullable.Object.MakeVisible( true );
+					cullable.IsVisible = true;
+				}
+			}
+		}
+
 		[Event.Tick.Client]
 		private void Tick()
 		{
@@ -216,11 +265,6 @@ namespace Facepunch.RTS
 				cullable = _cullables[i];
 				cullable.IsVisible = false;
 				cullable.Object.MakeVisible( false );
-			}
-
-			if ( Local.Pawn is Player player )
-			{
-				PunchHole( player.StartPosition, player.StartLineOfSight, 200 );
 			}
 
 			// Our first pass will create the seen history map.
@@ -237,21 +281,7 @@ namespace Facepunch.RTS
 				var position = viewer.Object.Position;
 				var range = viewer.Object.LineOfSight;
 
-				PunchHole( position, range, 0 );
-
-				for ( var j = _cullables.Count - 1; j >= 0; j-- )
-				{
-					cullable = _cullables[j];
-
-					if ( cullable.IsVisible ) continue;
-
-					if ( cullable.Object.Position.Distance( position ) <= range / 2f )
-					{
-						cullable.Object.HasBeenSeen = true;
-						cullable.Object.MakeVisible( true );
-						cullable.IsVisible = true;
-					}
-				}
+				AddRange( position, range, 0 );
 
 				viewer.LastPosition = position;
 			}
