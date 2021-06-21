@@ -155,6 +155,26 @@
 						frame_count = 1
 						frame_rate = 30
 					},
+					{
+						_class = "AnimFile"
+						name = "fire"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/buildings/turret_future/dmx/turret_future@fire.dmx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
 				]
 				default_root_bone_name = ""
 			},
