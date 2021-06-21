@@ -119,11 +119,11 @@
 				{
 					m_id = 204619005
 				}
-				m_networkMode = "ClientPredicted"
+				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_childID = 
 				{
-					m_id = 1657406755
+					m_id = 702887995
 				}
 				m_target = "VectorParameter"
 				m_param = 
@@ -167,7 +167,7 @@
 				{
 					m_id = 350365717
 				}
-				m_networkMode = "ClientPredicted"
+				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_children = 
 				[
@@ -222,7 +222,7 @@
 				{
 					m_id = 517168428
 				}
-				m_networkMode = "ClientPredicted"
+				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_baseChildID = 
 				{
@@ -243,6 +243,26 @@
 		{
 			key = 
 			{
+				m_id = 702887995
+			}
+			value = 
+			{
+				_class = "CSingleFrameAnimNode"
+				m_sName = "Unnamed"
+				m_vecPosition = [ -532.0, 51.0 ]
+				m_nNodeID = 
+				{
+					m_id = 702887995
+				}
+				m_networkMode = "ServerAuthoritative"
+				m_sNote = ""
+				m_sequenceName = "aim"
+				m_nFrameIndex = 0
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 853543169
 			}
 			value = 
@@ -254,7 +274,7 @@
 				{
 					m_id = 853543169
 				}
-				m_networkMode = "ClientPredicted"
+				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_baseChildID = 
 				{
@@ -281,12 +301,12 @@
 			{
 				_class = "CSingleFrameAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -658.0, -47.0 ]
+				m_vecPosition = [ -658.0, -49.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1261387022
 				}
-				m_networkMode = "ClientPredicted"
+				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_sequenceName = "fire"
 				m_nFrameIndex = 1
@@ -306,34 +326,12 @@
 				{
 					m_id = 1569685189
 				}
-				m_networkMode = "ClientPredicted"
+				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_childID = 
 				{
 					m_id = 1688070002
 				}
-			}
-		},
-		{
-			key = 
-			{
-				m_id = 1657406755
-			}
-			value = 
-			{
-				_class = "CSequenceAnimNode"
-				m_sName = "Unnamed"
-				m_vecPosition = [ -524.0, 48.0 ]
-				m_nNodeID = 
-				{
-					m_id = 1657406755
-				}
-				m_networkMode = "ClientPredicted"
-				m_sNote = ""
-				m_tagSpans = [  ]
-				m_sequenceName = "aim"
-				m_playbackSpeed = 1.0
-				m_bLoop = false
 			}
 		},
 		{
@@ -350,7 +348,7 @@
 				{
 					m_id = 1688070002
 				}
-				m_networkMode = "ClientPredicted"
+				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_baseChildID = 
 				{
@@ -382,7 +380,7 @@
 				{
 					m_id = 1821366964
 				}
-				m_networkMode = "ClientPredicted"
+				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_sequenceName = "fire"
 				m_nFrameIndex = 0

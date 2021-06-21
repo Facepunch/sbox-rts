@@ -125,10 +125,15 @@ namespace Facepunch.RTS
 
 		public void RemoveViewer( IFogViewer viewer )
 		{
+			FogViewer data;
+
 			for ( var i = _viewers.Count - 1; i >= 0; i-- )
 			{
-				if ( _viewers[i].Object == viewer )
+				data = _viewers[i];
+
+				if ( data.Object == viewer )
 				{
+					PunchHole( data.LastPosition, data.Object.LineOfSight, 200 );
 					_viewers.RemoveAt( i );
 					break;
 				}

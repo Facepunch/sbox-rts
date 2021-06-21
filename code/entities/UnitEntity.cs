@@ -31,6 +31,7 @@ namespace Facepunch.RTS
 		public Entity Target { get; private set; }
 		public TimeSince LastGatherTime { get; private set; }
 		public ResourceEntity LastResourceEntity { get; private set; }
+		public DamageInfo LastDamageTaken { get; private set; }
 		public ResourceType LastResourceType { get; private set; }
 		public Vector3 LastResourcePosition { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
@@ -100,6 +101,19 @@ namespace Facepunch.RTS
 				resource.Delete();
 
 			return true;
+		}
+
+		public override void OnKilled()
+		{
+			base.OnKilled();
+
+			BecomeRagdoll( Velocity, LastDamageTaken.Flags, LastDamageTaken.Position, LastDamageTaken.Force, GetHitboxBone( LastDamageTaken.HitboxIndex ) );
+		}
+
+		public override void TakeDamage( DamageInfo info )
+		{
+			LastDamageTaken = info;
+			base.TakeDamage( info );
 		}
 
 		public override void ClientSpawn()
@@ -212,13 +226,10 @@ namespace Facepunch.RTS
 
 		public ModelEntity AttachClothing( string modelName )
 		{
-			var entity = new ModelEntity();
+			var entity = new Clothes();
 
 			entity.SetModel( modelName );
 			entity.SetParent( this, true );
-			entity.EnableShadowInFirstPerson = true;
-			entity.EnableHideInFirstPerson = true;
-			entity.AddCollisionLayer( CollisionLayer.Debris );
 
 			Clothing.Add( entity );
 
@@ -252,6 +263,7 @@ namespace Facepunch.RTS
 		{
 			if ( IsClient )
 			{
+				Circle?.Delete();
 				RTS.Fog.RemoveViewer( this );
 				RTS.Fog.RemoveCullable( this );
 			}
@@ -269,6 +281,11 @@ namespace Facepunch.RTS
 			if ( !string.IsNullOrEmpty( item.Model ) )
 			{
 				SetModel( item.Model );
+
+				var materialGroups = MaterialGroupCount;
+
+				if ( materialGroups > 0 )
+					SetMaterialGroup( Rand.Int( 0, materialGroups ) );
 			}
 
 			foreach ( var clothes in item.Clothing )
@@ -623,11 +640,6 @@ namespace Facepunch.RTS
 			SpinSpeed = null;
 		}
 
-		protected override void OnPlayerAssigned( Player player )
-		{
-			base.OnPlayerAssigned( player );
-		}
-
 		protected override void AddHudComponents()
 		{
 			HealthBar = UI.AddChild<EntityHudBar>( "health" );
@@ -663,6 +675,12 @@ namespace Facepunch.RTS
 			}
 
 			base.UpdateHudComponents();
+		}
+
+		[ClientRpc]
+		private void BecomeRagdoll( Vector3 velocity, DamageFlags damageFlags, Vector3 forcePos, Vector3 force, int bone )
+		{
+			Ragdoll.From( this, velocity, damageFlags, forcePos, force, bone ).FadeOut( 10f );
 		}
 	}
 }

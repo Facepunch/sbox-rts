@@ -66,12 +66,18 @@ namespace Facepunch.RTS
 			};
 		}
 
+		public virtual void DoImpactEffect( TraceResult trace, float damage )
+		{
+			Surface.FindByName( "flesh" ).DoBulletImpact( trace );
+			//trace.Surface.DoBulletImpact( trace );
+		}
+
 		[ClientRpc]
 		protected virtual void ShootEffects()
 		{
 			Host.AssertClient();
 
-			if (!IsMelee)
+			if ( !IsMelee )
 			{
 				Particles.Create( "particles/pistol_muzzleflash.vpcf", this, "muzzle" );
 			}
@@ -87,8 +93,6 @@ namespace Facepunch.RTS
 				.Ignore( this )
 				.Run();
 
-			trace.Surface.DoBulletImpact( trace );
-
 			if ( trace.Entity == Target )
 			{
 				var damageInfo = DamageInfo.FromBullet( trace.EndPos, trace.Direction * 100 * force, damage )
@@ -97,6 +101,8 @@ namespace Facepunch.RTS
 					.WithWeapon( this );
 
 				trace.Entity.TakeDamage( damageInfo );
+
+				DoImpactEffect( trace, damage );
 			}
 		}
 	}
