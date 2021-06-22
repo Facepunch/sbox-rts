@@ -49,8 +49,6 @@ namespace Gamelib.FlowField
 
 					GetNeighbours( node.GridIndex, GridDirection.AllDirections, node.AllNeighbours );
 					GetNeighbours( node.GridIndex, GridDirection.CardinalDirections, node.CardinalNeighbours );
-
-					nodes[x, y] = node;
 				}
 			}
 		}
@@ -82,8 +80,6 @@ namespace Gamelib.FlowField
 
 					node.BestCost = ushort.MaxValue;
 					node.Cost = 1;
-
-					nodes[x, y] = node;
 				}
 			}
 		}
@@ -95,7 +91,6 @@ namespace Gamelib.FlowField
 			Destination.BestCost = 0;
 
 			var nodesToCheck = new Queue<Node>();
-			var nodes = Nodes;
 
 			nodesToCheck.Enqueue( Destination );
 
@@ -107,15 +102,14 @@ namespace Gamelib.FlowField
 				for ( int i = 0; i < neighbours.Length; i++ )
 				{
 					var neighbour = neighbours[i];
-					var neighbourNode = nodes[neighbour.x, neighbour.y];
 
-					if ( neighbourNode.Cost == byte.MaxValue ) continue;
+					if ( neighbour == null ) continue;
+					if ( neighbour.Cost == byte.MaxValue ) continue;
 
-					if ( neighbourNode.Cost + currentNode.BestCost < neighbourNode.BestCost )
+					if ( neighbour.Cost + currentNode.BestCost < neighbour.BestCost )
 					{
-						neighbourNode.BestCost = (ushort)(neighbourNode.Cost + currentNode.BestCost);
-						nodes[neighbour.x, neighbour.y] = neighbourNode;
-						nodesToCheck.Enqueue( neighbourNode );
+						neighbour.BestCost = (ushort)(neighbour.Cost + currentNode.BestCost);
+						nodesToCheck.Enqueue( neighbour );
 					}
 				}
 			}
@@ -137,42 +131,37 @@ namespace Gamelib.FlowField
 					for ( int i = 0; i < neighbours.Length; i++ )
 					{
 						var neighbour = neighbours[i];
-						var neighbourNode = nodes[neighbour.x, neighbour.y];
 
-						if ( neighbourNode.BestCost < bestCost )
+						if ( neighbour == null ) continue;
+
+						if ( neighbour.BestCost < bestCost )
 						{
-							bestCost = neighbourNode.BestCost;
-							node.BestDirection = GridDirection.GetDirectionFromVector( neighbourNode.GridIndex - node.GridIndex );
+							bestCost = neighbour.BestCost;
+							node.BestDirection = GridDirection.GetDirectionFromVector( neighbour.GridIndex - node.GridIndex );
 						}
 					}
-
-					nodes[x, y] = node;
 				}
 			}
 		}
-		 
-		private void GetNeighbours( Vector2i nodeIndex, List<GridDirection> directions, Vector2i[] neighbours )
+
+		private void GetNeighbours( Vector2i nodeIndex, List<GridDirection> directions, Node[] neighbours )
 		{
 			var currentIndex = 0;
 
 			for ( int i = 0; i < directions.Count; i++ )
 			{
 				var direction = directions[i];
-
-				if ( direction == GridDirection.None )
-					continue;
-
 				var neighbour = GetRelativeNode( nodeIndex, direction );
 
-				if ( neighbour.HasValue )
+				if ( neighbour != null )
 				{
-					neighbours[currentIndex] = neighbour.Value.GridIndex;
+					neighbours[currentIndex] = neighbour;
 					currentIndex++;
 				}
 			}
 		}
 
-		private Node? GetRelativeNode( Vector2i origin, Vector2i relative )
+		private Node GetRelativeNode( Vector2i origin, Vector2i relative )
 		{
 			var finalPos = origin + relative;
 

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Gamelib.FlowField
 {
-	public struct Node
+	public class Node
 	{
 		public Vector3 WorldPosition;
 		public Vector2i GridIndex;
 		public byte Cost;
 		public ushort BestCost;
 		public GridDirection BestDirection;
-		public Vector2i[] AllNeighbours;
-		public Vector2i[] CardinalNeighbours;
+		public Node[] AllNeighbours;
+		public Node[] CardinalNeighbours;
 
 		public Node( Vector3 worldPosition, Vector2i gridIndex )
 		{
@@ -20,8 +20,8 @@ namespace Gamelib.FlowField
 			Cost = 1;
 			BestCost = ushort.MaxValue;
 			BestDirection = GridDirection.None;
-			AllNeighbours = new Vector2i[8];
-			CardinalNeighbours = new Vector2i[4];
+			AllNeighbours = new Node[9];
+			CardinalNeighbours = new Node[4];
 		}
 
 		public void IncreaseCost( int amount )
