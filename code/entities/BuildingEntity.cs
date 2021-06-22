@@ -317,7 +317,7 @@ namespace Facepunch.RTS
 		{
 			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRange )
 				.OfType<UnitEntity>()
-				.Where( ( a ) => IsEnemy( a ) )
+				//.Where( ( a ) => IsEnemy( a ) )
 				.OrderBy( ( a ) => a.Position.Distance( Position ) )
 				.FirstOrDefault();
 

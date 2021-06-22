@@ -7,6 +7,8 @@ using System.Linq;
 using System;
 using Gamelib.Extensions;
 using Sandbox.UI;
+using Gamelib.FlowField;
+using Gamelib.Math;
 
 namespace Facepunch.RTS
 {
@@ -27,6 +29,7 @@ namespace Facepunch.RTS
 		public bool HasBeenSeen { get; set; }
 		public bool FollowTarget { get; private set; }
 		public float TargetAlpha { get; private set; }
+		public Vector3 TargetPosition { get; private set; }
 		public float Speed { get; private set; }
 		public Entity Target { get; private set; }
 		public TimeSince LastGatherTime { get; private set; }
@@ -43,8 +46,6 @@ namespace Facepunch.RTS
 		public EntityHudBar HealthBar { get; private set; }
 		public EntityHudBar GatherBar { get; private set; }
 		#endregion
-
-		public NavSteer Steer;
 
 		public UnitEntity() : base()
 		{
@@ -171,6 +172,7 @@ namespace Facepunch.RTS
 
 		public void MoveTo( Vector3 position )
 		{
+			RTS.Game.Pathfinder.Update( position );
 			ResetTarget( position);
 			OnTargetChanged();
 		}
@@ -225,8 +227,8 @@ namespace Facepunch.RTS
 
 		public void ClearTarget()
 		{
-			Steer = null;
 			Target = null;
+			TargetPosition = Vector3.Zero;
 			IsGathering = false;
 			FollowTarget = false;
 			OnTargetChanged();
@@ -394,8 +396,7 @@ namespace Facepunch.RTS
 		private void ResetTarget( Vector3? position = null )
 		{
 			Target = null;
-			Steer ??= new( this );
-			Steer.Target = position.Value;
+			TargetPosition = position.Value;
 			IsGathering = false;
 			FollowTarget = false;
 		}
@@ -469,8 +470,7 @@ namespace Facepunch.RTS
 			{
 				if ( Target.IsValid() && FollowTarget )
 				{
-					Steer ??= new( this );
-					Steer.Target = Target.Position;
+					TargetPosition = Target.Position;
 				}
 				else if ( !IsSelected )
 				{
@@ -480,22 +480,23 @@ namespace Facepunch.RTS
 						FindTargetUnit();
 				}
 
-				if ( Steer != null )
+				if ( Position.Distance( TargetPosition ) > 5f && RTS.Game.Pathfinder.FlowField != null )
 				{
-					Steer.Tick( Position );
+					var nodeBelow = RTS.Game.Pathfinder.FlowField.GetNodeFromWorld( Position );
+					var pathDirection = new Vector3( nodeBelow.BestDirection.Direction.x, nodeBelow.BestDirection.Direction.y, 0 );
+					var control = GroundEntity != null ? 200f : 10f;
 
-					if ( !Steer.Output.Finished )
-					{
-						var control = GroundEntity != null ? 200 : 10;
+					Log.Info( pathDirection.ToString() );
 
-						InputVelocity = Steer.Output.Direction.Normal * Speed;
-						var vel = Steer.Output.Direction.WithZ( 0 ).Normal * Time.Delta * control;
-						Velocity = Velocity.AddClamped( vel, Speed );
+					DebugOverlay.Line( Position.WithZ( 15f ), Position.WithZ( 15f ) + (pathDirection * 100f), Time.Delta );
 
-						SetAnimLookAt( "aim_head", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
-						SetAnimLookAt( "aim_body", EyePos + Steer.Output.Direction.WithZ( 0 ) * 10 );
-						SetAnimFloat( "aim_body_weight", 0.25f );
-					}
+					InputVelocity = pathDirection.Normal * Speed;
+					var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
+					Velocity = Velocity.AddClamped( velocity, Speed );
+
+					SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
+					SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
+					SetAnimFloat( "aim_body_weight", 0.25f );
 				}
 
 				Move( Time.Delta );
@@ -510,7 +511,6 @@ namespace Facepunch.RTS
 			else
 			{
 				var targetDirection = Target.Position - Position;
-				var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
 				var lookAtDistance = 0f;
 
 				if ( SpinSpeed.HasValue )

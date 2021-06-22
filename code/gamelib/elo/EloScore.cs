@@ -34,7 +34,7 @@ namespace Gamelib.Elo
 
 		public int GetNextLevelRating()
 		{
-			var roundedUp = Math.Max( ((int)MathF.Ceiling( Rating / 100 ) * 100) - 1, 0 );
+			var roundedUp = System.Math.Max( ((int)MathF.Ceiling( Rating / 100 ) * 100) - 1, 0 );
 			return Rating == roundedUp ? Rating + 100 : roundedUp;
 		}
 
@@ -62,10 +62,10 @@ namespace Gamelib.Elo
 			var eloK = 32;
 			var delta = (int)(eloK * ((int)outcome - Elo.GetWinChance( this, opponent )));
 
-			Rating = Math.Max( Rating + delta, 0 );
+			Rating = System.Math.Max( Rating + delta, 0 );
 			Delta = delta;
 
-			opponent.Rating = Math.Max( opponent.Rating - delta, 0 );
+			opponent.Rating = System.Math.Max( opponent.Rating - delta, 0 );
 			opponent.Delta = Delta;
 		}
 	}

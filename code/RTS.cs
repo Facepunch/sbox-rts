@@ -1,6 +1,8 @@
-﻿using Sandbox;
+﻿using Gamelib.FlowField;
+using Sandbox;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Gamelib.Math;
 
 namespace Facepunch.RTS
 {
@@ -35,6 +37,7 @@ namespace Facepunch.RTS
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
 		public BaseRound LastRound { get; private set; }
+		public Pathfinder Pathfinder { get; private set; }
 
 		public RTS()
 		{
@@ -48,6 +51,8 @@ namespace Facepunch.RTS
 				_ = new FogManager();
 				_ = new Hud();
 			}
+
+			Pathfinder = new Pathfinder();
 
 			Game = this;
 		}
