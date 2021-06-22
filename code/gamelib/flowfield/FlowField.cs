@@ -7,6 +7,7 @@ namespace Gamelib.FlowField
 {
 	public class FlowField
 	{
+		public HashSet<FlowFieldChunk> ChunkPath;
 		public FlowFieldChunk[,] Chunks;
 		public Vector2i GridSize;
 		public float NodeRadius;
@@ -22,6 +23,7 @@ namespace Gamelib.FlowField
 			NodeDiameter = NodeRadius * 2f;
 			ChunkSize = chunkSize;
 			GridSize = gridSize;
+			ChunkPath = new();
 		}
 
 		public void CreateGrid()
@@ -89,6 +91,42 @@ namespace Gamelib.FlowField
 			return GetNodeFromLocal( new Vector2i( x, y ) );
 		}
 
+		public void CreateIntegrationField( Node destination )
+		{
+			ChunkPath.Clear();
+
+			Destination = destination;
+			Destination.Cost = 0;
+			Destination.BestCost = 0;
+
+			var nodesToCheck = new Queue<Node>();
+
+			nodesToCheck.Enqueue( Destination );
+
+			while ( nodesToCheck.Count > 0 )
+			{
+				var currentNode = nodesToCheck.Dequeue();
+				var neighbours = currentNode.CardinalNeighbours;
+
+				for ( int i = 0; i < neighbours.Length; i++ )
+				{
+					var neighbour = neighbours[i];
+
+					if ( neighbour == null ) continue;
+					if ( neighbour.Cost == byte.MaxValue ) continue;
+
+					if ( neighbour.Cost + currentNode.BestCost < neighbour.BestCost )
+					{
+						neighbour.BestCost = (ushort)(neighbour.Cost + currentNode.BestCost);
+						nodesToCheck.Enqueue( neighbour );
+
+						if ( !ChunkPath.Contains( neighbour.Chunk ) )
+							ChunkPath.Add( neighbour.Chunk );
+					}
+				}
+			}
+		}
+
 		public Node GetNodeFromLocal( Vector2i position )
 		{
 			var chunk = GetChunkFromLocal( position );
@@ -122,52 +160,11 @@ namespace Gamelib.FlowField
 			}
 		}
 
-		public void CreateIntegrationField( Node destination )
-		{
-			Destination = destination;
-			Destination.Cost = 0;
-			Destination.BestCost = 0;
-
-			var nodesToCheck = new Queue<Node>();
-
-			nodesToCheck.Enqueue( Destination );
-
-			while ( nodesToCheck.Count > 0 )
-			{
-				var currentNode = nodesToCheck.Dequeue();
-				var neighbours = currentNode.CardinalNeighbours;
-
-				for ( int i = 0; i < neighbours.Length; i++ )
-				{
-					var neighbour = neighbours[i];
-
-					if ( neighbour == null ) continue;
-					if ( neighbour.Cost == byte.MaxValue ) continue;
-
-					if ( neighbour.Cost + currentNode.BestCost < neighbour.BestCost )
-					{
-						neighbour.BestCost = (ushort)(neighbour.Cost + currentNode.BestCost);
-						nodesToCheck.Enqueue( neighbour );
-					}
-				}
-			}
-		}
-
 		public void CreateFlowField()
 		{
-			var chunkSize = ChunkSize;
-			var gridSize = GridSize;
-			var chunksX = gridSize.x / chunkSize;
-			var chunksY = gridSize.y / chunkSize;
-			var chunks = Chunks;
-
-			for ( var x = 0; x < chunksX; x++ )
+			foreach ( var chunk in ChunkPath )
 			{
-				for ( var y = 0; y < chunksY; y++ )
-				{
-					var chunk = chunks[x, y];
-					chunk.CreateFlowField();
-				}
+				chunk.CreateFlowField();
 			}
 		}
 	}

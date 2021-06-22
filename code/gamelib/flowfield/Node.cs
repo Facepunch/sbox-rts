@@ -11,14 +11,16 @@ namespace Gamelib.FlowField
 		public byte Cost;
 		public ushort BestCost;
 		public GridDirection BestDirection;
+		public FlowFieldChunk Chunk;
 		public Node[] AllNeighbours;
 		public Node[] CardinalNeighbours;
 
-		public Node( Vector3 worldPosition, Vector2i gridIndex )
+		public Node( FlowFieldChunk chunk, Vector3 worldPosition, Vector2i gridIndex )
 		{
 			WorldPosition = worldPosition;
 			GridIndex = gridIndex;
 			Cost = 1;
+			Chunk = chunk;
 			BestCost = ushort.MaxValue;
 			BestDirection = GridDirection.None;
 			AllNeighbours = new Node[9];

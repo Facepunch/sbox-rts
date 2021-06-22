@@ -10,7 +10,6 @@ namespace Gamelib.FlowField
 		public Node[,] Nodes;
 		public Vector2i Index;
 		public int Size;
-		public Node Destination;
 		public FlowField FlowField;
 
 		public FlowFieldChunk( FlowField flowField, Vector2i index, int size )
@@ -60,38 +59,7 @@ namespace Gamelib.FlowField
 					var worldPosition = worldTopLeft + Vector3.Forward * (worldGridX * nodeDiameter + nodeRadius);
 					worldPosition += Vector3.Left * (worldGridY * nodeDiameter + nodeRadius);
 
-					nodes[x, y] = new Node( worldPosition, new Vector2i( worldGridX, worldGridY ) );
-				}
-			}
-		}
-
-		public void CreateIntegrationField( Node destination )
-		{
-			Destination = destination;
-			Destination.Cost = 0;
-			Destination.BestCost = 0;
-
-			var nodesToCheck = new Queue<Node>();
-
-			nodesToCheck.Enqueue( Destination );
-
-			while ( nodesToCheck.Count > 0 )
-			{
-				var currentNode = nodesToCheck.Dequeue();
-				var neighbours = currentNode.CardinalNeighbours;
-
-				for ( int i = 0; i < neighbours.Length; i++ )
-				{
-					var neighbour = neighbours[i];
-
-					if ( neighbour == null ) continue;
-					if ( neighbour.Cost == byte.MaxValue ) continue;
-
-					if ( neighbour.Cost + currentNode.BestCost < neighbour.BestCost )
-					{
-						neighbour.BestCost = (ushort)(neighbour.Cost + currentNode.BestCost);
-						nodesToCheck.Enqueue( neighbour );
-					}
+					nodes[x, y] = new Node( this, worldPosition, new Vector2i( worldGridX, worldGridY ) );
 				}
 			}
 		}
