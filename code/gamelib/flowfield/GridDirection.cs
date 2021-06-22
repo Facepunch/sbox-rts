@@ -20,10 +20,18 @@ namespace Gamelib.FlowField
 
 		public static GridDirection GetDirectionFromVector( Vector2i vector )
 		{
-			return CardinalAndIntercardinalDirections.DefaultIfEmpty( None ).FirstOrDefault( direction => direction == vector );
+			for ( var i = 0; i < CardinalAndIntercardinalDirections.Count; i++ )
+			{
+				var direction = CardinalAndIntercardinalDirections[i];
+
+				if ( direction == vector )
+					return direction;
+			}
+
+			return None;
 		}
 
-		public static readonly GridDirection None = new ( 0, 0 );
+		public static readonly GridDirection None = new( 0, 0 );
 		public static readonly GridDirection North = new( 0, 1 );
 		public static readonly GridDirection South = new( 0, -1 );
 		public static readonly GridDirection East = new( 1, 0 );

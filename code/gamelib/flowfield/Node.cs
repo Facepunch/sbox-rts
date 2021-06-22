@@ -1,4 +1,5 @@
 ﻿using Gamelib.Math;
+using System.Collections.Generic;
 
 namespace Gamelib.FlowField
 {
@@ -9,6 +10,8 @@ namespace Gamelib.FlowField
 		public byte Cost;
 		public ushort BestCost;
 		public GridDirection BestDirection;
+		public List<Node> AllNeighbours;
+		public List<Node> CardinalNeighbours;
 
 		public Node( Vector3 worldPosition, Vector2i gridIndex )
 		{
@@ -17,6 +20,8 @@ namespace Gamelib.FlowField
 			Cost = 1;
 			BestCost = ushort.MaxValue;
 			BestDirection = GridDirection.None;
+			AllNeighbours = new();
+			CardinalNeighbours = new();
 		}
 
 		public void IncreaseCost( int amount )

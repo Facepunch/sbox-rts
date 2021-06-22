@@ -480,15 +480,11 @@ namespace Facepunch.RTS
 						FindTargetUnit();
 				}
 
-				if ( Position.Distance( TargetPosition ) > 5f && RTS.Game.Pathfinder.FlowField != null )
+				if ( Position.Distance( TargetPosition ) > 80f && RTS.Game.Pathfinder.FlowField != null )
 				{
 					var nodeBelow = RTS.Game.Pathfinder.FlowField.GetNodeFromWorld( Position );
 					var pathDirection = new Vector3( nodeBelow.BestDirection.Direction.x, nodeBelow.BestDirection.Direction.y, 0 );
 					var control = GroundEntity != null ? 200f : 10f;
-
-					Log.Info( pathDirection.ToString() );
-
-					DebugOverlay.Line( Position.WithZ( 15f ), Position.WithZ( 15f ) + (pathDirection * 100f), Time.Delta );
 
 					InputVelocity = pathDirection.Normal * Speed;
 					var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
@@ -497,6 +493,10 @@ namespace Facepunch.RTS
 					SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
 					SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
 					SetAnimFloat( "aim_body_weight", 0.25f );
+				}
+				else
+				{
+					Velocity = 0;
 				}
 
 				Move( Time.Delta );
@@ -510,7 +510,6 @@ namespace Facepunch.RTS
 			}
 			else
 			{
-				var targetDirection = Target.Position - Position;
 				var lookAtDistance = 0f;
 
 				if ( SpinSpeed.HasValue )

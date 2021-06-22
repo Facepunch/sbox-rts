@@ -10,10 +10,12 @@ namespace Gamelib.FlowField
 
 		private void InitializeFlowField()
 		{
-			//if ( FlowField != null ) return;
+			if ( FlowField == null )
+			{
+				FlowField = new FlowField( 40f, new Vector2i( 500, 500 ) );
+				FlowField.CreateGrid();
+			}
 
-			FlowField = new FlowField( 10f, new Vector2i( 1000, 1000 ) );
-			FlowField.CreateGrid();
 			FlowField.CreateCostField();
 		}
 
