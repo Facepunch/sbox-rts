@@ -1,6 +1,4 @@
-﻿using Sandbox;
-
-namespace Facepunch.RTS
+﻿namespace Facepunch.RTS
 {
 	public interface ISelectable
 	{
