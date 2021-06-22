@@ -34,6 +34,7 @@ namespace Facepunch.RTS
 			}
 			else
 			{
+				FieldOfView = cameraConfig.FOV;
 				Ortho = false;
 			}
 

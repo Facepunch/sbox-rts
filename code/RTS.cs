@@ -165,6 +165,9 @@ namespace Facepunch.RTS
 
 		private void LoadConfig()
 		{
+			// TODO: Decals don't render in orthographic for some reason.
+
+			/*
 			Config = new GameConfig
 			{
 				Camera = new CameraConfig
@@ -177,8 +180,8 @@ namespace Facepunch.RTS
 					Up = 4000f
 				}
 			};
+			*/
 
-			/*
 			Config = new GameConfig
 			{
 				Camera = new CameraConfig
@@ -186,13 +189,12 @@ namespace Facepunch.RTS
 					Ortho = false,
 					PanSpeed = 5000f,
 					ZoomScale = 0.6f,
-					FOV = 60f,
-					Backward = 3000f,
-					Left = 3000f,
-					Up = 4000f
+					FOV = 30f,
+					Backward = 2500f,
+					Left = 2500f,
+					Up = 5000f
 				}
 			};
-			*/
 		}
 
 		private void LoadRatings()
