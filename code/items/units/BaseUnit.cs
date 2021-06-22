@@ -16,6 +16,14 @@ namespace Facepunch.RTS.Units
 		public virtual float ConstructRange => 1500f;
 		public virtual float AttackRange => 600f;
 		public virtual float InteractRange => 80f;
+		public virtual List<string> DamageDecals => new()
+		{
+			"materials/rts/blood/blood1.vmat"
+		};
+		public virtual List<string> ImpactEffects => new()
+		{
+			"particles/impact.flesh.vpcf"
+		};
 		public virtual uint Population => 1;
 		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";

@@ -10,7 +10,7 @@ using Sandbox.UI;
 
 namespace Facepunch.RTS
 {
-	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable
+	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable
 	{
 		public override bool HasSelectionGlow => false;
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
@@ -129,6 +129,33 @@ namespace Facepunch.RTS
 				RTS.Fog.AddCullable( this );
 
 			base.ClientSpawn();
+		}
+
+		public void DoImpactEffects( TraceResult trace )
+		{
+			var impactEffects = Item.ImpactEffects;
+			var particleName = impactEffects[Rand.Int( 0, impactEffects.Count - 1 )];
+
+			if ( particleName != null )
+			{
+				var particles = Particles.Create( particleName, trace.EndPos );
+				particles.SetForward( 0, trace.Normal );
+			}
+		}
+
+		public void CreateDamageDecals( Vector3 position )
+		{
+			var damageDecals = Item.DamageDecals;
+
+			if ( damageDecals.Count == 0 ) return;
+
+			var randomDecalName = damageDecals[Rand.Int( 0, damageDecals.Count - 1 )];
+			var decalMaterial = Material.Load( randomDecalName );
+			var decalRotation = Rotation.LookAt( Vector3.Up ) * Rotation.FromAxis( Vector3.Forward, Rand.Float( 0f, 360f ) );
+			var randomSize = Rand.Float( 50f, 100f );
+			var trace = Trace.Ray( position, position + Vector3.Down * 100f ).Ignore( this ).Run();
+
+			Decals.Place( decalMaterial, trace.EndPos, new Vector3( randomSize, randomSize, 4f ), decalRotation );
 		}
 
 		public void Attack( Entity target, bool autoFollow = true )

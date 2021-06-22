@@ -1,0 +1,42 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "projected_decals.vfx"
+
+	//---- Decal ----
+	F_ALPHA_MODE 1 // Cutoff
+	F_BLEND_MODE 3 // Liquid
+	F_CUTOFF_ANGLE 1
+
+	//---- Normal ----
+	F_NORMAL_MAP 1
+
+	//---- Specular ----
+	F_SPECULAR 1
+
+	//---- Alpha ----
+	g_flAlphaCutoffSoftness "0.010"
+
+	//---- Color ----
+	TextureColor "textures/rts/blood1_color.png"
+
+	//---- Decal ----
+	g_flCutoffAngle "60.000"
+	g_flCutoffAngleSoftness "5.000"
+
+	//---- Normal ----
+	TextureNormal "materials/default/default_normal.tga"
+
+	//---- Roughness ----
+	TextureRoughness "[0.407843 0.407843 0.407843 0.000000]"
+
+	//---- Translucent ----
+	TextureTranslucency "textures/rts/blood1_trans.jpg"
+
+	SystemAttributes
+	{
+		WorldMappingWidth "4"
+		WorldMappingHeight "4"
+	}
+}

@@ -68,8 +68,7 @@ namespace Facepunch.RTS
 
 		public virtual void DoImpactEffect( TraceResult trace, float damage )
 		{
-			Surface.FindByName( "flesh" ).DoBulletImpact( trace );
-			//trace.Surface.DoBulletImpact( trace );
+			trace.Surface.DoBulletImpact( trace );
 		}
 
 		[ClientRpc]
@@ -89,6 +88,7 @@ namespace Facepunch.RTS
 			var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
 				.EntitiesOnly()
 				.HitLayer( CollisionLayer.Debris, false )
+				.UseHitboxes()
 				.Ignore( Attacker )
 				.Ignore( this )
 				.Run();
@@ -103,6 +103,11 @@ namespace Facepunch.RTS
 				trace.Entity.TakeDamage( damageInfo );
 
 				DoImpactEffect( trace, damage );
+
+				if ( Target is IDamageable damageable && Rand.Float( 1f ) > 0.7f  )
+				{
+					damageable.CreateDamageDecals( trace.EndPos );
+				}
 			}
 		}
 	}

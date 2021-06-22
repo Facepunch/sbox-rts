@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using System;
+using System.Linq;
 
 namespace Facepunch.RTS
 {
@@ -31,9 +32,9 @@ namespace Facepunch.RTS
 		public override void DoImpactEffect( TraceResult trace, float damage )
 		{
 			// Don't go crazy with impact effects because we fire fast.
-			if ( Rand.Float( 1f ) >= 0.5f )
+			if ( Rand.Float( 1f ) >= 0.5f && Target is IDamageable damageable )
 			{
-				base.DoImpactEffect( trace, damage );
+				damageable.DoImpactEffects( trace );
 			}
 		}
 
