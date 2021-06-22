@@ -20,7 +20,7 @@ namespace Gamelib.FlowField
 
 			if ( FlowField == null )
 			{
-				FlowField = new FlowField( 40f, new Vector2i( 500, 500 ) );
+				FlowField = new FlowField( 40f, new Vector2i( 500, 500 ), 50 );
 				FlowField.CreateGrid();
 			}
 

@@ -7,79 +7,117 @@ namespace Gamelib.FlowField
 {
 	public class FlowField
 	{
-		public Node[,] Nodes;
+		public FlowFieldChunk[,] Chunks;
 		public Vector2i GridSize;
 		public float NodeRadius;
 		public Node Destination;
-		private float NodeDiameter;
+		public float NodeDiameter;
+		public int ChunkSize;
+		public Vector2 WorldSize;
+		public Vector3 WorldTopLeft;
 
-		public FlowField( float nodeRadius, Vector2i gridSize )
+		public FlowField( float nodeRadius, Vector2i gridSize, int chunkSize )
 		{
 			NodeRadius = nodeRadius;
 			NodeDiameter = NodeRadius * 2f;
+			ChunkSize = chunkSize;
 			GridSize = gridSize;
 		}
 
 		public void CreateGrid()
 		{
-			Nodes = new Node[GridSize.x, GridSize.y];
+			var chunkSize = ChunkSize;
+			var chunksX = GridSize.x / chunkSize;
+			var chunksY = GridSize.y / chunkSize;
+
+			Chunks = new FlowFieldChunk[
+				chunksX,
+				chunksY
+			];
 
 			var worldSizeX = GridSize.x * NodeDiameter;
 			var worldSizeY = GridSize.y * NodeDiameter;
-			var bottomLeft = Vector3.Zero - Vector3.Forward * worldSizeX / 2 - Vector3.Left * worldSizeY / 2;
-			var nodeDiameter = NodeDiameter;
-			var nodeRadius = NodeRadius;
-			var gridSize = GridSize;
-			var nodes = Nodes;
 
-			for ( int x = 0; x < gridSize.x; x++ )
+			WorldSize = new Vector2(
+				worldSizeX,
+				worldSizeY
+			);
+
+			WorldTopLeft = Vector3.Zero - Vector3.Forward * worldSizeX / 2f - Vector3.Left * worldSizeY / 2f;
+
+			var chunks = Chunks;
+
+			for ( int x = 0; x < chunksX; x++ )
 			{
-				for ( int y = 0; y < gridSize.y; y++ )
+				for ( int y = 0; y < chunksY; y++ )
 				{
-					var worldPosition = bottomLeft + Vector3.Forward * (x * nodeDiameter + nodeRadius) + Vector3.Left * (y * nodeDiameter + nodeRadius);
-					nodes[x, y] = new Node( worldPosition, new Vector2i( x, y ) );
+					var chunk = new FlowFieldChunk( this, new Vector2i( x, y ), chunkSize );
+					chunk.CreateGrid();
+					chunks[x, y] = chunk;
 				}
 			}
 
-			for ( var x = 0; x < gridSize.x; x++ )
+			for ( var x = 0; x < chunksX; x++ )
 			{
-				for ( var y = 0; y < gridSize.y; y++ )
+				for ( var y = 0; y < chunksY; y++ )
 				{
-					var node = nodes[x, y];
-
-					GetNeighbours( node.GridIndex, GridDirection.AllDirections, node.AllNeighbours );
-					GetNeighbours( node.GridIndex, GridDirection.CardinalDirections, node.CardinalNeighbours );
+					var chunk = chunks[x, y];
+					chunk.UpdateNeighbours();
 				}
 			}
 		}
 
+		public Node GetNodeFromWorld( Vector3 worldPosition )
+		{
+			var gridSize = GridSize;
+			var nodeDiameter = NodeDiameter;
+			var worldSizeX = gridSize.x * nodeDiameter;
+			var worldSizeY = gridSize.y * nodeDiameter;
+
+			var px = ((worldPosition.x + worldSizeX / 2f) / worldSizeX);
+			var py = ((worldPosition.y + worldSizeY / 2f) / worldSizeY);
+
+			px = px.Clamp( 0f, 1f );
+			py = py.Clamp( 0f, 1f );
+
+			var fx = gridSize.x * px;
+			var x = fx.FloorToInt().Clamp( 0, gridSize.x - 1 );
+
+			var fy = gridSize.y * py;
+			var y = fy.FloorToInt().Clamp( 0, gridSize.y - 1 );
+
+			return GetNodeFromLocal( new Vector2i( x, y ) );
+		}
+
+		public Node GetNodeFromLocal( Vector2i position )
+		{
+			var chunk = GetChunkFromLocal( position );
+			var nodeX = position.x % ChunkSize;
+			var nodeY = position.y % ChunkSize;
+			return chunk.Nodes[nodeX, nodeY];
+		}
+
+		public FlowFieldChunk GetChunkFromLocal( Vector2i position )
+		{
+			var x = ((float)(position.x / ChunkSize)).CeilToInt();
+			var y = ((float)(position.y / ChunkSize)).CeilToInt();
+			return Chunks[x, y];
+		}
+
 		public void CreateCostField()
 		{
-			//var nodeHalfExtents = Vector3.One * NodeRadius;
+			var chunkSize = ChunkSize;
 			var gridSize = GridSize;
-			var nodes = Nodes;
+			var chunksX = gridSize.x / chunkSize;
+			var chunksY = gridSize.y / chunkSize;
+			var chunks = Chunks;
 
-			for ( var x = 0; x < gridSize.x; x++ )
+			for ( var x = 0; x < chunksX; x++ )
 			{
-				for ( var y = 0; y < gridSize.y; y++ )
+				for ( var y = 0; y < chunksY; y++ )
 				{
-					var node = nodes[x, y];
-
-					/*
-					var pointContents = Physics.GetPointContents( node.WorldPosition );
-
-					if ( pointContents != CollisionLayer.Empty )
-					{
-						node.IncreaseCost( 255 );
-					}
-					else
-					{
-						// TODO: Maybe we want to increase the cost here for some other obstacle.
-					}
-					*/
-
-					node.BestCost = ushort.MaxValue;
-					node.Cost = 1;
+					var chunk = chunks[x, y];
+					chunk.CreateCostField();
 				}
 			}
 		}
@@ -117,84 +155,20 @@ namespace Gamelib.FlowField
 
 		public void CreateFlowField()
 		{
+			var chunkSize = ChunkSize;
 			var gridSize = GridSize;
-			var nodes = Nodes;
+			var chunksX = gridSize.x / chunkSize;
+			var chunksY = gridSize.y / chunkSize;
+			var chunks = Chunks;
 
-			for ( var x = 0; x < gridSize.x; x++ )
+			for ( var x = 0; x < chunksX; x++ )
 			{
-				for ( var y = 0; y < gridSize.y; y++ )
+				for ( var y = 0; y < chunksY; y++ )
 				{
-					var node = nodes[x, y];
-					var bestCost = node.BestCost;
-					var neighbours = node.AllNeighbours;
-
-					for ( int i = 0; i < neighbours.Length; i++ )
-					{
-						var neighbour = neighbours[i];
-
-						if ( neighbour == null ) continue;
-
-						if ( neighbour.BestCost < bestCost )
-						{
-							bestCost = neighbour.BestCost;
-							node.BestDirection = GridDirection.GetDirectionFromVector( neighbour.GridIndex - node.GridIndex );
-						}
-					}
+					var chunk = chunks[x, y];
+					chunk.CreateFlowField();
 				}
 			}
-		}
-
-		private void GetNeighbours( Vector2i nodeIndex, List<GridDirection> directions, Node[] neighbours )
-		{
-			var currentIndex = 0;
-
-			for ( int i = 0; i < directions.Count; i++ )
-			{
-				var direction = directions[i];
-				var neighbour = GetRelativeNode( nodeIndex, direction );
-
-				if ( neighbour != null )
-				{
-					neighbours[currentIndex] = neighbour;
-					currentIndex++;
-				}
-			}
-		}
-
-		private Node GetRelativeNode( Vector2i origin, Vector2i relative )
-		{
-			var finalPos = origin + relative;
-
-			if ( finalPos.x < 0 || finalPos.x >= GridSize.x || finalPos.y < 0 || finalPos.y >= GridSize.y )
-			{
-				return null;
-			}
-			else
-			{
-				return Nodes[finalPos.x, finalPos.y];
-			}
-		}
-
-		public Node GetNodeFromWorld( Vector3 worldPosition )
-		{
-			var nodeDiameter = NodeDiameter;
-			var gridSize = GridSize;
-			var worldSizeX = gridSize.x * nodeDiameter;
-			var worldSizeY = gridSize.y * nodeDiameter;
-
-			var px = ((worldPosition.x + worldSizeX / 2f) / worldSizeX);
-			var py = ((worldPosition.y + worldSizeY / 2f) / worldSizeY);
-
-			px = px.Clamp( 0f, 1f );
-			py = py.Clamp( 0f, 1f );
-
-			var fx = GridSize.x * px;
-			var x = fx.FloorToInt().Clamp( 0, GridSize.x - 1 );
-
-			var fy = GridSize.y * py;
-			var y = fy.FloorToInt().Clamp( 0, GridSize.y - 1 );
-
-			return Nodes[x, y];
 		}
 	}
 }
