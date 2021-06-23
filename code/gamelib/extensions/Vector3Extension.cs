@@ -15,6 +15,11 @@ namespace Gamelib.Extensions
 			return matrix.Transform( self );
 		}
 
+		public static Vector3 InvertXY( this Vector3 self )
+		{
+			return new Vector3( self.y, self.x, self.z );
+		}
+
 		/*
 		public static Vector3 Unproject( this Vector3 self, Matrix inverseViewProjection )
 		{

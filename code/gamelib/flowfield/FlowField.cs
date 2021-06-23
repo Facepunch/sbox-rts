@@ -1,171 +1,175 @@
-﻿using Gamelib.Math;
-using Sandbox;
-using System;
+﻿using System;
+using Gamelib.Math;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Gamelib.FlowField
 {
 	public class FlowField
 	{
-		public HashSet<FlowFieldChunk> ChunkPath;
-		public FlowFieldChunk[,] Chunks;
-		public Vector2i GridSize;
-		public float NodeRadius;
-		public Node Destination;
-		public float NodeDiameter;
+		public static int CurrentFloodPathId = 0;
+		public static int CurrentPathId = 0;
+
+		public int WorldSize;
 		public int ChunkSize;
-		public Vector2 WorldSize;
-		public Vector3 WorldTopLeft;
+		public int NodeSize;
+		public int ChunksX;
+		public int ChunksY;
 
-		public FlowField( float nodeRadius, Vector2i gridSize, int chunkSize )
+		public List<Portal> m_Portals = new List<Portal>();
+
+		public Chunk[,] Chunks;
+
+		public void CreateWorld( int worldSize = 10000, int chunkSize = 100, int nodeSize = 10 )
 		{
-			NodeRadius = nodeRadius;
-			NodeDiameter = NodeRadius * 2f;
+			CurrentFloodPathId = 0;
+
+			WorldSize = worldSize;
 			ChunkSize = chunkSize;
-			GridSize = gridSize;
-			ChunkPath = new();
+			NodeSize = nodeSize;
+			ChunksX = worldSize / chunkSize;
+			ChunksY = worldSize / chunkSize;
+
+			CreateChunks();
+			CreatePortals();
+			CreatePortalConnections();
 		}
 
-		public void CreateGrid()
+		public void CreateChunks()
 		{
-			var chunkSize = ChunkSize;
-			var chunksX = GridSize.x / chunkSize;
-			var chunksY = GridSize.y / chunkSize;
+			Chunks = new Chunk[ChunksX, ChunksY];
 
-			Chunks = new FlowFieldChunk[
-				chunksX,
-				chunksY
-			];
-
-			var worldSizeX = GridSize.x * NodeDiameter;
-			var worldSizeY = GridSize.y * NodeDiameter;
-
-			WorldSize = new Vector2(
-				worldSizeX,
-				worldSizeY
-			);
-
-			WorldTopLeft = Vector3.Zero - Vector3.Forward * worldSizeX / 2f - Vector3.Left * worldSizeY / 2f;
-
-			var chunks = Chunks;
-
-			for ( int x = 0; x < chunksX; x++ )
+			for ( int x = 0; x < ChunksX; ++x )
 			{
-				for ( int y = 0; y < chunksY; y++ )
+				for ( int y = 0; y < ChunksY; ++y )
 				{
-					var chunk = new FlowFieldChunk( this, new Vector2i( x, y ), chunkSize );
-					chunk.CreateGrid();
-					chunks[x, y] = chunk;
-				}
-			}
-
-			for ( var x = 0; x < chunksX; x++ )
-			{
-				for ( var y = 0; y < chunksY; y++ )
-				{
-					var chunk = chunks[x, y];
-					chunk.UpdateNeighbours();
+					Chunks[x, y] = new Chunk();
+					Chunks[x, y].Initialize( x, y, this );
 				}
 			}
 		}
 
-		public Node GetNodeFromWorld( Vector3 worldPosition )
+		public void CreatePortals()
 		{
-			var gridSize = GridSize;
-			var nodeDiameter = NodeDiameter;
-			var worldSizeX = gridSize.x * nodeDiameter;
-			var worldSizeY = gridSize.y * nodeDiameter;
-
-			var px = ((worldPosition.x + worldSizeX / 2f) / worldSizeX);
-			var py = ((worldPosition.y + worldSizeY / 2f) / worldSizeY);
-
-			px = px.Clamp( 0f, 1f );
-			py = py.Clamp( 0f, 1f );
-
-			var fx = gridSize.x * px;
-			var x = fx.FloorToInt().Clamp( 0, gridSize.x - 1 );
-
-			var fy = gridSize.y * py;
-			var y = fy.FloorToInt().Clamp( 0, gridSize.y - 1 );
-
-			return GetNodeFromLocal( new Vector2i( x, y ) );
-		}
-
-		public void CreateIntegrationField( Node destination )
-		{
-			ChunkPath.Clear();
-
-			Destination = destination;
-			Destination.Cost = 0;
-			Destination.BestCost = 0;
-
-			var nodesToCheck = new Queue<Node>();
-
-			nodesToCheck.Enqueue( Destination );
-
-			while ( nodesToCheck.Count > 0 )
+			for ( int x = 0; x < ChunksX; ++x )
 			{
-				var currentNode = nodesToCheck.Dequeue();
-				var neighbours = currentNode.CardinalNeighbours;
-
-				for ( int i = 0; i < neighbours.Length; i++ )
+				for ( int y = 0; y < ChunksY; ++y )
 				{
-					var neighbour = neighbours[i];
+					Chunk chunk = Chunks[x, y];
+					Chunk horizontal = null;
+					Chunk vertical = null;
 
-					if ( neighbour == null ) continue;
-					if ( neighbour.Cost == byte.MaxValue ) continue;
-
-					if ( neighbour.Cost + currentNode.BestCost < neighbour.BestCost )
+					if ( x + 1 < ChunksX )
 					{
-						neighbour.BestCost = (ushort)(neighbour.Cost + currentNode.BestCost);
-						nodesToCheck.Enqueue( neighbour );
+						horizontal = Chunks[x + 1, y];
+					}
 
-						if ( !ChunkPath.Contains( neighbour.Chunk ) )
-							ChunkPath.Add( neighbour.Chunk );
+					if ( y + 1 < ChunksY )
+					{
+						vertical = Chunks[x, y + 1];
+					}
+
+					if ( horizontal != null )
+					{
+						List<Portal> portals = Chunk.GeneratePortals( this, chunk, horizontal, true );
+
+						for ( int i = 0; i < portals.Count; ++i )
+						{
+							if ( !m_Portals.Contains( portals[i] ) )
+							{
+								m_Portals.Add( portals[i] );
+							}
+						}
+					}
+
+					if ( vertical != null )
+					{
+						var portals = Chunk.GeneratePortals( this, chunk, vertical, false );
+
+						for ( int i = 0; i < portals.Count; ++i )
+						{
+							if ( !m_Portals.Contains( portals[i] ) )
+							{
+								m_Portals.Add( portals[i] );
+							}
+						}
 					}
 				}
 			}
 		}
 
-		public Node GetNodeFromLocal( Vector2i position )
+		public void CreatePortalConnections()
 		{
-			var chunk = GetChunkFromLocal( position );
-			var nodeX = position.x % ChunkSize;
-			var nodeY = position.y % ChunkSize;
-			return chunk.Nodes[nodeX, nodeY];
+			for ( int i = 0; i < m_Portals.Count; ++i )
+			{
+				var portal = m_Portals[i];
+
+				List<PortalNode> distinctPortals = new();
+
+				CurrentFloodPathId++;
+
+				var foundPortals = portal.NodeA.FloodChunk( CurrentFloodPathId );
+				foundPortals.Add( portal.NodeB );
+				distinctPortals.Clear();
+
+				for ( int k = 0; k < foundPortals.Count; ++k )
+				{
+					var p = foundPortals[k];
+
+					if ( !distinctPortals.Contains( p ) )
+					{
+						distinctPortals.Add( p );
+					}
+				}
+
+				portal.NodeA.Connections = distinctPortals.ToArray();
+
+				CurrentFloodPathId++;
+
+				foundPortals = portal.NodeB.FloodChunk( CurrentFloodPathId );
+				foundPortals.Add( portal.NodeA );
+				distinctPortals.Clear();
+
+				for ( int k = 0; k < foundPortals.Count; ++k )
+				{
+					var p = foundPortals[k];
+
+					if ( !distinctPortals.Contains( p ) )
+					{
+						distinctPortals.Add( p );
+					}
+				}
+
+				portal.NodeB.Connections = distinctPortals.ToArray();
+			}
 		}
 
-		public FlowFieldChunk GetChunkFromLocal( Vector2i position )
+		public Vector3 GetOrigin()
 		{
-			var x = ((float)(position.x / ChunkSize)).CeilToInt();
-			var y = ((float)(position.y / ChunkSize)).CeilToInt();
+			return Vector3.Zero;
+		}
+
+		public Chunk GetChunkAtWorld( Vector3 position )
+		{
+			var center = GetOrigin();
+			var distance = position - center;
+
+			distance.x += WorldSize * 0.5f - ChunkSize * 0.5f;
+			distance.y += WorldSize * 0.5f - ChunkSize * 0.5f;
+
+			int x = (int)MathF.Round( distance.x / ChunkSize, 0f );
+			int y = (int)MathF.Round( distance.y / ChunkSize, 0f );
+
+			x = System.Math.Clamp( x, 0, ChunksX - 1 );
+			y = System.Math.Clamp( y, 0, ChunksY - 1 );
+
 			return Chunks[x, y];
 		}
 
-		public void CreateCostField()
+		public void FindPath( Vector3 position, Vector3 goal )
 		{
-			var chunkSize = ChunkSize;
-			var gridSize = GridSize;
-			var chunksX = gridSize.x / chunkSize;
-			var chunksY = gridSize.y / chunkSize;
-			var chunks = Chunks;
-
-			for ( var x = 0; x < chunksX; x++ )
-			{
-				for ( var y = 0; y < chunksY; y++ )
-				{
-					var chunk = chunks[x, y];
-					chunk.CreateCostField();
-				}
-			}
-		}
-
-		public void CreateFlowField()
-		{
-			foreach ( var chunk in ChunkPath )
-			{
-				chunk.CreateFlowField();
-			}
+			var astar = new AStar();
+			astar.FindPath( ++CurrentPathId, this, position.WithZ( 0f ), goal.WithZ( 0f ) );
 		}
 	}
 }

@@ -1,47 +1,58 @@
 ﻿using Gamelib.Math;
 using System.Threading.Tasks;
+using Gamelib.Extensions;
 using System.Threading;
 using Sandbox;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Gamelib.FlowField
 {
 	public class Pathfinder
 	{
-		public FlowField FlowField { get; private set; }
+		private Stack<FlowField> Pool { get; set; }
 
 		public Pathfinder()
 		{
-			InitializeFlowField();
+			Pool = new();
+			_ = Populate();
 		}
 
-		private void InitializeFlowField()
+		public FlowField Request( Vector3 from, Vector3 target )
 		{
-			var realTimeNow = RealTime.Now;
+			var flowField = Pool.Pop();
+			flowField.FindPath( from, target );
+			return flowField;
+		}
 
-			if ( FlowField == null )
+		public void Finish( FlowField flowField )
+		{
+			Pool.Push( flowField );
+		}
+
+		private async Task Populate()
+		{
+			for ( var i = 0; i < 10; i++ )
 			{
-				FlowField = new FlowField( 40f, new Vector2i( 500, 500 ), 50 );
-				FlowField.CreateGrid();
+				var flowField = new FlowField();
+				flowField.CreateWorld( 10000, 1000, 100 );
+				Pool.Push( flowField );
+
+				await Task.Delay( 100 );
 			}
-
-			var delta = RealTime.Now - realTimeNow;
-
-			Log.Info( "Initialized Flow Field (" + (delta * 1000) + "ms)" );
 		}
 
-		public void Update( Vector3 target )
+		/*
+		public void Update( Vector3 from, Vector3 target )
 		{
-			Task.Run( () => UpdateThread( target ) );
+			Task.Run( () => UpdateThread( from, target ) );
 		}
 
-		private Task UpdateThread( Vector3 target )
+		private Task UpdateThread( Vector3 from, Vector3 target )
 		{
 			var realTimeNow = RealTime.Now;
 
-			FlowField.CreateCostField();
-			var node = FlowField.GetNodeFromWorld( target );
-			FlowField.CreateIntegrationField( node );
-			FlowField.CreateFlowField();
+			FlowField.FindPath( from, target );
 
 			var delta = RealTime.Now - realTimeNow;
 
@@ -49,5 +60,6 @@ namespace Gamelib.FlowField
 
 			return Task.CompletedTask;
 		}
+		*/
 	}
 }

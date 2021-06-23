@@ -29,7 +29,7 @@ namespace Facepunch.RTS
 		public bool HasBeenSeen { get; set; }
 		public bool FollowTarget { get; private set; }
 		public float TargetAlpha { get; private set; }
-		public Vector3 TargetPosition { get; private set; }
+		public Vector3? TargetPosition { get; private set; }
 		public float Speed { get; private set; }
 		public Entity Target { get; private set; }
 		public TimeSince LastGatherTime { get; private set; }
@@ -37,6 +37,7 @@ namespace Facepunch.RTS
 		public DamageInfo LastDamageTaken { get; private set; }
 		public ResourceType LastResourceType { get; private set; }
 		public Vector3 LastResourcePosition { get; private set; }
+		public FlowField FlowField { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
 		public float TargetRange { get; private set; }
@@ -172,7 +173,13 @@ namespace Facepunch.RTS
 
 		public void MoveTo( Vector3 position )
 		{
-			RTS.Game.Pathfinder.Update( position );
+			if ( FlowField != null )
+			{
+				RTS.Game.Pathfinder.Finish( FlowField );
+			}
+
+			FlowField = RTS.Game.Pathfinder.Request( Position, position );
+
 			ResetTarget( position);
 			OnTargetChanged();
 		}
@@ -228,7 +235,7 @@ namespace Facepunch.RTS
 		public void ClearTarget()
 		{
 			Target = null;
-			TargetPosition = Vector3.Zero;
+			TargetPosition = null;
 			IsGathering = false;
 			FollowTarget = false;
 			OnTargetChanged();
@@ -480,19 +487,49 @@ namespace Facepunch.RTS
 						FindTargetUnit();
 				}
 
-				if ( Position.Distance( TargetPosition ) > 80f && RTS.Game.Pathfinder.FlowField != null )
+				if ( TargetPosition.HasValue )
 				{
-					var nodeBelow = RTS.Game.Pathfinder.FlowField.GetNodeFromWorld( Position );
-					var pathDirection = new Vector3( nodeBelow.BestDirection.Direction.x, nodeBelow.BestDirection.Direction.y, 0 );
-					var control = GroundEntity != null ? 200f : 10f;
+					var targetPosition = TargetPosition.Value;
+					var pathDirection = (targetPosition - Position).Normal;
 
-					InputVelocity = pathDirection.Normal * Speed;
-					var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
-					Velocity = Velocity.AddClamped( velocity, Speed );
+					if ( FlowField != null )
+					{
+						var chunk = FlowField.GetChunkAtWorld( Position );
+						var node = chunk.GetNodeAtWorld( Position );
 
-					SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
-					SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
-					SetAnimFloat( "aim_body_weight", 0.25f );
+						var targetChunk = FlowField.GetChunkAtWorld( targetPosition );
+						var targetNode = targetChunk.GetNodeAtWorld( targetPosition );
+
+						DebugOverlay.Box( node.GetWorldPosition().WithZ( 50f ), new Vector3( -50f, -50f, -50f ), new Vector3( 50f, 50f, 50f ), Color.Red );
+
+						if ( targetNode == node )
+						{
+							RTS.Game.Pathfinder.Finish( FlowField );
+						}
+						else
+						{
+							pathDirection = node.GetDirection();
+						}
+					}
+
+					if ( Position.Distance( targetPosition ) > 10f )
+					{
+						DebugOverlay.Line( Position.WithZ( 80f ), Position.WithZ( 80f ) + pathDirection * 100f, Color.Green );
+
+						var control = GroundEntity != null ? 200f : 10f;
+
+						InputVelocity = pathDirection.Normal * Speed;
+						var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
+						Velocity = Velocity.AddClamped( velocity, Speed );
+
+						SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
+						SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
+						SetAnimFloat( "aim_body_weight", 0.25f );
+					}
+					else
+					{
+						TargetPosition = null;
+					}
 				}
 				else
 				{
