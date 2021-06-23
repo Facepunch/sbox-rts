@@ -2,6 +2,7 @@
 using Gamelib.Math;
 using System.Collections;
 using System.Collections.Generic;
+using Sandbox;
 
 namespace Gamelib.FlowField
 {
@@ -10,25 +11,31 @@ namespace Gamelib.FlowField
 		public static int CurrentFloodPathId = 0;
 		public static int CurrentPathId = 0;
 
+		public Vector3 WorldTopLeft;
 		public int WorldSize;
+		public float NodeRadius;
+		public float NodeDiameter;
 		public int ChunkSize;
 		public int NodeSize;
 		public int ChunksX;
 		public int ChunksY;
 
-		public List<Portal> m_Portals = new List<Portal>();
+		public List<Portal> Portals = new();
+		public List<PortalNode> CurrentPortals = new();
 
 		public Chunk[,] Chunks;
 
-		public void CreateWorld( int worldSize = 10000, int chunkSize = 100, int nodeSize = 10 )
+		public void CreateWorld( int worldSize, int chunkSize, float nodeRadius )
 		{
 			CurrentFloodPathId = 0;
 
 			WorldSize = worldSize;
 			ChunkSize = chunkSize;
-			NodeSize = nodeSize;
+			NodeRadius = nodeRadius;
+			NodeDiameter = nodeRadius * 2f;
 			ChunksX = worldSize / chunkSize;
 			ChunksY = worldSize / chunkSize;
+			WorldTopLeft = Vector3.Zero - Vector3.Forward * WorldSize / 2f - Vector3.Left * WorldSize / 2f;
 
 			CreateChunks();
 			CreatePortals();
@@ -71,13 +78,13 @@ namespace Gamelib.FlowField
 
 					if ( horizontal != null )
 					{
-						List<Portal> portals = Chunk.GeneratePortals( this, chunk, horizontal, true );
+						var portals = Chunk.GeneratePortals( this, chunk, horizontal, true );
 
 						for ( int i = 0; i < portals.Count; ++i )
 						{
-							if ( !m_Portals.Contains( portals[i] ) )
+							if ( !Portals.Contains( portals[i] ) )
 							{
-								m_Portals.Add( portals[i] );
+								Portals.Add( portals[i] );
 							}
 						}
 					}
@@ -88,9 +95,9 @@ namespace Gamelib.FlowField
 
 						for ( int i = 0; i < portals.Count; ++i )
 						{
-							if ( !m_Portals.Contains( portals[i] ) )
+							if ( !Portals.Contains( portals[i] ) )
 							{
-								m_Portals.Add( portals[i] );
+								Portals.Add( portals[i] );
 							}
 						}
 					}
@@ -100,9 +107,9 @@ namespace Gamelib.FlowField
 
 		public void CreatePortalConnections()
 		{
-			for ( int i = 0; i < m_Portals.Count; ++i )
+			for ( int i = 0; i < Portals.Count; ++i )
 			{
-				var portal = m_Portals[i];
+				var portal = Portals[i];
 
 				List<PortalNode> distinctPortals = new();
 
@@ -149,27 +156,55 @@ namespace Gamelib.FlowField
 			return Vector3.Zero;
 		}
 
-		public Chunk GetChunkAtWorld( Vector3 position )
+		public ChunkNode GetNodeAtWorld( Vector3 position )
 		{
-			var center = GetOrigin();
-			var distance = position - center;
-
-			distance.x += WorldSize * 0.5f - ChunkSize * 0.5f;
-			distance.y += WorldSize * 0.5f - ChunkSize * 0.5f;
-
-			int x = (int)MathF.Round( distance.x / ChunkSize, 0f );
-			int y = (int)MathF.Round( distance.y / ChunkSize, 0f );
-
-			x = System.Math.Clamp( x, 0, ChunksX - 1 );
-			y = System.Math.Clamp( y, 0, ChunksY - 1 );
-
-			return Chunks[x, y];
+			var localPosition = WorldToLocal( position );
+			return GetNodeFromLocal( localPosition.x, localPosition.y );
 		}
 
-		public void FindPath( Vector3 position, Vector3 goal )
+		public Chunk GetChunkAtWorld( Vector3 position )
+		{
+			var localPosition = WorldToLocal( position );
+			return GetChunkFromLocal( localPosition.x, localPosition.y );
+		}
+
+		public Vector2i WorldToLocal( Vector2 position )
+		{
+			var worldSize = WorldSize;
+			var px = ((position.x + worldSize / 2f) / worldSize);
+			var py = ((position.y + worldSize / 2f) / worldSize);
+
+			px = px.Clamp( 0f, 1f );
+			py = py.Clamp( 0f, 1f );
+
+			var fx = worldSize * px;
+			var x = fx.FloorToInt().Clamp( 0, worldSize - 1 );
+
+			var fy = worldSize * py;
+			var y = fy.FloorToInt().Clamp( 0, worldSize - 1 );
+
+			return new Vector2i( x, y );
+		}
+
+		public ChunkNode GetNodeFromLocal( int x, int y )
+		{
+			var chunk = GetChunkFromLocal( x, y );
+			var nodeX = ((float)((x % ChunkSize) / chunk.NodeRadius)).FloorToInt();
+			var nodeY = ((float)((y % ChunkSize) / chunk.NodeRadius)).FloorToInt();
+			return chunk.Nodes[nodeX, nodeY];
+		}
+
+		public Chunk GetChunkFromLocal( int x, int y )
+		{
+			var chunkX = ((float)(x / ChunkSize)).CeilToInt();
+			var chunkY = ((float)(y / ChunkSize)).CeilToInt();
+			return Chunks[chunkX, chunkY];
+		}
+
+		public List<PortalNode> FindPath( Vector3 position, Vector3 goal )
 		{
 			var astar = new AStar();
-			astar.FindPath( ++CurrentPathId, this, position.WithZ( 0f ), goal.WithZ( 0f ) );
+			return astar.FindPath( ++CurrentPathId, this, position.WithZ( 0f ), goal.WithZ( 0f ) );
 		}
 	}
 }

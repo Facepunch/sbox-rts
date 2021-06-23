@@ -494,13 +494,13 @@ namespace Facepunch.RTS
 
 					if ( FlowField != null )
 					{
-						var chunk = FlowField.GetChunkAtWorld( Position );
-						var node = chunk.GetNodeAtWorld( Position );
+						var node = FlowField.GetNodeAtWorld( Position );
+						var targetNode = FlowField.GetNodeAtWorld( targetPosition );
 
-						var targetChunk = FlowField.GetChunkAtWorld( targetPosition );
-						var targetNode = targetChunk.GetNodeAtWorld( targetPosition );
-
-						DebugOverlay.Box( node.GetWorldPosition().WithZ( 50f ), new Vector3( -50f, -50f, -50f ), new Vector3( 50f, 50f, 50f ), Color.Red );
+						if ( !node.IsWalkable )
+							DebugOverlay.Sphere( node.WorldPosition, FlowField.NodeRadius, Color.Red, true );
+						else
+							DebugOverlay.Sphere( node.WorldPosition, FlowField.NodeRadius, Color.Green, true );
 
 						if ( targetNode == node )
 						{
@@ -509,6 +509,14 @@ namespace Facepunch.RTS
 						else
 						{
 							pathDirection = node.GetDirection();
+						}
+
+						foreach ( var p in FlowField.CurrentPortals )
+						{
+							foreach ( var n in p.ChunkNodes )
+							{
+								DebugOverlay.Box( n.WorldPosition.WithZ( 50f ), new Vector3( -50f, -50f, -50f ), new Vector3( 50f, 50f, 50f ), Color.Magenta );
+							}
 						}
 					}
 

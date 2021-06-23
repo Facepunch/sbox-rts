@@ -21,7 +21,7 @@ namespace Gamelib.FlowField
 		public FlowField Request( Vector3 from, Vector3 target )
 		{
 			var flowField = Pool.Pop();
-			flowField.FindPath( from, target );
+			flowField.CurrentPortals = flowField.FindPath( from, target );
 			return flowField;
 		}
 
@@ -32,10 +32,10 @@ namespace Gamelib.FlowField
 
 		private async Task Populate()
 		{
-			for ( var i = 0; i < 10; i++ )
+			for ( var i = 0; i < 1; i++ )
 			{
 				var flowField = new FlowField();
-				flowField.CreateWorld( 10000, 1000, 100 );
+				flowField.CreateWorld( 10000, 1000, 80f );
 				Pool.Push( flowField );
 
 				await Task.Delay( 100 );

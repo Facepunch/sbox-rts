@@ -52,8 +52,6 @@ namespace Facepunch.RTS
 				_ = new Hud();
 			}
 
-			Pathfinder = new Pathfinder();
-
 			Game = this;
 		}
 
@@ -110,7 +108,9 @@ namespace Facepunch.RTS
 		public override void PostLevelLoaded()
 		{
 			_ = StartSecondTimer();
-			
+
+			Pathfinder = new Pathfinder();
+
 			base.PostLevelLoaded();
 		}
 

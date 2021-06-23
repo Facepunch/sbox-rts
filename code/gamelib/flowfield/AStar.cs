@@ -5,7 +5,7 @@ namespace Gamelib.FlowField
 {
 	public class AStar
 	{
-		public PriorityQueue<PortalNode> OpenList = new PriorityQueue<PortalNode>();
+		public PriorityQueue<PortalNode> OpenList = new();
 
 		private Vector3 StartPosition;
 		private Vector3 GoalPosition;
@@ -21,8 +21,8 @@ namespace Gamelib.FlowField
 			var startingChunk = world.GetChunkAtWorld( startPosition );
 			var goalChunk = world.GetChunkAtWorld( goalPosition );
 
-			var startNode = startingChunk.GetNodeAtWorld( startPosition );
-			var goalNode = goalChunk.GetNodeAtWorld( goalPosition );
+			var startNode = world.GetNodeAtWorld( startPosition );
+			var goalNode = world.GetNodeAtWorld( goalPosition );
 
 			var startNodes = new ChunkNode[] { startNode };
 			startingChunk.Flood( ++FlowField.CurrentFloodPathId, ref startNodes, ref startingPortals );

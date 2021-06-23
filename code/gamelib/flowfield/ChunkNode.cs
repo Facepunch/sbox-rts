@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using Sandbox;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gamelib.FlowField
 {
 	public class ChunkNode
 	{
+		public Vector3 WorldPosition;
 		public bool IsWalkable = true;
+		public float Radius;
 
 		private Chunk Chunk;
 		private int X;
@@ -16,22 +20,35 @@ namespace Gamelib.FlowField
 		private ChunkNode[] Neighbours;
 		private List<PortalNode> PortalNodes;
 
-		public void Initialize( int x, int y, Chunk chunk )
+		public void Initialize( Vector3 worldPosition, int x, int y, Chunk chunk, float radius )
 		{
+			WorldPosition = worldPosition;
+			Radius = radius;
+			Chunk = chunk;
 			X = x;
 			Y = y;
-			Chunk = chunk;
 
-			/*
-			Vector3 worldPos = GetWorldPosition();
-			RaycastHit hitInfo;
+			var entities = Physics.GetEntitiesInSphere( worldPosition, Radius );
 
-			float rad = Mathf.Max(m_Tile.m_TileNodeXSize, m_Tile.m_TileNodeYSize);
-			if( Physics.SphereCast(worldPos, rad, Vector3.forward, out hitInfo, 100.0f) == true)
+			if ( entities.Count() > 0 )
 			{
-				IsWalkable = false;
+				foreach ( var e in entities )
+				{
+					Log.Info( e.ToString() + ": " + e.Position + " / " + worldPosition + " (Dist: " + e.Position.Distance( worldPosition ) + ")" );
+					DebugOverlay.Sphere( worldPosition, Radius * 2f, Color.Cyan, true, 60f );
+				}
 			}
-			*/
+
+			IsWalkable = (entities.Count() == 0);
+
+			if ( !IsWalkable )
+			{
+				Log.Info( "A tile is not walkable" );
+			}
+			else
+			{
+				DebugOverlay.Sphere( worldPosition, Radius * 2f, Color.Green, true, 60f );
+			}
 
 			var nodes = new List<ChunkNode>();
 			var up = chunk.GetNode( x, y + 1 );
@@ -106,46 +123,32 @@ namespace Gamelib.FlowField
 			}
 		}
 
-		public Vector3 GetWorldPosition()
-		{
-			var chunkWorldPosition = Chunk.GetWorldPosition();
-			var flowField = Chunk.FlowField;
-
-			var normalX = ((X / (float)flowField.ChunksX) * 2.0f) - 1.0f;
-			var normalY = ((Y / (float)flowField.ChunksY) * 2.0f) - 1.0f;
-
-			var centerX = normalX * 0.5f * flowField.ChunkSize;
-			var centerY = normalY * 0.5f * flowField.ChunkSize;
-
-			centerX += Chunk.NodeSize * 0.5f;
-			centerY += Chunk.NodeSize * 0.5f;
-
-			var relative = new Vector3( centerX, centerY );
-
-			return chunkWorldPosition + relative;
-		}
-
 		public Vector3 GetDirection()
 		{
 			var direction = Vector3.Zero;
-			var position = GetWorldPosition();
+			var position = WorldPosition;
+			var length = 0;
 
 			for ( int i = 0; i < Neighbours.Length; ++i )
 			{
 				if ( Neighbours[i].IsWalkable )
 				{
+					length++;
+
 					if ( Neighbours[i].Distance > Distance )
 					{
-						direction += Neighbours[i].GetWorldPosition() - position;
+						direction += position - Neighbours[i].WorldPosition;
 					}
 					else
 					{
-						direction -= Neighbours[i].GetWorldPosition() - position;
+						direction -= position - Neighbours[i].WorldPosition;
 					}
 				}
 			}
 
-			return direction.Normal * -1f;
+			direction /= length;
+
+			return direction.Normal;
 		}
 	}
 }

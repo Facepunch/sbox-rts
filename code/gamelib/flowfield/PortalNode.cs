@@ -8,12 +8,9 @@ namespace Gamelib.FlowField
 		public Chunk Chunk;
 		public ChunkNode[] ChunkNodes;
 		public PortalNode[] Connections;
-
-
 		public Vector3 Center;
 		public Vector3 MinPos;
 		public Vector3 MaxPos;
-
 		public int OpenPathId;
 		public int ClosedPathId;
 		public float TotalCost = float.MaxValue;
@@ -31,7 +28,7 @@ namespace Gamelib.FlowField
 			for ( int i = 0; i < ChunkNodes.Length; ++i )
 			{
 				ChunkNodes[i].SetPortalNode( this );
-				var position = ChunkNodes[i].GetWorldPosition();
+				var position = ChunkNodes[i].WorldPosition;
 				MakeBoundingBox( position );
 				Center += position;
 			}
