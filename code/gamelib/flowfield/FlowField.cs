@@ -13,8 +13,8 @@ namespace Gamelib.FlowField
 
 		public Vector3 WorldTopLeft;
 		public int WorldSize;
-		public float NodeRadius;
 		public float NodeDiameter;
+		public float NodeRadius;
 		public int ChunkSize;
 		public int NodeSize;
 		public int ChunksX;
@@ -25,14 +25,14 @@ namespace Gamelib.FlowField
 
 		public Chunk[,] Chunks;
 
-		public void CreateWorld( int worldSize, int chunkSize, float nodeRadius )
+		public void CreateWorld( int worldSize, int chunkSize, float nodeDiameter )
 		{
 			CurrentFloodPathId = 0;
 
 			WorldSize = worldSize;
 			ChunkSize = chunkSize;
-			NodeRadius = nodeRadius;
-			NodeDiameter = nodeRadius * 2f;
+			NodeRadius = nodeDiameter * 0.5f;
+			NodeDiameter = nodeDiameter;
 			ChunksX = worldSize / chunkSize;
 			ChunksY = worldSize / chunkSize;
 			WorldTopLeft = Vector3.Zero - Vector3.Forward * WorldSize / 2f - Vector3.Left * WorldSize / 2f;
@@ -110,8 +110,7 @@ namespace Gamelib.FlowField
 			for ( int i = 0; i < Portals.Count; ++i )
 			{
 				var portal = Portals[i];
-
-				List<PortalNode> distinctPortals = new();
+				var distinctPortals = new List<PortalNode>();
 
 				CurrentFloodPathId++;
 
@@ -189,8 +188,8 @@ namespace Gamelib.FlowField
 		public ChunkNode GetNodeFromLocal( int x, int y )
 		{
 			var chunk = GetChunkFromLocal( x, y );
-			var nodeX = ((float)((x % ChunkSize) / chunk.NodeRadius)).FloorToInt();
-			var nodeY = ((float)((y % ChunkSize) / chunk.NodeRadius)).FloorToInt();
+			var nodeX = ((float)((x % ChunkSize) / chunk.NodeDiameter)).FloorToInt();
+			var nodeY = ((float)((y % ChunkSize) / chunk.NodeDiameter)).FloorToInt();
 			return chunk.Nodes[nodeX, nodeY];
 		}
 

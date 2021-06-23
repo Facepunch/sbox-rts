@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sandbox;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ namespace Gamelib.FlowField
 	{
 		public FlowField FlowField;
 		public ChunkNode[,] Nodes;
-		public float NodeRadius;
+		public float NodeDiameter;
 		public int Size;
 		public int X;
 		public int Y;
@@ -28,9 +29,9 @@ namespace Gamelib.FlowField
 
 		public void Initialize( int x, int y, FlowField world )
 		{
-			NodeRadius = world.NodeRadius;
+			NodeDiameter = world.NodeDiameter;
 			FlowField = world;
-			Size = (int)MathF.Floor( world.ChunkSize / NodeRadius );
+			Size = (int)MathF.Ceiling( world.ChunkSize / NodeDiameter );
 			Nodes = new ChunkNode[Size, Size];
 			X = x;
 			Y = y;
@@ -44,20 +45,20 @@ namespace Gamelib.FlowField
 			}
 
 			var worldTopLeft = world.WorldTopLeft;
+			var nodeDiameter = world.NodeDiameter;
 			var startGridX = (x * world.ChunkSize);
 			var startGridY = (y * world.ChunkSize);
-			var nodeRadius = world.NodeRadius;
 
 			for ( int px = 0; px < Size; ++px )
 			{
 				for ( int py = 0; py < Size; ++py )
 				{
-					var worldGridX = startGridX + (px * nodeRadius);
-					var worldGridY = startGridY + (py * nodeRadius);
+					var worldGridX = startGridX + (px * nodeDiameter);
+					var worldGridY = startGridY + (py * nodeDiameter);
 					var worldPosition = worldTopLeft + Vector3.Forward * worldGridX;
 					worldPosition += Vector3.Left * worldGridY;
 
-					Nodes[px, py].Initialize( worldPosition, px, py, this, NodeRadius );
+					Nodes[px, py].Initialize( worldPosition, px, py, this, nodeDiameter );
 				}
 			}
 		}
@@ -67,17 +68,28 @@ namespace Gamelib.FlowField
 			var openList = new List<ChunkNode>();
 			openList.AddRange( chunkNodes );
 
-			for ( int i = 0; i < openList.Count; ++i )
-			{
-				var tile = openList[i];
-				tile.SetPathId( floodId );
-				tile.SetDistance( 0 );
-			}
+			var worldTopLeft = FlowField.WorldTopLeft;
+			var startGridX = (X * FlowField.ChunkSize);
+			var startGridY = (Y * FlowField.ChunkSize);
+			var worldPosition = worldTopLeft + Vector3.Forward * startGridX;
+			worldPosition += Vector3.Left * startGridY;
+
+			DebugOverlay.Box( 5f, worldPosition.WithZ( 80f ), new Vector3( 0f, 0f, 0f ), new Vector3( FlowField.ChunkSize, FlowField.ChunkSize, 500f ), Color.Cyan );
 
 			for ( int i = 0; i < openList.Count; ++i )
 			{
-				var chunk = openList[i];
-				var neighbours = chunk.GetNeighbours();
+				var node = openList[i];
+				node.SetPathId( floodId );
+				node.SetDistance( 0 );
+				//node.Debug( Color.White, 5f );
+			}
+			
+			Log.Info( "Resetting chunk " + X + ", " + Y + " node distances to 0: " + openList.Count + " nodes" );
+
+			for ( int i = 0; i < openList.Count; ++i )
+			{
+				var node = openList[i];
+				var neighbours = node.GetNeighbours();
 
 				for ( int j = 0; j < neighbours.Length; ++j )
 				{
@@ -87,13 +99,13 @@ namespace Gamelib.FlowField
 					{
 						openList.Add( neighbour );
 						neighbour.SetPathId( floodId );
-						neighbour.SetDistance( chunk.GetDistance() + 1 );
+						neighbour.SetDistance( node.GetDistance() + 1 );
 					}
 				}
 
 				if ( foundPortals != null )
 				{
-					var portals = chunk.GetPortalNodes();
+					var portals = node.GetPortalNodes();
 
 					if ( portals != null )
 					{
@@ -124,13 +136,13 @@ namespace Gamelib.FlowField
 
 				for ( int x = 0; x < chunkA.Size; ++x )
 				{
-					var botA = chunkA.Nodes[x, bottomY];
+					var bottomA = chunkA.Nodes[x, bottomY];
 					var topB = chunkB.Nodes[x, 0];
-					var createPortal = TraversePortalEdge( botA, topB, ref inPortal );
+					var createPortal = TraversePortalEdge( bottomA, topB, ref inPortal );
 
 					if ( inPortal )
 					{
-						nodesA.Add( botA );
+						nodesA.Add( bottomA );
 						nodesB.Add( topB );
 
 						var isLastNode = (x == (chunkA.Size - 1));
@@ -148,7 +160,6 @@ namespace Gamelib.FlowField
 						portals.Add( newPortal );
 						nodesA.Clear();
 						nodesB.Clear();
-
 					}
 				}
 			}

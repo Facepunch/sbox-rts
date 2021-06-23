@@ -9,11 +9,8 @@ namespace Gamelib.FlowField
 	{
 		public Vector3 WorldPosition;
 		public bool IsWalkable = true;
-		public float Radius;
+		public float Diameter;
 
-		private Chunk Chunk;
-		private int X;
-		private int Y;
 		private int PathId;
 		private int Distance;
 
@@ -23,32 +20,11 @@ namespace Gamelib.FlowField
 		public void Initialize( Vector3 worldPosition, int x, int y, Chunk chunk, float radius )
 		{
 			WorldPosition = worldPosition;
-			Radius = radius;
-			Chunk = chunk;
-			X = x;
-			Y = y;
+			Diameter = radius;
 
-			var entities = Physics.GetEntitiesInSphere( worldPosition, Radius );
-
-			if ( entities.Count() > 0 )
-			{
-				foreach ( var e in entities )
-				{
-					Log.Info( e.ToString() + ": " + e.Position + " / " + worldPosition + " (Dist: " + e.Position.Distance( worldPosition ) + ")" );
-					DebugOverlay.Sphere( worldPosition, Radius * 2f, Color.Cyan, true, 60f );
-				}
-			}
+			var entities = Physics.GetEntitiesInSphere( worldPosition, Diameter );
 
 			IsWalkable = (entities.Count() == 0);
-
-			if ( !IsWalkable )
-			{
-				Log.Info( "A tile is not walkable" );
-			}
-			else
-			{
-				DebugOverlay.Sphere( worldPosition, Radius * 2f, Color.Green, true, 60f );
-			}
 
 			var nodes = new List<ChunkNode>();
 			var up = chunk.GetNode( x, y + 1 );
@@ -78,6 +54,11 @@ namespace Gamelib.FlowField
 
 			Neighbours = nodes.ToArray();
 			PathId = -1;
+
+			if ( !IsWalkable )
+			{
+				Debug( Color.Red, 60f );
+			}
 		}
 
 		public void SetPathId( int id )
@@ -123,11 +104,20 @@ namespace Gamelib.FlowField
 			}
 		}
 
+		public void Debug( Color color, float time = 0f )
+		{
+			var diameter = Diameter;
+			var radius = diameter * 0.5f;
+			DebugOverlay.Box( time, WorldPosition, new Vector3( -radius, -radius, 0f ), new Vector3( radius, radius, diameter ), color );
+			DebugOverlay.Line( WorldPosition.WithZ( diameter ), WorldPosition.WithZ( diameter ) + GetDirection() * radius, Color.Blue, time );
+			DebugOverlay.Circle( WorldPosition.WithZ( diameter ), Rotation.LookAt( Vector3.Up ), (diameter * 0.05f), Color.White, true, time );
+		}
+
 		public Vector3 GetDirection()
 		{
 			var direction = Vector3.Zero;
 			var position = WorldPosition;
-			var length = 0;
+			int length = 0;
 
 			for ( int i = 0; i < Neighbours.Length; ++i )
 			{

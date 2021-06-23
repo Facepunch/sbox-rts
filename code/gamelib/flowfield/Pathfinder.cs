@@ -35,7 +35,7 @@ namespace Gamelib.FlowField
 			for ( var i = 0; i < 1; i++ )
 			{
 				var flowField = new FlowField();
-				flowField.CreateWorld( 10000, 1000, 80f );
+				flowField.CreateWorld( 10000, 1000, 100f );
 				Pool.Push( flowField );
 
 				await Task.Delay( 100 );

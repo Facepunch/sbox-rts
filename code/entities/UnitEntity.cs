@@ -495,12 +495,21 @@ namespace Facepunch.RTS
 					if ( FlowField != null )
 					{
 						var node = FlowField.GetNodeAtWorld( Position );
+						var chunk = FlowField.GetChunkAtWorld( Position );
 						var targetNode = FlowField.GetNodeAtWorld( targetPosition );
 
+						/*
 						if ( !node.IsWalkable )
-							DebugOverlay.Sphere( node.WorldPosition, FlowField.NodeRadius, Color.Red, true );
+							node.Debug( Color.Red, 0f );
 						else
-							DebugOverlay.Sphere( node.WorldPosition, FlowField.NodeRadius, Color.Green, true );
+							node.Debug( Color.Green, 0f );
+						*/
+
+						foreach ( var n in chunk.Nodes )
+						{
+							var scale = (1f / 10f) * n.GetDistance();
+							//n.Debug( Color.Lerp( Color.Green, Color.Red, scale ) );
+						}
 
 						if ( targetNode == node )
 						{
@@ -511,19 +520,19 @@ namespace Facepunch.RTS
 							pathDirection = node.GetDirection();
 						}
 
+						/*
 						foreach ( var p in FlowField.CurrentPortals )
 						{
 							foreach ( var n in p.ChunkNodes )
 							{
-								DebugOverlay.Box( n.WorldPosition.WithZ( 50f ), new Vector3( -50f, -50f, -50f ), new Vector3( 50f, 50f, 50f ), Color.Magenta );
+								n.Debug( Color.Magenta );
 							}
 						}
+						*/
 					}
 
 					if ( Position.Distance( targetPosition ) > 10f )
 					{
-						DebugOverlay.Line( Position.WithZ( 80f ), Position.WithZ( 80f ) + pathDirection * 100f, Color.Green );
-
 						var control = GroundEntity != null ? 200f : 10f;
 
 						InputVelocity = pathDirection.Normal * Speed;

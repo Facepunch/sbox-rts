@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Sandbox;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Gamelib.FlowField
@@ -85,6 +86,25 @@ namespace Gamelib.FlowField
 				parentNode.FloodChunk( ++FlowField.CurrentPathId );
 				path.Add( parentNode );
 				parentNode = parentNode.Parent;
+			}
+
+			foreach ( var n in startingChunk.Nodes )
+			{
+				var scale = (1f / 10f) * n.GetDistance();
+				if ( n.GetDistance() > 0 )
+					n.Debug( Color.Lerp( Color.Green, Color.Red, scale ), 5f );
+				else
+					n.Debug( Color.Cyan, 5f );
+			}
+
+			foreach ( var n in goalChunk.Nodes )
+			{
+				var scale = (1f / 10f) * n.GetDistance();
+
+				if ( n.GetDistance() > 0 )
+					n.Debug( Color.Lerp( Color.Green, Color.Red, scale ), 5f );
+				else
+					n.Debug( Color.Cyan, 5f );
 			}
 
 			return path;
