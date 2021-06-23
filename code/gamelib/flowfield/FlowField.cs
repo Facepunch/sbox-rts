@@ -1,209 +1,399 @@
-﻿using System;
-using Gamelib.Math;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Gamelib.FlowFields.Algorithms;
+using Gamelib.FlowFields.Grid;
+using Gamelib.FlowFields.Connectors;
 using Sandbox;
 
-namespace Gamelib.FlowField
+namespace Gamelib.FlowFields
 {
-	public class FlowField
-	{
-		public static int CurrentFloodPathId = 0;
-		public static int CurrentPathId = 0;
+    public class GatewaySubPath
+    {
+        public Gateway FromConnectionGateway;
+        public Gateway UntilConnectionGateway;
+    }
 
-		public Vector3 WorldTopLeft;
-		public int WorldSize;
-		public float NodeDiameter;
-		public float NodeRadius;
-		public int ChunkSize;
-		public int NodeSize;
-		public int ChunksX;
-		public int ChunksY;
+    public interface IIntegrationContainer
+    {
+        bool HasIntegration(int index);
+        Integration GetIntegration(int index);
+        Pathfinder GetPathfinder();
+    }
 
-		public List<Portal> Portals = new();
-		public List<PortalNode> CurrentPortals = new();
+    public class FlowField : IIntegrationContainer
+    {
+        public delegate void Changed();
 
-		public Chunk[,] Chunks;
+		public readonly Dictionary<int, List<Gateway>> DestinationGateways = new();
+		public readonly Dictionary<Gateway, Gateway> GatewayPath = new();
+		public readonly Dictionary<int, Integration> Integrations = new();
 
-		public void CreateWorld( int worldSize, int chunkSize, float nodeDiameter )
-		{
-			CurrentFloodPathId = 0;
+		protected readonly Dictionary<int, int[]> Flows = new();
+        protected readonly Stack<Gateway> IntegrationStack = new();
 
-			WorldSize = worldSize;
-			ChunkSize = chunkSize;
-			NodeRadius = nodeDiameter * 0.5f;
-			NodeDiameter = nodeDiameter;
-			ChunksX = worldSize / chunkSize;
-			ChunksY = worldSize / chunkSize;
-			WorldTopLeft = Vector3.Zero - Vector3.Forward * WorldSize / 2f - Vector3.Left * WorldSize / 2f;
+        private readonly Queue<int> _flowQueue = new();
+        private readonly List<int> _flowsToBeProcessed = new();
+        private readonly Dictionary<int, int[]> _previousFlows = new();
+        private readonly Dictionary<Gateway, Gateway> _previousGatewayPath = new();
 
-			CreateChunks();
-			CreatePortals();
-			CreatePortalConnections();
-		}
+        private Vector3 _destinationPosition;
 
-		public void CreateChunks()
-		{
-			Chunks = new Chunk[ChunksX, ChunksY];
+        public Changed ChangedDelegates;
 
-			for ( int x = 0; x < ChunksX; ++x )
-			{
-				for ( int y = 0; y < ChunksY; ++y )
-				{
-					Chunks[x, y] = new Chunk();
-					Chunks[x, y].Initialize( x, y, this );
-				}
-			}
-		}
+        public List<int> DestinationIndexes = new();
+        public int DestinationIndex;
 
-		public void CreatePortals()
-		{
-			for ( int x = 0; x < ChunksX; ++x )
-			{
-				for ( int y = 0; y < ChunksY; ++y )
-				{
-					Chunk chunk = Chunks[x, y];
-					Chunk horizontal = null;
-					Chunk vertical = null;
+        public FlowField( Pathfinder pathfinder )
+        {
+            Pathfinder = pathfinder;
+			Pathfinder.OnWorldChanged += OnPathfinderWorldChanged;
+        }
 
-					if ( x + 1 < ChunksX )
+        public Pathfinder Pathfinder { get; }
+
+        public virtual Vector3 DestinationPosition => _destinationPosition;
+
+        public bool HasIntegration(int index)
+        {
+            return Integrations.ContainsKey(index);
+        }
+
+        public Integration GetIntegration(int index)
+        {
+            if (!Integrations.ContainsKey(index)) Integrations[index] = IntegrationService.CreateIntegration(Pathfinder.ChunkSize);
+
+            return Integrations[index];
+        }
+
+        public Pathfinder GetPathfinder()
+        {
+            return Pathfinder;
+        }
+
+        public void OnPathfinderWorldChanged( Pathfinder pathfinder, List<int> chunks )
+        {
+            if ( Pathfinder != pathfinder ) return;
+
+            if ( Integrations.Any( integration => chunks.Contains( integration.Key ) ) )
+                UpdatePaths( chunks );
+        }
+
+        public Dictionary<int, Integration> GetIntegrations()
+        {
+            return Integrations;
+        }
+
+        public void CreateDestinationGateways(List<int> worldIndexes)
+        {
+            if ( worldIndexes.Count == 0 )
+                return;
+
+            DestinationIndex = worldIndexes.First();
+            DestinationIndexes.Clear();
+            DestinationIndexes.AddRange(worldIndexes);
+            DestinationGateways.Clear();
+
+            _destinationPosition = Pathfinder.GetPositionCentered(Pathfinder.CreateWorldPosition(DestinationIndex));
+
+            var chunks = new Dictionary<int, List<int>>();
+
+            foreach ( var worldIndex in worldIndexes )
+            {
+                var chunkIndex = Pathfinder.GetChunkIndex(worldIndex);
+
+                if (!chunks.ContainsKey(chunkIndex)) chunks[chunkIndex] = new();
+
+                chunks[chunkIndex].Add(Pathfinder.GetNodeIndex(worldIndex));
+            }
+
+
+            foreach ( var data in chunks )
+            {
+                var chunk = Pathfinder.GetChunk( data.Key );
+
+                foreach ( var gateway in chunk.GetGateways() )
+                {
+                    if ( !chunk.Connects(gateway, data.Value) ) continue;
+
+                    if ( !DestinationGateways.ContainsKey(data.Key) )
+						DestinationGateways[data.Key] = new();
+
+                    DestinationGateways[data.Key].Add(gateway);
+                }
+            }
+        }
+
+        public void ResetDestination()
+        {
+            DestinationGateways.Clear();
+        }
+
+        public void UpdatePaths( List<int> changedChunks )
+        {
+            _previousGatewayPath.Clear();
+            _previousFlows.Clear();
+
+            CreateDestinationGateways( DestinationIndexes.ToList() );
+
+            Integrations.Clear();
+            GatewayPath.Clear();
+            Flows.Clear();
+        }
+
+        public void UpdatePaths()
+        {
+            _previousGatewayPath.Clear();
+            _previousFlows.Clear();
+            CreateDestinationGateways( DestinationIndexes.ToList() );
+
+            Integrations.Clear();
+            GatewayPath.Clear();
+            Flows.Clear();
+        }
+
+        protected virtual void SeekPath( Vector3 startPosition )
+        {
+            var subPath = AStarPortal.Default.CalculatePath( this, startPosition );
+            var worldPosition = Pathfinder.CreateWorldPosition( startPosition );
+
+            if ( DestinationGateways.ContainsKey( worldPosition.ChunkIndex ) )
+            {
+                var destinationGateway = DestinationGateways[worldPosition.ChunkIndex];
+
+                IntegrationStack.Push(destinationGateway.First());
+                _flowQueue.Enqueue(destinationGateway.First().Chunk);
+
+                IntegrateStack();
+            }
+
+            if ( subPath != null )
+            {
+                BuildIntegrationStack(subPath.FromConnectionGateway, subPath.UntilConnectionGateway);
+                IntegrateStack();
+            }
+
+            QueueFlow();
+
+            ChangedDelegates?.Invoke();
+        }
+
+        public bool IsAvailable( GridWorldPosition worldPosition )
+        {
+            return IsAvailable( worldPosition.ChunkIndex, worldPosition.NodeIndex );
+        }
+
+        public bool IsAvailable( int chunk, int index )
+        {
+            return !Pathfinder.GetChunk(chunk).IsImpassable(index);
+        }
+
+        private void BuildIntegrationStack( Gateway fromGateway, Gateway untilGateway )
+        {
+            while ( !Equals( fromGateway, untilGateway ) )
+            {
+                if ( RestoreFromCache( fromGateway ) )
+                {
+                    fromGateway = GatewayPath[fromGateway];
+                    continue;
+                }
+
+                _flowQueue.Enqueue(fromGateway.Chunk);
+                IntegrationStack.Push(fromGateway);
+
+                DebugOverlay.Line( Pathfinder.GetPosition(fromGateway), Pathfinder.GetPosition( GatewayPath[fromGateway] ), Color.Cyan, 5f );
+                fromGateway = GatewayPath[fromGateway];
+            }
+
+            if ( !RestoreFromCache( untilGateway ) )
+                IntegrationStack.Push( untilGateway );
+
+            if ( !RestoreFromCache( fromGateway ) )
+                _flowQueue.Enqueue(fromGateway.Chunk);
+
+            if ( !RestoreFromCache( untilGateway ) )
+                _flowQueue.Enqueue( untilGateway.Chunk );
+        }
+
+        private bool RestoreFromCache( Gateway connectionGateway )
+        {
+            if ( !_previousGatewayPath.ContainsKey( connectionGateway ) || !GatewayPath.ContainsKey( connectionGateway ) )
+                return false;
+
+            if ( !_previousGatewayPath[connectionGateway].Equals( GatewayPath[connectionGateway] ) )
+                return false;
+
+            Flows[connectionGateway.Chunk] = _previousFlows[connectionGateway.Chunk];
+            return true;
+        }
+
+
+        private void IntegrateStack()
+        {
+            foreach ( var index in DestinationIndexes )
+            {
+                var integration = GetIntegration( Pathfinder.GetChunkIndex(index) );
+                var node = Pathfinder.GetNodeIndex( index );
+
+                integration.SetValue(node, 1);
+                integration.Enqueue(node);
+            }
+
+
+            while ( IntegrationStack.Count > 0 )
+            {
+                var gateway = IntegrationStack.Pop();
+                var integration = GetIntegration(gateway.Chunk);
+
+                IntegrationsPathService.Default.Integrate( this, integration, gateway.Chunk );
+                integration.IsIntegrated = true;
+
+                OpenIntegration( gateway.Chunk, GridDirection.Down );
+                OpenIntegration( gateway.Chunk, GridDirection.Up );
+                OpenIntegration( gateway.Chunk, GridDirection.Left );
+                OpenIntegration( gateway.Chunk, GridDirection.Right );
+            }
+        }
+
+        private void OpenIntegration(int index, GridDirection direction)
+        {
+            var otherChunkIndex = GridUtility.GetNeighborIndex( index, direction, Pathfinder.WorldChunkSize );
+
+            if ( !GridUtility.IsValid( otherChunkIndex ) )
+                return;
+
+            var thisIntegration = GetIntegration( index );
+            var range = GridUtility.GetBorderRange( Pathfinder.ChunkSize, direction );
+            var worldIndex = Pathfinder.CreateWorldPosition( index, 0 );
+            var translation = new GridConverter( thisIntegration.Definition, Pathfinder.WorldNodeSize, 0, worldIndex.WorldIndex );
+            var indexes = new List<int>();
+
+            for ( var x = range.XMin; x < range.XMax; x++ )
+				for ( var y = range.YMin; y < range.YMax; y++ )
+					indexes.Add(GridUtility.GetIndex(Pathfinder.ChunkSize, y, x));
+
+            indexes.Sort( ( index1, index2 ) => thisIntegration.GetValue( index1 ).CompareTo( thisIntegration.GetValue( index2 ) ) );
+
+            foreach ( var i in indexes )
+            {
+                var globalIndex = translation.Global(i);
+                var thisCost = thisIntegration.GetValue(i);
+
+                if ( thisCost == IntegrationService.Closed || thisCost == IntegrationService.UnIntegrated || thisCost < 0 )
+                    continue;
+
+                foreach ( var neighbor in GridUtility.GetNeighborsIndex( globalIndex, Pathfinder.WorldNodeSize, true ) )
+                {
+                    var nw = Pathfinder.CreateWorldPosition(neighbor.Value);
+                    var otherIntegration = GetIntegration(nw.ChunkIndex);
+
+                    if ( otherIntegration.GetValue(nw.NodeIndex) != IntegrationService.UnIntegrated )
+                        continue;
+
+                    var otherCost = IntegrationService.H( thisCost, Pathfinder.GetCost( nw ) );
+
+                    if (neighbor.Key == GridDirection.RightDown || neighbor.Key == GridDirection.UpRight
+						|| neighbor.Key == GridDirection.LeftUp || neighbor.Key == GridDirection.DownLeft )
 					{
-						horizontal = Chunks[x + 1, y];
+						otherCost += 1;
 					}
 
-					if ( y + 1 < ChunksY )
-					{
-						vertical = Chunks[x, y + 1];
-					}
+                    otherIntegration.SetValue( nw.NodeIndex, otherCost );
+                    otherIntegration.Enqueue( nw.NodeIndex );
+                }
+            }
+        }
 
-					if ( horizontal != null )
-					{
-						var portals = Chunk.GeneratePortals( this, chunk, horizontal, true );
+        private void QueueFlow()
+        {
+            while ( _flowQueue.Count > 0 )
+            {
+                var chunkIndex = _flowQueue.Dequeue();
+                if ( Flows.ContainsKey( chunkIndex ) ) continue;
 
-						for ( int i = 0; i < portals.Count; ++i )
-						{
-							if ( !Portals.Contains( portals[i] ) )
-							{
-								Portals.Add( portals[i] );
-							}
-						}
-					}
+                if ( _flowsToBeProcessed.Contains( chunkIndex ) )
+                    continue;
 
-					if ( vertical != null )
-					{
-						var portals = Chunk.GeneratePortals( this, chunk, vertical, false );
+                _flowsToBeProcessed.Add( chunkIndex );
+                CalculateFlow( chunkIndex );
+            }
+        }
 
-						for ( int i = 0; i < portals.Count; ++i )
-						{
-							if ( !Portals.Contains( portals[i] ) )
-							{
-								Portals.Add( portals[i] );
-							}
-						}
-					}
-				}
-			}
-		}
+        public void CalculateFlow( int chunkIndex )
+        {
+			var flow = FlowService.Default.Flow(
+				this,
+				Pathfinder.WorldNodeSize,
+				Pathfinder.WorldChunkSize,
+				Pathfinder.ChunkSize,
+				chunkIndex
+			);
 
-		public void CreatePortalConnections()
-		{
-			for ( int i = 0; i < Portals.Count; ++i )
-			{
-				var portal = Portals[i];
-				var distinctPortals = new List<PortalNode>();
+			Flows.Add( chunkIndex, flow );
 
-				CurrentFloodPathId++;
+            _flowsToBeProcessed.Remove(chunkIndex);
+        }
 
-				var foundPortals = portal.NodeA.FloodChunk( CurrentFloodPathId );
-				foundPortals.Add( portal.NodeB );
-				distinctPortals.Clear();
+        public int GetIntegrationValue(GridWorldPosition position)
+        {
+            if ( !Integrations.ContainsKey( position.ChunkIndex ) ) return 0;
+            return Integrations[position.ChunkIndex].GetValue( position.NodeIndex );
+        }
 
-				for ( int k = 0; k < foundPortals.Count; ++k )
-				{
-					var p = foundPortals[k];
+        public int GetDirectionInt( GridWorldPosition position )
+        {
+            if ( !Flows.ContainsKey( position.ChunkIndex ) ) return -1;
+            return Flows[position.ChunkIndex][position.NodeIndex];
+        }
 
-					if ( !distinctPortals.Contains( p ) )
-					{
-						distinctPortals.Add( p );
-					}
-				}
+        public bool Ready( Vector3 position )
+        {
+            return Ready( Pathfinder.CreateWorldPosition( position ) );
+        }
 
-				portal.NodeA.Connections = distinctPortals.ToArray();
+        public bool Ready( GridWorldPosition position )
+        {
+            if ( _flowsToBeProcessed.Contains( position.ChunkIndex ) )
+                return false;
 
-				CurrentFloodPathId++;
+            if ( Flows.ContainsKey( position.ChunkIndex ) ) return true;
 
-				foundPortals = portal.NodeB.FloodChunk( CurrentFloodPathId );
-				foundPortals.Add( portal.NodeA );
-				distinctPortals.Clear();
+            SeekPath( Pathfinder.GetPosition( position ) );
+            return false;
+        }
 
-				for ( int k = 0; k < foundPortals.Count; ++k )
-				{
-					var p = foundPortals[k];
+        public Vector3 GetDirection( Vector3 position )
+        {
+            return GetDirection( Pathfinder.CreateWorldPosition( position ) );
+        }
 
-					if ( !distinctPortals.Contains( p ) )
-					{
-						distinctPortals.Add( p );
-					}
-				}
+        public Vector3 GetDirection( GridWorldPosition position )
+        {
+            var gridDirection = GetGridDirection( position );
 
-				portal.NodeB.Connections = distinctPortals.ToArray();
-			}
-		}
+            if (gridDirection != GridDirection.Zero)
+				return gridDirection.GetVector();
 
-		public Vector3 GetOrigin()
-		{
-			return Vector3.Zero;
-		}
+            foreach ( var gatewayLink in GatewayPath )
+            {
+                if (gatewayLink.Key.Chunk != position.ChunkIndex)
+					continue;
 
-		public ChunkNode GetNodeAtWorld( Vector3 position )
-		{
-			var localPosition = WorldToLocal( position );
-			return GetNodeFromLocal( localPosition.x, localPosition.y );
-		}
+                if ( gatewayLink.Key is Gateway connectionGateway )
+                    return (connectionGateway.Portal.GetVector( Pathfinder ) - Pathfinder.GetPosition( position )).Normal;
+            }
 
-		public Chunk GetChunkAtWorld( Vector3 position )
-		{
-			var localPosition = WorldToLocal( position );
-			return GetChunkFromLocal( localPosition.x, localPosition.y );
-		}
+            return (DestinationPosition - Pathfinder.GetPosition( position )).Normal;
+        }
 
-		public Vector2i WorldToLocal( Vector2 position )
-		{
-			var worldSize = WorldSize;
-			var px = ((position.x + worldSize / 2f) / worldSize);
-			var py = ((position.y + worldSize / 2f) / worldSize);
+        public GridDirection GetGridDirection( GridWorldPosition position )
+        {
+            if ( !Flows.ContainsKey(position.ChunkIndex) )
+                return GridDirection.Zero;
 
-			px = px.Clamp( 0f, 1f );
-			py = py.Clamp( 0f, 1f );
+            if ( Flows[position.ChunkIndex][position.NodeIndex] != -1 )
+                return (GridDirection)Flows[position.ChunkIndex][position.NodeIndex];
 
-			var fx = worldSize * px;
-			var x = fx.FloorToInt().Clamp( 0, worldSize - 1 );
-
-			var fy = worldSize * py;
-			var y = fy.FloorToInt().Clamp( 0, worldSize - 1 );
-
-			return new Vector2i( x, y );
-		}
-
-		public ChunkNode GetNodeFromLocal( int x, int y )
-		{
-			var chunk = GetChunkFromLocal( x, y );
-			var nodeX = ((float)((x % ChunkSize) / chunk.NodeDiameter)).FloorToInt();
-			var nodeY = ((float)((y % ChunkSize) / chunk.NodeDiameter)).FloorToInt();
-			return chunk.Nodes[nodeX, nodeY];
-		}
-
-		public Chunk GetChunkFromLocal( int x, int y )
-		{
-			var chunkX = ((float)(x / ChunkSize)).CeilToInt();
-			var chunkY = ((float)(y / ChunkSize)).CeilToInt();
-			return Chunks[chunkX, chunkY];
-		}
-
-		public List<PortalNode> FindPath( Vector3 position, Vector3 goal )
-		{
-			var astar = new AStar();
-			return astar.FindPath( ++CurrentPathId, this, position.WithZ( 0f ), goal.WithZ( 0f ) );
-		}
-	}
+            return GridDirection.Zero;
+        }
+    }
 }

@@ -7,8 +7,7 @@ using System.Linq;
 using System;
 using Gamelib.Extensions;
 using Sandbox.UI;
-using Gamelib.FlowField;
-using Gamelib.Math;
+using Gamelib.FlowFields;
 
 namespace Facepunch.RTS
 {
@@ -173,12 +172,7 @@ namespace Facepunch.RTS
 
 		public void MoveTo( Vector3 position )
 		{
-			if ( FlowField != null )
-			{
-				RTS.Game.Pathfinder.Finish( FlowField );
-			}
-
-			FlowField = RTS.Game.Pathfinder.Request( Position, position );
+			FlowField = RTS.Game.Pathfinding.FindPath( Position, position );
 
 			ResetTarget( position);
 			OnTargetChanged();
@@ -492,43 +486,9 @@ namespace Facepunch.RTS
 					var targetPosition = TargetPosition.Value;
 					var pathDirection = (targetPosition - Position).Normal;
 
-					if ( FlowField != null )
+					if ( FlowField != null && FlowField.Ready( Position ) )
 					{
-						var node = FlowField.GetNodeAtWorld( Position );
-						var chunk = FlowField.GetChunkAtWorld( Position );
-						var targetNode = FlowField.GetNodeAtWorld( targetPosition );
-
-						/*
-						if ( !node.IsWalkable )
-							node.Debug( Color.Red, 0f );
-						else
-							node.Debug( Color.Green, 0f );
-						*/
-
-						foreach ( var n in chunk.Nodes )
-						{
-							var scale = (1f / 10f) * n.GetDistance();
-							//n.Debug( Color.Lerp( Color.Green, Color.Red, scale ) );
-						}
-
-						if ( targetNode == node )
-						{
-							RTS.Game.Pathfinder.Finish( FlowField );
-						}
-						else
-						{
-							pathDirection = node.GetDirection();
-						}
-
-						/*
-						foreach ( var p in FlowField.CurrentPortals )
-						{
-							foreach ( var n in p.ChunkNodes )
-							{
-								n.Debug( Color.Magenta );
-							}
-						}
-						*/
+						pathDirection = FlowField.GetDirection( Position );
 					}
 
 					if ( Position.Distance( targetPosition ) > 10f )

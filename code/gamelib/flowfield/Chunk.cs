@@ -1,225 +1,184 @@
-﻿using Sandbox;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Gamelib.FlowFields.Algorithms;
+using Gamelib.FlowFields.Maths;
+using Gamelib.FlowFields.Grid;
+using Gamelib.FlowFields.Connectors;
 
-namespace Gamelib.FlowField
+namespace Gamelib.FlowFields
 {
-	public class Chunk
-	{
-		public FlowField FlowField;
-		public ChunkNode[,] Nodes;
-		public float NodeDiameter;
-		public int Size;
-		public int X;
-		public int Y;
+    public class Chunk
+    {
+        public static byte Impassable = byte.MaxValue;
 
-		public ChunkNode GetNode( int x, int y )
-		{
-			if ( x >= 0 && x < Size )
-			{
-				if ( y >= 0 && y < Size )
-				{
-					return Nodes[x, y];
-				}
-			}
+		private List<Gateway> _gateways = new();
+		private List<Portal> _connectedPortals = new();
+		private byte[] _costs;
+        private bool[] _collisions;
+		private GridDefinition _definition;
+		private int _index;
 
-			return null;
-		}
+        public bool IsDivided;
+        public int Size => _definition.Size;
+        public int Index => _index;
 
-		public void Initialize( int x, int y, FlowField world )
-		{
-			NodeDiameter = world.NodeDiameter;
-			FlowField = world;
-			Size = (int)MathF.Ceiling( world.ChunkSize / NodeDiameter );
-			Nodes = new ChunkNode[Size, Size];
-			X = x;
-			Y = y;
+        public Chunk( int index, GridDefinition definition )
+        {
+            _definition = definition;
+            _index = index;
+            _costs = new byte[_definition.Size];
+            _collisions = new bool[_definition.Size];
+        }
 
-			for ( int px = 0; px < Size; ++px )
-			{
-				for ( int py = 0; py < Size; ++py )
-				{
-					Nodes[px, py] = new ChunkNode();
-				}
-			}
+        public static implicit operator int( Chunk chunk )
+        {
+            return chunk._index;
+        }
 
-			var worldTopLeft = world.WorldTopLeft;
-			var nodeDiameter = world.NodeDiameter;
-			var startGridX = (x * world.ChunkSize);
-			var startGridY = (y * world.ChunkSize);
+        public bool IsImpassable( int index )
+        {
+            return GetCost(index) == Impassable || _collisions[index];
+        }
 
-			for ( int px = 0; px < Size; ++px )
-			{
-				for ( int py = 0; py < Size; ++py )
-				{
-					var worldGridX = startGridX + (px * nodeDiameter);
-					var worldGridY = startGridY + (py * nodeDiameter);
-					var worldPosition = worldTopLeft + Vector3.Forward * worldGridX;
-					worldPosition += Vector3.Left * worldGridY;
+        public bool HasCollision( int index )
+        {
+            return _collisions[index];
+        }
 
-					Nodes[px, py].Initialize( worldPosition, px, py, this, nodeDiameter );
-				}
-			}
-		}
+        public void ClearCollisions()
+        {
+            _collisions = new bool[_definition.Size];
+        }
 
-		public void Flood( int floodId, ref ChunkNode[] chunkNodes, ref List<PortalNode> foundPortals )
-		{
-			var openList = new List<ChunkNode>();
-			openList.AddRange( chunkNodes );
+        public void SetCollision( int index )
+        {
+            _costs[index] = Impassable;
+            _collisions[index] = true;
+        }
 
-			var worldTopLeft = FlowField.WorldTopLeft;
-			var startGridX = (X * FlowField.ChunkSize);
-			var startGridY = (Y * FlowField.ChunkSize);
-			var worldPosition = worldTopLeft + Vector3.Forward * startGridX;
-			worldPosition += Vector3.Left * startGridY;
+        public void RemoveCollision( int index )
+        {
+            _costs[index] = 0;
+            _collisions[index] = false;
+        }
 
-			DebugOverlay.Box( 5f, worldPosition.WithZ( 80f ), new Vector3( 0f, 0f, 0f ), new Vector3( FlowField.ChunkSize, FlowField.ChunkSize, 500f ), Color.Cyan );
+        public int GetCost( int index )
+        {
+            return _collisions[index] ? Impassable : GetRawCost(index);
+        }
 
-			for ( int i = 0; i < openList.Count; ++i )
-			{
-				var node = openList[i];
-				node.SetPathId( floodId );
-				node.SetDistance( 0 );
-				//node.Debug( Color.White, 5f );
-			}
-			
-			Log.Info( "Resetting chunk " + X + ", " + Y + " node distances to 0: " + openList.Count + " nodes" );
+        public int GetRawCost( int index )
+        {
+            return _costs[index];
+        }
 
-			for ( int i = 0; i < openList.Count; ++i )
-			{
-				var node = openList[i];
-				var neighbours = node.GetNeighbours();
+        public void SetCost( int index, byte cost )
+        {
+            _costs[index] = cost;
+        }
 
-				for ( int j = 0; j < neighbours.Length; ++j )
-				{
-					var neighbour = neighbours[j];
+        public void IncrementCost( int index )
+        {
+            _costs[index] = (byte)MathUtility.Clamp( _costs[index] + 10, byte.MinValue, byte.MaxValue );
+        }
 
-					if ( neighbour.IsWalkable && !neighbour.HasPathId( floodId ) )
-					{
-						openList.Add( neighbour );
-						neighbour.SetPathId( floodId );
-						neighbour.SetDistance( node.GetDistance() + 1 );
-					}
-				}
+        public void DecrementCost( int index )
+        {
+            _costs[index] = (byte)MathUtility.Clamp( _costs[index] - 10, byte.MinValue, byte.MaxValue );
+        }
 
-				if ( foundPortals != null )
-				{
-					var portals = node.GetPortalNodes();
+        public void ClearGateways( GridDirection direction = GridDirection.Zero )
+        {
+			if ( _gateways == null )
+				_gateways = new();
 
-					if ( portals != null )
-					{
-						for ( int p = 0; p < portals.Count; ++p )
-						{
-							var portal = portals[p];
+            if (direction == GridDirection.Zero)
+                _gateways.Clear();
+            else
+                _gateways.RemoveAll( gateway => gateway.Direction == direction );
+        }
 
-							if ( !foundPortals.Contains( portal ) )
-							{
-								foundPortals.Add( portal );
-							}
-						}
-					}
-				}
-			}
-		}
+        public void AddGateway( Gateway connectionGateway )
+        {
+            _gateways.Add( connectionGateway );
+        }
 
-		public static List<Portal> GeneratePortals( FlowField world, Chunk chunkA, Chunk chunkB, bool isHorizontal )
-		{
-			var portals = new List<Portal>();
-			var inPortal = false;
-			var nodesA = new List<ChunkNode>();
-			var nodesB = new List<ChunkNode>();
+        public bool IsInitialized()
+        {
+            return _gateways != null;
+        }
 
-			if ( !isHorizontal )
-			{
-				var bottomY = chunkA.Size - 1;
+        public bool HasGateway( int index )
+        {
+            return _gateways.Any( gateway => gateway.Contains(index) );
+        }
 
-				for ( int x = 0; x < chunkA.Size; ++x )
-				{
-					var bottomA = chunkA.Nodes[x, bottomY];
-					var topB = chunkB.Nodes[x, 0];
-					var createPortal = TraversePortalEdge( bottomA, topB, ref inPortal );
+        public void ConnectGateways()
+        {
+            IsDivided = false;
 
-					if ( inPortal )
-					{
-						nodesA.Add( bottomA );
-						nodesB.Add( topB );
+            foreach ( var gateway in _gateways )
+                gateway.Connections.Clear();
 
-						var isLastNode = (x == (chunkA.Size - 1));
+            for ( var i = 0; i < _gateways.Count; i++ )
+            for ( var j = i + 1; j < _gateways.Count; j++ )
+            {
+                var gateway1 = _gateways[i];
+                var gateway2 = _gateways[j];
 
-						if ( isLastNode )
-						{
-							createPortal = true;
-						}
-					}
+                var path = AStarGateway.Default.GetPath(
+                    _definition,
+                    _costs,
+                    gateway1.Median(),
+                    gateway2.Median()
+                );
 
-					if ( createPortal )
-					{
-						var newPortal = new Portal();
-						newPortal.Initialize( chunkA, nodesA.ToArray(), chunkB, nodesB.ToArray(), world );
-						portals.Add( newPortal );
-						nodesA.Clear();
-						nodesB.Clear();
-					}
-				}
-			}
-			else
-			{
-				var rightX = chunkA.Size - 1;
+                if ( path == null )
+                {
+                    IsDivided = true;
+                    continue;
+                }
 
-				for ( int y = 0; y < chunkA.Size; ++y )
-				{
-					var bottomA = chunkA.Nodes[rightX, y];
-					var topB = chunkB.Nodes[0, y];
-					var createPortal = TraversePortalEdge( bottomA, topB, ref inPortal );
+                var cost = AStarGateway.GetPathCost( path, _costs );
 
-					if ( inPortal )
-					{
-						nodesA.Add( bottomA );
-						nodesB.Add( topB );
+                if ( !gateway1.Connections.ContainsKey( gateway2 ) )
+                    gateway1.Connections.Add( gateway2, cost );
+                if ( !gateway2.Connections.ContainsKey( gateway1 ) )
+                    gateway2.Connections.Add( gateway1, cost );
+            }
+        }
 
-						var isLastNode = (y == (chunkA.Size - 1));
+        public bool Connects( Gateway gateway, List<int> nodes )
+        {
+            return AStarGateway.Default.GetPath( _definition, _costs, gateway.Median(), nodes.First() ) != null;
+        }
 
-						if ( isLastNode )
-						{
-							createPortal = true;
-						}
-					}
+        public List<Gateway> GetGateways()
+        {
+            return _gateways.ToList();
+        }
 
-					if ( createPortal )
-					{
-						var newPortal = new Portal();
-						newPortal.Initialize( chunkA, nodesA.ToArray(), chunkB, nodesB.ToArray(), world );
-						portals.Add( newPortal );
-						nodesA.Clear();
-						nodesB.Clear();
-					}
-				}
-			}
+        public List<Gateway> GetGatewaysToChunk( int index )
+        {
+            return _gateways.Where( gateway => gateway.Portal.HasChunk(index) ).ToList();
+        }
 
-			return portals;
-		}
+        public List<Portal> GetConnectedPortals( int index )
+        {
+            if (_connectedPortals == null)
+                _connectedPortals = new();
 
-		private static bool TraversePortalEdge( ChunkNode bottomA, ChunkNode topB, ref bool inPortal )
-		{
-			if ( !inPortal )
-			{
-				if ( bottomA.IsWalkable && topB.IsWalkable )
-				{
-					inPortal = true;
-				}
-			}
+            _connectedPortals.Clear();
 
-			if ( inPortal )
-			{
-				if ( !bottomA.IsWalkable || !topB.IsWalkable )
-				{
-					inPortal = false;
-					return true;
-				}
-			}
+            if ( IsDivided )
+                _connectedPortals.AddRange( from gateway in _gateways
+                    where AStarGateway.Default.GetPath(_definition, _costs, gateway.Median(), index) != null
+                    select gateway.Portal );
+            else
+                _connectedPortals.AddRange( _gateways.Select(gateway => gateway.Portal) );
 
-			return false;
-		}
-	}
+            return _connectedPortals;
+        }
+    }
 }
