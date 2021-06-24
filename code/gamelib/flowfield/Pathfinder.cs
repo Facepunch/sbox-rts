@@ -13,17 +13,19 @@ namespace Gamelib.FlowFields
 		public static event Action<Pathfinder, List<int>> OnWorldChanged;
 
         public readonly List<Portal> Portals = new();
-        public float Scale = 1f;
 
 		private readonly List<GridWorldPosition> _collisionBuffer = new();
 		private readonly List<int> _chunkBuffer = new();
 
-		private GridDefinition _worldChunkSize = new(10, 10);
+		private GridDefinition _numberOfChunks = new(10, 10);
         private GridDefinition _chunkSize = new(10, 10);
-        private GridDefinition _worldNodeSize = new(100, 100);
+        private GridDefinition _worldSize = new(100, 100);
         private Chunk[] _chunks;
-        private Vector3 _centerOffset;
         private int _waitForPhysicsUpdate = 3;
+        private float _scale = 1f;
+
+		public Vector3 PositionOffset { get; private set; }
+		public Vector3 CenterOffset { get; private set; }
 
         public GridDefinition ChunkSize
         {
@@ -31,27 +33,40 @@ namespace Gamelib.FlowFields
             set => _chunkSize = value;
         }
 
-        public GridDefinition WorldChunkSize
+        public GridDefinition NumberOfChunks
         {
-            get => _worldChunkSize;
-            set => _worldChunkSize = value;
+            get => _numberOfChunks;
+            set => _numberOfChunks = value;
         }
 
-        public GridDefinition WorldNodeSize
+		public float Scale => _scale;
+
+		public GridDefinition WorldSize
         {
             get
             {
-                if (_worldNodeSize == null || _worldNodeSize.Columns == 0)
+                if (_worldSize == null || _worldSize.Columns == 0)
 				{
-					_worldNodeSize = new GridDefinition(
-						_chunkSize.Rows * _worldChunkSize.Rows,
-						_chunkSize.Columns * _worldChunkSize.Columns
+					_worldSize = new GridDefinition(
+						_chunkSize.Rows * _numberOfChunks.Rows,
+						_chunkSize.Columns * _numberOfChunks.Columns
 					);
 				}
 
-                return _worldNodeSize;
+                return _worldSize;
             }
         }
+
+		public Pathfinder( int numberOfChunks, int chunkSize, float scale = 1f )
+		{
+			_numberOfChunks = new GridDefinition( numberOfChunks, numberOfChunks );
+			_chunkSize = new GridDefinition( chunkSize, chunkSize );
+			_worldSize = new GridDefinition(
+				_chunkSize.Rows * _numberOfChunks.Rows,
+				_chunkSize.Columns * _numberOfChunks.Columns
+			);
+			_scale = scale;
+		}
 
 		public void Update()
         {
@@ -66,20 +81,31 @@ namespace Gamelib.FlowFields
 
         public void UpdateCollisions()
         {
-            CalculateCenterOffset();
-
-            for ( var index = 0; index < WorldNodeSize.Size; index++ )
+            for ( var index = 0; index < WorldSize.Size; index++ )
             {
-                var position = GetPosition( index ) + _centerOffset;
+				var position = GetPosition( index ) + CenterOffset;
 
-				if ( Physics.GetEntitiesInSphere( position, Scale / 2 ).Count() > 0 )
+				if ( Physics.GetEntitiesInSphere( position, Scale ).Count() > 0 )
+				{
+					DebugOverlay.Sphere( position, Scale, Color.Red, true, 60f );
 					GetChunk( GetChunkIndex( index ) ).SetCollision( GetNodeIndex( index ) );
+				}
             }
         }
 
         public void Init()
         {
-            if ( _chunks == null || !_chunks.Any() )
+			PositionOffset = new Vector3(
+				_worldSize.Columns * _scale / 2f,
+				_worldSize.Rows * _scale / 2f
+			);
+
+			CenterOffset = new Vector3(
+				Scale / 2f,
+				Scale / 2f
+			);
+
+			if ( _chunks == null || !_chunks.Any() )
                 CreateChunks();
 
             ClearCollisions();
@@ -91,10 +117,10 @@ namespace Gamelib.FlowFields
         {
             Portals.Clear();
 
-            for ( var i = 0; i < _worldChunkSize.Size; i++ )
+            for ( var i = 0; i < _numberOfChunks.Size; i++ )
                 GetChunk(i).ClearGateways();
 
-            for ( var i = 0; i < _worldChunkSize.Size; i++ )
+            for ( var i = 0; i < _numberOfChunks.Size; i++ )
             {
                 CreatePortalsBetweenChunks( i, GridDirection.Up );
                 CreatePortalsBetweenChunks( i, GridDirection.Right );
@@ -109,16 +135,11 @@ namespace Gamelib.FlowFields
             _chunks = null;
         }
 
-		private void CalculateCenterOffset()
-		{
-			_centerOffset = new Vector3( Scale / 2f, Scale / 2f, 0 );
-		}
-
 		private void CreateChunks()
         {
-            _chunks = new Chunk[WorldChunkSize.Size];
+            _chunks = new Chunk[NumberOfChunks.Size];
 
-            for (var i = 0; i < _worldChunkSize.Size; i++)
+            for (var i = 0; i < _numberOfChunks.Size; i++)
 				_chunks[i] = new Chunk( i, _chunkSize );
         }
 
@@ -140,14 +161,13 @@ namespace Gamelib.FlowFields
             return GetChunk(chunk).GetCost( node );
         }
 
-
         public void UpdateArea( Vector3 position, int size )
         {
             _waitForPhysicsUpdate = 5;
 
             var worldPivotPosition = CreateWorldPosition( position );
             var grid = new GridDefinition( size * 2 + 1, size * 2 + 1 );
-            var translation = new GridConverter( grid, WorldNodeSize, grid.Size / 2, worldPivotPosition.WorldIndex );
+            var translation = new GridConverter( grid, WorldSize, grid.Size / 2, worldPivotPosition.WorldIndex );
 
             for ( var i = 0; i < grid.Size; i++ )
             {
@@ -169,9 +189,10 @@ namespace Gamelib.FlowFields
                 if ( collision.WorldIndex == int.MinValue ) continue;
 
                 var chunk = GetChunk( collision.ChunkIndex );
-                var position = GetPositionCentered( collision );
+				var position = GetPosition( collision ) + CenterOffset;
 
-                if ( Physics.GetEntitiesInSphere( position, Scale / 2 ).Count() > 0 )
+
+				if ( Physics.GetEntitiesInSphere( position, Scale ).Count() > 0 )
                     chunk.SetCollision( collision.NodeIndex );
                 else
                     chunk.RemoveCollision( collision.NodeIndex );
@@ -206,26 +227,26 @@ namespace Gamelib.FlowFields
 
         public Chunk GetChunk( int index )
         {
-            return index >= _worldChunkSize.Size || index < 0 ? null : _chunks[index];
+            return index >= _numberOfChunks.Size || index < 0 ? null : _chunks[index];
         }
 
         private void ResetChunk( int i )
         {
-            CreatePortalsBetweenChunks(i, GridDirection.Up);
-            CreatePortalsBetweenChunks(i, GridDirection.Right);
-            CreatePortalsBetweenChunks(i, GridDirection.Left);
-            CreatePortalsBetweenChunks(i, GridDirection.Down);
-            GetChunk(i).ConnectGateways();
+            CreatePortalsBetweenChunks( i, GridDirection.Up );
+            CreatePortalsBetweenChunks( i, GridDirection.Right );
+            CreatePortalsBetweenChunks( i, GridDirection.Left );
+            CreatePortalsBetweenChunks( i, GridDirection.Down );
+            GetChunk( i ).ConnectGateways();
 
-            GetChunk(GridUtility.GetNeighborIndex(i, GridDirection.Up, _worldChunkSize))?.ConnectGateways();
-            GetChunk(GridUtility.GetNeighborIndex(i, GridDirection.Right, _worldChunkSize))?.ConnectGateways();
-            GetChunk(GridUtility.GetNeighborIndex(i, GridDirection.Down, _worldChunkSize))?.ConnectGateways();
-            GetChunk(GridUtility.GetNeighborIndex(i, GridDirection.Left, _worldChunkSize))?.ConnectGateways();
+            GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Up, _numberOfChunks) )?.ConnectGateways();
+            GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Right, _numberOfChunks) )?.ConnectGateways();
+            GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Down, _numberOfChunks) )?.ConnectGateways();
+            GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Left, _numberOfChunks) )?.ConnectGateways();
         }
 
         private void CreatePortalsBetweenChunks( int index, GridDirection direction )
         {
-            var otherChunkIndex = GridUtility.GetNeighborIndex( index, direction, WorldChunkSize );
+            var otherChunkIndex = GridUtility.GetNeighborIndex( index, direction, NumberOfChunks );
 
             if ( !GridUtility.IsValid( otherChunkIndex ) )
                 return;
@@ -306,19 +327,20 @@ namespace Gamelib.FlowFields
 
         public GridWorldPosition CreateWorldPosition( Vector3 position )
         {
-            return CreateWorldPosition( GridUtility.GetIndex( WorldNodeSize, MathUtility.FloorToInt( position.y / Scale ), MathUtility.FloorToInt( position.x / Scale ) ) );
+			position += PositionOffset;
+			return CreateWorldPosition( GridUtility.GetIndex( WorldSize, MathUtility.FloorToInt( position.y / Scale ), MathUtility.FloorToInt( position.x / Scale ) ) );
         }
 
         public GridWorldPosition CreateWorldPosition( int chunkIndex, int nodeIndex )
         {
-            var chunk = GridUtility.GetCoordinates( WorldChunkSize, chunkIndex );
+            var chunk = GridUtility.GetCoordinates( NumberOfChunks, chunkIndex );
             var node = GridUtility.GetCoordinates( ChunkSize, nodeIndex );
 
             var row = chunk.y * ChunkSize.Rows + node.y;
             var column = chunk.x * ChunkSize.Columns + node.x;
 
             return new GridWorldPosition(
-                GridUtility.GetIndex( WorldNodeSize, row, column ),
+                GridUtility.GetIndex( WorldSize, row, column ),
                 chunkIndex,
                 nodeIndex
             );
@@ -326,58 +348,58 @@ namespace Gamelib.FlowFields
 
         public Vector2i GetWorldCoordinates( int chunkIndex, int nodeIndex )
         {
-            var chunk = GridUtility.GetCoordinates( WorldChunkSize, chunkIndex );
+            var chunk = GridUtility.GetCoordinates( NumberOfChunks, chunkIndex );
             var node = GridUtility.GetCoordinates( ChunkSize, nodeIndex );
             return new Vector2i( chunk.y * ChunkSize.Rows + node.y, chunk.x * ChunkSize.Columns + node.x );
         }
 
         public Vector3 GetPosition( Gateway gateway )
         {
-            return GetPosition( gateway.Chunk, gateway.Median() );
-        }
+			return GetPosition( gateway.Chunk, gateway.Median() );
+		}
 
         public Vector3 GetPosition( int chunkIndex, int nodeIndex )
         {
-            return GetChunkPosition( chunkIndex ) + GetNodePosition( nodeIndex );
-        }
+            return GetLocalChunkPosition( chunkIndex ) + GetLocalNodePosition( nodeIndex ) - PositionOffset;
+		}
+
+		public Vector3 GetCenterPosition( GridWorldPosition worldPosition )
+		{
+			return GetPosition( worldPosition ) + CenterOffset;
+		}
 
         public Vector3 GetPosition( GridWorldPosition worldPosition )
         {
-            return GetPosition( worldPosition.ChunkIndex, worldPosition.NodeIndex );
-        }
-
-        public Vector3 GetPositionCentered( GridWorldPosition worldPosition )
-        {
-            return GetPosition( worldPosition ) + _centerOffset;
-        }
+			return GetPosition( worldPosition.ChunkIndex, worldPosition.NodeIndex );
+		}
 
         public Vector3 GetPosition( int index )
         {
-            return GetPosition( CreateWorldPosition( index ) );
+			return GetPosition( CreateWorldPosition( index ) );
         }
 
-        public Vector3 GetChunkPosition( int chunkIndex )
+        public Vector3 GetLocalChunkPosition( int chunkIndex )
         {
-            return new Vector3( chunkIndex % WorldChunkSize.Columns * ChunkSize.Columns * Scale,
-                (chunkIndex - chunkIndex % WorldChunkSize.Columns) / WorldChunkSize.Rows * ChunkSize.Columns * Scale, 0 );
+            return new Vector3( chunkIndex % NumberOfChunks.Columns * ChunkSize.Columns * Scale,
+                (chunkIndex - chunkIndex % NumberOfChunks.Columns) / NumberOfChunks.Rows * ChunkSize.Columns * Scale, 0 );
         }
 
-        public Vector3 GetNodePosition( int nodeIndex )
+        public Vector3 GetLocalNodePosition( int nodeIndex )
         {
             return new Vector3( nodeIndex % ChunkSize.Columns * Scale, (nodeIndex - nodeIndex % ChunkSize.Columns) / ChunkSize.Columns * Scale, 0 );
         }
 
         public int GetChunkIndex( int worldIndex )
         {
-            var coordinates = GridUtility.GetCoordinates( WorldNodeSize, worldIndex );
-            return GridUtility.GetIndex( WorldChunkSize,
+            var coordinates = GridUtility.GetCoordinates( WorldSize, worldIndex );
+            return GridUtility.GetIndex( NumberOfChunks,
                 coordinates.y / ChunkSize.Rows,
                 coordinates.x / ChunkSize.Columns );
         }
 
         public int GetNodeIndex( int worldIndex )
         {
-            var coordinates = GridUtility.GetCoordinates( WorldNodeSize, worldIndex );
+            var coordinates = GridUtility.GetCoordinates( WorldSize, worldIndex );
             return GridUtility.GetIndex( ChunkSize,
                 coordinates.y % ChunkSize.Rows,
                 coordinates.x % ChunkSize.Columns );

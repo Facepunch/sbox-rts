@@ -108,7 +108,11 @@ namespace Facepunch.RTS
 		{
 			_ = StartSecondTimer();
 
-			Pathfinding = new Pathfinding();
+			if ( IsServer )
+			{
+				Pathfinding = new Pathfinding();
+				Pathfinding.Initialize( 20, 10, 100f );
+			}
 
 			base.PostLevelLoaded();
 		}
@@ -162,6 +166,7 @@ namespace Facepunch.RTS
 			}
 			else
 			{
+				Pathfinding?.Update();
 				ServerTime = Time.Now;
 				LoadConfig();
 			}

@@ -36,7 +36,7 @@ namespace Facepunch.RTS
 		public DamageInfo LastDamageTaken { get; private set; }
 		public ResourceType LastResourceType { get; private set; }
 		public Vector3 LastResourcePosition { get; private set; }
-		public FlowField FlowField { get; private set; }
+		public PathRequest PathRequest { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
 		public float TargetRange { get; private set; }
@@ -172,8 +172,7 @@ namespace Facepunch.RTS
 
 		public void MoveTo( Vector3 position )
 		{
-			FlowField = RTS.Game.Pathfinding.FindPath( Position, position );
-
+			PathRequest = RTS.Game.Pathfinding.Request( Position, position );
 			ResetTarget( position);
 			OnTargetChanged();
 		}
@@ -484,28 +483,34 @@ namespace Facepunch.RTS
 				if ( TargetPosition.HasValue )
 				{
 					var targetPosition = TargetPosition.Value;
-					var pathDirection = (targetPosition - Position).Normal;
 
-					if ( FlowField != null && FlowField.Ready( Position ) )
+					if ( PathRequest != null && PathRequest.IsValid() )
 					{
-						pathDirection = FlowField.GetDirection( Position );
-					}
+						var pathDirection = PathRequest.GetDirection( Position );
+						var distance = Position.Distance( targetPosition );
 
-					if ( Position.Distance( targetPosition ) > 10f )
-					{
-						var control = GroundEntity != null ? 200f : 10f;
+						if ( distance <= 10f )
+						{
+							RTS.Game.Pathfinding.Complete( PathRequest );
+							TargetPosition = null;
+						}
+						else
+						{
+							if ( distance < 100f )
+							{
+								pathDirection = (targetPosition - Position).Normal;
+							}
 
-						InputVelocity = pathDirection.Normal * Speed;
-						var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
-						Velocity = Velocity.AddClamped( velocity, Speed );
+							var control = GroundEntity != null ? 200f : 10f;
 
-						SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
-						SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
-						SetAnimFloat( "aim_body_weight", 0.25f );
-					}
-					else
-					{
-						TargetPosition = null;
+							InputVelocity = pathDirection.Normal * Speed;
+							var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
+							Velocity = Velocity.AddClamped( velocity, Speed );
+
+							SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
+							SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
+							SetAnimFloat( "aim_body_weight", 0.25f );
+						}
 					}
 				}
 				else

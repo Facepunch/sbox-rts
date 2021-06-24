@@ -93,7 +93,7 @@ namespace Gamelib.FlowFields
             DestinationIndexes.AddRange(worldIndexes);
             DestinationGateways.Clear();
 
-            _destinationPosition = Pathfinder.GetPositionCentered(Pathfinder.CreateWorldPosition(DestinationIndex));
+            _destinationPosition = Pathfinder.GetCenterPosition(Pathfinder.CreateWorldPosition(DestinationIndex));
 
             var chunks = new Dictionary<int, List<int>>();
 
@@ -226,7 +226,6 @@ namespace Gamelib.FlowFields
             return true;
         }
 
-
         private void IntegrateStack()
         {
             foreach ( var index in DestinationIndexes )
@@ -256,7 +255,7 @@ namespace Gamelib.FlowFields
 
         private void OpenIntegration(int index, GridDirection direction)
         {
-            var otherChunkIndex = GridUtility.GetNeighborIndex( index, direction, Pathfinder.WorldChunkSize );
+            var otherChunkIndex = GridUtility.GetNeighborIndex( index, direction, Pathfinder.NumberOfChunks );
 
             if ( !GridUtility.IsValid( otherChunkIndex ) )
                 return;
@@ -264,7 +263,7 @@ namespace Gamelib.FlowFields
             var thisIntegration = GetIntegration( index );
             var range = GridUtility.GetBorderRange( Pathfinder.ChunkSize, direction );
             var worldIndex = Pathfinder.CreateWorldPosition( index, 0 );
-            var translation = new GridConverter( thisIntegration.Definition, Pathfinder.WorldNodeSize, 0, worldIndex.WorldIndex );
+            var translation = new GridConverter( thisIntegration.Definition, Pathfinder.WorldSize, 0, worldIndex.WorldIndex );
             var indexes = new List<int>();
 
             for ( var x = range.XMin; x < range.XMax; x++ )
@@ -281,7 +280,7 @@ namespace Gamelib.FlowFields
                 if ( thisCost == IntegrationService.Closed || thisCost == IntegrationService.UnIntegrated || thisCost < 0 )
                     continue;
 
-                foreach ( var neighbor in GridUtility.GetNeighborsIndex( globalIndex, Pathfinder.WorldNodeSize, true ) )
+                foreach ( var neighbor in GridUtility.GetNeighborsIndex( globalIndex, Pathfinder.WorldSize, true ) )
                 {
                     var nw = Pathfinder.CreateWorldPosition(neighbor.Value);
                     var otherIntegration = GetIntegration(nw.ChunkIndex);
@@ -322,8 +321,8 @@ namespace Gamelib.FlowFields
         {
 			var flow = FlowService.Default.Flow(
 				this,
-				Pathfinder.WorldNodeSize,
-				Pathfinder.WorldChunkSize,
+				Pathfinder.WorldSize,
+				Pathfinder.NumberOfChunks,
 				Pathfinder.ChunkSize,
 				chunkIndex
 			);
