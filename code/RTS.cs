@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Gamelib.FlowFields;
+using Sandbox;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -35,6 +36,7 @@ namespace Facepunch.RTS
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
 		public BaseRound LastRound { get; private set; }
+		public Pathfinding Pathfinding{ get; private set; }
 
 		public RTS()
 		{
@@ -105,7 +107,18 @@ namespace Facepunch.RTS
 		public override void PostLevelLoaded()
 		{
 			_ = StartSecondTimer();
-			
+
+			if ( IsServer )
+			{
+				Pathfinding = new Pathfinding();
+				Pathfinding.Initialize( 30, 10, 100f );
+
+				var mins = Pathfinding.Pathfinder.GetPosition( 0, 0 );
+				var maxs = Pathfinding.Pathfinder.GetPosition( Pathfinding.Pathfinder.NumberOfChunks.Size - 1, 0 );
+
+				DebugOverlay.Box( 60f, mins.WithZ( 0f ), maxs.WithZ( 500f ), Color.Red );
+			}
+
 			base.PostLevelLoaded();
 		}
 
@@ -158,6 +171,7 @@ namespace Facepunch.RTS
 			}
 			else
 			{
+				Pathfinding?.Update();
 				ServerTime = Time.Now;
 				LoadConfig();
 			}

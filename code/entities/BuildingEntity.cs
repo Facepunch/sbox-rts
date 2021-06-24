@@ -108,6 +108,11 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
+			var pathfinder = RTS.Game.Pathfinding.Pathfinder;
+			var size = CollisionBounds.Size.Length;
+
+			pathfinder.UpdateCollisions( Position, size * 0.5f );
+
 			IsUnderConstruction = true;
 			RenderAlpha = 0.25f;
 			GlowActive = true;
@@ -317,7 +322,7 @@ namespace Facepunch.RTS
 		{
 			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRange )
 				.OfType<UnitEntity>()
-				.Where( ( a ) => IsEnemy( a ) )
+				//.Where( ( a ) => IsEnemy( a ) )
 				.OrderBy( ( a ) => a.Position.Distance( Position ) )
 				.FirstOrDefault();
 
