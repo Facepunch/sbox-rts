@@ -11,8 +11,7 @@ namespace Facepunch.RTS
 		public virtual float GatherTime => 1f;
 		public virtual int MaxCarry => 10;
 
-		[Property( Help = "How much of this resource there is left to take." )]
-		[Net] public int Stock { get; set; } = 250;
+		[Property, Net] public int Stock { get; set; } = 250;
 
 		public bool IsLocalPlayers => false;
 		public bool HasBeenSeen { get; set; }

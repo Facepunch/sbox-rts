@@ -8,6 +8,7 @@ using System;
 using Gamelib.Extensions;
 using Sandbox.UI;
 using Gamelib.FlowFields;
+using Gamelib.FlowFields.Grid;
 
 namespace Facepunch.RTS
 {
@@ -172,14 +173,15 @@ namespace Facepunch.RTS
 
 		public void MoveTo( Vector3 position )
 		{
-			PathRequest = RTS.Game.Pathfinding.Request( Position, position );
-			ResetTarget( position);
+			ResetTarget();
+			RequestPath( position );
 			OnTargetChanged();
 		}
 
 		public void Occupy( BuildingEntity building )
 		{
-			ResetTarget( building.Position );
+			ResetTarget();
+			RequestPath( building );
 
 			Target = building;
 			FollowTarget = true;
@@ -191,7 +193,8 @@ namespace Facepunch.RTS
 
 		public void Deposit( BuildingEntity building )
 		{
-			ResetTarget( building.Position );
+			ResetTarget();
+			RequestPath( building );
 
 			Target = building;
 			FollowTarget = true;
@@ -202,7 +205,8 @@ namespace Facepunch.RTS
 
 		public void Gather( ResourceEntity resource)
 		{
-			ResetTarget( resource.Position );
+			ResetTarget();
+			RequestPath( resource );
 
 			Target = resource;
 			FollowTarget = true;
@@ -216,7 +220,8 @@ namespace Facepunch.RTS
 
 		public void Construct( BuildingEntity building )
 		{
-			ResetTarget( building.Position );
+			ResetTarget();
+			RequestPath( building );
 
 			Target = building;
 			FollowTarget = true;
@@ -231,6 +236,7 @@ namespace Facepunch.RTS
 			TargetPosition = null;
 			IsGathering = false;
 			FollowTarget = false;
+			CompletePathRequest();
 			OnTargetChanged();
 		}
 
@@ -393,12 +399,45 @@ namespace Facepunch.RTS
 			Velocity = move.Velocity;
 		}
 
-		private void ResetTarget( Vector3? position = null )
+		public void RequestPath( ModelEntity entity )
+		{
+			CompletePathRequest();
+
+			var potentialTiles = new List<Vector3>();
+			var collisionSize = entity.CollisionBounds.Size.Length * 0.4f;
+			var possibleLocations = new List<GridWorldPosition>();
+
+			RTS.Game.Pathfinding.Pathfinder.GetGridPositions( entity.Position, collisionSize, possibleLocations );
+
+			var destinations = possibleLocations.ConvertAll( v =>
+			{
+				return RTS.Game.Pathfinding.Pathfinder.GetPosition( v );
+			} );
+
+			PathRequest = RTS.Game.Pathfinding.Request( destinations );
+		}
+
+		public void RequestPath( Vector3 position )
+		{
+			CompletePathRequest();
+			PathRequest = RTS.Game.Pathfinding.Request( position );
+		}
+
+		private void ResetTarget()
 		{
 			Target = null;
-			TargetPosition = position.Value;
+			TargetPosition = null;
 			IsGathering = false;
 			FollowTarget = false;
+			CompletePathRequest();
+		}
+
+		private void CompletePathRequest()
+		{
+			if ( PathRequest != null && PathRequest.IsValid() )
+			{
+				RTS.Game.Pathfinding.Complete( PathRequest );
+			}
 		}
 
 		private void FindTargetResource()
@@ -480,38 +519,35 @@ namespace Facepunch.RTS
 						FindTargetUnit();
 				}
 
-				if ( TargetPosition.HasValue )
+				var pathDirection = Vector3.Zero;
+
+				if ( PathRequest != null && PathRequest.IsValid() )
 				{
-					var targetPosition = TargetPosition.Value;
-
-					if ( PathRequest != null && PathRequest.IsValid() )
+					if ( PathRequest.IsDestination( Position ) )
 					{
-						var pathDirection = PathRequest.GetDirection( Position );
-						var distance = Position.Distance( targetPosition );
-
-						if ( distance <= 10f )
-						{
-							RTS.Game.Pathfinding.Complete( PathRequest );
-							TargetPosition = null;
-						}
-						else
-						{
-							if ( distance < 100f )
-							{
-								pathDirection = (targetPosition - Position).Normal;
-							}
-
-							var control = GroundEntity != null ? 200f : 10f;
-
-							InputVelocity = pathDirection.Normal * Speed;
-							var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
-							Velocity = Velocity.AddClamped( velocity, Speed );
-
-							SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
-							SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
-							SetAnimFloat( "aim_body_weight", 0.25f );
-						}
+						CompletePathRequest();
 					}
+					else
+					{
+						pathDirection = PathRequest.GetDirection( Position );
+					}
+				}
+				else if ( TargetPosition.HasValue )
+				{
+					pathDirection = (TargetPosition.Value - Position).Normal;
+				}
+
+				if ( pathDirection.Length > 0 )
+				{
+					var control = GroundEntity != null ? 200f : 10f;
+
+					InputVelocity = pathDirection.Normal * Speed;
+					var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
+					Velocity = Velocity.AddClamped( velocity, Speed );
+
+					SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
+					SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
+					SetAnimFloat( "aim_body_weight", 0.25f );
 				}
 				else
 				{

@@ -15,6 +15,15 @@ namespace Gamelib.FlowFields
 			return FlowField.GetDirection( position );
 		}
 
+		public bool IsDestination( Vector3 position )
+		{
+			var indicies = FlowField.DestinationIndexes;
+			var pathfinder = FlowField.Pathfinder;
+			var worldPosition = pathfinder.CreateWorldPosition( position );
+
+			return indicies.Contains( worldPosition.WorldIndex );
+		}
+
 		public bool IsValid()
 		{
 			return (FlowField != null);

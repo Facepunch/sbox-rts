@@ -113,6 +113,9 @@ namespace Facepunch.RTS
 				Pathfinding = new Pathfinding();
 				Pathfinding.Initialize( 30, 10, 100f );
 
+				var mins = Pathfinding.Pathfinder.GetPosition( 0, 0 );
+				var maxs = Pathfinding.Pathfinder.GetPosition( Pathfinding.Pathfinder.NumberOfChunks.Size - 1, 0 );
+
 				DebugOverlay.Box( 60f, mins.WithZ( 0f ), maxs.WithZ( 500f ), Color.Red );
 			}
 

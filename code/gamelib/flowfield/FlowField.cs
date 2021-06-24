@@ -22,8 +22,6 @@ namespace Gamelib.FlowFields
 
     public class FlowField : IIntegrationContainer
     {
-        public delegate void Changed();
-
 		public readonly Dictionary<int, List<Gateway>> DestinationGateways = new();
 		public readonly Dictionary<Gateway, Gateway> GatewayPath = new();
 		public readonly Dictionary<int, Integration> Integrations = new();
@@ -37,8 +35,6 @@ namespace Gamelib.FlowFields
         private readonly Dictionary<Gateway, Gateway> _previousGatewayPath = new();
 
         private Vector3 _destinationPosition;
-
-        public Changed ChangedDelegates;
 
         public List<int> DestinationIndexes = new();
         public int DestinationIndex;
@@ -83,27 +79,31 @@ namespace Gamelib.FlowFields
             return Integrations;
         }
 
-        public void CreateDestinationGateways(List<int> worldIndexes)
+        public void CreateDestinationGateways( List<int> worldIndexes )
         {
-            if ( worldIndexes.Count == 0 )
+			ResetAndClearDestination();
+
+			if ( worldIndexes.Count == 0 )
                 return;
 
             DestinationIndex = worldIndexes.First();
             DestinationIndexes.Clear();
-            DestinationIndexes.AddRange(worldIndexes);
+            DestinationIndexes.AddRange( worldIndexes );
             DestinationGateways.Clear();
 
-            _destinationPosition = Pathfinder.GetCenterPosition(Pathfinder.CreateWorldPosition(DestinationIndex));
+            _destinationPosition = Pathfinder.GetCenterPosition( Pathfinder.CreateWorldPosition(DestinationIndex) );
 
             var chunks = new Dictionary<int, List<int>>();
 
-            foreach ( var worldIndex in worldIndexes )
+			for ( int i = 0; i < worldIndexes.Count; i++ )
             {
-                var chunkIndex = Pathfinder.GetChunkIndex(worldIndex);
+				var worldIndex = worldIndexes[i];
+				var chunkIndex = Pathfinder.GetChunkIndex( worldIndex );
 
-                if (!chunks.ContainsKey(chunkIndex)) chunks[chunkIndex] = new();
+                if ( !chunks.ContainsKey( chunkIndex ) )
+					chunks[chunkIndex] = new();
 
-                chunks[chunkIndex].Add(Pathfinder.GetNodeIndex(worldIndex));
+                chunks[chunkIndex].Add( Pathfinder.GetNodeIndex( worldIndex ) );
             }
 
 
@@ -111,9 +111,13 @@ namespace Gamelib.FlowFields
             {
                 var chunk = Pathfinder.GetChunk( data.Key );
 
-                foreach ( var gateway in chunk.GetGateways() )
+				var gateways = chunk.GetGateways();
+
+				for ( int i = 0; i < gateways.Count; i++ )
                 {
-                    if ( !chunk.Connects(gateway, data.Value) ) continue;
+					var gateway = gateways[i];
+
+					if ( !chunk.Connects(gateway, data.Value) ) continue;
 
                     if ( !DestinationGateways.ContainsKey(data.Key) )
 						DestinationGateways[data.Key] = new();
@@ -123,32 +127,44 @@ namespace Gamelib.FlowFields
             }
         }
 
-        public void ResetDestination()
+		public void SetDestination( Vector3 destination )
+		{
+			var gridPosition = Pathfinder.CreateWorldPosition( destination );
+			var indicies = new List<int> { gridPosition.WorldIndex };
+
+			CreateDestinationGateways( indicies );
+		}
+
+		public void SetDestinations( List<Vector3> destinations )
+		{
+			var indicies = destinations.ConvertAll( ( v ) =>
+			{
+				return Pathfinder.CreateWorldPosition( v ).WorldIndex;
+			} );
+
+			CreateDestinationGateways( indicies );
+		}
+
+        public void ResetAndClearDestination()
         {
+			_previousGatewayPath.Clear();
+			_previousFlows.Clear();
+
             DestinationGateways.Clear();
-        }
+			Integrations.Clear();
+			GatewayPath.Clear();
+			Flows.Clear();
+		}
 
         public void UpdatePaths( List<int> changedChunks )
         {
-            _previousGatewayPath.Clear();
-            _previousFlows.Clear();
-
-            CreateDestinationGateways( DestinationIndexes.ToList() );
-
-            Integrations.Clear();
-            GatewayPath.Clear();
-            Flows.Clear();
+			// TODO: Only update changed chunks.
+			CreateDestinationGateways( DestinationIndexes.ToList() );
         }
 
         public void UpdatePaths()
         {
-            _previousGatewayPath.Clear();
-            _previousFlows.Clear();
-            CreateDestinationGateways( DestinationIndexes.ToList() );
-
-            Integrations.Clear();
-            GatewayPath.Clear();
-            Flows.Clear();
+			CreateDestinationGateways( DestinationIndexes.ToList() );
         }
 
         protected virtual void SeekPath( Vector3 startPosition )
@@ -173,9 +189,13 @@ namespace Gamelib.FlowFields
             }
 
             QueueFlow();
-
-            ChangedDelegates?.Invoke();
         }
+
+		public bool IsAvailable( Vector3 position )
+		{
+			var worldPosition = Pathfinder.CreateWorldPosition( position );
+			return IsAvailable( worldPosition );
+		}
 
         public bool IsAvailable( GridWorldPosition worldPosition )
         {
@@ -227,9 +247,10 @@ namespace Gamelib.FlowFields
 
         private void IntegrateStack()
         {
-            foreach ( var index in DestinationIndexes )
+			for ( int i = 0; i < DestinationIndexes.Count; i++ )
             {
-                var integration = GetIntegration( Pathfinder.GetChunkIndex(index) );
+				var index = DestinationIndexes[i];
+				var integration = GetIntegration( Pathfinder.GetChunkIndex(index) );
                 var node = Pathfinder.GetNodeIndex( index );
 
                 integration.SetValue(node, 1);
@@ -265,15 +286,16 @@ namespace Gamelib.FlowFields
             var translation = new GridConverter( thisIntegration.Definition, Pathfinder.WorldSize, 0, worldIndex.WorldIndex );
             var indexes = new List<int>();
 
-            for ( var x = range.XMin; x < range.XMax; x++ )
-				for ( var y = range.YMin; y < range.YMax; y++ )
+            for ( var x = range.MinX; x < range.MaxX; x++ )
+				for ( var y = range.MinY; y < range.MaxY; y++ )
 					indexes.Add(GridUtility.GetIndex(Pathfinder.ChunkSize, y, x));
 
             indexes.Sort( ( index1, index2 ) => thisIntegration.GetValue( index1 ).CompareTo( thisIntegration.GetValue( index2 ) ) );
 
-            foreach ( var i in indexes )
+			for ( int j = 0; j < indexes.Count; j++ )
             {
-                var globalIndex = translation.Global(i);
+				var i = indexes[j];
+				var globalIndex = translation.Global(i);
                 var thisCost = thisIntegration.GetValue(i);
 
                 if ( thisCost == IntegrationService.Closed || thisCost == IntegrationService.UnIntegrated || thisCost < 0 )
@@ -369,7 +391,9 @@ namespace Gamelib.FlowFields
             var gridDirection = GetGridDirection( position );
 
             if (gridDirection != GridDirection.Zero)
+			{
 				return gridDirection.GetVector();
+			}
 
             foreach ( var gatewayLink in GatewayPath )
             {
@@ -380,7 +404,7 @@ namespace Gamelib.FlowFields
                     return (connectionGateway.Portal.GetVector( Pathfinder ) - Pathfinder.GetPosition( position )).Normal;
             }
 
-            return (DestinationPosition - Pathfinder.GetPosition( position )).Normal;
+            return (DestinationPosition - Pathfinder.GetCenterPosition( position )).Normal;
         }
 
         public GridDirection GetGridDirection( GridWorldPosition position )

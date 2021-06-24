@@ -20,10 +20,13 @@ namespace Gamelib.FlowFields
 		private GridDefinition _numberOfChunks = new(10, 10);
         private GridDefinition _chunkSize = new(10, 10);
         private GridDefinition _worldSize = new(100, 100);
+        private PhysicsBody _physicsBody;
+        private Vector3 _halfExtents;
         private Chunk[] _chunks;
         private int _waitForPhysicsUpdate = 3;
         private float _scale = 1f;
 
+		public PhysicsBody PhysicsBody => _physicsBody;
 		public Vector3 PositionOffset { get; private set; }
 		public Vector3 CenterOffset { get; private set; }
 
@@ -59,7 +62,15 @@ namespace Gamelib.FlowFields
 
 		public Pathfinder( int numberOfChunks, int chunkSize, float scale = 1f )
 		{
+			var physicsBody = PhysicsWorld.AddBody();
+			var halfExtents = Vector3.One * scale * 0.5f;
+
+			physicsBody.CollisionEnabled = false;
+			physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, halfExtents );
+
 			_numberOfChunks = new GridDefinition( numberOfChunks, numberOfChunks );
+			_physicsBody = physicsBody;
+			_halfExtents = halfExtents;
 			_chunkSize = new GridDefinition( chunkSize, chunkSize );
 			_worldSize = new GridDefinition(
 				_chunkSize.Rows * _numberOfChunks.Rows,
@@ -83,17 +94,35 @@ namespace Gamelib.FlowFields
         {
             for ( var index = 0; index < WorldSize.Size; index++ )
             {
-				var position = GetPosition( index ) + CenterOffset;
-
-				if ( Physics.GetEntitiesInSphere( position, Scale ).Count() > 0 )
-				{
-					DebugOverlay.Sphere( position, Scale, Color.Red, true, 60f );
-					GetChunk( GetChunkIndex( index ) ).SetCollision( GetNodeIndex( index ) );
-				}
+				UpdateCollisions( index );
             }
-        }
+		}
 
-        public void Init()
+		public bool IsCollisionAt( Vector3 position )
+		{
+			var transform = _physicsBody.Transform;
+			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z * 2.5f );
+			return Trace.Sweep( _physicsBody, transform, transform ).Run().Hit;
+		}
+
+		public bool IsAvailable( Vector3 position )
+		{
+			var worldPosition = CreateWorldPosition( position );
+			return !GetChunk( worldPosition.ChunkIndex ).IsImpassable( worldPosition.NodeIndex );
+		}
+
+		public void UpdateCollisions( int worldIndex )
+		{
+			var chunk = GetChunk( GetChunkIndex( worldIndex ) );
+			var nodeIndex = GetNodeIndex( worldIndex );
+
+			if ( IsCollisionAt( GetPosition( worldIndex ) ) )
+				chunk.SetCollision( nodeIndex );
+			else
+				chunk.RemoveCollision( nodeIndex );
+		}
+
+        public void Initialize()
         {
 			PositionOffset = new Vector3(
 				_worldSize.Columns * _scale / 2f,
@@ -126,8 +155,11 @@ namespace Gamelib.FlowFields
                 CreatePortalsBetweenChunks( i, GridDirection.Right );
             }
 
-            foreach (var chunk in _chunks)
-                chunk.ConnectGateways();
+			for ( int i = 0; i < _chunks.Length; i++ )
+			{
+				var chunk = _chunks[i];
+				chunk.ConnectGateways();
+			}
         }
 
         public void ClearChunks()
@@ -161,42 +193,56 @@ namespace Gamelib.FlowFields
             return GetChunk(chunk).GetCost( node );
         }
 
-        public void UpdateArea( Vector3 position, int size )
+		public void UpdateCollisions( Vector3 position, float radius )
+		{
+			UpdateCollisions( position, Convert.ToInt32( radius / Scale ) );
+		}
+
+		public void GetGridPositions( Vector3 position, int gridSize, List<GridWorldPosition> output )
+		{
+			var grid = new GridDefinition( gridSize * 2 + 1, gridSize * 2 + 1 );
+			var worldPivotPosition = CreateWorldPosition( position );
+			var translation = new GridConverter( grid, WorldSize, grid.Size / 2, worldPivotPosition.WorldIndex );
+
+			for ( var i = 0; i < grid.Size; i++ )
+			{
+				output.Add( CreateWorldPosition( translation.Global( i ) ) );
+			}
+		}
+
+		public void GetGridPositions( Vector3 position, float radius, List<GridWorldPosition> output )
+		{
+			GetGridPositions( position, Convert.ToInt32( radius / Scale ), output ); 
+		}
+
+        public void UpdateCollisions( Vector3 position, int gridSize )
         {
             _waitForPhysicsUpdate = 5;
-
-            var worldPivotPosition = CreateWorldPosition( position );
-            var grid = new GridDefinition( size * 2 + 1, size * 2 + 1 );
-            var translation = new GridConverter( grid, WorldSize, grid.Size / 2, worldPivotPosition.WorldIndex );
-
-            for ( var i = 0; i < grid.Size; i++ )
-            {
-                var worldPosition = CreateWorldPosition( translation.Global(i) );
-                _collisionBuffer.Add( worldPosition );
-            }
+			GetGridPositions( position, gridSize, _collisionBuffer );
         }
 
         public void ClearCollisions()
         {
-            foreach ( var chunk in _chunks )
+			for ( int i = 0; i < _chunks.Length; i++ )
+			{
+				var chunk = _chunks[i];
 				chunk.ClearCollisions();
+			}
         }
 
         private void ProcessBuffers()
         {
-            foreach ( var collision in _collisionBuffer )
+			for ( int i = 0; i < _collisionBuffer.Count; i++ )
             {
-                if ( collision.WorldIndex == int.MinValue ) continue;
+				var collision = _collisionBuffer[i];
+				if ( collision.WorldIndex == int.MinValue ) continue;
 
                 var chunk = GetChunk( collision.ChunkIndex );
-				var position = GetPosition( collision ) + CenterOffset;
 
-
-				if ( Physics.GetEntitiesInSphere( position, Scale ).Count() > 0 )
+				if ( IsCollisionAt( GetPosition( collision ) ) )
                     chunk.SetCollision( collision.NodeIndex );
                 else
                     chunk.RemoveCollision( collision.NodeIndex );
-
 
                 if (_chunkBuffer.Contains( chunk ))
                     continue;
@@ -205,9 +251,11 @@ namespace Gamelib.FlowFields
             }
 
 
-            foreach ( var i in _chunkBuffer )
+			for ( int j = 0; j < _chunkBuffer.Count; j++ )
             {
-                if ( GetChunk( i ) == null )
+				var i = _chunkBuffer[j];
+
+				if ( GetChunk( i ) == null )
                     continue;
 
                 ResetChunk(i);
@@ -263,8 +311,8 @@ namespace Gamelib.FlowFields
             var thisGateway = new Gateway( thisChunk, direction );
             var otherGateway = new Gateway( otherChunk, direction.Opposite() );
 
-            for ( var x = range.XMin; x < range.XMax; x++ )
-            for ( var y = range.YMin; y < range.YMax; y++ )
+            for ( var x = range.MinX; x < range.MaxX; x++ )
+            for ( var y = range.MinY; y < range.MaxY; y++ )
             {
                 var thisNode = GridUtility.GetIndex( ChunkSize, y, x );
                 var otherNode = GridUtility.GetMirrorIndex( ChunkSize, thisNode, direction );

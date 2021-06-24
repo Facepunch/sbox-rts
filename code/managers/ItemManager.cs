@@ -58,9 +58,9 @@ namespace Facepunch.RTS
 						caller.TakeResourcesForItem( item );
 
 						var building = new BuildingEntity();
+						building.Position = trace.EndPos;
 						building.Assign( caller, item );
 						building.StartConstruction();
-						building.Position = trace.EndPos;
 						worker.Construct( building );
 					}
 				}

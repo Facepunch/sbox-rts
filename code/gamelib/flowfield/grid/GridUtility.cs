@@ -7,10 +7,10 @@ namespace Gamelib.FlowFields.Grid
 {
     public struct GridRange
     {
-        public int YMin;
-        public int YMax;
-        public int XMin;
-        public int XMax;
+        public int MinY;
+        public int MaxY;
+        public int MinX;
+        public int MaxX;
     }
 
     public readonly struct GridNeighbor
@@ -219,32 +219,32 @@ namespace Gamelib.FlowFields.Grid
             switch (direction)
             {
                 case GridDirection.Up:
-                    range.YMax = definition.Rows;
-                    range.YMin = range.YMax - 1;
+                    range.MaxY = definition.Rows;
+                    range.MinY = range.MaxY - 1;
 
-                    range.XMin = 0;
-                    range.XMax = definition.Columns;
+                    range.MinX = 0;
+                    range.MaxX = definition.Columns;
                     break;
                 case GridDirection.Right:
-                    range.YMax = definition.Rows;
-                    range.YMin = 0;
+                    range.MaxY = definition.Rows;
+                    range.MinY = 0;
 
-                    range.XMax = definition.Columns;
-                    range.XMin = range.XMax - 1;
+                    range.MaxX = definition.Columns;
+                    range.MinX = range.MaxX - 1;
                     break;
                 case GridDirection.Down:
-                    range.YMin = 0;
-                    range.YMax = range.YMin + 1;
+                    range.MinY = 0;
+                    range.MaxY = range.MinY + 1;
 
-                    range.XMin = 0;
-                    range.XMax = definition.Columns;
+                    range.MinX = 0;
+                    range.MaxX = definition.Columns;
                     break;
                 case GridDirection.Left:
-                    range.YMax = definition.Rows;
-                    range.YMin = 0;
+                    range.MaxY = definition.Rows;
+                    range.MinY = 0;
 
-                    range.XMin = 0;
-                    range.XMax = range.XMin + 1;
+                    range.MinX = 0;
+                    range.MaxX = range.MinX + 1;
                     break;
                 case GridDirection.UpRight:
                     break;
