@@ -5,6 +5,7 @@ using Gamelib.FlowFields.Maths;
 using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
 using Sandbox;
+using Gamelib.Extensions;
 
 namespace Gamelib.FlowFields
 {
@@ -17,11 +18,12 @@ namespace Gamelib.FlowFields
 		private readonly List<GridWorldPosition> _collisionBuffer = new();
 		private readonly List<int> _chunkBuffer = new();
 
-		private GridDefinition _numberOfChunks = new(10, 10);
-        private GridDefinition _chunkSize = new(10, 10);
-        private GridDefinition _worldSize = new(100, 100);
+		private GridDefinition _numberOfChunks = new( 10, 10 );
+        private GridDefinition _chunkSize = new( 10, 10 );
+        private GridDefinition _worldSize = new( 100, 100 );
         private PhysicsBody _physicsBody;
         private Vector3 _halfExtents;
+		private float[] _heightMap;
         private Chunk[] _chunks;
         private int _waitForPhysicsUpdate = 3;
         private float _scale = 1f;
@@ -29,6 +31,7 @@ namespace Gamelib.FlowFields
 		public PhysicsBody PhysicsBody => _physicsBody;
 		public Vector3 PositionOffset { get; private set; }
 		public Vector3 CenterOffset { get; private set; }
+		public Vector3 Origin { get; private set; }
 
         public GridDefinition ChunkSize
         {
@@ -62,21 +65,19 @@ namespace Gamelib.FlowFields
 
 		public Pathfinder( int numberOfChunks, int chunkSize, float scale = 1f )
 		{
-			var physicsBody = PhysicsWorld.AddBody();
-			var halfExtents = Vector3.One * scale * 0.5f;
+			SetupSize( numberOfChunks, chunkSize, scale );
+		}
 
-			physicsBody.CollisionEnabled = false;
-			physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, halfExtents );
+		public Pathfinder( int numberOfChunks, BBox bounds, float scale = 1f )
+		{
+			var delta = bounds.Maxs - bounds.Mins;
+			var width = delta.x;
+			var height = delta.y;
+			var squareSize = MathF.Ceiling( Math.Max( width, height ) / 1000f ) * 1000f;
 
-			_numberOfChunks = new GridDefinition( numberOfChunks, numberOfChunks );
-			_physicsBody = physicsBody;
-			_halfExtents = halfExtents;
-			_chunkSize = new GridDefinition( chunkSize, chunkSize );
-			_worldSize = new GridDefinition(
-				_chunkSize.Rows * _numberOfChunks.Rows,
-				_chunkSize.Columns * _numberOfChunks.Columns
-			);
-			_scale = scale;
+			Origin = bounds.Center;
+
+			SetupSize( numberOfChunks, MathUtility.CeilToInt( squareSize / numberOfChunks / scale ), scale );
 		}
 
 		public void Update()
@@ -98,11 +99,17 @@ namespace Gamelib.FlowFields
             }
 		}
 
-		public bool IsCollisionAt( Vector3 position )
+		public bool IsCollisionAt( Vector3 position, int worldIndex )
 		{
 			var transform = _physicsBody.Transform;
-			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z * 2.5f );
-			return Trace.Sweep( _physicsBody, transform, transform ).Run().Hit;
+			var heightMap = _heightMap[worldIndex];
+
+			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + heightMap + 5f );
+
+			return Trace.Sweep( _physicsBody, transform, transform )
+				.WithoutTags( "flowfield" )
+				.Run()
+				.Hit;
 		}
 
 		public bool IsAvailable( Vector3 position )
@@ -117,11 +124,11 @@ namespace Gamelib.FlowFields
 			var nodeIndex = GetNodeIndex( worldIndex );
 			var position = GetPosition( worldIndex );
 
-			if ( IsCollisionAt( position ) )
+			if ( IsCollisionAt( position, worldIndex ) )
 			{
 				var transform = _physicsBody.Transform;
-				transform.Position = (position + CenterOffset).WithZ( _halfExtents.z * 2.5f );
-				DebugOverlay.Box( 120f, transform.Position.WithZ( _halfExtents.z ), -_halfExtents, _halfExtents, Color.Red );
+				transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );
+				DebugOverlay.Box( 30f, transform.Position, -_halfExtents, _halfExtents, Color.Red );
 				chunk.SetCollision( nodeIndex );
 			}
 			else
@@ -130,9 +137,9 @@ namespace Gamelib.FlowFields
 			}
 		}
 
-        public void Initialize()
+        public bool Initialize()
         {
-			PositionOffset = new Vector3(
+			PositionOffset = Origin + new Vector3(
 				_worldSize.Columns * _scale / 2f,
 				_worldSize.Rows * _scale / 2f
 			);
@@ -145,12 +152,36 @@ namespace Gamelib.FlowFields
 			if ( _chunks == null || !_chunks.Any() )
                 CreateChunks();
 
+			CreateHeightMap();
             ClearCollisions();
             _chunkBuffer.Clear();
             ConnectPortals();
+
+			return true;
         }
 
-        public void ConnectPortals()
+		public void CreateHeightMap()
+		{
+			var worldSizeLength = _worldSize.Size;
+
+			_heightMap = new float[worldSizeLength];
+
+			for ( var index = 0; index < worldSizeLength; index++ )
+			{
+				var position = GetPosition( index );
+				var trace = Trace.Ray( position.WithZ( 1000f ), position )
+					.EntitiesOnly()
+					.WithTag( "flowfield" )
+					.Run();
+
+				if ( trace.Hit )
+					_heightMap[index] = trace.EndPos.z;
+				else
+					_heightMap[index] = position.z;
+			}
+		}
+
+		public void ConnectPortals()
         {
             Portals.Clear();
 
@@ -173,14 +204,6 @@ namespace Gamelib.FlowFields
         public void ClearChunks()
         {
             _chunks = null;
-        }
-
-		private void CreateChunks()
-        {
-            _chunks = new Chunk[NumberOfChunks.Size];
-
-            for (var i = 0; i < _numberOfChunks.Size; i++)
-				_chunks[i] = new Chunk( i, _chunkSize );
         }
 
         public void SetCost( GridWorldPosition position, byte cost = byte.MaxValue )
@@ -238,7 +261,34 @@ namespace Gamelib.FlowFields
 			}
         }
 
-        private void ProcessBuffers()
+		private void SetupSize( int numberOfChunks, int chunkSize, float scale )
+		{
+			var physicsBody = PhysicsWorld.AddBody();
+			var halfExtents = Vector3.One * scale * 0.5f;
+
+			physicsBody.CollisionEnabled = false;
+			physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, halfExtents );
+
+			_numberOfChunks = new GridDefinition( numberOfChunks, numberOfChunks );
+			_physicsBody = physicsBody;
+			_halfExtents = halfExtents;
+			_chunkSize = new GridDefinition( chunkSize, chunkSize );
+			_worldSize = new GridDefinition(
+				_chunkSize.Rows * _numberOfChunks.Rows,
+				_chunkSize.Columns * _numberOfChunks.Columns
+			);
+			_scale = scale;
+		}
+
+		private void CreateChunks()
+		{
+			_chunks = new Chunk[NumberOfChunks.Size];
+
+			for ( var i = 0; i < _numberOfChunks.Size; i++ )
+				_chunks[i] = new Chunk( i, _chunkSize );
+		}
+
+		private void ProcessBuffers()
         {
 			for ( int i = 0; i < _collisionBuffer.Count; i++ )
             {
@@ -247,7 +297,7 @@ namespace Gamelib.FlowFields
 
                 var chunk = GetChunk( collision.ChunkIndex );
 
-				if ( IsCollisionAt( GetPosition( collision ) ) )
+				if ( IsCollisionAt( GetPosition( collision ), collision.WorldIndex ) )
                     chunk.SetCollision( collision.NodeIndex );
                 else
                     chunk.RemoveCollision( collision.NodeIndex );

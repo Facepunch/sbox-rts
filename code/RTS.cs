@@ -1,4 +1,5 @@
 ﻿using Gamelib.FlowFields;
+using Gamelib.FlowFields.Entities;
 using Sandbox;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace Facepunch.RTS
 		public static ItemTooltip Tooltip => ItemTooltip.Instance;
 		public static SoundManager Sound => SoundManager.Instance;
 		public static ItemManager Item => ItemManager.Instance;
+		public static PathManager Path => PathManager.Instance;
 		public static FogManager Fog => FogManager.Instance;
 		public static RTS Game { get; private set; }
 
@@ -36,7 +38,6 @@ namespace Facepunch.RTS
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
 		public BaseRound LastRound { get; private set; }
-		public Pathfinding Pathfinding { get; private set; }
 
 		public RTS()
 		{
@@ -46,6 +47,7 @@ namespace Facepunch.RTS
 				LoadRatings();
 
 				_ = new SoundManager();
+				_ = new PathManager();
 				_ = new ItemManager();
 				_ = new FogManager();
 				_ = new Hud();
@@ -110,11 +112,13 @@ namespace Facepunch.RTS
 
 			if ( IsServer )
 			{
-				Pathfinding = new Pathfinding();
-				Pathfinding.Initialize( 10, 30, 100f );
+				if ( FlowFieldGround.Exists )
+					Path.Create( 10, FlowFieldGround.Bounds, 100f );
+				else
+					Path.Create( 10, 30, 100f );
 
-				var mins = Pathfinding.Pathfinder.GetPosition( 0, 0 );
-				var maxs = Pathfinding.Pathfinder.GetPosition( Pathfinding.Pathfinder.NumberOfChunks.Size - 1, 0 );
+				var mins = FlowFieldGround.Bounds.Mins;
+				var maxs = FlowFieldGround.Bounds.Maxs;
 
 				DebugOverlay.Box( 60f, mins.WithZ( 0f ), maxs.WithZ( 500f ), Color.Red );
 			}
@@ -171,7 +175,7 @@ namespace Facepunch.RTS
 			}
 			else
 			{
-				Pathfinding?.Update();
+				Path?.Update();
 				ServerTime = Time.Now;
 				LoadConfig();
 			}

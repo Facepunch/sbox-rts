@@ -108,7 +108,7 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			var pathfinder = RTS.Game.Pathfinding.Pathfinder;
+			var pathfinder = RTS.Path.Pathfinder;
 			var size = CollisionBounds.Size.Length;
 
 			pathfinder.UpdateCollisions( Position, size * 0.5f );

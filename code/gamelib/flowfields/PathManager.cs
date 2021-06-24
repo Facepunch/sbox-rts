@@ -2,24 +2,30 @@ using System.Collections.Generic;
 
 namespace Gamelib.FlowFields
 {
-    public class Pathfinding
+    public class PathManager
     {
+		public static PathManager Instance { get; private set; }
+
 		private Queue<FlowField> _flowFields = new();
 		private Pathfinder _pathfinder;
 
 		public Pathfinder Pathfinder => _pathfinder;
 
-        public void Initialize( int numberOfChunks, int chunkSize, float scale = 1f )
+		public PathManager()
+		{
+			Instance = this;
+		}
+
+        public void Create( int numberOfChunks, int chunkSize, float scale = 1f )
 		{
 			_pathfinder = new Pathfinder( numberOfChunks, chunkSize, scale );
-			_pathfinder.Initialize();
-			_pathfinder.UpdateCollisions();
+			Initialize();
+		}
 
-			// Create a good amount of flow fields ready in the pool.
-			for ( var i = 0; i < 20; i++ )
-			{
-				_flowFields.Enqueue( new FlowField( _pathfinder ) );
-			}
+		public void Create( int numberOfChunks, BBox bounds, float scale = 1f )
+		{
+			_pathfinder = new Pathfinder( numberOfChunks, bounds, scale );
+			Initialize();
 		}
 
 		public PathRequest Request( List<Vector3> destinations )
@@ -34,7 +40,7 @@ namespace Gamelib.FlowFields
 
 			if ( destinations.Count == 0 ) return null;
 
-			var pathRequest = GetPathRequest();
+			var pathRequest = GetRequest();
 			pathRequest.FlowField.SetDestinations( destinations );
 			return pathRequest;
 		}
@@ -43,7 +49,7 @@ namespace Gamelib.FlowFields
 		{
 			if ( !_pathfinder.IsAvailable( destination ) ) return null;
 
-			var pathRequest = GetPathRequest();
+			var pathRequest = GetRequest();
 			pathRequest.FlowField.SetDestination( destination);
 			return pathRequest;
 		}
@@ -63,7 +69,19 @@ namespace Gamelib.FlowFields
 			_pathfinder.Update();
 		}
 
-		private PathRequest GetPathRequest()
+		private void Initialize()
+		{
+			_pathfinder.Initialize();
+			_pathfinder.UpdateCollisions();
+
+			// Create a good amount of flow fields ready in the pool.
+			for ( var i = 0; i < 20; i++ )
+			{
+				_flowFields.Enqueue( new FlowField( _pathfinder ) );
+			}
+		}
+
+		private PathRequest GetRequest()
 		{
 			var isValid = _flowFields.TryDequeue( out var flowField );
 

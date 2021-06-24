@@ -407,20 +407,20 @@ namespace Facepunch.RTS
 			var collisionSize = entity.CollisionBounds.Size.Length * 0.4f;
 			var possibleLocations = new List<GridWorldPosition>();
 
-			RTS.Game.Pathfinding.Pathfinder.GetGridPositions( entity.Position, collisionSize, possibleLocations );
+			RTS.Path.Pathfinder.GetGridPositions( entity.Position, collisionSize, possibleLocations );
 
 			var destinations = possibleLocations.ConvertAll( v =>
 			{
-				return RTS.Game.Pathfinding.Pathfinder.GetPosition( v );
+				return RTS.Path.Pathfinder.GetPosition( v );
 			} );
 
-			PathRequest = RTS.Game.Pathfinding.Request( destinations );
+			PathRequest = RTS.Path.Request( destinations );
 		}
 
 		public void RequestPath( Vector3 position )
 		{
 			CompletePathRequest();
-			PathRequest = RTS.Game.Pathfinding.Request( position );
+			PathRequest = RTS.Path.Request( position );
 		}
 
 		private void ResetTarget()
@@ -436,7 +436,7 @@ namespace Facepunch.RTS
 		{
 			if ( PathRequest != null && PathRequest.IsValid() )
 			{
-				RTS.Game.Pathfinding.Complete( PathRequest );
+				RTS.Path.Complete( PathRequest );
 			}
 		}
 
