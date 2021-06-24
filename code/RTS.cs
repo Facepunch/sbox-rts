@@ -36,7 +36,7 @@ namespace Facepunch.RTS
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
 		public BaseRound LastRound { get; private set; }
-		public Pathfinding Pathfinding{ get; private set; }
+		public Pathfinding Pathfinding { get; private set; }
 
 		public RTS()
 		{

@@ -115,11 +115,19 @@ namespace Gamelib.FlowFields
 		{
 			var chunk = GetChunk( GetChunkIndex( worldIndex ) );
 			var nodeIndex = GetNodeIndex( worldIndex );
+			var position = GetPosition( worldIndex );
 
-			if ( IsCollisionAt( GetPosition( worldIndex ) ) )
+			if ( IsCollisionAt( position ) )
+			{
+				var transform = _physicsBody.Transform;
+				transform.Position = (position + CenterOffset).WithZ( _halfExtents.z * 2.5f );
+				DebugOverlay.Box( 120f, transform.Position.WithZ( _halfExtents.z ), -_halfExtents, _halfExtents, Color.Red );
 				chunk.SetCollision( nodeIndex );
+			}
 			else
+			{
 				chunk.RemoveCollision( nodeIndex );
+			}
 		}
 
         public void Initialize()

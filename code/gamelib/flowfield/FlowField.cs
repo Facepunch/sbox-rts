@@ -404,7 +404,7 @@ namespace Gamelib.FlowFields
                     return (connectionGateway.Portal.GetVector( Pathfinder ) - Pathfinder.GetPosition( position )).Normal;
             }
 
-            return (DestinationPosition - Pathfinder.GetCenterPosition( position )).Normal;
+            return (DestinationPosition - Pathfinder.GetPosition( position )).Normal;
         }
 
         public GridDirection GetGridDirection( GridWorldPosition position )
