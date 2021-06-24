@@ -86,8 +86,8 @@ namespace Gamelib.FlowFields
 			if ( worldIndexes.Count == 0 )
                 return;
 
-            DestinationIndex = worldIndexes.First();
-            DestinationIndexes.Clear();
+            DestinationIndex = worldIndexes[0];
+			DestinationIndexes.Clear();
             DestinationIndexes.AddRange( worldIndexes );
             DestinationGateways.Clear();
 
@@ -170,21 +170,22 @@ namespace Gamelib.FlowFields
         protected virtual void SeekPath( Vector3 startPosition )
         {
             var subPath = AStarPortal.Default.CalculatePath( this, startPosition );
-            var worldPosition = Pathfinder.CreateWorldPosition( startPosition );
+			var worldPosition = Pathfinder.CreateWorldPosition( startPosition );
 
             if ( DestinationGateways.ContainsKey( worldPosition.ChunkIndex ) )
             {
-                var destinationGateway = DestinationGateways[worldPosition.ChunkIndex];
+                var destinationGateway = DestinationGateways[ worldPosition.ChunkIndex ];
+				var firstGateway = destinationGateway[0];
 
-                IntegrationStack.Push(destinationGateway.First());
-                _flowQueue.Enqueue(destinationGateway.First().Chunk);
+				IntegrationStack.Push( firstGateway );
+                _flowQueue.Enqueue( firstGateway.Chunk );
 
                 IntegrateStack();
             }
 
             if ( subPath != null )
             {
-                BuildIntegrationStack(subPath.FromConnectionGateway, subPath.UntilConnectionGateway);
+                BuildIntegrationStack( subPath.FromConnectionGateway, subPath.UntilConnectionGateway );
                 IntegrateStack();
             }
 
@@ -250,13 +251,12 @@ namespace Gamelib.FlowFields
 			for ( int i = 0; i < DestinationIndexes.Count; i++ )
             {
 				var index = DestinationIndexes[i];
-				var integration = GetIntegration( Pathfinder.GetChunkIndex(index) );
+				var integration = GetIntegration( Pathfinder.GetChunkIndex( index ) );
                 var node = Pathfinder.GetNodeIndex( index );
 
-                integration.SetValue(node, 1);
-                integration.Enqueue(node);
+                integration.SetValue( node, 1 );
+                integration.Enqueue( node );
             }
-
 
             while ( IntegrationStack.Count > 0 )
             {

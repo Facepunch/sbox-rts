@@ -111,7 +111,7 @@ namespace Facepunch.RTS
 			if ( IsServer )
 			{
 				Pathfinding = new Pathfinding();
-				Pathfinding.Initialize( 30, 10, 100f );
+				Pathfinding.Initialize( 10, 30, 100f );
 
 				var mins = Pathfinding.Pathfinder.GetPosition( 0, 0 );
 				var maxs = Pathfinding.Pathfinder.GetPosition( Pathfinding.Pathfinder.NumberOfChunks.Size - 1, 0 );

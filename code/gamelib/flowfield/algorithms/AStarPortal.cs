@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
+using Gamelib.Data;
 
 namespace Gamelib.FlowFields.Algorithms
 {
@@ -12,8 +13,8 @@ namespace Gamelib.FlowFields.Algorithms
         private readonly Dictionary<Portal, long> _f = new();
         private readonly Dictionary<Portal, long> _g = new();
 
-        private readonly List<Gateway> _openSet = new();
-        private readonly List<Gateway> _closedSet = new();
+        private readonly HashSetList<Gateway> _openSet = new();
+        private readonly HashSet<Gateway> _closedSet = new();
         
         private readonly Dictionary<Gateway, Gateway> _previous = new();
         public static AStarPortal Default => _default ?? (_default = new());
@@ -62,7 +63,7 @@ namespace Gamelib.FlowFields.Algorithms
         {
             var worldPosition = field.Pathfinder.CreateWorldPosition( startPosition );
 
-            _closedSet.Clear();
+			_closedSet.Clear();
             _openSet.Clear();
 
             var chunk = field.Pathfinder.GetChunk( worldPosition.ChunkIndex );
@@ -70,29 +71,36 @@ namespace Gamelib.FlowFields.Algorithms
 
             var portals = chunk.GetConnectedPortals( worldPosition.NodeIndex );
 
-            foreach (var portal in portals)
-				_openSet.Add( portal.GetGatewayInChunk( chunk ) );
+			for ( int i = 0; i < portals.Count; i++ )
+			{
+				var portal = portals[i];
+				var gateway = portal.GetGatewayInChunk( chunk );
 
-            _f.Clear();
+				_openSet.Add( gateway );
+			}
+
+			_f.Clear();
             _g.Clear();
 
-            foreach ( var portal in field.Pathfinder.Portals )
+			for ( int i = 0; i < field.Pathfinder.Portals.Count; i++ )
             {
-                _f.Add( portal, long.MaxValue );
+				var portal = field.Pathfinder.Portals[i];
+				_f.Add( portal, long.MaxValue );
                 _g.Add( portal, long.MaxValue );
             }
 
-            foreach ( var openGateway in _openSet )
+			for ( int i = 0; i < _openSet.Count; i++ )
             {
-                _g[openGateway.Portal] = 0;
-                _f[openGateway.Portal] = H(field.Pathfinder, openGateway, field.DestinationIndex);
+				var openGateway = _openSet[i];
+				_g[openGateway.Portal] = 0;
+                _f[openGateway.Portal] = H( field.Pathfinder, openGateway, field.DestinationIndex );
             }
 
-            while (_openSet.Count > 0)
+            while ( _openSet.Count > 0 )
             {
                 _openSet.Sort( (index1, index2) => _f[index1.Portal].CompareTo( _f[index2.Portal] ) );
 
-                var current = _openSet.First();
+				var current = _openSet[0];
                 var oppositeGateway = current.Portal.OppositeGateway(current);
 
                 if ( field.GatewayPath.ContainsKey( current ) )

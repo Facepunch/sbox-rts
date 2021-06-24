@@ -11,6 +11,8 @@ namespace Gamelib.FlowFields.Connectors
         public readonly Dictionary<Gateway, int> Connections = new();
         public readonly GridDirection Direction;
         public Portal Portal;
+		public int CachedNodeCount;
+		public int CachedMedian;
         
         public Gateway( Chunk chunk, GridDirection direction )
         {
@@ -30,13 +32,15 @@ namespace Gamelib.FlowFields.Connectors
 
         public int Median()
         {
-            return Nodes[(Nodes.Count - Nodes.Count % 2) / 2];
+            return Nodes[CachedMedian];
         }
 
         public void AddNode( int node )
         {
             Nodes.Add( node );
-        }
+			CachedNodeCount++;
+			CachedMedian = (CachedNodeCount - CachedNodeCount % 2) / 2;
+		}
 
         public override int GetHashCode()
         {

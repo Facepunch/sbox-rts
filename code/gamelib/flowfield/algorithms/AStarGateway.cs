@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Gamelib.Data;
 using Gamelib.FlowFields.Grid;
 
 namespace Gamelib.FlowFields.Algorithms
@@ -7,8 +8,8 @@ namespace Gamelib.FlowFields.Algorithms
     public sealed class AStarGateway
     {
         private static AStarGateway _default;
-        private readonly List<int> _closedSet = new();
-        private readonly List<int> _openSet = new();
+        private readonly HashSet<int> _closedSet = new();
+        private readonly HashSetList<int> _openSet = new();
         private readonly Dictionary<int, int> _previous = new();
         private GridDefinition _definition;
 
@@ -22,15 +23,16 @@ namespace Gamelib.FlowFields.Algorithms
         {
             var path = new List<int>();
 
-            while  (_previous.ContainsKey( current ) )
+            while  ( _previous.ContainsKey( current ) )
             {
                 path.Add(current);
 
-                if (_previous[current] == current)
+                if ( _previous[current] == current )
 					break;
 
                 current = _previous[current];
             }
+
             return path;
         }
 
@@ -41,11 +43,11 @@ namespace Gamelib.FlowFields.Algorithms
 
         public List<int> GetPath( GridDefinition definition, byte[] costs, int start, int end )
         {
-            var ends = new List<int> {end};
+            var ends = new List<int> { end };
             return GetPath( definition, costs, start, ends );
         }
 
-        public List<int> GetPath( GridDefinition definition, byte[] costs, int start, List<int> end )
+		public List<int> GetPath( GridDefinition definition, byte[] costs, int start, List<int> end )
         {
             _end = end;
             _definition = definition;
@@ -53,7 +55,7 @@ namespace Gamelib.FlowFields.Algorithms
             _f = new int[definition.Size];
             _g = new int[definition.Size];
 
-            for ( var i = 0; i < _g.Count(); i++ )
+            for ( var i = 0; i < _g.Length; i++ )
             {
                 _g[i] = int.MaxValue;
                 _f[i] = int.MaxValue;
@@ -63,22 +65,26 @@ namespace Gamelib.FlowFields.Algorithms
             _f[start] = H( start );
 
             _closedSet.Clear();
-            _openSet.Clear();
             _previous.Clear();
+            _openSet.Clear();
 
-            if (end.Contains(start))
-				return new List<int> {start};
+			if ( end.Contains( start ) )
+			{
+				return new List<int> { start };
+			}
 
             _openSet.Add(start);
 
             while ( _openSet.Count > 0 )
             {
-                _openSet.Sort( (index1, index2) => _f[index1].CompareTo (_f[index2] ) );
+                _openSet.Sort( CompareValues );
 
-                var current = _openSet.First();
+				var current = _openSet[0];
 
                 if ( end.Contains( current ) )
+				{
 					return ReconstructPath( current );
+				}
 
                 _openSet.Remove( current );
                 _closedSet.Add( current );
@@ -112,9 +118,14 @@ namespace Gamelib.FlowFields.Algorithms
             return null;
         }
 
+		private int CompareValues( int a, int b )
+		{
+			return _f[a].CompareTo( _f[b] );
+		}
+
         private int H( int i )
         {
-            return GridUtility.Distance( _definition, i, _end.First() );
+            return GridUtility.Distance( _definition, i, _end[0] );
         }
 
         private static int D()

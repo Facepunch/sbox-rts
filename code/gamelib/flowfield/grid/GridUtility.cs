@@ -54,7 +54,6 @@ namespace Gamelib.FlowFields.Grid
             return Distance( GetCoordinates( definition, i ), GetCoordinates( definition, j ) );
         }
 
-
         private static int Distance( Vector2i i, Vector2i j )
         {
             var temp1 = i.x - j.x;
@@ -209,7 +208,7 @@ namespace Gamelib.FlowFields.Grid
 
         public static Vector2i GetCoordinates( GridDefinition definition, int index )
         {
-            return index == 0 ? new Vector2i(0, 0) : new Vector2i(index % definition.Columns, index / definition.Columns);
+            return index == 0 ? new Vector2i( 0, 0 ) : new Vector2i( index % definition.Columns, index / definition.Columns );
         }
 
         public static GridRange GetBorderRange( GridDefinition definition, GridDirection direction )

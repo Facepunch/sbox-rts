@@ -151,7 +151,7 @@ namespace Gamelib.FlowFields
 
         public bool Connects( Gateway gateway, List<int> nodes )
         {
-            return AStarGateway.Default.GetPath( _definition, _costs, gateway.Median(), nodes.First() ) != null;
+            return AStarGateway.Default.GetPath( _definition, _costs, gateway.Median(), nodes[0] ) != null;
         }
 
         public List<Gateway> GetGateways()

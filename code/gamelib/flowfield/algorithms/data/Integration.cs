@@ -52,8 +52,8 @@ namespace Gamelib.FlowFields.Algorithms
         {
             if (_openIndexes.Count == 0) return NoIndex;
             
-            var index = _openIndexes.First();
-            _openIndexes.RemoveAt(0);
+            var index = _openIndexes[0];
+			_openIndexes.RemoveAt(0);
             return index;
         }
     }
