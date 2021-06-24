@@ -111,7 +111,9 @@ namespace Facepunch.RTS
 			if ( IsServer )
 			{
 				Pathfinding = new Pathfinding();
-				Pathfinding.Initialize( 20, 10, 100f );
+				Pathfinding.Initialize( 30, 10, 100f );
+
+				DebugOverlay.Box( 60f, mins.WithZ( 0f ), maxs.WithZ( 500f ), Color.Red );
 			}
 
 			base.PostLevelLoaded();

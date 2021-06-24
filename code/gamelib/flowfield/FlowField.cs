@@ -200,7 +200,6 @@ namespace Gamelib.FlowFields
                 _flowQueue.Enqueue(fromGateway.Chunk);
                 IntegrationStack.Push(fromGateway);
 
-                DebugOverlay.Line( Pathfinder.GetPosition(fromGateway), Pathfinder.GetPosition( GatewayPath[fromGateway] ), Color.Cyan, 5f );
                 fromGateway = GatewayPath[fromGateway];
             }
 
