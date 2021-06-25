@@ -2,6 +2,7 @@
 using Facepunch.RTS.Buildings;
 using Sandbox;
 using System.Linq;
+using Gamelib.FlowFields.Entities;
 
 namespace Facepunch.RTS
 {
@@ -41,7 +42,7 @@ namespace Facepunch.RTS
 					BoundsEntity.SetParent( this );
 					BoundsEntity.Position = Position;
 					BoundsEntity.Color = Color.Green;
-					BoundsEntity.Alpha = 0.05f;
+					BoundsEntity.Alpha = 0.5f;
 				}
 			}
 		}
@@ -66,14 +67,14 @@ namespace Facepunch.RTS
 
 		public TraceResult GetPlacementTrace( Client client, Vector3 cursorOrigin, Vector3 cursorAim )
 		{
-			if ( IsServer )
-				return TraceExtension.RayDirection( cursorOrigin, cursorAim )
-					.WorldOnly()
-					.Run();
+			var trace = TraceExtension.RayDirection( cursorOrigin, cursorAim );
+
+			if ( FlowFieldGround.Exists )
+				trace.WithTag( "flowfield" );
 			else
-				return TraceExtension.RayDirection( cursorOrigin, cursorAim )
-					.WorldOnly()
-					.Run();
+				trace.WorldOnly();
+
+			return trace.Run();
 		}
 
 		public bool IsPlacementValid( TraceResult trace )
@@ -82,7 +83,8 @@ namespace Facepunch.RTS
 
 			var position = trace.EndPos;
 			var bounds = CollisionBounds * 1.25f;
-			var entities = Physics.GetEntitiesInBox( bounds + position ).Where( i => i != this );
+			var entities = Physics.GetEntitiesInBox( bounds + position )
+				.Where( i => i != this && i is not FlowFieldGround );
 
 			if ( IsClient && !RTS.Fog.IsAreaSeen( position ) )
 				return false;

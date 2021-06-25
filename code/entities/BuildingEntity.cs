@@ -1,6 +1,7 @@
 ﻿using Facepunch.RTS.Buildings;
 using Facepunch.RTS.Tech;
 using Facepunch.RTS.Units;
+using Gamelib.FlowFields.Grid;
 using Sandbox;
 using Sandbox.UI;
 using Steamworks.Data;
@@ -146,13 +147,25 @@ namespace Facepunch.RTS
 		public void PlaceNear( UnitEntity unit )
 		{
 			var buildingMaxSize = CollisionBounds.Size.Length;
-			var availablePoint = NavMesh.GetPointWithinRadius( Position, buildingMaxSize * 0.5f, buildingMaxSize );
+			var potentialNodes = new List<GridWorldPosition>();
+			var pathfinder = RTS.Path.Pathfinder;
+
+			pathfinder.GetGridPositions( Position, buildingMaxSize * 0.5f, potentialNodes );
+
+			var freeLocations = potentialNodes
+				.Where( v => RTS.Path.Pathfinder.IsAvailable( v ) )
+				.ToList();
+
+			if ( freeLocations.Count == 0 )
+			{
+				throw new Exception( "[BuildingEntity::PlaceNear] Unable to find a free location to spawn the unit!" );
+			}
+
+			var randomLocation = freeLocations[Rand.Int( freeLocations.Count - 1 )];
+			var withHeightMap = pathfinder.GetPosition( randomLocation ) + new Vector3( 0f, 0f, pathfinder.GetHeight( randomLocation ) );
 
 			// TODO: What we should do is have various attachments to buildings for spawn points that cannot be blocked.
-			if ( availablePoint.HasValue )
-			{
-				unit.Position = availablePoint.Value;
-			}
+			unit.Position = withHeightMap;
 		}
 
 		public void SpawnUnit( BaseUnit unit )

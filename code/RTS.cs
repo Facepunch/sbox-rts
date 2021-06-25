@@ -113,9 +113,9 @@ namespace Facepunch.RTS
 			if ( IsServer )
 			{
 				if ( FlowFieldGround.Exists )
-					Path.Create( 10, FlowFieldGround.Bounds, 100f );
+					Path.Create( 10, FlowFieldGround.Bounds, 50f );
 				else
-					Path.Create( 10, 30, 100f );
+					Path.Create( 10, 30, 50f );
 
 				var mins = FlowFieldGround.Bounds.Mins;
 				var maxs = FlowFieldGround.Bounds.Maxs;

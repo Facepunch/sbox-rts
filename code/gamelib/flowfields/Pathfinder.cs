@@ -106,16 +106,23 @@ namespace Gamelib.FlowFields
 
 			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + heightMap + 5f );
 
-			return Trace.Sweep( _physicsBody, transform, transform )
+			var trace = Trace.Sweep( _physicsBody, transform, transform )
 				.WithoutTags( "flowfield" )
-				.Run()
-				.Hit;
+				.Run();
+			
+			return trace.Hit;
+		}
+
+		public bool IsAvailable( GridWorldPosition position )
+		{
+			var chunk = GetChunk( position.ChunkIndex );
+			if ( chunk == null ) return false;
+			return !chunk.IsImpassable( position.NodeIndex );
 		}
 
 		public bool IsAvailable( Vector3 position )
 		{
-			var worldPosition = CreateWorldPosition( position );
-			return !GetChunk( worldPosition.ChunkIndex ).IsImpassable( worldPosition.NodeIndex );
+			return IsAvailable( CreateWorldPosition( position ) );
 		}
 
 		public void UpdateCollisions( int worldIndex )
@@ -464,7 +471,22 @@ namespace Gamelib.FlowFields
 			return GetPosition( gateway.Chunk, gateway.Median() );
 		}
 
-        public Vector3 GetPosition( int chunkIndex, int nodeIndex )
+		public float GetHeight( int worldIndex )
+		{
+			return _heightMap[worldIndex];
+		}
+
+		public float GetHeight( GridWorldPosition worldPosition )
+		{
+			return GetHeight( worldPosition.WorldIndex );
+		}
+
+		public float GetHeight( Vector3 position )
+		{
+			return GetHeight( CreateWorldPosition( position ) );
+		}
+
+		public Vector3 GetPosition( int chunkIndex, int nodeIndex )
         {
             return GetLocalChunkPosition( chunkIndex ) + GetLocalNodePosition( nodeIndex ) - PositionOffset;
 		}

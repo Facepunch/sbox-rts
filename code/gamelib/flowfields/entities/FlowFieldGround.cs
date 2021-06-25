@@ -20,6 +20,13 @@ namespace Gamelib.FlowFields.Entities
 			Exists = true;
 		}
 
+		public override void ClientSpawn()
+		{
+			base.ClientSpawn();
+
+			Exists = true;
+		}
+
 		private void CheckMinsMaxs()
 		{
 			var totalBounds = Bounds;
