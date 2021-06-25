@@ -112,7 +112,7 @@ namespace Facepunch.RTS
 
 		protected virtual bool ShouldUpdateHud()
 		{
-			return EnableDrawing;
+			return EnableDrawing && UI.IsVisibleSelf;
 		}
 
 		protected override void OnDestroy()
