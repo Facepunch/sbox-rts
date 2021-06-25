@@ -58,9 +58,9 @@ namespace Facepunch.RTS
 		public static FogManager Instance { get; private set; }
 
 		public readonly FogBounds Bounds = new();
-		public readonly Texture Texture;
-		public readonly int Resolution;
-		public readonly byte[] Data;
+		public Texture Texture;
+		public int Resolution;
+		public byte[] Data;
 		public bool IsActive { get; private set; }
 		public Fog Fog { get; private set; }
 
@@ -71,8 +71,6 @@ namespace Facepunch.RTS
 		{
 			Instance = this;
 			Transmit = TransmitType.Always;
-			Resolution = 1024;
-			Data = new byte[Resolution * Resolution];
 
 			_cullables = new List<FogCullable>();
 			_viewers = new List<FogViewer>();
@@ -80,7 +78,6 @@ namespace Facepunch.RTS
 			if ( IsClient )
 			{
 				FlowFieldGround.OnUpdated += OnGroundUpdated;
-				Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
 				Clear();
 			}
 		}
@@ -257,7 +254,8 @@ namespace Facepunch.RTS
 				Bounds.SetSize( 30000f );
 
 			Fog.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
-			Fog.FogMaterial.OverrideTexture( "Color", Texture );
+
+			UpdateTextureSize();
 
 			base.ClientSpawn();
 		}
@@ -265,6 +263,22 @@ namespace Facepunch.RTS
 		private void OnGroundUpdated()
 		{
 			Bounds.SetFrom( FlowFieldGround.Bounds );
+			UpdateTextureSize();
+		}
+
+		private void UpdateTextureSize()
+		{
+			if ( Texture != null )
+			{
+				Texture.Dispose();
+				Texture = null;
+			}
+
+			Resolution = ((float)(Bounds.Size / 20f)).CeilToInt();
+			Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
+			Data = new byte[Resolution * Resolution];
+
+			Fog.FogMaterial.OverrideTexture( "Color", Texture );
 		}
 
 		private void FillLine( int y, int x1, int x2, byte alpha )
