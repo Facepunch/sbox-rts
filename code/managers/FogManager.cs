@@ -170,7 +170,7 @@ namespace Facepunch.RTS
 			var origin = location - Bounds.Origin;
 			var x = (origin.x * pixelScale).CeilToInt() + (Resolution / 2);
 			var y = (origin.y * pixelScale).CeilToInt() + (Resolution / 2);
-			var i = ((y * Resolution) + x) * 1;
+			var i = ((y * Resolution) + x);
 
 			if ( i <= 0 || i > Resolution * Resolution )
 				return false;
@@ -186,7 +186,7 @@ namespace Facepunch.RTS
 			{
 				for ( int y = 0; y < Resolution; y++ )
 				{
-					var index = ((x * Resolution) + y) * 1;
+					var index = ((x * Resolution) + y);
 
 					Data[index + 0] = 255;
 				}
@@ -207,7 +207,7 @@ namespace Facepunch.RTS
 			var px = (origin.x * pixelScale).CeilToInt() + (Resolution / 2);
 			var py = (origin.y * pixelScale).CeilToInt() + (Resolution / 2);
 
-			if ( px + radius < 0 || px - radius >= Texture.Width || py + radius < 0 || py - radius >= Texture.Height )
+			if ( px + radius < 0 || px - radius >= Resolution || py + radius < 0 || py - radius >= Resolution )
 				return;
 
 			int x = 0;
@@ -269,8 +269,8 @@ namespace Facepunch.RTS
 
 		private void FillLine( int y, int x1, int x2, byte alpha )
 		{
-			var w = Texture.Width;
-			var h = Texture.Height;
+			var w = Resolution;
+			var h = Resolution;
 
 			if ( x2 < x1 ) { x1 += x2; x2 = x1 - x2; x1 -= x2; }
 			if ( x2 < 0 || x1 >= w || y < 0 || y >= h ) return;
@@ -279,7 +279,7 @@ namespace Facepunch.RTS
 
 			for ( int x = x1; x <= x2; x++ )
 			{
-				var index = ((y * Resolution) + x) * 1;
+				var index = ((y * Resolution) + x);
 
 				Data[index + 0] = alpha;
 			}
