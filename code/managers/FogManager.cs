@@ -1,11 +1,7 @@
-﻿using Facepunch.RTS.Buildings;
-using Facepunch.RTS.Units;
+﻿using Gamelib.FlowFields.Entities;
 using Sandbox;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Facepunch.RTS
 {
@@ -23,13 +19,38 @@ namespace Facepunch.RTS
 			public bool IsVisible;
 		}
 
+		public class FogBounds
+		{
+			public Vector3 TopLeft = new Vector3( -10000f, -10000f );
+			public Vector3 TopRight = new Vector3( 10000f, -10000f );
+			public Vector3 BottomRight = new Vector3( 10000f, 10000f );
+			public Vector3 BottomLeft = new Vector3( -10000f, 10000f );
+			public Vector3 Origin;
+			public float HalfSize => Size * 0.5f;
+			public float Size = 20000f;
+
+			public void SetFrom( BBox bounds )
+			{
+				var squareSize = Math.Max( bounds.Size.x, bounds.Size.y ) + 1000f;
+				var halfSize = squareSize / 2f;
+				var center = bounds.Center;
+
+				TopLeft = center + new Vector3( -halfSize, -halfSize );
+				TopRight = center + new Vector3( halfSize, -halfSize );
+				BottomRight = center + new Vector3( halfSize, halfSize );
+				BottomLeft = center + new Vector3( -halfSize, halfSize );
+				Size = squareSize;
+				Origin = center;
+			}
+		}
+
 		public static FogManager Instance { get; private set; }
 
+		public readonly FogBounds Bounds = new();
 		public readonly Texture Texture;
 		public readonly int Resolution;
 		public readonly byte[] Data;
 		public bool IsActive { get; private set; }
-		public FogBounds Bounds => FogBounds.Instance;
 		public Fog Fog { get; private set; }
 
 		private readonly List<FogCullable> _cullables;
@@ -47,17 +68,9 @@ namespace Facepunch.RTS
 
 			if ( IsClient )
 			{
+				FlowFieldGround.OnUpdated += OnGroundUpdated;
 				Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
-
 				Clear();
-
-				Fog = new Fog
-				{
-					Texture = Texture,
-					Position = Vector3.Zero
-				};
-
-				Fog.FogMaterial.OverrideTexture( "Color", Texture );
 			}
 		}
 
@@ -142,8 +155,8 @@ namespace Facepunch.RTS
 
 		public bool IsAreaSeen( Vector3 location )
 		{
-			var pixelScale = (Resolution / FogBounds.Size);
-			var origin = location - FogBounds.Origin;
+			var pixelScale = (Resolution / Bounds.Size);
+			var origin = location - Bounds.Origin;
 			var x = (origin.x * pixelScale).CeilToInt() + (Resolution / 2);
 			var y = (origin.y * pixelScale).CeilToInt() + (Resolution / 2);
 			var i = ((y * Resolution) + x) * 1;
@@ -177,8 +190,8 @@ namespace Facepunch.RTS
 
 		public void PunchHole( Vector3 location, float range, byte alpha )
 		{
-			var pixelScale = (Resolution / FogBounds.Size);
-			var origin = location - FogBounds.Origin;
+			var pixelScale = (Resolution / Bounds.Size);
+			var origin = location - Bounds.Origin;
 			var radius = ((range * pixelScale) / 2f).CeilToInt();
 			var px = (origin.x * pixelScale).CeilToInt() + (Resolution / 2);
 			var py = (origin.y * pixelScale).CeilToInt() + (Resolution / 2);
@@ -217,6 +230,30 @@ namespace Facepunch.RTS
 				else
 					p += ((x++ - y--) << 2) + 10;
 			}
+		}
+
+		public override void ClientSpawn()
+		{
+			Fog = new Fog
+			{
+				Texture = Texture,
+				Position = Vector3.Zero
+			};
+
+			if ( FlowFieldGround.Exists )
+			{
+				Bounds.SetFrom( FlowFieldGround.Bounds );
+			}
+
+			Fog.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
+			Fog.FogMaterial.OverrideTexture( "Color", Texture );
+
+			base.ClientSpawn();
+		}
+
+		private void OnGroundUpdated()
+		{
+			Bounds.SetFrom( FlowFieldGround.Bounds );
 		}
 
 		private void FillLine( int y, int x1, int x2, byte alpha )

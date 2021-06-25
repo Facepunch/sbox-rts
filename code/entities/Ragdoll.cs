@@ -31,7 +31,7 @@ namespace Facepunch.RTS
 			ragdoll.Rotation = entity.Rotation;
 			ragdoll.Scale = entity.Scale;
 			ragdoll.MoveType = MoveType.Physics;
-			ragdoll.UsePhysicsCollision = true;
+			ragdoll.SetSolidType( SolidType.Physics );
 			ragdoll.EnableAllCollisions = true;
 			ragdoll.CollisionGroup = CollisionGroup.Debris;
 			ragdoll.SetModel( entity.GetModelName() );

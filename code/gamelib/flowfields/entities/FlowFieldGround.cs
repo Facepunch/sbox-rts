@@ -1,10 +1,12 @@
 ﻿using Sandbox;
+using System;
 
 namespace Gamelib.FlowFields.Entities
 {
 	[Library( "flowfield_ground" )]
 	public class FlowFieldGround : FuncBrush
 	{
+		public static event Action OnUpdated;
 		public static BBox Bounds { get; private set; }
 		public static bool Exists { get; private set; }
 
@@ -12,19 +14,23 @@ namespace Gamelib.FlowFields.Entities
 		{
 			base.Spawn();
 
-			CheckMinsMaxs();
-
 			Tags.Add( "flowfield" );
 
+			CheckMinsMaxs();
 			Transmit = TransmitType.Always;
 			Exists = true;
+
+			OnUpdated?.Invoke();
 		}
 
 		public override void ClientSpawn()
 		{
 			base.ClientSpawn();
 
+			CheckMinsMaxs();
 			Exists = true;
+
+			OnUpdated?.Invoke();
 		}
 
 		private void CheckMinsMaxs()

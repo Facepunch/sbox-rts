@@ -73,7 +73,7 @@ namespace Gamelib.FlowFields
 			var delta = bounds.Maxs - bounds.Mins;
 			var width = delta.x;
 			var height = delta.y;
-			var squareSize = MathF.Ceiling( Math.Max( width, height ) / 1000f ) * 1000f;
+			var squareSize = (MathF.Ceiling( Math.Max( width, height ) / 1000f ) * 1000f) + 1000f;
 
 			Origin = bounds.Center;
 
