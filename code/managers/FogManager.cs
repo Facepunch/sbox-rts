@@ -21,13 +21,24 @@ namespace Facepunch.RTS
 
 		public class FogBounds
 		{
-			public Vector3 TopLeft = new Vector3( -10000f, -10000f );
-			public Vector3 TopRight = new Vector3( 10000f, -10000f );
-			public Vector3 BottomRight = new Vector3( 10000f, 10000f );
-			public Vector3 BottomLeft = new Vector3( -10000f, 10000f );
+			public Vector3 TopLeft;
+			public Vector3 TopRight;
+			public Vector3 BottomRight;
+			public Vector3 BottomLeft;
 			public Vector3 Origin;
 			public float HalfSize => Size * 0.5f;
-			public float Size = 20000f;
+			public float Size;
+
+			public void SetSize( float size )
+			{
+				var halfSize = size / 2f;
+
+				TopLeft = new Vector3( -halfSize, -halfSize );
+				TopRight = new Vector3( halfSize, -halfSize );
+				BottomRight = new Vector3( halfSize, halfSize );
+				BottomLeft = new Vector3( -halfSize, halfSize );
+				Size = size;
+			}
 
 			public void SetFrom( BBox bounds )
 			{
@@ -241,9 +252,9 @@ namespace Facepunch.RTS
 			};
 
 			if ( FlowFieldGround.Exists )
-			{
 				Bounds.SetFrom( FlowFieldGround.Bounds );
-			}
+			else
+				Bounds.SetSize( 30000f );
 
 			Fog.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
 			Fog.FogMaterial.OverrideTexture( "Color", Texture );
