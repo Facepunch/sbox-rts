@@ -30,7 +30,7 @@ namespace Facepunch.RTS
 			ZoomLevel = 1f;
 			Selection = new List<Entity>();
 			Dependencies = new List<uint>();
-			MaxPopulation = 8;
+			MaxPopulation = 100;
 		}
 
 		public List<UnitEntity> GetUnits( BaseUnit unit)

@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Units
 		public override bool CanConstruct => true;
 		public override bool CanEnterBuildings => true;
 		public override string Description => "Gathers Wood, Stone and Beer for your empire and constructs buildings.";
-		public override int BuildTime => 5;
+		public override int BuildTime => 1;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 50

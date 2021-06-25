@@ -14,6 +14,16 @@ namespace Facepunch.RTS
 {
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable
 	{
+		private struct AnimationValues
+		{
+			public float Walking;
+
+			public void Lerp( AnimEntity entity, string name, float value )
+			{
+				entity.SetAnimFloat( name, entity.GetAnimFloat( name ).LerpTo( value, Time.Delta * 10f ) );
+			}
+		}
+
 		public override bool HasSelectionGlow => false;
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
 		[Net, Local] public float GatherProgress { get; private set; }
@@ -41,12 +51,13 @@ namespace Facepunch.RTS
 		public Vector3 InputVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
 		public float TargetRange { get; private set; }
-		public float WishSpeed { get; private set; }
 
 		#region UI
 		public EntityHudBar HealthBar { get; private set; }
 		public EntityHudBar GatherBar { get; private set; }
 		#endregion
+
+		private AnimationValues _animationValues;
 
 		public UnitEntity() : base()
 		{
@@ -503,6 +514,8 @@ namespace Facepunch.RTS
 		{
 			InputVelocity = 0;
 
+			_animationValues.Walking = 0f;
+
 			var isTargetInRange = IsTargetInRange();
 
 			if ( !Target.IsValid() || !isTargetInRange )
@@ -541,13 +554,11 @@ namespace Facepunch.RTS
 				{
 					var control = GroundEntity != null ? 200f : 10f;
 
+					_animationValues.Walking = 1f;
+
 					InputVelocity = pathDirection.Normal * Speed;
 					var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
 					Velocity = Velocity.AddClamped( velocity, Speed );
-
-					SetAnimLookAt( "aim_head", EyePos + pathDirection.WithZ( 0 ) * 10 );
-					SetAnimLookAt( "aim_body", EyePos + pathDirection.WithZ( 0 ) * 10 );
-					SetAnimFloat( "aim_body_weight", 0.25f );
 				}
 				else
 				{
@@ -596,22 +607,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( Weapon.IsValid() )
-				SetAnimInt( "holdtype", Weapon.HoldType );
-			else
-				SetAnimInt( "holdtype", 0 );
-
-			WishSpeed = WishSpeed.LerpTo( InputVelocity.Length, 10f * Time.Delta );
-
-			SetAnimBool( "b_grounded", true );
-			SetAnimBool( "b_noclip", false );
-			SetAnimBool( "b_swim", false );
-			SetAnimFloat( "forward", Vector3.Dot( Rotation.Forward, InputVelocity ) );
-			SetAnimFloat( "sideward", Vector3.Dot( Rotation.Right, InputVelocity ) );
-			SetAnimFloat( "wishspeed", WishSpeed );
-			SetAnimFloat( "walkspeed_scale", 2.0f / 10.0f );
-			SetAnimFloat( "runspeed_scale", 2.0f / 320.0f );
-			SetAnimFloat( "duckspeed_scale", 2.0f / 80.0f );
+			_animationValues.Lerp( this, "walking", _animationValues.Walking );
 		}
 
 		private void TickOccupy( BuildingEntity building )

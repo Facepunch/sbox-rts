@@ -6,7 +6,7 @@ namespace Facepunch.RTS.Units
 	{
 		public override Color Color => Color.Cyan;
 		public virtual float MaxHealth => 100f;
-		public virtual string Model => "models/citizen/citizen.vmdl";
+		public virtual string Model => "models/units/simpleterry.vmdl";
 		public virtual HashSet<string> Clothing => new();
 		public virtual bool CanConstruct => false;
 		public virtual bool CanEnterBuildings => false;

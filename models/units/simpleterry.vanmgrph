@@ -1,0 +1,196 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:animgraph1:version{ed501b4a-4c4b-4832-917c-534fe2787259} -->
+{
+	_class = "CAnimationGraph"
+	m_pParameterList = 
+	{
+		_class = "CAnimParameterList"
+		m_Parameters = 
+		[
+			{
+				_class = "CFloatAnimParameter"
+				m_name = "walking"
+				m_id = 
+				{
+					m_id = 263231024
+				}
+				m_previewButton = "ANIMPARAM_BUTTON_NONE"
+				m_bNetwork = true
+				m_bUseMostRecentValue = false
+				m_bAutoReset = false
+				m_bPredicted = true
+				m_fDefaultValue = 0.0
+				m_fMinValue = 0.0
+				m_fMaxValue = 1.0
+				m_bInterpolate = true
+			},
+		]
+	}
+	m_pTagManager = 
+	{
+		_class = "CAnimTagManager"
+		m_tags = [  ]
+	}
+	m_pMovementManager = 
+	{
+		_class = "CAnimMovementManager"
+		m_MotorList = 
+		{
+			_class = "CAnimMotorList"
+			m_motors = [  ]
+		}
+		m_MovementSettings = 
+		{
+			_class = "CAnimMovementSettings"
+			m_bShouldCalculateSlope = false
+		}
+	}
+	m_pSettingsManager = 
+	{
+		_class = "CAnimGraphSettingsManager"
+		m_settingsGroups = 
+		[
+			{
+				_class = "CAnimGraphGeneralSettings"
+			},
+			{
+				_class = "CAnimGraphNetworkSettings"
+				m_bNetworkingEnabled = true
+			},
+		]
+	}
+	m_pActivityValuesList = 
+	{
+		_class = "CActivityValueList"
+		m_activities = [  ]
+	}
+	m_rootNodeID = 
+	{
+		m_id = 1943641487
+	}
+	m_previewModels = 
+	[
+		"models/units/simpleterry.vmdl",
+	]
+	m_nodes = 
+	[
+		{
+			key = 
+			{
+				m_id = 219440637
+			}
+			value = 
+			{
+				_class = "CSequenceAnimNode"
+				m_sName = "Walking"
+				m_vecPosition = [ -308.0, -46.0 ]
+				m_nNodeID = 
+				{
+					m_id = 219440637
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_tagSpans = [  ]
+				m_sequenceName = "Walk_N"
+				m_playbackSpeed = 1.0
+				m_bLoop = true
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 1328397348
+			}
+			value = 
+			{
+				_class = "CSingleFrameAnimNode"
+				m_sName = "Idle"
+				m_vecPosition = [ -308.0, 51.0 ]
+				m_nNodeID = 
+				{
+					m_id = 1328397348
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_sequenceName = "IdlePoseDefault"
+				m_nFrameIndex = 0
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 1632521099
+			}
+			value = 
+			{
+				_class = "CBlendAnimNode"
+				m_sName = "Idle->Walk"
+				m_vecPosition = [ -54.0, -57.0 ]
+				m_nNodeID = 
+				{
+					m_id = 1632521099
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_children = 
+				[
+					{
+						m_nodeID = 
+						{
+							m_id = 219440637
+						}
+						m_name = "Walk"
+						m_blendValue = 1.0
+					},
+					{
+						m_nodeID = 
+						{
+							m_id = 1328397348
+						}
+						m_name = "Idle"
+						m_blendValue = 0.0
+					},
+				]
+				m_blendValueSource = "Parameter"
+				m_param = 
+				{
+					m_id = 263231024
+				}
+				m_blendKeyType = "BlendKey_UserValue"
+				m_bLockBlendOnReset = false
+				m_bSyncCycles = true
+				m_bLoop = true
+				m_bLockWhenWaning = true
+				m_damping = 
+				{
+					_class = "CAnimInputDamping"
+					m_speedFunction = "NoDamping"
+					m_fSpeedScale = 1.0
+					m_fMinSpeed = 10.0
+					m_fMaxTension = 1000.0
+				}
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 1943641487
+			}
+			value = 
+			{
+				_class = "CRootAnimNode"
+				m_sName = "Output"
+				m_vecPosition = [ 237.0, 12.0 ]
+				m_nNodeID = 
+				{
+					m_id = 1943641487
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_childID = 
+				{
+					m_id = 1632521099
+				}
+			}
+		},
+	]
+}

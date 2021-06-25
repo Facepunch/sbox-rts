@@ -1,0 +1,2198 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:modeldoc29:version{3cec427c-1b0e-4d48-a90a-0436f33a6041} -->
+{
+	rootNode = 
+	{
+		_class = "RootNode"
+		children = 
+		[
+			{
+				_class = "ModelModifierList"
+				children = 
+				[
+					{
+						_class = "ModelModifier_ScaleAndMirror"
+						scale = 0.3937
+						mirror_x = false
+						mirror_y = false
+						mirror_z = false
+						flip_bone_forward = false
+						swap_left_and_right_bones = false
+					},
+				]
+			},
+			{
+				_class = "MaterialGroupList"
+				children = 
+				[
+					{
+						_class = "DefaultMaterialGroup"
+						remaps = 
+						[
+							{
+								from = "citizen_eyes.vmat"
+								to = "models/citizen/skin/citizen_eyes_advanced.vmat"
+							},
+							{
+								from = "citizen_skin.vmat"
+								to = "models/citizen/skin/citizen_skin01.vmat"
+							},
+							{
+								from = "citizen_eyeao.vmat"
+								to = "models/citizen/skin/citizen_eyeao.vmat"
+							},
+						]
+						use_global_default = false
+						global_default_material = ""
+					},
+					{
+						_class = "MaterialGroup"
+						name = "Skin02"
+						remaps = 
+						[
+							{
+								from = "models/citizen/skin/citizen_skin01.vmat"
+								to = "models/citizen/skin/citizen_skin02.vmat"
+							},
+							{
+								from = "models/citizen/skin/citizen_eyes_advanced.vmat"
+								to = "models/citizen/skin/citizen_eyes_advanced02.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "Skin03"
+						remaps = 
+						[
+							{
+								from = "models/citizen/skin/citizen_skin01.vmat"
+								to = "models/citizen/skin/citizen_skin03.vmat"
+							},
+							{
+								from = "models/citizen/skin/citizen_eyes_advanced.vmat"
+								to = "models/citizen/skin/citizen_eyes_advanced03.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "Skin04"
+						remaps = 
+						[
+							{
+								from = "models/citizen/skin/citizen_skin01.vmat"
+								to = "models/citizen/skin/citizen_skin04.vmat"
+							},
+							{
+								from = "models/citizen/skin/citizen_eyes_advanced.vmat"
+								to = "models/citizen/skin/citizen_eyes_advanced.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "Skin05"
+						remaps = 
+						[
+							{
+								from = "models/citizen/skin/citizen_skin01.vmat"
+								to = "models/citizen/skin/citizen_skin05.vmat"
+							},
+							{
+								from = "models/citizen/skin/citizen_eyes_advanced.vmat"
+								to = "models/citizen/skin/citizen_eyes_advanced.vmat"
+							},
+						]
+					},
+				]
+			},
+			{
+				_class = "RenderMeshList"
+				children = 
+				[
+					{
+						_class = "RenderMeshFile"
+						name = "Head_LOD0"
+						filename = "models/citizen/citizen_head.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = [  ]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Head_LOD2"
+						filename = "models/citizen/citizen_lod2.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenHead_LOD2",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Head_LOD3"
+						filename = "models/citizen/citizen_lod3.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenHead_LOD3",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Torso_LOD0"
+						filename = "models/citizen/citizen.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenTorso_LOD0",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Torso_LOD1"
+						filename = "models/citizen/citizen_lod1.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenTorso_LOD1",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Torso_LOD2"
+						filename = "models/citizen/citizen_lod2.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenTorso_LOD2",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Torso_LOD3"
+						filename = "models/citizen/citizen_lod3.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenTorso_LOD3",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Hands_LOD0"
+						filename = "models/citizen/citizen.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenHands_LOD0",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Hands_LOD1"
+						filename = "models/citizen/citizen_lod1.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenHands_LOD1",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Hands_LOD2"
+						filename = "models/citizen/citizen_lod2.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenHands_LOD2",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Hands_LOD3"
+						filename = "models/citizen/citizen_lod3.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenHands_LOD3",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Legs_LOD0"
+						filename = "models/citizen/citizen.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenLegs_LOD0",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Legs_LOD1"
+						filename = "models/citizen/citizen_lod1.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenLegs_LOD1",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Legs_LOD2"
+						filename = "models/citizen/citizen_lod2.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenLegs_LOD2",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Legs_LOD3"
+						filename = "models/citizen/citizen_lod3.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenLegs_LOD3",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Feet_LOD0"
+						filename = "models/citizen/citizen.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenFeet_LOD0",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Feet_LOD1"
+						filename = "models/citizen/citizen_lod1.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenFeet_LOD1",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Feet_LOD2"
+						filename = "models/citizen/citizen_lod2.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenFeet_LOD2",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Feet_LOD3"
+						filename = "models/citizen/citizen_lod3.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"CitizenFeet_LOD3",
+							]
+						}
+					},
+				]
+			},
+			{
+				_class = "AnimationList"
+				children = 
+				[
+					{
+						_class = "Folder"
+						name = "Movement"
+						children = 
+						[
+							{
+								_class = "Folder"
+								name = "Walk"
+								children = 
+								[
+									{
+										_class = "AnimFile"
+										name = "Walk_N"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "IdlePoseDefault"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/Citizen@WalkN.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+								]
+							},
+							{
+								_class = "Folder"
+								name = "Run"
+								children = 
+								[
+									{
+										_class = "AnimFile"
+										name = "Run_N"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "IdlePoseDefault"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/Citizen@RunN.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+								]
+							},
+						]
+					},
+					{
+						_class = "Folder"
+						name = "Weapons"
+						children = 
+						[
+							{
+								_class = "Folder"
+								name = "Pistol"
+								children = 
+								[
+									{
+										_class = "AnimFile"
+										name = "Pistol_2H_Attack_01"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.01
+										fade_out_time = 0.1
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Attack_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = 40.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Pistol_2H_Pose_Standing_01"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Pose_Standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Pistol_2H_Pose_Moving_01"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Pose_Moving_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+								]
+							},
+							{
+								_class = "Folder"
+								name = "SMG"
+								children = 
+								[
+									{
+										_class = "AnimFile"
+										name = "SMG_2H_Attack_01"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@SMG_2H_Attack_01.fbx"
+										start_frame = -1
+										end_frame = 4
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "SMG_2H_Pose_Standing_01"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@SMG_2H_Pose_Standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+								]
+							},
+							{
+								_class = "Folder"
+								name = "Shotgun"
+								children = 
+								[
+									{
+										_class = "AnimFile"
+										name = "Shotgun_2H_Attack_01"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Attack_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Shotgun_2H_Pose_Standing_01"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Pose_Standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Shotgun_2H_Pose_Moving_01"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Pose_Moving_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+								]
+							},
+						]
+					},
+					{
+						_class = "AnimFile"
+						name = "IdlePoseDefault"
+						activity_name = "ACT_IDLE"
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = true
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/citizen/animations/Citizen@IdlePoseDefault.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
+				]
+				default_root_bone_name = ""
+			},
+			{
+				_class = "BoneMarkupList"
+				children = 
+				[
+					{
+						_class = "BoneMarkup"
+						target_bone = "arm_upper_R_twist"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "arm_lower_R_twist"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "arm_upper_L_twist"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "arm_lower_L_twist"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "leg_upper_R_twist"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "leg_lower_R_twist"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "leg_upper_L_twist"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "leg_lower_L_twist"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "arm_elbow_helper_L"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "arm_elbow_helper_R"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "leg_knee_helper_L"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "leg_knee_helper_R"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "foot_R_IK_target"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "foot_L_IK_target"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "hand_R_IK_target"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "hand_L_IK_target"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "hand_R_to_L_ikrule"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "hand_L_to_R_ikrule"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "root_IK"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = false
+					},
+				]
+				bone_cull_type = "None"
+			},
+			{
+				_class = "AttachmentList"
+				children = 
+				[
+					{
+						_class = "Attachment"
+						name = "forward_reference"
+						parent_bone = "head"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 90.0, 90.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "eyes"
+						parent_bone = "head"
+						relative_origin = [ 7.0, 4.3, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "hat"
+						parent_bone = "head"
+						relative_origin = [ 15.15, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "IK_right_hand"
+						parent_bone = "hand_R_IK_target"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "IK_left_hand"
+						parent_bone = "hand_L_IK_target"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "hand_R"
+						parent_bone = "hand_R"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "hand_L"
+						parent_bone = "hand_L"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "foot_R"
+						parent_bone = "ankle_R"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "foot_L"
+						parent_bone = "ankle_L"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "hold_R"
+						parent_bone = "hold_R"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "hold_L"
+						parent_bone = "hold_L"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "eye_R_forward"
+						parent_bone = "head"
+						relative_origin = [ 6.908901, 4.015474, -3.234581 ]
+						relative_angles = [ 0.0, 90.0, 180.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "eye_L_forward"
+						parent_bone = "head"
+						relative_origin = [ 6.908913, 4.015432, 3.234703 ]
+						relative_angles = [ 0.0, 90.0, 180.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "forward_reference_modelspace"
+						children = 
+						[
+							{
+								_class = "AttachmentInfluence"
+								parent_bone = "head"
+								relative_origin = [ 0.0, -3.0, 0.0 ]
+								relative_angles = [ 0.0, 90.0, 90.0 ]
+								weight = 1.0
+							},
+						]
+						parent_bone = "pelvis"
+						relative_origin = [ 0.0, -3.0, 0.0 ]
+						relative_angles = [ 0.0, 90.0, 90.0 ]
+						weight = 1.0
+						ignore_rotation = true
+					},
+					{
+						_class = "Attachment"
+						name = "middle_of_both_hands"
+						children = 
+						[
+							{
+								_class = "AttachmentInfluence"
+								parent_bone = "hand_L"
+								relative_origin = [ 5.0, 0.0, 0.0 ]
+								relative_angles = [ 0.0, 0.0, 0.0 ]
+								weight = 1.0
+							},
+							{
+								_class = "AttachmentInfluence"
+								parent_bone = "hand_R"
+								relative_origin = [ 5.0, 0.0, 0.0 ]
+								relative_angles = [ 0.0, 0.0, 0.0 ]
+								weight = 1.0
+							},
+						]
+						parent_bone = "spine_1"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 0.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "hold_R_jiggle"
+						disabled = true
+						parent_bone = "hold_R_jiggle"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "hold_L_jiggle"
+						disabled = true
+						parent_bone = "hold_L_jiggle"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+				]
+			},
+			{
+				_class = "HitboxSetList"
+				children = 
+				[
+					{
+						_class = "HitboxSet"
+						name = "Hitboxes"
+						children = 
+						[
+							{
+								_class = "HitboxCapsule"
+								name = "HB_pelvis"
+								parent_bone = "pelvis"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 3
+								radius = 4.5
+								point0 = [ 0.5, 0.0, -2.5 ]
+								point1 = [ 0.5, 0.0, 2.5 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_spine_0"
+								parent_bone = "spine_0"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 3
+								radius = 6.5
+								point0 = [ 0.0, 0.0, -1.0 ]
+								point1 = [ 0.0, 0.0, 1.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_spine_1"
+								parent_bone = "spine_1"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 2
+								radius = 7.0
+								point0 = [ 0.0, 0.0, -0.5 ]
+								point1 = [ 0.0, 0.0, 0.5 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_spine_2"
+								parent_bone = "spine_2"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 2
+								radius = 7.0
+								point0 = [ -1.0, 0.0, 0.0 ]
+								point1 = [ 1.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_neck_0"
+								parent_bone = "neck_0"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 2
+								radius = 2.0
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 2.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_head"
+								parent_bone = "head"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 1
+								radius = 6.2
+								point0 = [ 0.0, 0.5, 0.0 ]
+								point1 = [ 9.0, 0.3, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_clavicle_L"
+								parent_bone = "clavicle_L"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.5
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 4.5, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_arm_upper_L"
+								parent_bone = "arm_upper_L"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.5
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 10.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_arm_lower_L"
+								parent_bone = "arm_lower_L"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.2
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 9.0, -0.5, 0.5 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_hand_L"
+								parent_bone = "hand_L"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.0
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 2.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_clavicle_R"
+								parent_bone = "clavicle_R"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.5
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 4.5, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_arm_upper_R"
+								parent_bone = "arm_upper_R"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.5
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 10.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_arm_lower_R"
+								parent_bone = "arm_lower_R"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.2
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 9.0, -0.5, -0.5 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_hand_R"
+								parent_bone = "hand_R"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.0
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 2.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_leg_upper_R"
+								parent_bone = "leg_upper_R"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 3.0
+								point0 = [ 1.0, 0.0, 0.0 ]
+								point1 = [ 13.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_leg_lower_R"
+								parent_bone = "leg_lower_R"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.4
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 13.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_ankle_R"
+								parent_bone = "ankle_R"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.5
+								point0 = [ 2.0, -1.6, 0.0 ]
+								point1 = [ 4.5, 0.85, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_leg_upper_L"
+								parent_bone = "leg_upper_L"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 3.0
+								point0 = [ 1.0, 0.0, 0.0 ]
+								point1 = [ 13.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_leg_lower_L"
+								parent_bone = "leg_lower_L"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.4
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 13.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "HitboxCapsule"
+								name = "HB_ankle_L"
+								parent_bone = "ankle_L"
+								surface_property = "flesh"
+								translation_only = false
+								group_id = 0
+								radius = 2.5
+								point0 = [ 2.0, -1.6, 0.0 ]
+								point1 = [ 4.5, 0.85, 0.0 ]
+							},
+						]
+					},
+				]
+			},
+			{
+				_class = "GameDataList"
+				children = 
+				[
+					{
+						_class = "Folder"
+						name = "AmbientOcclusion"
+						children = 
+						[
+							{
+								_class = "Folder"
+								name = "AO_Body"
+								children = 
+								[
+									{
+										_class = "GenericGameData"
+										name = "AO_Pelvis"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "pelvis"
+											radius = 5.5
+											point0 = [ 1.5, 0.0, -2.0 ]
+											point1 = [ 1.5, 0.0, 2.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "spine_0"
+											radius = 6.0
+											point0 = [ 1.0, 0.0, -1.0 ]
+											point1 = [ 1.0, 0.0, 1.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "spine_1"
+											radius = 6.0
+											point0 = [ 0.0, 0.0, -1.0 ]
+											point1 = [ 0.0, 0.0, 1.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "spine_2"
+											radius = 6.5
+											point0 = [ -1.0, 0.0, 0.0 ]
+											point1 = [ 3.0, 0.0, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "head"
+											radius = 6.5
+											point0 = [ 9.0, 0.25, 0.0 ]
+											point1 = [ 1.0, 1.0, 0.0 ]
+										}
+									},
+								]
+							},
+							{
+								_class = "Folder"
+								name = "AO_Arms"
+								children = 
+								[
+									{
+										_class = "Folder"
+										name = "AO_Fingers"
+										children = 
+										[
+											{
+												_class = "GenericGameData"
+												name = "thumbL"
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_thumb_0_L"
+													radius = 1.2
+													point0 = [ -1.0, 0.0, 0.0 ]
+													point1 = [ 1.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_thumb_1_L"
+													radius = 0.9
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.5, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_thumb_2_L"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.3, 0.0, 0.1 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												name = "indexL"
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_index_meta_L"
+													radius = 1.3
+													point0 = [ -1.0, 0.0, 0.0 ]
+													point1 = [ 2.2, -0.1, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_index_0_L"
+													radius = 0.8
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 2.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_index_1_L"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.5, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_index_2_L"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												name = "middleL"
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_middle_meta_L"
+													radius = 1.4
+													point0 = [ -1.0, 0.0, 0.0 ]
+													point1 = [ 2.2, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_middle_0_L"
+													radius = 0.85
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 2.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_middle_1_L"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.5, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_middle_2_L"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												name = "ringL"
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_ring_meta_L"
+													radius = 1.4
+													point0 = [ -1.0, 0.1, 0.0 ]
+													point1 = [ 1.7, 0.1, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_ring_0_L"
+													radius = 0.85
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 2.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_ring_1_L"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.5, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_ring_2_L"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												name = "thumbR"
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_thumb_0_R"
+													radius = 1.2
+													point0 = [ -1.0, 0.0, 0.0 ]
+													point1 = [ 1.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_thumb_1_R"
+													radius = 0.9
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.5, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_thumb_2_R"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.3, 0.0, -0.1 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												name = "indexR"
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_index_meta_R"
+													radius = 1.3
+													point0 = [ -1.0, 0.0, 0.0 ]
+													point1 = [ 2.2, -0.1, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_index_0_R"
+													radius = 0.8
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 2.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_index_1_R"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.5, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_index_2_R"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												name = "middleR"
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_middle_meta_R"
+													radius = 1.4
+													point0 = [ -1.0, 0.0, 0.0 ]
+													point1 = [ 2.2, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_middle_0_R"
+													radius = 0.85
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 2.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_middle_1_R"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.5, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_middle_2_R"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												name = "ringR"
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_ring_meta_R"
+													radius = 1.4
+													point0 = [ -1.0, 0.1, 0.0 ]
+													point1 = [ 1.7, 0.1, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_ring_0_R"
+													radius = 0.85
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 2.0, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_ring_1_R"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.5, 0.0, 0.0 ]
+												}
+											},
+											{
+												_class = "GenericGameData"
+												disabled = true
+												game_class = "ao_proxy_capsule"
+												game_keys = 
+												{
+													bonename = "finger_ring_2_R"
+													radius = 0.7
+													point0 = [ 0.0, 0.0, 0.0 ]
+													point1 = [ 1.0, 0.0, 0.0 ]
+												}
+											},
+										]
+									},
+									{
+										_class = "GenericGameData"
+										name = "clavicleR"
+										disabled = true
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "clavicle_R"
+											radius = 5.0
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 2.0, 0.0, -1.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "arm_upper_R"
+											radius = 2.0
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 10.0, 0.0, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "arm_lower_R"
+											radius = 2.0
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 6.5, -0.2, -0.2 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										name = "clavicleL"
+										disabled = true
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "clavicle_L"
+											radius = 5.0
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 2.0, 0.0, 1.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "arm_upper_L"
+											radius = 2.0
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 10.0, 0.0, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "arm_lower_L"
+											radius = 2.0
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 6.5, -0.2, 0.2 ]
+										}
+									},
+								]
+							},
+							{
+								_class = "Folder"
+								name = "AO_Legs"
+								children = 
+								[
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "leg_upper_R"
+											radius = 2.5
+											point0 = [ 1.0, 0.0, 0.0 ]
+											point1 = [ 13.0, 0.0, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "leg_lower_R"
+											radius = 2.0
+											point0 = [ 1.0, 0.0, 0.0 ]
+											point1 = [ 13.5, 0.2, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "ankle_R"
+											radius = 1.9
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 1.4, -1.4, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "ankle_R"
+											radius = 1.8
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 2.5, -0.5, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_box"
+										game_keys = 
+										{
+											bonename = "ball_R"
+											dimensions = [ 1.05, 3.22, 4.85 ]
+											offset_origin = [ 0.55, 0.098, 0.28 ]
+											offset_angles = [ 0.0, 90.0, -0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "leg_upper_L"
+											radius = 2.5
+											point0 = [ 1.0, 0.0, 0.0 ]
+											point1 = [ 13.0, 0.0, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "leg_lower_L"
+											radius = 2.0
+											point0 = [ 1.0, 0.0, 0.0 ]
+											point1 = [ 13.5, 0.2, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "ankle_L"
+											radius = 1.9
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 1.4, -1.4, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_capsule"
+										game_keys = 
+										{
+											bonename = "ankle_L"
+											radius = 1.8
+											point0 = [ 0.0, 0.0, 0.0 ]
+											point1 = [ 2.5, -0.5, 0.0 ]
+										}
+									},
+									{
+										_class = "GenericGameData"
+										game_class = "ao_proxy_box"
+										game_keys = 
+										{
+											bonename = "ball_L"
+											dimensions = [ 1.05, 3.22, 4.85 ]
+											offset_origin = [ 0.55, 0.098, -0.28 ]
+											offset_angles = [ 0.0, 90.0, -0.0 ]
+										}
+									},
+								]
+							},
+						]
+					},
+				]
+			},
+			{
+				_class = "BodyGroupList"
+				children = 
+				[
+					{
+						_class = "BodyGroup"
+						name = "Head"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								meshes = 
+								[
+									"Head_LOD0",
+									"Head_LOD2",
+									"Head_LOD3",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								meshes = [  ]
+							},
+						]
+						hidden_in_tools = false
+					},
+					{
+						_class = "BodyGroup"
+						name = "Chest"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								meshes = 
+								[
+									"Torso_LOD0",
+									"Torso_LOD1",
+									"Torso_LOD2",
+									"Torso_LOD3",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								meshes = [  ]
+							},
+						]
+						hidden_in_tools = false
+					},
+					{
+						_class = "BodyGroup"
+						name = "Legs"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								meshes = 
+								[
+									"Legs_LOD0",
+									"Legs_LOD1",
+									"Legs_LOD2",
+									"Legs_LOD3",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								meshes = [  ]
+							},
+						]
+						hidden_in_tools = false
+					},
+					{
+						_class = "BodyGroup"
+						name = "Hands"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								meshes = 
+								[
+									"Hands_LOD0",
+									"Hands_LOD1",
+									"Hands_LOD2",
+									"Hands_LOD3",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								meshes = [  ]
+							},
+						]
+						hidden_in_tools = false
+					},
+					{
+						_class = "BodyGroup"
+						name = "Feet"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								meshes = 
+								[
+									"Feet_LOD0",
+									"Feet_LOD1",
+									"Feet_LOD2",
+									"Feet_LOD3",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								meshes = [  ]
+							},
+						]
+						hidden_in_tools = false
+					},
+				]
+			},
+			{
+				_class = "LODGroupList"
+				children = 
+				[
+					{
+						_class = "LODGroup"
+						switch_threshold = 0.0
+						meshes = 
+						[
+							"Head_LOD0",
+							"Torso_LOD0",
+							"Hands_LOD0",
+							"Legs_LOD0",
+							"Feet_LOD0",
+						]
+					},
+					{
+						_class = "LODGroup"
+						switch_threshold = 5.0
+						meshes = 
+						[
+							"Head_LOD0",
+							"Torso_LOD1",
+							"Hands_LOD1",
+							"Legs_LOD1",
+							"Feet_LOD1",
+						]
+					},
+					{
+						_class = "LODGroup"
+						switch_threshold = 20.0
+						meshes = 
+						[
+							"Head_LOD2",
+							"Torso_LOD2",
+							"Hands_LOD2",
+							"Legs_LOD2",
+							"Feet_LOD2",
+						]
+					},
+					{
+						_class = "LODGroup"
+						switch_threshold = 40.0
+						meshes = 
+						[
+							"Head_LOD3",
+							"Torso_LOD3",
+							"Hands_LOD3",
+							"Legs_LOD3",
+							"Feet_LOD3",
+						]
+					},
+				]
+			},
+		]
+		model_archetype = ""
+		primary_associated_entity = ""
+		anim_graph_name = "models/units/simpleterry.vanmgrph"
+	}
+}
