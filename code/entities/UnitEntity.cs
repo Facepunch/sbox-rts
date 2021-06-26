@@ -168,7 +168,7 @@ namespace Facepunch.RTS
 			var randomSize = Rand.Float( 50f, 100f );
 			var trace = Trace.Ray( position, position + Vector3.Down * 100f ).Ignore( this ).Run();
 
-			Decals.Place( decalMaterial, trace.EndPos, new Vector3( randomSize, randomSize, 4f ), decalRotation );
+			Decals.Place( decalMaterial, trace.Entity, trace.Bone, trace.EndPos, new Vector3( randomSize, randomSize, 4f ), decalRotation );
 		}
 
 		public void Attack( Entity target, bool autoFollow = true )

@@ -969,15 +969,6 @@
 				[
 					{
 						_class = "Attachment"
-						name = "forward_reference"
-						parent_bone = "head"
-						relative_origin = [ 0.0, 0.0, 0.0 ]
-						relative_angles = [ 0.0, 90.0, 90.0 ]
-						weight = 1.0
-						ignore_rotation = false
-					},
-					{
-						_class = "Attachment"
 						name = "eyes"
 						parent_bone = "head"
 						relative_origin = [ 7.0, 4.3, 0.0 ]
@@ -990,24 +981,6 @@
 						name = "hat"
 						parent_bone = "head"
 						relative_origin = [ 15.15, 0.0, 0.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
-						weight = 1.0
-						ignore_rotation = false
-					},
-					{
-						_class = "Attachment"
-						name = "IK_right_hand"
-						parent_bone = "hand_R_IK_target"
-						relative_origin = [ 0.0, 0.0, 0.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
-						weight = 1.0
-						ignore_rotation = false
-					},
-					{
-						_class = "Attachment"
-						name = "IK_left_hand"
-						parent_bone = "hand_L_IK_target"
-						relative_origin = [ 0.0, 0.0, 0.0 ]
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
@@ -1066,89 +1039,6 @@
 						weight = 1.0
 						ignore_rotation = false
 					},
-					{
-						_class = "Attachment"
-						name = "eye_R_forward"
-						parent_bone = "head"
-						relative_origin = [ 6.908901, 4.015474, -3.234581 ]
-						relative_angles = [ 0.0, 90.0, 180.0 ]
-						weight = 1.0
-						ignore_rotation = false
-					},
-					{
-						_class = "Attachment"
-						name = "eye_L_forward"
-						parent_bone = "head"
-						relative_origin = [ 6.908913, 4.015432, 3.234703 ]
-						relative_angles = [ 0.0, 90.0, 180.0 ]
-						weight = 1.0
-						ignore_rotation = false
-					},
-					{
-						_class = "Attachment"
-						name = "forward_reference_modelspace"
-						children = 
-						[
-							{
-								_class = "AttachmentInfluence"
-								parent_bone = "head"
-								relative_origin = [ 0.0, -3.0, 0.0 ]
-								relative_angles = [ 0.0, 90.0, 90.0 ]
-								weight = 1.0
-							},
-						]
-						parent_bone = "pelvis"
-						relative_origin = [ 0.0, -3.0, 0.0 ]
-						relative_angles = [ 0.0, 90.0, 90.0 ]
-						weight = 1.0
-						ignore_rotation = true
-					},
-					{
-						_class = "Attachment"
-						name = "middle_of_both_hands"
-						children = 
-						[
-							{
-								_class = "AttachmentInfluence"
-								parent_bone = "hand_L"
-								relative_origin = [ 5.0, 0.0, 0.0 ]
-								relative_angles = [ 0.0, 0.0, 0.0 ]
-								weight = 1.0
-							},
-							{
-								_class = "AttachmentInfluence"
-								parent_bone = "hand_R"
-								relative_origin = [ 5.0, 0.0, 0.0 ]
-								relative_angles = [ 0.0, 0.0, 0.0 ]
-								weight = 1.0
-							},
-						]
-						parent_bone = "spine_1"
-						relative_origin = [ 0.0, 0.0, 0.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
-						weight = 0.0
-						ignore_rotation = false
-					},
-					{
-						_class = "Attachment"
-						name = "hold_R_jiggle"
-						disabled = true
-						parent_bone = "hold_R_jiggle"
-						relative_origin = [ 0.0, 0.0, 0.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
-						weight = 1.0
-						ignore_rotation = false
-					},
-					{
-						_class = "Attachment"
-						name = "hold_L_jiggle"
-						disabled = true
-						parent_bone = "hold_L_jiggle"
-						relative_origin = [ 0.0, 0.0, 0.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
-						weight = 1.0
-						ignore_rotation = false
-					},
 				]
 			},
 			{
@@ -1161,224 +1051,14 @@
 						children = 
 						[
 							{
-								_class = "HitboxCapsule"
-								name = "HB_pelvis"
+								_class = "Hitbox"
+								name = "Hitbox"
 								parent_bone = "pelvis"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 3
-								radius = 4.5
-								point0 = [ 0.5, 0.0, -2.5 ]
-								point1 = [ 0.5, 0.0, 2.5 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_spine_0"
-								parent_bone = "spine_0"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 3
-								radius = 6.5
-								point0 = [ 0.0, 0.0, -1.0 ]
-								point1 = [ 0.0, 0.0, 1.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_spine_1"
-								parent_bone = "spine_1"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 2
-								radius = 7.0
-								point0 = [ 0.0, 0.0, -0.5 ]
-								point1 = [ 0.0, 0.0, 0.5 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_spine_2"
-								parent_bone = "spine_2"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 2
-								radius = 7.0
-								point0 = [ -1.0, 0.0, 0.0 ]
-								point1 = [ 1.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_neck_0"
-								parent_bone = "neck_0"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 2
-								radius = 2.0
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 2.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_head"
-								parent_bone = "head"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 1
-								radius = 6.2
-								point0 = [ 0.0, 0.5, 0.0 ]
-								point1 = [ 9.0, 0.3, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_clavicle_L"
-								parent_bone = "clavicle_L"
-								surface_property = "flesh"
+								surface_property = ""
 								translation_only = false
 								group_id = 0
-								radius = 2.5
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 4.5, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_arm_upper_L"
-								parent_bone = "arm_upper_L"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.5
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 10.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_arm_lower_L"
-								parent_bone = "arm_lower_L"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.2
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 9.0, -0.5, 0.5 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_hand_L"
-								parent_bone = "hand_L"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.0
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 2.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_clavicle_R"
-								parent_bone = "clavicle_R"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.5
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 4.5, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_arm_upper_R"
-								parent_bone = "arm_upper_R"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.5
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 10.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_arm_lower_R"
-								parent_bone = "arm_lower_R"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.2
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 9.0, -0.5, -0.5 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_hand_R"
-								parent_bone = "hand_R"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.0
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 2.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_leg_upper_R"
-								parent_bone = "leg_upper_R"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 3.0
-								point0 = [ 1.0, 0.0, 0.0 ]
-								point1 = [ 13.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_leg_lower_R"
-								parent_bone = "leg_lower_R"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.4
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 13.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_ankle_R"
-								parent_bone = "ankle_R"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.5
-								point0 = [ 2.0, -1.6, 0.0 ]
-								point1 = [ 4.5, 0.85, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_leg_upper_L"
-								parent_bone = "leg_upper_L"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 3.0
-								point0 = [ 1.0, 0.0, 0.0 ]
-								point1 = [ 13.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_leg_lower_L"
-								parent_bone = "leg_lower_L"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.4
-								point0 = [ 0.0, 0.0, 0.0 ]
-								point1 = [ 13.0, 0.0, 0.0 ]
-							},
-							{
-								_class = "HitboxCapsule"
-								name = "HB_ankle_L"
-								parent_bone = "ankle_L"
-								surface_property = "flesh"
-								translation_only = false
-								group_id = 0
-								radius = 2.5
-								point0 = [ 2.0, -1.6, 0.0 ]
-								point1 = [ 4.5, 0.85, 0.0 ]
+								hitbox_mins = [ -30.0, -10.0, -15.0 ]
+								hitbox_maxs = [ 40.0, 10.0, 15.0 ]
 							},
 						]
 					},
@@ -2186,6 +1866,504 @@
 							"Hands_LOD3",
 							"Legs_LOD3",
 							"Feet_LOD3",
+						]
+					},
+				]
+			},
+			{
+				_class = "PhysicsJointList"
+				children = 
+				[
+					{
+						_class = "Folder"
+						name = "PhysicsJointBody"
+						children = 
+						[
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "pelvis"
+								child_body = "spine_0"
+								anchor_origin = [ 3.921839, -0.002458, -0.000122 ]
+								anchor_angles = [ 0.029621, -90.006454, -90.0 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_swing_limit = true
+								swing_limit = 10.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -10.0
+								max_twist_angle = 10.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "spine_0"
+								child_body = "spine_2"
+								anchor_origin = [ 11.220913, 0.003078, 0.000057 ]
+								anchor_angles = [ -0.021218, -89.958176, -89.971085 ]
+								collision_enabled = false
+								friction = 3.0
+								enable_swing_limit = true
+								swing_limit = 20.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -15.0
+								max_twist_angle = 15.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								disabled = true
+								parent_body = "spine_2"
+								child_body = "neck_0"
+								anchor_origin = [ 5.820038, -0.09351, -0.00296 ]
+								anchor_angles = [ -0.009987, -92.285278, -90.028572 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_swing_limit = true
+								swing_limit = 10.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -10.0
+								max_twist_angle = 10.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "spine_2"
+								child_body = "head"
+								anchor_origin = [ 10.330833, -0.10869, -0.004868 ]
+								anchor_angles = [ -0.004001, -87.933022, -90.024933 ]
+								collision_enabled = false
+								friction = 1.5
+								enable_swing_limit = true
+								swing_limit = 35.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -25.0
+								max_twist_angle = 25.0
+							},
+						]
+					},
+					{
+						_class = "Folder"
+						name = "PhysicsJointsArms"
+						children = 
+						[
+							{
+								_class = "PhysicsJointConical"
+								disabled = true
+								parent_body = "spine_2"
+								child_body = "clavicle_L"
+								anchor_origin = [ 4.038124, 0.275188, 1.10397 ]
+								anchor_angles = [ 13.629756, -90.885353, -3.47933 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_swing_limit = true
+								swing_limit = 5.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -1.0
+								max_twist_angle = 1.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "spine_2"
+								child_body = "arm_upper_L"
+								anchor_origin = [ 4.392952, -1.19286, 7.136116 ]
+								anchor_angles = [ 7.244876, -96.518921, 41.299156 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_swing_limit = true
+								swing_limit = 30.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -10.0
+								max_twist_angle = 10.0
+							},
+							{
+								_class = "PhysicsJointRevolute"
+								parent_body = "arm_upper_L"
+								child_body = "arm_lower_L"
+								anchor_origin = [ 10.045197, 0.000015, -0.000031 ]
+								anchor_angles = [ 0.0, 0.0, 0.0 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_limit = true
+								min_angle = 0.0
+								max_angle = 140.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "arm_lower_L"
+								child_body = "hand_L"
+								anchor_origin = [ 7.706666, -0.000004, -0.000053 ]
+								anchor_angles = [ 10.347548, -85.044273, -85.738663 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_swing_limit = true
+								swing_limit = 60.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -40.0
+								max_twist_angle = 40.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								disabled = true
+								parent_body = "spine_2"
+								child_body = "clavicle_R"
+								anchor_origin = [ 4.037003, 0.274853, -1.108154 ]
+								anchor_angles = [ -13.647896, -90.871323, -176.579971 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_swing_limit = true
+								swing_limit = 5.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -1.0
+								max_twist_angle = 1.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "spine_2"
+								child_body = "arm_upper_R"
+								anchor_origin = [ 4.385933, -1.194662, -7.140232 ]
+								anchor_angles = [ -7.264868, -96.512123, 138.645859 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_swing_limit = true
+								swing_limit = 30.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -10.0
+								max_twist_angle = 10.0
+							},
+							{
+								_class = "PhysicsJointRevolute"
+								parent_body = "arm_upper_R"
+								child_body = "arm_lower_R"
+								anchor_origin = [ 10.045218, -0.000016, 0.0 ]
+								anchor_angles = [ 0.0, 0.0, 0.0 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_limit = true
+								min_angle = 0.0
+								max_angle = 140.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "arm_lower_R"
+								child_body = "hand_R"
+								anchor_origin = [ 7.706682, -0.000025, 0.000011 ]
+								anchor_angles = [ -10.347623, -85.04422, -94.261368 ]
+								collision_enabled = false
+								friction = 4.0
+								enable_swing_limit = true
+								swing_limit = 60.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -40.0
+								max_twist_angle = 40.0
+							},
+						]
+					},
+					{
+						_class = "Folder"
+						name = "PhysicsJointsLegs"
+						children = 
+						[
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "pelvis"
+								child_body = "leg_upper_L"
+								anchor_origin = [ -0.288126, -0.426451, 4.427378 ]
+								anchor_angles = [ -90.0, 0.0, 0.0 ]
+								collision_enabled = false
+								friction = 2.5
+								enable_swing_limit = true
+								swing_limit = 60.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = 30.0
+								max_twist_angle = 30.0
+							},
+							{
+								_class = "PhysicsJointRevolute"
+								parent_body = "leg_upper_L"
+								child_body = "leg_lower_L"
+								anchor_origin = [ 14.470346, -0.000055, -0.000043 ]
+								anchor_angles = [ 0.0, 0.0, 0.0 ]
+								collision_enabled = false
+								friction = 1.8
+								enable_limit = true
+								min_angle = -110.0
+								max_angle = 0.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "leg_lower_L"
+								child_body = "ankle_L"
+								anchor_origin = [ 12.515529, 0.000006, -0.000018 ]
+								anchor_angles = [ 0.000043, -43.904522, -89.999947 ]
+								collision_enabled = false
+								friction = 0.8
+								enable_swing_limit = true
+								swing_limit = 30.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -18.0
+								max_twist_angle = 18.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "pelvis"
+								child_body = "leg_upper_R"
+								anchor_origin = [ -0.28817, -0.42645, -4.427383 ]
+								anchor_angles = [ -90.0, 0.0, 0.0 ]
+								collision_enabled = false
+								friction = 2.5
+								enable_swing_limit = true
+								swing_limit = 60.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = 30.0
+								max_twist_angle = 30.0
+							},
+							{
+								_class = "PhysicsJointRevolute"
+								parent_body = "leg_upper_R"
+								child_body = "leg_lower_R"
+								anchor_origin = [ 14.470343, -0.000002, -0.000013 ]
+								anchor_angles = [ 0.0, 0.0, 0.0 ]
+								collision_enabled = false
+								friction = 1.8
+								enable_limit = true
+								min_angle = -110.0
+								max_angle = 0.0
+							},
+							{
+								_class = "PhysicsJointConical"
+								parent_body = "leg_lower_R"
+								child_body = "ankle_R"
+								anchor_origin = [ 12.5155, 0.000019, -0.000019 ]
+								anchor_angles = [ 0.00002, -43.904572, -89.999886 ]
+								collision_enabled = false
+								friction = 0.8
+								enable_swing_limit = true
+								swing_limit = 30.0
+								swing_offset_angle = [ 0.0, 0.0, 0.0 ]
+								enable_twist_limit = true
+								min_twist_angle = -18.0
+								max_twist_angle = 18.0
+							},
+						]
+					},
+				]
+			},
+			{
+				_class = "PhysicsShapeList"
+				children = 
+				[
+					{
+						_class = "Folder"
+						name = "PhysicsBody"
+						children = 
+						[
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "pelvis"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 5.0
+								point0 = [ 1.0, 0.0, -2.5 ]
+								point1 = [ 1.0, 0.0, 2.5 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "spine_0"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 7.0
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 4.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeSphere"
+								disabled = true
+								parent_bone = "spine_1"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 7.0
+								center = [ -0.5, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "spine_2"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 7.0
+								point0 = [ 1.0, 0.0, 0.0 ]
+								point1 = [ -2.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								disabled = true
+								parent_bone = "neck_0"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.0
+								point0 = [ 1.0, 0.0, -4.0 ]
+								point1 = [ 1.0, 0.0, 4.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "head"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 6.5
+								point0 = [ 3.0, 1.0, 0.0 ]
+								point1 = [ 9.0, 0.25, 0.0 ]
+							},
+						]
+					},
+					{
+						_class = "Folder"
+						name = "PhysicsArms"
+						children = 
+						[
+							{
+								_class = "PhysicsShapeCapsule"
+								disabled = true
+								parent_bone = "clavicle_L"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 1.55458
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 6.21832, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "arm_upper_L"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.4
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 10.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "arm_lower_L"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.0
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 7.5, -0.2, 0.2 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "hand_L"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 3.0
+								point0 = [ 2.0, 0.0, 0.4 ]
+								point1 = [ 7.0, 0.0, 2.5 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								disabled = true
+								parent_bone = "clavicle_R"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 1.554579
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 6.21831, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "arm_upper_R"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.4
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 10.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "arm_lower_R"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.0
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 7.5, -0.2, -0.2 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "hand_R"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 3.0
+								point0 = [ 2.0, 0.0, -0.4 ]
+								point1 = [ 7.0, 0.0, -2.5 ]
+							},
+						]
+					},
+					{
+						_class = "Folder"
+						name = "PhysicsLegs"
+						children = 
+						[
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "leg_upper_L"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 3.0
+								point0 = [ 3.0, 0.0, 0.0 ]
+								point1 = [ 14.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "leg_lower_L"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.5
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 12.5155, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "ankle_L"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.5
+								point0 = [ 1.5, -1.5, 0.0 ]
+								point1 = [ 4.5, 0.5, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "leg_upper_R"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 3.0
+								point0 = [ 3.0, 0.0, 0.0 ]
+								point1 = [ 14.0, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "leg_lower_R"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.5
+								point0 = [ 0.0, 0.0, 0.0 ]
+								point1 = [ 12.5155, 0.0, 0.0 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "ankle_R"
+								surface_prop = "flesh"
+								collision_prop = "default"
+								radius = 2.5
+								point0 = [ 1.5, -1.5, 0.0 ]
+								point1 = [ 4.5, 0.5, 0.0 ]
+							},
 						]
 					},
 				]

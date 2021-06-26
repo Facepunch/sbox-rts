@@ -19,6 +19,7 @@ namespace Facepunch.RTS
 
 		public void Play( Player player, string sound )
 		{
+			Log.Info( "Send " + sound );
 			Play( To.Single( player ), sound );
 		}
 
@@ -41,19 +42,19 @@ namespace Facepunch.RTS
 		public void Play( ItemCreateError error )
 		{
 			if ( error == ItemCreateError.NotEnoughStone )
-				Play( "not_enough_stone" );
+				Play( "announcer.not_enough_stone" );
 
 			if ( error == ItemCreateError.NotEnoughMetal )
-				Play( "not_enough_metal" );
+				Play( "announcer.not_enough_metal" );
 
 			if ( error == ItemCreateError.NotEnoughPlasma )
-				Play( "not_enough_plasma" );
+				Play( "announcer.not_enough_plasma" );
 
 			if ( error == ItemCreateError.NotEnoughBeer )
-				Play( "not_enough_beer" );
+				Play( "announcer.not_enough_beer" );
 
 			if ( error == ItemCreateError.NotEnoughPopulation )
-				Play( "need_additional_pubs" );
+				Play( "announcer.need_additional_pubs" );
 		}
 
 		[ClientRpc]

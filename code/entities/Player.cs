@@ -58,6 +58,37 @@ namespace Facepunch.RTS
 			Population = Math.Max( Population - population, 0 );
 		}
 
+		public List<T> GetSelected<T>() where T : ISelectable
+		{
+			var output = new List<T>();
+
+			foreach ( var entity in Selection )
+			{
+				if ( entity is T selected )
+				{
+					output.Add( selected );
+				}
+			}
+
+			return output;
+		}
+
+		public List<T> ForEachSelected<T>( Func<T, bool> callback ) where T : ISelectable
+		{
+			var output = new List<T>();
+
+			foreach ( var entity in Selection )
+			{
+				if ( entity is T selected )
+				{
+					if ( callback( selected ) )
+						output.Add( selected );
+				}
+			}
+
+			return output;
+		}
+
 		public bool HasPopulationCapacity( uint population )
 		{
 			return (Population + population <= MaxPopulation);

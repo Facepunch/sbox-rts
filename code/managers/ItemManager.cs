@@ -58,10 +58,13 @@ namespace Facepunch.RTS
 						caller.TakeResourcesForItem( item );
 
 						var building = new BuildingEntity();
+
 						building.Position = trace.EndPos;
 						building.Assign( caller, item );
 						building.StartConstruction();
+
 						worker.Construct( building );
+						worker.Item.PlayConstructSound( caller );
 					}
 				}
 			}
@@ -124,27 +127,16 @@ namespace Facepunch.RTS
 
 			if ( target.IsValid() )
 			{
-				var hasUnitEntities = false;
-
-				foreach ( var entity in caller.Selection )
+				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( entity is UnitEntity unit )
-					{
-						hasUnitEntities = true;
-						unit.Attack( target );
-					}
-				}
+					unit.Attack( target );
+					return true;
+				} );
 
-				if ( hasUnitEntities )
+				if ( units.Count > 0 )
 				{
-					var soundOptions = new string[]
-					{
-						"lets_go",
-						"lets_take_em_down",
-						"ready_to_destroy"
-					};
-
-					RTS.Sound.Play( caller, Rand.FromArray( soundOptions ) );
+					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					randomUnit.Item.PlayAttackSound( caller );
 				}
 			}
 		}
@@ -210,14 +202,18 @@ namespace Facepunch.RTS
 			if ( target.IsValid() && target is BuildingEntity building )
 			{
 				if ( building.Player != caller ) return;
+				if ( !building.CanDepositResources ) return;
 
-				foreach ( var entity in caller.Selection )
+				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( entity is UnitEntity unit )
-					{
-						if ( building.CanDepositResources )
-							unit.Deposit( building );
-					}
+					unit.Deposit( building );
+					return true;
+				} );
+
+				if ( units.Count > 0 )
+				{
+					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					randomUnit.Item.PlayDepositSound( caller );
 				}
 			}
 		}
@@ -234,10 +230,22 @@ namespace Facepunch.RTS
 
 			if ( target.IsValid() && target is ResourceEntity resource )
 			{
-				foreach ( var entity in caller.Selection )
+				var resourceType = resource.Resource;
+				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( entity is UnitEntity unit && unit.CanGather( resource.Resource )  )
+					if ( unit.CanGather( resourceType ) )
+					{
 						unit.Gather( resource );
+						return true;
+					}
+
+					return false;
+				} );
+
+				if ( units.Count > 0 )
+				{
+					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					randomUnit.Item.PlayGatherSound( caller, resourceType );
 				}
 			}
 		}
@@ -256,20 +264,21 @@ namespace Facepunch.RTS
 			{
 				if ( building.IsUnderConstruction && building.Player == caller )
 				{
-					var willStartConstruction = false;
-
-					foreach ( var entity in caller.Selection )
+					var units = caller.ForEachSelected<UnitEntity>( unit =>
 					{
-						if ( entity is UnitEntity unit && unit.CanConstruct )
+						if ( unit.CanConstruct )
 						{
-							willStartConstruction = true;
 							unit.Construct( building );
+							return true;
 						}
-					}
 
-					if ( willStartConstruction )
+						return false;
+					} );
+
+					if ( units.Count > 0 )
 					{
-						RTS.Sound.Play( caller, "on_my_way" );
+						var randomUnit = units[Rand.Int( units.Count - 1 )];
+						randomUnit.Item.PlayConstructSound( caller );
 					}
 				}
 			}
@@ -289,27 +298,17 @@ namespace Facepunch.RTS
 
 			if ( entries.Count == 3 )
 			{
-				var hasUnitEntities = false;
 				var position = new Vector3( entries[0], entries[1], entries[2] );
-
-				foreach ( var entity in caller.Selection )
+				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( entity is UnitEntity unit )
-					{
-						hasUnitEntities = true;
-						unit.MoveTo( position );
-					}
-				}
+					unit.MoveTo( position );
+					return true;
+				} );
 
-				if ( hasUnitEntities )
+				if ( units.Count > 0 )
 				{
-					var soundOptions = new string[]
-					{
-						"lets_go",
-						"on_my_way"
-					};
-
-					RTS.Sound.Play( caller, Rand.FromArray( soundOptions ) );
+					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					randomUnit.Item.PlayMoveSound( caller );
 				}
 			}
 		}
@@ -327,7 +326,7 @@ namespace Facepunch.RTS
 			if ( string.IsNullOrEmpty( csv ) )
 				return;
 
-			var hasUnitEntities = false;
+			var eligible = new List<ISelectable>(); 
 			var entities = csv.Split( ',', StringSplitOptions.TrimEntries )
 				.Select( i => FindByIndex( Convert.ToInt32( i ) ) );
 
@@ -341,20 +340,24 @@ namespace Facepunch.RTS
 
 				if ( selectable.Player == caller )
 				{
-					hasUnitEntities = (selectable is UnitEntity);
 					selectable.Select();
+					eligible.Add( selectable );
+
+					if ( !selectable.CanMultiSelect )
+					{
+						break;
+					}
 				}
 			}
 
-			if ( hasUnitEntities )
+			if ( eligible.Count > 0 )
 			{
-				var soundOptions = new string[]
-				{
-					"ready_lower_serious",
-					"tell_me_what_to_do"
-				};
+				var randomItem = eligible[Rand.Int( eligible.Count - 1 )];
 
-				RTS.Sound.Play( caller, Rand.FromArray( soundOptions ) );
+				if ( randomItem is UnitEntity unit )
+				{
+					unit.Item.PlaySelectSound( caller );
+				}
 			}
 		}
 

@@ -8,5 +8,13 @@
 		{
 			return !Has( player ) && HasDependencies( player );
 		}
+
+		public override void OnCreated( Player player )
+		{
+			RTS.Sound.Play( player, "announcer.technology_researched" );
+			RTS.Game.Toast( player, "Technology Researched", this );
+
+			base.OnCreated( player );
+		}
 	}
 }

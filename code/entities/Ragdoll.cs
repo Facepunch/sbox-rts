@@ -26,6 +26,7 @@ namespace Facepunch.RTS
 		public static Ragdoll From( ModelEntity entity, Vector3 velocity, DamageFlags damageFlags, Vector3 forcePos, Vector3 force, int bone )
 		{
 			var ragdoll = new Ragdoll();
+			var modelName = entity.GetModelName();
 
 			ragdoll.Position = entity.Position;
 			ragdoll.Rotation = entity.Rotation;
@@ -34,7 +35,7 @@ namespace Facepunch.RTS
 			ragdoll.SetSolidType( SolidType.Physics );
 			ragdoll.EnableAllCollisions = true;
 			ragdoll.CollisionGroup = CollisionGroup.Debris;
-			ragdoll.SetModel( entity.GetModelName() );
+			ragdoll.SetModel( modelName );
 			ragdoll.CopyBonesFrom( entity );
 			ragdoll.CopyBodyGroups( entity );
 			ragdoll.CopyMaterialGroup( entity );
@@ -43,6 +44,12 @@ namespace Facepunch.RTS
 			ragdoll.EnableAllCollisions = true;
 			ragdoll.SurroundingBoundsMode = SurroundingBoundsType.Physics;
 			ragdoll.RenderColorAndAlpha = entity.RenderColorAndAlpha;
+
+			if ( ragdoll.PhysicsGroup == null )
+			{
+				throw new Exception( $"Tried to make a ragdoll with {modelName} but it has no physics group!" );
+			}
+
 			ragdoll.PhysicsGroup.Velocity = velocity;
 			ragdoll.SetInteractsAs( CollisionLayer.Debris );
 			ragdoll.SetInteractsWith( CollisionLayer.WORLD_GEOMETRY );

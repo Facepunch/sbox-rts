@@ -56,6 +56,16 @@ namespace Facepunch.RTS
 			Game = this;
 		}
 
+		public void ToastAll( string text, BaseItem item )
+		{
+			Toast( To.Everyone, text, item.NetworkId );
+		}
+
+		public void Toast( Player player, string text, BaseItem item )
+		{
+			Toast( To.Single( player ), text, item.NetworkId );
+		}
+
 		public void ToastAll( string text, string icon = "" )
 		{
 			Toast( To.Everyone, text, icon );
@@ -65,7 +75,18 @@ namespace Facepunch.RTS
 		{
 			Toast( To.Single( player ), text, icon );
 		}
-		
+
+		[ClientRpc]
+		public void Toast( string text, uint itemId )
+		{
+			var item = Item.Find<BaseItem>( itemId );
+
+			if ( item != null )
+			{
+				ToastList.Instance.AddItem( text, item.Icon );
+			}
+		}
+
 		[ClientRpc]
 		public void Toast( string text, string icon = "" )
 		{

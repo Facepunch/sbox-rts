@@ -102,7 +102,7 @@ namespace Facepunch.RTS
 
 			AddAsFogViewer( To.Single( Player ) );
 
-			RTS.Sound.Play( Player, "construction_complete" );
+			RTS.Sound.Play( Player, "announcer.construction_complete" );
 		}
 
 		public void StartConstruction()
