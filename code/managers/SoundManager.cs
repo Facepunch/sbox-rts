@@ -19,7 +19,6 @@ namespace Facepunch.RTS
 
 		public void Play( Player player, string sound )
 		{
-			Log.Info( "Send " + sound );
 			Play( To.Single( player ), sound );
 		}
 
