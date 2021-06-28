@@ -7,17 +7,18 @@ Layer0
 	//---- Translucent ----
 	F_TRANSLUCENT 1
 
+	//---- Unlit ----
+	F_UNLIT 1
+
 	//---- Z-Buffering ----
 	F_DISABLE_Z_BUFFERING 1
 
 	//---- Ambient Occlusion ----
-	g_flAmbientOcclusionDirectDiffuse "0.000"
-	g_flAmbientOcclusionDirectSpecular "0.000"
 	TextureAmbientOcclusion "materials/default/default_ao.tga"
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
-	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
+	g_vColorTint "[0.000000 0.000000 0.000000 0.000000]"
 	TextureColor "[0.000000 0.000000 0.000000 0.000000]"
 
 	//---- Fade ----
@@ -25,10 +26,6 @@ Layer0
 
 	//---- Fog ----
 	g_bFogEnabled "0"
-
-	//---- Lighting ----
-	g_flDirectionalLightmapMinZ "0.050"
-	g_flDirectionalLightmapStrength "1.000"
 
 	//---- Metalness ----
 	g_flMetalness "0.000"
