@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Gamelib.FlowFields;
 
 namespace Facepunch.RTS
 {
@@ -303,7 +304,8 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
-					var moveGroup = new MoveGroup( units, position );
+					var flockAgents = units.Cast<IFlockAgent>().ToList();
+					var moveGroup = new MoveGroup( flockAgents, position );
 
 					for ( int i = 0; i < units.Count; i++ )
 					{

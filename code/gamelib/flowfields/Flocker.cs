@@ -8,9 +8,9 @@ namespace Gamelib.FlowFields
 		public Vector3 Position;
 		public Vector3 Force;
 		public IFlockAgent Agent;
-		public IEnumerable<IFlockAgent> Agents;
+		public List<IFlockAgent> Agents;
 
-		public void Setup( IFlockAgent agent, IEnumerable<IFlockAgent> agents, Vector3 position )
+		public void Setup( IFlockAgent agent, List<IFlockAgent> agents, Vector3 position )
 		{
 			Position = position;
 			Force = Vector3.Zero;
