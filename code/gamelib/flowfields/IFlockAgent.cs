@@ -12,5 +12,7 @@
 		public Vector3 Position { get; }
 		public Vector3 Velocity { get; }
 		public FlockSettings FlockSettings { get; }
+		public MoveGroup MoveGroup { get; }
+		public void OnMoveGroupDisposed();
 	}
 }

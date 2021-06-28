@@ -97,7 +97,7 @@ namespace Facepunch.RTS
 				// We can try to see if our range overlaps the bounding box of the target.
 				var targetBounds = entity.CollisionBounds + entity.Position;
 
-				if ( targetBounds.Overlaps( Position, TargetRange * 2f ) )
+				if ( targetBounds.Overlaps( Position, TargetRange ) )
 					return true;
 			}
 
@@ -207,24 +207,24 @@ namespace Facepunch.RTS
 		public void MoveTo( Vector3 position )
 		{
 			ResetTarget();
-			MoveGroup = CreateSingleMoveGroup( position );
+			MoveGroup = CreateMoveGroup( position );
 			OnTargetChanged();
 		}
 
-		public MoveGroup CreateSingleMoveGroup( Vector3 destination )
+		public MoveGroup CreateMoveGroup( Vector3 destination )
 		{
-			return new MoveGroup( new List<UnitEntity>() { this }, destination );
+			return new MoveGroup( this, destination );
 		}
 
-		public MoveGroup CreateSingleMoveGroup( List<Vector3> destinations )
+		public MoveGroup CreateMoveGroup( List<Vector3> destinations )
 		{
-			return new MoveGroup( new List<UnitEntity>() { this }, destinations );
+			return new MoveGroup( this, destinations );
 		}
 
 		public void Occupy( BuildingEntity building, MoveGroup moveGroup = null )
 		{
 			if ( moveGroup == null )
-				moveGroup = CreateSingleMoveGroup( GetDestinations( building ) );
+				moveGroup = CreateMoveGroup( GetDestinations( building ) );
 
 			ResetTarget();
 			Target = building;
@@ -237,7 +237,7 @@ namespace Facepunch.RTS
 		public void Deposit( BuildingEntity building, MoveGroup moveGroup = null )
 		{
 			if ( moveGroup == null )
-				moveGroup = CreateSingleMoveGroup( GetDestinations( building ) );
+				moveGroup = CreateMoveGroup( GetDestinations( building ) );
 
 			ResetTarget();
 			Target = building;
@@ -250,7 +250,7 @@ namespace Facepunch.RTS
 		public void Gather( ResourceEntity resource, MoveGroup moveGroup = null )
 		{
 			if ( moveGroup == null )
-				moveGroup = CreateSingleMoveGroup( GetDestinations( resource ) );
+				moveGroup = CreateMoveGroup( GetDestinations( resource ) );
 
 			ResetTarget();
 			Target = resource;
@@ -266,7 +266,7 @@ namespace Facepunch.RTS
 		public void Construct( BuildingEntity building, MoveGroup moveGroup = null )
 		{
 			if ( moveGroup == null )
-				moveGroup = CreateSingleMoveGroup( GetDestinations( building ) );
+				moveGroup = CreateMoveGroup( GetDestinations( building ) );
 
 			ResetTarget();
 			Target = building;
@@ -317,10 +317,17 @@ namespace Facepunch.RTS
 			return entity;
 		}
 
+		public void OnMoveGroupDisposed()
+		{
+			ClearTarget();
+		}
+
 		public List<Vector3> GetDestinations( ModelEntity model )
 		{
+			var modelSize = model.CollisionBounds.Size;
+			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
 			var potentialTiles = new List<Vector3>();
-			var collisionSize = model.CollisionBounds.Size.Length * 0.4f;
+			var collisionSize = maxRadius * 0.4f;
 			var possibleLocations = new List<GridWorldPosition>();
 
 			RTS.Path.Pathfinder.GetGridPositions( model.Position, collisionSize, possibleLocations );
@@ -533,7 +540,13 @@ namespace Facepunch.RTS
 					}
 					else
 					{
-						pathDirection = MoveGroup.GetDirection( Position );
+						var direction = MoveGroup.GetDirection( Position );
+						var flocker = new Flocker();
+
+						flocker.Setup( this, MoveGroup.Agents, Position );
+						flocker.Flock( Position + direction.Normal * 50f );
+
+						pathDirection = flocker.Force.Normal;
 					}
 				}
 				else if ( TargetPosition.HasValue )
@@ -545,17 +558,7 @@ namespace Facepunch.RTS
 				{
 					_animationValues.Walking = 1f;
 
-					var agents = Physics.GetEntitiesInSphere( Position, _flockSettings.Radius * 5f )
-						.Where( entity => entity is UnitEntity unit && IsInMoveGroup( unit ) )
-						.Cast<IFlockAgent>();
-
-					CollisionGroup = CollisionGroup.Debris;
-
-					var flocker = new Flocker();
-					flocker.Setup( this, agents, Position );
-					flocker.Flock( Position + pathDirection.Normal * 50f );
-
-					InputVelocity = (flocker.Force.Normal * Speed).WithZ( 0f );
+					InputVelocity = (pathDirection * Speed).WithZ( 0f );
 					Velocity = InputVelocity * Time.Delta;
 				}
 				else
