@@ -515,7 +515,7 @@ namespace Facepunch.RTS
 				{
 					TargetPosition = Target.Position;
 				}
-				else if ( !IsSelected )
+				else if ( !IsSelected || !TargetPosition.HasValue )
 				{
 					if ( Target is ResourceEntity )
 						FindTargetResource();
@@ -566,6 +566,7 @@ namespace Facepunch.RTS
 				Position += Velocity;
 				AlignToGround();
 
+				var worldPos = RTS.Path.Pathfinder.CreateWorldPosition( Position );
 				RTS.Path.Pathfinder.DrawBox( worldPos, Color.Green, Time.Delta );
 
 				var walkVelocity = Velocity.WithZ( 0 );
