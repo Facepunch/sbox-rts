@@ -71,11 +71,9 @@ namespace Facepunch.RTS
 
 			_flockSettings = new FlockSettings()
 			{
-				Radius = 80f,
+				Radius = 200f,
 				MaxSpeed = 300f,
-				MaxForce = 300f,
-				SeperateRange = 120f,
-				CohesionRange = 100f
+				MaxForce = 300f
 			};
 
 			// Don't collide with anything but static shit.
@@ -546,16 +544,7 @@ namespace Facepunch.RTS
 				{
 					_animationValues.Walking = 1f;
 
-					_flockSettings = new FlockSettings()
-					{
-						Radius = 150f,
-						MaxSpeed = 300f,
-						MaxForce = 300f,
-						SeperateRange = 100f,
-						CohesionRange = 100f
-					};
-
-					var agents = Physics.GetEntitiesInSphere( Position, _flockSettings.Radius * 4f )
+					var agents = Physics.GetEntitiesInSphere( Position, _flockSettings.Radius * 5f )
 						.Where( entity => entity is UnitEntity unit && IsInMoveGroup( unit ) )
 						.Cast<IFlockAgent>();
 

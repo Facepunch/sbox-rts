@@ -70,7 +70,7 @@ namespace Facepunch.RTS
 				{
 					var distance = unit.Position.Distance( other.Position );
 
-					if ( distance <= 200f )
+					if ( distance <= (unit.FlockSettings.Radius * 2f) )
 					{
 						return true;
 					}

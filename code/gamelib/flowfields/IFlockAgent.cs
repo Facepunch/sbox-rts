@@ -5,8 +5,6 @@
 		public float Radius;
 		public float MaxSpeed;
 		public float MaxForce;
-		public float SeperateRange;
-		public float CohesionRange;
 	}
 
 	public interface IFlockAgent
