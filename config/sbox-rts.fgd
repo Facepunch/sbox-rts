@@ -1,7 +1,7 @@
 // 
 // Gamelib.FlowFields.Entities.FlowFieldGround : Sandbox.FuncBrush 
 // 
-@PointClass = flowfield_ground : ""
+@SolidClass = flowfield_ground : ""
 [
 	rendercolor(color255) : "FX Color (R G B)" : "255 255 255" : "The FX color is used by the selected Render Mode."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
@@ -9,7 +9,6 @@
 	enabled(boolean) : "Enabled" : 0 : "Whether this func_brush is visible/active at all"
 	solid(boolean) : "Solid" : 0 : "Whether this func_brush has collisions"
 	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
-
 	input DisableSolid(void) : "Make this func_brush non solid"
 	input EnableSolid(void) : "Make this func_brush solid"
 	input ToggleSolid(void) : "Toggle solidity of this func_brush"
@@ -40,7 +39,6 @@
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
 	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
-
 ]
 
 // 
@@ -56,7 +54,6 @@
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
 	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
-
 ]
 
 // 
@@ -72,7 +69,6 @@
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
 	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
-
 ]
 
 // 
@@ -88,7 +84,6 @@
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
 	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
-
 ]
 
 // 
@@ -99,7 +94,6 @@
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
-
 ]
 
 // 
@@ -110,6 +104,5 @@
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
-
 ]
 

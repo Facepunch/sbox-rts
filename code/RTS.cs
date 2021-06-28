@@ -137,11 +137,6 @@ namespace Facepunch.RTS
 					Path.Create( 10, FlowFieldGround.Bounds, 50f );
 				else
 					Path.Create( 10, 30, 100f );
-
-				var mins = FlowFieldGround.Bounds.Mins;
-				var maxs = FlowFieldGround.Bounds.Maxs;
-
-				DebugOverlay.Box( 60f, mins.WithZ( 0f ), maxs.WithZ( 500f ), Color.Red );
 			}
 
 			base.PostLevelLoaded();

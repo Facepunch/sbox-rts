@@ -4,10 +4,9 @@ using System;
 namespace Gamelib.FlowFields.Entities
 {
 	[Library( "flowfield_ground" )]
+	[Hammer.Solid]
 	public class FlowFieldGround : FuncBrush
 	{
-		public static SoundEvent e = new SoundEvent();
-
 		public static event Action OnUpdated;
 		public static BBox Bounds { get; private set; }
 		public static bool Exists { get; private set; }

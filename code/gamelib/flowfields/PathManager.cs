@@ -6,6 +6,12 @@ namespace Gamelib.FlowFields
     {
 		public static PathManager Instance { get; private set; }
 
+		[ServerCmd( "rts_collisions" )]
+		private static void UpdateCollision()
+		{
+			Instance?.Pathfinder?.UpdateCollisions();
+		}
+
 		private Queue<FlowField> _flowFields = new();
 		private Pathfinder _pathfinder;
 

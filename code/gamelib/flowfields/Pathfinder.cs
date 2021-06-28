@@ -30,6 +30,7 @@ namespace Gamelib.FlowFields
 
 		public PhysicsBody PhysicsBody => _physicsBody;
 		public Vector3 PositionOffset { get; private set; }
+		public float CollisionScale { get; private set; } = 0.75f;
 		public Vector3 CenterOffset { get; private set; }
 		public Vector3 Origin { get; private set; }
 
@@ -133,9 +134,11 @@ namespace Gamelib.FlowFields
 
 			if ( IsCollisionAt( position, worldIndex ) )
 			{
+				var collisionScale = CollisionScale;
 				var transform = _physicsBody.Transform;
 				transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );
-				DebugOverlay.Box( 30f, transform.Position, -_halfExtents, _halfExtents, Color.Red );
+				DebugOverlay.Box( 30f, transform.Position, -_halfExtents * collisionScale, _halfExtents * collisionScale, Color.Red );
+				DebugOverlay.Box( 30f, transform.Position, -_halfExtents, _halfExtents, Color.White );
 				chunk.SetCollision( nodeIndex );
 			}
 			else
@@ -274,7 +277,7 @@ namespace Gamelib.FlowFields
 			var halfExtents = Vector3.One * scale * 0.5f;
 
 			physicsBody.CollisionEnabled = false;
-			physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, halfExtents );
+			physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, halfExtents * CollisionScale );
 
 			_numberOfChunks = new GridDefinition( numberOfChunks, numberOfChunks );
 			_physicsBody = physicsBody;
