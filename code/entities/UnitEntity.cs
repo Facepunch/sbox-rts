@@ -12,7 +12,7 @@ using Gamelib.FlowFields.Grid;
 
 namespace Facepunch.RTS
 {
-	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable
+	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IFlockAgent
 	{
 		private struct AnimationValues
 		{
@@ -47,7 +47,7 @@ namespace Facepunch.RTS
 		public DamageInfo LastDamageTaken { get; private set; }
 		public ResourceType LastResourceType { get; private set; }
 		public Vector3 LastResourcePosition { get; private set; }
-		public PathRequest PathRequest { get; private set; }
+		public MoveGroup MoveGroup { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
 		public float TargetRange { get; private set; }
@@ -58,6 +58,7 @@ namespace Facepunch.RTS
 		#endregion
 
 		private AnimationValues _animationValues;
+		private FlockSettings _flockSettings;
 
 		public UnitEntity() : base()
 		{
@@ -67,9 +68,22 @@ namespace Facepunch.RTS
 			{
 				Carrying = new();
 			}
+
+			_flockSettings = new FlockSettings()
+			{
+				Radius = 80f,
+				MaxSpeed = 300f,
+				MaxForce = 300f,
+				SeperateRange = 120f,
+				CohesionRange = 100f
+			};
+
+			// Don't collide with anything but static shit.
+			CollisionGroup = CollisionGroup.Debris;
 		}
 
 		public bool CanConstruct => Item.CanConstruct;
+		public FlockSettings FlockSettings => _flockSettings;
 
 		public bool CanGather( ResourceType type )
 		{
@@ -171,73 +185,96 @@ namespace Facepunch.RTS
 			Decals.Place( decalMaterial, trace.Entity, trace.Bone, trace.EndPos, new Vector3( randomSize, randomSize, 4f ), decalRotation );
 		}
 
+		public bool IsInMoveGroup( UnitEntity other )
+		{
+			return (other.MoveGroup == MoveGroup);
+		}
+
 		public void Attack( Entity target, bool autoFollow = true )
 		{
 			ResetTarget();
-
 			Target = target;
 			TargetRange = Item.AttackRange;
 			FollowTarget = autoFollow;
+			OnTargetChanged();
+		}
 
+		public void MoveTo( MoveGroup group )
+		{
+			ResetTarget();
+			MoveGroup = group;
 			OnTargetChanged();
 		}
 
 		public void MoveTo( Vector3 position )
 		{
 			ResetTarget();
-			RequestPath( position );
+			MoveGroup = CreateSingleMoveGroup( position );
 			OnTargetChanged();
 		}
 
-		public void Occupy( BuildingEntity building )
+		public MoveGroup CreateSingleMoveGroup( Vector3 destination )
 		{
-			ResetTarget();
-			RequestPath( building );
+			return new MoveGroup( new List<UnitEntity>() { this }, destination );
+		}
 
+		public MoveGroup CreateSingleMoveGroup( List<Vector3> destinations )
+		{
+			return new MoveGroup( new List<UnitEntity>() { this }, destinations );
+		}
+
+		public void Occupy( BuildingEntity building, MoveGroup moveGroup = null )
+		{
+			if ( moveGroup == null )
+				moveGroup = CreateSingleMoveGroup( GetDestinations( building ) );
+
+			ResetTarget();
 			Target = building;
+			MoveGroup = moveGroup;
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
-
 			OnTargetChanged();
 		}
 
-
-		public void Deposit( BuildingEntity building )
+		public void Deposit( BuildingEntity building, MoveGroup moveGroup = null )
 		{
-			ResetTarget();
-			RequestPath( building );
+			if ( moveGroup == null )
+				moveGroup = CreateSingleMoveGroup( GetDestinations( building ) );
 
+			ResetTarget();
 			Target = building;
+			MoveGroup = moveGroup;
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
-
 			OnTargetChanged();
 		}
 
-		public void Gather( ResourceEntity resource)
+		public void Gather( ResourceEntity resource, MoveGroup moveGroup = null )
 		{
-			ResetTarget();
-			RequestPath( resource );
+			if ( moveGroup == null )
+				moveGroup = CreateSingleMoveGroup( GetDestinations( resource ) );
 
+			ResetTarget();
 			Target = resource;
+			MoveGroup = MoveGroup;
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
 			LastResourceType = resource.Resource;
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
-
 			OnTargetChanged();
 		}
 
-		public void Construct( BuildingEntity building )
+		public void Construct( BuildingEntity building, MoveGroup moveGroup = null )
 		{
-			ResetTarget();
-			RequestPath( building );
+			if ( moveGroup == null )
+				moveGroup = CreateSingleMoveGroup( GetDestinations( building ) );
 
+			ResetTarget();
 			Target = building;
+			MoveGroup = moveGroup;
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
-
 			OnTargetChanged();
 		}
 
@@ -247,7 +284,7 @@ namespace Facepunch.RTS
 			TargetPosition = null;
 			IsGathering = false;
 			FollowTarget = false;
-			CompletePathRequest();
+			ClearMoveGroup();
 			OnTargetChanged();
 		}
 
@@ -280,6 +317,22 @@ namespace Facepunch.RTS
 			Clothing.Add( entity );
 
 			return entity;
+		}
+
+		public List<Vector3> GetDestinations( ModelEntity model )
+		{
+			var potentialTiles = new List<Vector3>();
+			var collisionSize = model.CollisionBounds.Size.Length * 0.4f;
+			var possibleLocations = new List<GridWorldPosition>();
+
+			RTS.Path.Pathfinder.GetGridPositions( model.Position, collisionSize, possibleLocations );
+
+			var destinations = possibleLocations.ConvertAll( v =>
+			{
+				return RTS.Path.Pathfinder.GetPosition( v );
+			} );
+
+			return destinations;
 		}
 
 		public void RemoveClothing()
@@ -371,84 +424,23 @@ namespace Facepunch.RTS
 			base.OnItemChanged( item );
 		}
 
-		protected virtual void Move( float timeDelta )
-		{
-			var bbox = BBox.FromHeightAndRadius( 64, 4 );
-
-			MoveHelper move = new( Position, Velocity );
-			move.MaxStandableAngle = 50;
-			move.Trace = move.Trace.Ignore( this ).Size( bbox );
-
-			if ( !Velocity.IsNearlyZero( 0.001f ) )
-			{
-				move.TryUnstuck();
-				move.TryMoveWithStep( timeDelta, 30 );
-			}
-
-			var tr = move.TraceDirection( Vector3.Down * 10.0f );
-
-			if ( move.IsFloor( tr ) )
-			{
-				GroundEntity = tr.Entity;
-
-				if ( !tr.StartedSolid )
-				{
-					move.Position = tr.EndPos;
-				}
-
-				move.Velocity -= InputVelocity;
-				move.ApplyFriction( tr.Surface.Friction * 200.0f, timeDelta );
-				move.Velocity += InputVelocity;
-			}
-			else
-			{
-				GroundEntity = null;
-				move.Velocity += Vector3.Down * 900 * timeDelta;
-			}
-
-			Position = move.Position;
-			Velocity = move.Velocity;
-		}
-
-		public void RequestPath( ModelEntity entity )
-		{
-			CompletePathRequest();
-
-			var potentialTiles = new List<Vector3>();
-			var collisionSize = entity.CollisionBounds.Size.Length * 0.4f;
-			var possibleLocations = new List<GridWorldPosition>();
-
-			RTS.Path.Pathfinder.GetGridPositions( entity.Position, collisionSize, possibleLocations );
-
-			var destinations = possibleLocations.ConvertAll( v =>
-			{
-				return RTS.Path.Pathfinder.GetPosition( v );
-			} );
-
-			PathRequest = RTS.Path.Request( destinations );
-		}
-
-		public void RequestPath( Vector3 position )
-		{
-			CompletePathRequest();
-			PathRequest = RTS.Path.Request( position );
-		}
-
 		private void ResetTarget()
 		{
 			Target = null;
 			TargetPosition = null;
 			IsGathering = false;
 			FollowTarget = false;
-			CompletePathRequest();
+			ClearMoveGroup();
 		}
 
-		private void CompletePathRequest()
+		private void ClearMoveGroup()
 		{
-			if ( PathRequest != null && PathRequest.IsValid() )
+			if ( MoveGroup != null && MoveGroup.IsValid() )
 			{
-				RTS.Path.Complete( PathRequest );
+				MoveGroup.Remove( this );
 			}
+
+			MoveGroup = null;
 		}
 
 		private void FindTargetResource()
@@ -534,15 +526,15 @@ namespace Facepunch.RTS
 
 				var pathDirection = Vector3.Zero;
 
-				if ( PathRequest != null && PathRequest.IsValid() )
+				if ( MoveGroup != null && MoveGroup.IsValid() )
 				{
-					if ( PathRequest.IsDestination( Position ) )
+					if ( MoveGroup.IsDestination( this, Position ) )
 					{
-						CompletePathRequest();
+						MoveGroup.Finish( this );
 					}
 					else
 					{
-						pathDirection = PathRequest.GetDirection( Position );
+						pathDirection = MoveGroup.GetDirection( Position );
 					}
 				}
 				else if ( TargetPosition.HasValue )
@@ -552,26 +544,43 @@ namespace Facepunch.RTS
 
 				if ( pathDirection.Length > 0 )
 				{
-					var control = GroundEntity != null ? 200f : 10f;
-
 					_animationValues.Walking = 1f;
 
-					InputVelocity = pathDirection.Normal * Speed;
-					var velocity = pathDirection.WithZ( 0 ).Normal * Time.Delta * control;
-					Velocity = Velocity.AddClamped( velocity, Speed );
+					_flockSettings = new FlockSettings()
+					{
+						Radius = 150f,
+						MaxSpeed = 300f,
+						MaxForce = 300f,
+						SeperateRange = 100f,
+						CohesionRange = 100f
+					};
+
+					var agents = Physics.GetEntitiesInSphere( Position, _flockSettings.Radius * 4f )
+						.Where( entity => entity is UnitEntity unit && IsInMoveGroup( unit ) )
+						.Cast<IFlockAgent>();
+
+					CollisionGroup = CollisionGroup.Debris;
+
+					var flocker = new Flocker();
+					flocker.Setup( this, agents, Position );
+					flocker.Flock( Position + pathDirection.Normal * 50f );
+
+					InputVelocity = (flocker.Force.Normal * Speed).WithZ( 0f );
+					Velocity = InputVelocity * Time.Delta;
 				}
 				else
 				{
 					Velocity = 0;
 				}
 
-				Move( Time.Delta );
+				Position += Velocity;
+				AlignToGround();
 
 				var walkVelocity = Velocity.WithZ( 0 );
 
 				if ( walkVelocity.Length > 1 )
 				{
-					Rotation = Rotation.LookAt( walkVelocity.Normal, Vector3.Up );
+					Rotation = Rotation.Lerp( Rotation, Rotation.LookAt( walkVelocity.Normal, Vector3.Up ), Time.Delta * 10f );
 				}
 			}
 			else
@@ -608,6 +617,11 @@ namespace Facepunch.RTS
 			}
 
 			_animationValues.Lerp( this, "walking", _animationValues.Walking );
+		}
+
+		private void AlignToGround()
+		{
+			Position = Position.WithZ( RTS.Path.Pathfinder.GetHeight( Position ) );
 		}
 
 		private void TickOccupy( BuildingEntity building )

@@ -299,14 +299,18 @@ namespace Facepunch.RTS
 			if ( entries.Count == 3 )
 			{
 				var position = new Vector3( entries[0], entries[1], entries[2] );
-				var units = caller.ForEachSelected<UnitEntity>( unit =>
-				{
-					unit.MoveTo( position );
-					return true;
-				} );
+				var units = caller.GetSelected<UnitEntity>();
 
 				if ( units.Count > 0 )
 				{
+					var moveGroup = new MoveGroup( units, position );
+
+					for ( int i = 0; i < units.Count; i++ )
+					{
+						var unit = units[i];
+						unit.MoveTo( moveGroup );
+					}
+
 					var randomUnit = units[Rand.Int( units.Count - 1 )];
 					randomUnit.Item.PlayMoveSound( caller );
 				}
