@@ -10,6 +10,11 @@ namespace Gamelib.FlowFields.Maths
 			return value.CeilToInt();
 		}
 
+		public static int RoundToint( float value )
+		{
+			return (int)MathF.Round( value );
+		}
+
 		public static int FloorToInt( float value )
 		{
 			return value.FloorToInt();

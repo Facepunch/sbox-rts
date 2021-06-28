@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Units
 		public override string Description => "A basic Terry armed with only a pistol.";
 		public override bool CanEnterBuildings => true;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
-		public override int BuildTime => 10;
+		public override int BuildTime => 1;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 150

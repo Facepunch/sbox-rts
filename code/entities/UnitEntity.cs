@@ -97,7 +97,7 @@ namespace Facepunch.RTS
 				// We can try to see if our range overlaps the bounding box of the target.
 				var targetBounds = entity.CollisionBounds + entity.Position;
 
-				if ( targetBounds.Overlaps( Position, TargetRange ) )
+				if ( targetBounds.Overlaps( Position, TargetRange * 2f ) )
 					return true;
 			}
 
@@ -327,6 +327,7 @@ namespace Facepunch.RTS
 
 			var destinations = possibleLocations.ConvertAll( v =>
 			{
+				RTS.Path.Pathfinder.DrawBox( v, Color.Blue, 10f );
 				return RTS.Path.Pathfinder.GetPosition( v );
 			} );
 
@@ -564,6 +565,8 @@ namespace Facepunch.RTS
 
 				Position += Velocity;
 				AlignToGround();
+
+				RTS.Path.Pathfinder.DrawBox( worldPos, Color.Green, Time.Delta );
 
 				var walkVelocity = Velocity.WithZ( 0 );
 

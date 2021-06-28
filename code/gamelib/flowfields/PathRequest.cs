@@ -20,7 +20,6 @@ namespace Gamelib.FlowFields
 			var indicies = FlowField.DestinationIndexes;
 			var pathfinder = FlowField.Pathfinder;
 			var worldPosition = pathfinder.CreateWorldPosition( position );
-
 			return indicies.Contains( worldPosition.WorldIndex );
 		}
 

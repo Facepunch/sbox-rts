@@ -29,7 +29,7 @@
 // 
 // Facepunch.RTS.BeerResource : Facepunch.RTS.ResourceEntity 
 // 
-@PointClass  model() = resource_beer : ""
+@PointClass model() = resource_beer : ""
 [
 	model(studio) [report]: "World Model" : "models/barrels/square_wooden_box_gold.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
@@ -44,7 +44,7 @@
 // 
 // Facepunch.RTS.MetalResource : Facepunch.RTS.ResourceEntity 
 // 
-@PointClass  model() = resource_metal : ""
+@PointClass model() = resource_metal : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Metal" : "Some models have multiple versions of their textures, called skins." 
@@ -59,7 +59,7 @@
 // 
 // Facepunch.RTS.PlasmaResource : Facepunch.RTS.ResourceEntity 
 // 
-@PointClass  model() = resource_plasma : ""
+@PointClass model() = resource_plasma : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Plasma" : "Some models have multiple versions of their textures, called skins." 
@@ -74,7 +74,7 @@
 // 
 // Facepunch.RTS.StoneResource : Facepunch.RTS.ResourceEntity 
 // 
-@PointClass  model() = resource_stone : ""
+@PointClass model() = resource_stone : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Rock" : "Some models have multiple versions of their textures, called skins." 

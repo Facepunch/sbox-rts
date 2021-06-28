@@ -134,17 +134,32 @@ namespace Gamelib.FlowFields
 
 			if ( IsCollisionAt( position, worldIndex ) )
 			{
-				var collisionScale = CollisionScale;
-				var transform = _physicsBody.Transform;
-				transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );
-				DebugOverlay.Box( 30f, transform.Position, -_halfExtents * collisionScale, _halfExtents * collisionScale, Color.Red );
-				DebugOverlay.Box( 30f, transform.Position, -_halfExtents, _halfExtents, Color.White );
+				DrawBox( position, worldIndex, Color.White, 10f );
 				chunk.SetCollision( nodeIndex );
 			}
 			else
 			{
 				chunk.RemoveCollision( nodeIndex );
 			}
+		}
+
+		public void DrawBox( Vector3 position, int worldIndex, Color? color = null, float duration = 1f )
+		{
+			var collisionScale = CollisionScale;
+			var transform = _physicsBody.Transform;
+			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );
+			DebugOverlay.Box( duration, transform.Position, -_halfExtents * collisionScale, _halfExtents * collisionScale, Color.Red );
+			DebugOverlay.Box( duration, transform.Position, -_halfExtents, _halfExtents, color.HasValue ? color.Value : Color.White );
+		}
+
+		public void DrawBox( int worldIndex, Color? color = null, float duration = 1f )
+		{
+			DrawBox( GetPosition( worldIndex ), worldIndex, color, duration );
+		}
+
+		public void DrawBox( GridWorldPosition position, Color? color = null, float duration = 1f )
+		{
+			DrawBox( GetPosition( position ), position.WorldIndex, color, duration );
 		}
 
         public bool Initialize()
@@ -352,6 +367,7 @@ namespace Gamelib.FlowFields
             CreatePortalsBetweenChunks( i, GridDirection.Right );
             CreatePortalsBetweenChunks( i, GridDirection.Left );
             CreatePortalsBetweenChunks( i, GridDirection.Down );
+
             GetChunk( i ).ConnectGateways();
 
             GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Up, _numberOfChunks) )?.ConnectGateways();
