@@ -8,7 +8,7 @@
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enabled(boolean) : "Enabled" : 0 : "Whether this func_brush is visible/active at all"
 	solid(boolean) : "Solid" : 0 : "Whether this func_brush has collisions"
-	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 	input DisableSolid(void) : "Make this func_brush non solid"
 	input EnableSolid(void) : "Make this func_brush solid"
 	input ToggleSolid(void) : "Toggle solidity of this func_brush"
@@ -24,12 +24,13 @@
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 
 // Facepunch.RTS.BeerResource : Facepunch.RTS.ResourceEntity 
 // 
-@PointClass  model() = resource_beer : ""
+@PointClass model() = resource_beer : ""
 [
 	model(studio) [report]: "World Model" : "models/barrels/square_wooden_box_gold.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
@@ -38,13 +39,13 @@
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
-	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 
 // Facepunch.RTS.MetalResource : Facepunch.RTS.ResourceEntity 
 // 
-@PointClass  model() = resource_metal : ""
+@PointClass model() = resource_metal : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Metal" : "Some models have multiple versions of their textures, called skins." 
@@ -53,13 +54,13 @@
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
-	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 
 // Facepunch.RTS.PlasmaResource : Facepunch.RTS.ResourceEntity 
 // 
-@PointClass  model() = resource_plasma : ""
+@PointClass model() = resource_plasma : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Plasma" : "Some models have multiple versions of their textures, called skins." 
@@ -68,13 +69,13 @@
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
-	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 
 // Facepunch.RTS.StoneResource : Facepunch.RTS.ResourceEntity 
 // 
-@PointClass  model() = resource_stone : ""
+@PointClass model() = resource_stone : ""
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Rock" : "Some models have multiple versions of their textures, called skins." 
@@ -83,7 +84,7 @@
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
-	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 
@@ -93,7 +94,7 @@
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 
@@ -103,6 +104,6 @@
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	disableshadows(boolean) [ group="Render Properties" ] : "Disable shadow casting" : 0 : "Disable shadow casting for this entity"
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 

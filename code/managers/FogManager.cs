@@ -278,6 +278,12 @@ namespace Facepunch.RTS
 			Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
 			Data = new byte[Resolution * Resolution];
 
+			if ( Fog == null )
+			{
+				Log.Error( "[FogManager::UpdateTextureSize] Unable to locate Fog entity!" );
+				return;
+			}
+
 			Fog.FogMaterial.OverrideTexture( "Color", Texture );
 		}
 

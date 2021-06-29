@@ -1,5 +1,6 @@
 ﻿using Facepunch.RTS;
 using Gamelib.FlowFields;
+using Sandbox;
 using System.Collections.Generic;
 
 namespace Gamelib.FlowFields
@@ -26,16 +27,22 @@ namespace Gamelib.FlowFields
 
 		public MoveGroup( List<IFlockAgent> agents, List<Vector3> destinations )
 		{
-			ReachedGoal = new();
-			PathRequest = PathManager.Instance.Request( destinations );
-			Agents = agents;
+			if ( destinations.Count > 0 )
+			{
+				ReachedGoal = new();
+				PathRequest = PathManager.Instance.Request( destinations );
+				Agents = agents;
+			}
 		}
 
 		public MoveGroup( IFlockAgent agent, List<Vector3> destinations )
 		{
-			ReachedGoal = new();
-			PathRequest = PathManager.Instance.Request( destinations );
-			Agents = new List<IFlockAgent>() { agent };
+			if ( destinations.Count > 0 )
+			{
+				ReachedGoal = new();
+				PathRequest = PathManager.Instance.Request( destinations );
+				Agents = new List<IFlockAgent>() { agent };
+			}
 		}
 
 		public void Finish( UnitEntity unit )
@@ -54,6 +61,7 @@ namespace Gamelib.FlowFields
 		{
 			if ( !IsValid() ) return;
 
+			ReachedGoal.Remove( unit );
 			Agents.Remove( unit );
 
 			if ( Agents.Count == 0 )
@@ -103,6 +111,8 @@ namespace Gamelib.FlowFields
 		{
 			if ( PathRequest != null && PathRequest.IsValid() )
 			{
+				RTS.Path.Complete( PathRequest );
+
 				PathRequest = null;
 
 				for ( int i = 0; i < Agents.Count; i++ )
@@ -115,7 +125,6 @@ namespace Gamelib.FlowFields
 					}
 				}
 
-				RTS.Path.Complete( PathRequest );
 				Agents = null;
 			}
 		}

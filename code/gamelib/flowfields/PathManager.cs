@@ -1,3 +1,4 @@
+using Sandbox;
 using System.Collections.Generic;
 
 namespace Gamelib.FlowFields
@@ -56,7 +57,8 @@ namespace Gamelib.FlowFields
 			if ( !_pathfinder.IsAvailable( destination ) ) return null;
 
 			var pathRequest = GetRequest();
-			pathRequest.FlowField.SetDestination( destination);
+			pathRequest.FlowField.SetDestination( destination );
+
 			return pathRequest;
 		}
 

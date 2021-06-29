@@ -221,10 +221,10 @@ namespace Facepunch.RTS
 			return new MoveGroup( this, destinations );
 		}
 
-		public void Occupy( BuildingEntity building, MoveGroup moveGroup = null )
+		public bool Occupy( BuildingEntity building, MoveGroup moveGroup = null )
 		{
-			if ( moveGroup == null )
-				moveGroup = CreateMoveGroup( GetDestinations( building ) );
+			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
+			if ( !moveGroup.IsValid() ) return false;
 
 			ResetTarget();
 			Target = building;
@@ -232,12 +232,14 @@ namespace Facepunch.RTS
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
 			OnTargetChanged();
+
+			return true;
 		}
 
-		public void Deposit( BuildingEntity building, MoveGroup moveGroup = null )
+		public bool Deposit( BuildingEntity building, MoveGroup moveGroup = null )
 		{
-			if ( moveGroup == null )
-				moveGroup = CreateMoveGroup( GetDestinations( building ) );
+			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
+			if ( !moveGroup.IsValid() ) return false;
 
 			ResetTarget();
 			Target = building;
@@ -245,28 +247,32 @@ namespace Facepunch.RTS
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
 			OnTargetChanged();
+
+			return true;
 		}
 
-		public void Gather( ResourceEntity resource, MoveGroup moveGroup = null )
+		public bool Gather( ResourceEntity resource, MoveGroup moveGroup = null )
 		{
-			if ( moveGroup == null )
-				moveGroup = CreateMoveGroup( GetDestinations( resource ) );
+			moveGroup ??= CreateMoveGroup( GetDestinations( resource ) );
+			if ( !moveGroup.IsValid() ) return false;
 
 			ResetTarget();
 			Target = resource;
-			MoveGroup = MoveGroup;
+			MoveGroup = moveGroup;
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
 			LastResourceType = resource.Resource;
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
 			OnTargetChanged();
+
+			return true;
 		}
 
-		public void Construct( BuildingEntity building, MoveGroup moveGroup = null )
+		public bool Construct( BuildingEntity building, MoveGroup moveGroup = null )
 		{
-			if ( moveGroup == null )
-				moveGroup = CreateMoveGroup( GetDestinations( building ) );
+			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
+			if ( !moveGroup.IsValid() ) return false;
 
 			ResetTarget();
 			Target = building;
@@ -274,6 +280,8 @@ namespace Facepunch.RTS
 			FollowTarget = true;
 			TargetRange = Item.InteractRange;
 			OnTargetChanged();
+
+			return true;
 		}
 
 		public void ClearTarget()
@@ -319,7 +327,12 @@ namespace Facepunch.RTS
 
 		public void OnMoveGroupDisposed()
 		{
-			ClearTarget();
+			Target = null;
+			MoveGroup = null;
+			TargetPosition = null;
+			IsGathering = false;
+			FollowTarget = false;
+			OnTargetChanged();
 		}
 
 		public List<Vector3> GetDestinations( ModelEntity model )
@@ -327,7 +340,7 @@ namespace Facepunch.RTS
 			var modelSize = model.CollisionBounds.Size;
 			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
 			var potentialTiles = new List<Vector3>();
-			var collisionSize = maxRadius * 0.4f;
+			var collisionSize = maxRadius * 0.5f;
 			var possibleLocations = new List<GridWorldPosition>();
 
 			RTS.Path.Pathfinder.GetGridPositions( model.Position, collisionSize, possibleLocations );
@@ -376,6 +389,8 @@ namespace Facepunch.RTS
 			{
 				if ( Player.IsValid() )
 					Player.TakePopulation( Item.Population );
+
+				ClearMoveGroup();
 			}
 
 			base.OnDestroy();
@@ -441,8 +456,10 @@ namespace Facepunch.RTS
 
 		private void ClearMoveGroup()
 		{
+			Log.Info( "Clear Move Group" );
 			if ( MoveGroup != null && MoveGroup.IsValid() )
 			{
+				Log.Info( "Remove From" );
 				MoveGroup.Remove( this );
 			}
 

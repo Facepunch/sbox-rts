@@ -8,9 +8,7 @@ namespace Facepunch.RTS
 {
 	public class MiniMap : Panel
 	{
-		public Image Image;
-		public Texture Texture;
-		public SceneCapture Capture;
+		public Scene Scene;
 
 		public MiniMap()
 		{
@@ -21,7 +19,7 @@ namespace Facepunch.RTS
 			Capture.World = SceneWorld.Current;
 			*/
 
-			Image = Add.Image( "", "texture" );
+			//Scene = Add.Scene( SceneWorld.Current, Vector3.Up * 1000f, Vector3.VectorAngle( Vector3.Down ), 70f, "scene" );
 		}
 
 		public override void Tick()

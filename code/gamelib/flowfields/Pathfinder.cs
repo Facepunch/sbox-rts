@@ -492,7 +492,7 @@ namespace Gamelib.FlowFields
 
 		public float GetHeight( int worldIndex )
 		{
-			return _heightMap[worldIndex];
+			return _heightMap[Math.Clamp(worldIndex, 0, _heightMap.Length - 1)];
 		}
 
 		public float GetHeight( GridWorldPosition worldPosition )
