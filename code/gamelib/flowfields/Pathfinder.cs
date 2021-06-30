@@ -37,35 +37,11 @@ namespace Gamelib.FlowFields
 		public Vector3 CenterOffset { get; private set; }
 		public Vector3 Origin { get; private set; }
 
-        public GridDefinition ChunkSize
-        {
-            get => _chunkSize;
-            set => _chunkSize = value;
-        }
-
-        public GridDefinition NumberOfChunks
-        {
-            get => _numberOfChunks;
-            set => _numberOfChunks = value;
-        }
-
+		public GridDefinition ChunkSize => _chunkSize;
+		public GridDefinition NumberOfChunks => _numberOfChunks;
+		public GridDefinition WorldSize => _worldSize;
+		public Chunk[] Chunks => _chunks;
 		public float Scale => _scale;
-
-		public GridDefinition WorldSize
-        {
-            get
-            {
-                if (_worldSize == null || _worldSize.Columns == 0)
-				{
-					_worldSize = new GridDefinition(
-						_chunkSize.Rows * _numberOfChunks.Rows,
-						_chunkSize.Columns * _numberOfChunks.Columns
-					);
-				}
-
-                return _worldSize;
-            }
-        }
 
 		public Pathfinder( int numberOfChunks, int chunkSize, float scale = 1f )
 		{
@@ -103,7 +79,7 @@ namespace Gamelib.FlowFields
             }
 		}
 
-		public bool IsCollisionAt( Vector3 position, int worldIndex )
+		public TraceResult GetCollisionTrace( Vector3 position, int worldIndex )
 		{
 			var transform = _physicsBody.Transform;
 			var heightMap = _heightMap[worldIndex];
@@ -113,7 +89,20 @@ namespace Gamelib.FlowFields
 			var trace = Trace.Sweep( _physicsBody, transform, transform )
 				.WithoutTags( "flowfield" )
 				.Run();
-			
+
+			return trace;
+		}
+
+		public bool IsCollisionAt( Vector3 position, int worldIndex )
+		{
+			var trace = GetCollisionTrace( position, worldIndex );
+			return trace.Hit;
+		}
+
+		public bool IsCollisionAt( Vector3 position, int worldIndex, out Entity entity )
+		{
+			var trace = GetCollisionTrace( position, worldIndex );
+			entity = trace.Entity;
 			return trace.Hit;
 		}
 
@@ -135,10 +124,18 @@ namespace Gamelib.FlowFields
 			var nodeIndex = GetNodeIndex( worldIndex );
 			var position = GetPosition( worldIndex );
 
-			if ( IsCollisionAt( position, worldIndex ) )
+			if ( chunk.GetCollision( nodeIndex ) == NodeCollision.Static )
 			{
-				DrawBox( position, worldIndex, Color.White, 10f );
-				chunk.SetCollision( nodeIndex );
+				// Static collisions never change, let's not update this node.
+				return;
+			}
+
+			if ( IsCollisionAt( position, worldIndex, out var entity ) )
+			{
+				if ( !entity.IsValid() || entity.IsWorld )
+					chunk.SetCollision( nodeIndex, NodeCollision.Static );
+				else
+					chunk.SetCollision( nodeIndex );
 			}
 			else
 			{
@@ -327,6 +324,12 @@ namespace Gamelib.FlowFields
 
                 var chunk = GetChunk( collision.ChunkIndex );
 
+				if ( chunk.GetCollision( collision.NodeIndex ) == NodeCollision.Static )
+				{
+					// Static collisions never change, let's not update this node.
+					continue;
+				}
+
 				if ( IsCollisionAt( GetPosition( collision ), collision.WorldIndex ) )
                     chunk.SetCollision( collision.NodeIndex );
                 else
@@ -459,7 +462,7 @@ namespace Gamelib.FlowFields
 
         public GridWorldPosition CreateWorldPosition( int worldIndex )
         {
-            return new GridWorldPosition( worldIndex, GetChunkIndex(worldIndex), GetNodeIndex(worldIndex) );
+            return new GridWorldPosition( worldIndex, GetChunkIndex( worldIndex ), GetNodeIndex( worldIndex ) );
         }
 
         public GridWorldPosition CreateWorldPosition( Vector3 position )

@@ -7,10 +7,27 @@ namespace Gamelib.FlowFields
     {
 		public static PathManager Instance { get; private set; }
 
-		[ServerCmd( "rts_collisions" )]
-		private static void UpdateCollision()
+		[ServerCmd( "ff_collisions" )]
+		private static void ShowCollisions()
 		{
-			Instance?.Pathfinder?.UpdateCollisions();
+			var pathfinder = Instance.Pathfinder;
+			var chunks = pathfinder.Chunks;
+			var numberOfChunks = pathfinder.Chunks.Length;
+
+			for ( var i = 0; i < numberOfChunks; i++ )
+			{
+				var chunk = chunks[i];
+				var collisions = chunk.Collisions;
+
+				for ( var j = 0; j < collisions.Length; j++ )
+				{
+					if ( collisions[j] != NodeCollision.None )
+					{
+						var worldPosition = pathfinder.CreateWorldPosition( i, j );
+						pathfinder.DrawBox( worldPosition, Color.White, 10f );
+					}
+				}
+			}
 		}
 
 		private Queue<FlowField> _flowFields = new();

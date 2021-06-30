@@ -126,20 +126,23 @@ namespace Gamelib.FlowFields.Grid
                     break;
 
                 case GridDirection.UpRight:
-                    if (!ValidateRow(index, 1, definition))
+                    if ( !ValidateRow( index, 1, definition ) )
                         break;
+
                     neighborIndex = index + definition.Columns + 1;
                     break;
 
                 case GridDirection.Right:
-                    if (!ValidateRow(index, 1, definition))
+                    if ( !ValidateRow( index, 1, definition ) )
                         break;
+
                     neighborIndex = index + 1;
                     break;
 
                 case GridDirection.RightDown:
-                    if (!ValidateRow(index, 1, definition))
+                    if ( !ValidateRow( index, 1, definition ) )
                         break;
+
                     neighborIndex = index - definition.Columns + 1;
                     break;
 
@@ -148,18 +151,20 @@ namespace Gamelib.FlowFields.Grid
                     break;
 
                 case GridDirection.DownLeft:
-                    if (!ValidateRow(index, -1, definition))
+                    if ( !ValidateRow( index, -1, definition ) )
                         break;
+
                     neighborIndex = index - definition.Columns - 1;
                     break;
                 case GridDirection.Left:
-                    if (!ValidateRow(index, -1, definition))
+                    if ( !ValidateRow( index, -1, definition ) )
                         break;
+
                     neighborIndex = index - 1;
                     break;
 
                 case GridDirection.LeftUp:
-                    if (!ValidateRow(index, -1, definition))
+                    if ( !ValidateRow( index, -1, definition ) )
                         break;
 
                     neighborIndex = index + definition.Columns - 1;

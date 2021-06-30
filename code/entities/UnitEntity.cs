@@ -62,7 +62,7 @@ namespace Facepunch.RTS
 
 		public UnitEntity() : base()
 		{
-			Tags.Add( "unit", "selectable" );
+			Tags.Add( "unit", "selectable", "flowfield" );
 
 			if ( IsServer )
 			{

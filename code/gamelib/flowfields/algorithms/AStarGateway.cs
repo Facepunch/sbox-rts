@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamelib.Data;
 using Gamelib.FlowFields.Grid;
+using Sandbox;
 
 namespace Gamelib.FlowFields.Algorithms
 {

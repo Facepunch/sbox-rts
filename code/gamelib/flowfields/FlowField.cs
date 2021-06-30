@@ -91,7 +91,7 @@ namespace Gamelib.FlowFields
             DestinationIndexes.AddRange( worldIndexes );
             DestinationGateways.Clear();
 
-            _destinationPosition = Pathfinder.GetPosition( Pathfinder.CreateWorldPosition(DestinationIndex) );
+            _destinationPosition = Pathfinder.GetPosition( Pathfinder.CreateWorldPosition( DestinationIndex ) );
 
             var chunks = new Dictionary<int, List<int>>();
 

@@ -14,12 +14,13 @@ namespace Gamelib.FlowFields
 
 		private List<Gateway> _gateways = new();
 		private List<Portal> _connectedPortals = new();
+        private NodeCollision[] _collisions;
 		private byte[] _costs;
-        private bool[] _collisions;
 		private GridDefinition _definition;
 		private int _index;
 
-        public bool IsDivided;
+		public NodeCollision[] Collisions => _collisions;
+		public bool IsDivided;
         public int Size => _definition.Size;
         public int Index => _index;
 
@@ -28,7 +29,7 @@ namespace Gamelib.FlowFields
             _definition = definition;
             _index = index;
             _costs = new byte[_definition.Size];
-            _collisions = new bool[_definition.Size];
+            _collisions = new NodeCollision[_definition.Size];
         }
 
         public static implicit operator int( Chunk chunk )
@@ -38,34 +39,39 @@ namespace Gamelib.FlowFields
 
         public bool IsImpassable( int index )
         {
-            return GetCost(index) == Impassable || _collisions[index];
+            return GetCost(index) == Impassable || (_collisions[index] != NodeCollision.None);
         }
 
         public bool HasCollision( int index )
         {
-            return _collisions[index];
+            return (_collisions[index] != NodeCollision.None);
         }
+
+		public NodeCollision GetCollision( int index )
+		{
+			return _collisions[index];
+		}
 
         public void ClearCollisions()
         {
-            _collisions = new bool[_definition.Size];
+			Array.Clear( _collisions, 0, _collisions.Length );
         }
 
-        public void SetCollision( int index )
+        public void SetCollision( int index, NodeCollision type = NodeCollision.Dynamic )
         {
+            _collisions[index] = type;
             _costs[index] = Impassable;
-            _collisions[index] = true;
         }
 
         public void RemoveCollision( int index )
         {
+            _collisions[index] = NodeCollision.None;
             _costs[index] = 0;
-            _collisions[index] = false;
         }
 
         public int GetCost( int index )
         {
-            return _collisions[index] ? Impassable : GetRawCost(index);
+            return (_collisions[index] != NodeCollision.None) ? Impassable : GetRawCost(index);
         }
 
         public int GetRawCost( int index )

@@ -77,7 +77,6 @@ namespace Facepunch.RTS
 
 			if ( IsClient )
 			{
-				FlowFieldGround.OnUpdated += OnGroundUpdated;
 				Clear();
 			}
 		}
@@ -256,6 +255,8 @@ namespace Facepunch.RTS
 			Fog.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
 
 			UpdateTextureSize();
+
+			FlowFieldGround.OnUpdated += OnGroundUpdated;
 
 			base.ClientSpawn();
 		}
