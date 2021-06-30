@@ -192,7 +192,7 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 			Target = target;
-			TargetRange = Item.AttackRange;
+			SetTargetRange( Item.AttackRange );
 			FollowTarget = autoFollow;
 			OnTargetChanged();
 		}
@@ -230,7 +230,7 @@ namespace Facepunch.RTS
 			Target = building;
 			MoveGroup = moveGroup;
 			FollowTarget = true;
-			TargetRange = Item.InteractRange;
+			SetTargetRange( Item.InteractRange );
 			OnTargetChanged();
 
 			return true;
@@ -245,7 +245,7 @@ namespace Facepunch.RTS
 			Target = building;
 			MoveGroup = moveGroup;
 			FollowTarget = true;
-			TargetRange = Item.InteractRange;
+			SetTargetRange( Item.InteractRange );
 			OnTargetChanged();
 
 			return true;
@@ -260,10 +260,10 @@ namespace Facepunch.RTS
 			Target = resource;
 			MoveGroup = moveGroup;
 			FollowTarget = true;
-			TargetRange = Item.InteractRange;
 			LastResourceType = resource.Resource;
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
+			SetTargetRange( Item.InteractRange );
 			OnTargetChanged();
 
 			return true;
@@ -278,7 +278,7 @@ namespace Facepunch.RTS
 			Target = building;
 			MoveGroup = moveGroup;
 			FollowTarget = true;
-			TargetRange = Item.InteractRange;
+			SetTargetRange( Item.InteractRange );
 			OnTargetChanged();
 
 			return true;
@@ -340,7 +340,7 @@ namespace Facepunch.RTS
 			var modelSize = model.CollisionBounds.Size;
 			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
 			var potentialTiles = new List<Vector3>();
-			var collisionSize = maxRadius * 0.5f;
+			var collisionSize = (maxRadius * 0.5f) + (RTS.Path.Pathfinder.Scale * 0.5f);
 			var possibleLocations = new List<GridWorldPosition>();
 
 			RTS.Path.Pathfinder.GetGridPositions( model.Position, collisionSize, possibleLocations );
@@ -445,6 +445,11 @@ namespace Facepunch.RTS
 			base.OnItemChanged( item );
 		}
 
+		private void SetTargetRange( float range )
+		{
+			TargetRange = range + RTS.Path.Pathfinder.Scale;
+		}
+
 		private void ResetTarget()
 		{
 			Target = null;
@@ -456,10 +461,8 @@ namespace Facepunch.RTS
 
 		private void ClearMoveGroup()
 		{
-			Log.Info( "Clear Move Group" );
 			if ( MoveGroup != null && MoveGroup.IsValid() )
 			{
-				Log.Info( "Remove From" );
 				MoveGroup.Remove( this );
 			}
 

@@ -18,6 +18,9 @@ namespace Gamelib.FlowFields
 		private readonly List<GridWorldPosition> _collisionBuffer = new();
 		private readonly List<int> _chunkBuffer = new();
 
+		[ServerVar( "ff_debug", Saved = true )]
+		public static bool Debug { get; set; }
+
 		private GridDefinition _numberOfChunks = new( 10, 10 );
         private GridDefinition _chunkSize = new( 10, 10 );
         private GridDefinition _worldSize = new( 100, 100 );
@@ -145,6 +148,8 @@ namespace Gamelib.FlowFields
 
 		public void DrawBox( Vector3 position, int worldIndex, Color? color = null, float duration = 1f )
 		{
+			if ( !Debug ) return;
+
 			var collisionScale = CollisionScale;
 			var transform = _physicsBody.Transform;
 			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );

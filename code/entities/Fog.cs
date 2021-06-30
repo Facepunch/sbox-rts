@@ -5,6 +5,9 @@ namespace Facepunch.RTS
 {
 	public partial class Fog : RenderEntity
 	{
+		[ServerVar( "rts_fog", Saved = true )]
+		public static bool Enabled { get; set; } = true;
+
 		public Material FogMaterial = Material.Load( "materials/rts/fog.vmat" );
 		public Texture Texture { get; set; }
 
@@ -12,7 +15,7 @@ namespace Facepunch.RTS
 		{
 			var manager = RTS.Fog;
 
-			if ( !manager.IsActive ) return;
+			if ( !Enabled || !manager.IsActive ) return;
 
 			var vertexBuffer = Render.GetDynamicVB( true );
 			var bounds = manager.Bounds;
