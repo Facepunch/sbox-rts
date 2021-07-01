@@ -1,5 +1,6 @@
 using Sandbox;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gamelib.FlowFields
 {
@@ -43,13 +44,13 @@ namespace Gamelib.FlowFields
         public void Create( int numberOfChunks, int chunkSize, float scale = 1f )
 		{
 			_pathfinder = new Pathfinder( numberOfChunks, chunkSize, scale );
-			Initialize();
+			_ = Initialize();
 		}
 
 		public void Create( int numberOfChunks, BBox bounds, float scale = 1f )
 		{
 			_pathfinder = new Pathfinder( numberOfChunks, bounds, scale );
-			Initialize();
+			_ = Initialize();
 		}
 
 		public PathRequest Request( List<Vector3> destinations )
@@ -94,14 +95,17 @@ namespace Gamelib.FlowFields
 			_pathfinder.Update();
 		}
 
-		private void Initialize()
+		private async Task Initialize()
 		{
 			_pathfinder.Initialize();
-			_pathfinder.UpdateCollisions();
+
+			await _pathfinder.UpdateCollisions();
 
 			// Create a good amount of flow fields ready in the pool.
 			for ( var i = 0; i < 20; i++ )
 			{
+				await Task.Delay( 30 );
+
 				_flowFields.Enqueue( new FlowField( _pathfinder ) );
 			}
 		}

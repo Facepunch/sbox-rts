@@ -5,22 +5,23 @@ using Gamelib.FlowFields.Algorithms;
 using Gamelib.FlowFields.Maths;
 using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
+using Sandbox;
 
 namespace Gamelib.FlowFields
 {
     public class Chunk
     {
-        public static byte Impassable = byte.MaxValue;
+        public const byte Impassable = byte.MaxValue;
 
-		private List<Gateway> _gateways = new();
 		private List<Portal> _connectedPortals = new();
-        private NodeCollision[] _collisions;
-		private byte[] _costs;
-		private GridDefinition _definition;
-		private int _index;
+		private List<Gateway> _gateways = new();
+        private readonly NodeCollision[] _collisions;
+		private readonly byte[] _costs;
+		private readonly GridDefinition _definition;
+		private readonly int _index;
+		private bool _isDivided;
 
 		public NodeCollision[] Collisions => _collisions;
-		public bool IsDivided;
         public int Size => _definition.Size;
         public int Index => _index;
 
@@ -122,7 +123,7 @@ namespace Gamelib.FlowFields
 
         public void ConnectGateways()
         {
-            IsDivided = false;
+            _isDivided = false;
 
             foreach ( var gateway in _gateways )
                 gateway.Connections.Clear();
@@ -142,7 +143,7 @@ namespace Gamelib.FlowFields
 
                 if ( path == null )
                 {
-                    IsDivided = true;
+                    _isDivided = true;
                     continue;
                 }
 
@@ -177,7 +178,7 @@ namespace Gamelib.FlowFields
 
             _connectedPortals.Clear();
 
-            if ( IsDivided )
+            if ( _isDivided )
                 _connectedPortals.AddRange( from gateway in _gateways
                     where AStarGateway.Default.GetPath(_definition, _costs, gateway.Median(), index) != null
                     select gateway.Portal );

@@ -6,6 +6,7 @@ using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
 using Sandbox;
 using Gamelib.Extensions;
+using System.Threading.Tasks;
 
 namespace Gamelib.FlowFields
 {
@@ -33,7 +34,7 @@ namespace Gamelib.FlowFields
 
 		public PhysicsBody PhysicsBody => _physicsBody;
 		public Vector3 PositionOffset { get; private set; }
-		public float CollisionScale { get; private set; } = 0.75f;
+		public float CollisionScale { get; private set; } = 1f;
 		public Vector3 CenterOffset { get; private set; }
 		public Vector3 Origin { get; private set; }
 
@@ -71,12 +72,22 @@ namespace Gamelib.FlowFields
             ProcessBuffers();
         }
 
-        public void UpdateCollisions()
+        public async Task UpdateCollisions()
         {
+			var collisionsPerFrame = 1000;
+			var calculatedThisFrame = 0;
+
             for ( var index = 0; index < WorldSize.Size; index++ )
             {
+				if ( calculatedThisFrame >= collisionsPerFrame )
+				{
+					await Task.Delay( 30 );
+					calculatedThisFrame = 0;
+				}
+
 				UpdateCollisions( index );
-            }
+				calculatedThisFrame++;
+			}
 		}
 
 		public TraceResult GetCollisionTrace( Vector3 position, int worldIndex )
