@@ -401,10 +401,10 @@ namespace Gamelib.FlowFields
 					continue;
 
                 if ( gatewayLink.Key is Gateway connectionGateway )
-                    return (connectionGateway.Portal.GetVector( Pathfinder ) - Pathfinder.GetPosition( position )).Normal;
+                    return (connectionGateway.Portal.GetVector( Pathfinder ) - Pathfinder.GetCenterPosition( position )).Normal;
             }
 
-            return (DestinationPosition - Pathfinder.GetPosition( position )).Normal;
+            return (DestinationPosition - Pathfinder.GetCenterPosition( position )).Normal;
         }
 
         public GridDirection GetGridDirection( GridWorldPosition position )
