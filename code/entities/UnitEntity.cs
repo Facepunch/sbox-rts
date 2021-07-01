@@ -231,14 +231,14 @@ namespace Facepunch.RTS
 		public void MoveTo( MoveGroup group )
 		{
 			ResetTarget();
-			MoveGroup = group;
+			SetMoveGroup( group );
 			OnTargetChanged();
 		}
 
 		public void MoveTo( Vector3 position )
 		{
 			ResetTarget();
-			MoveGroup = CreateMoveGroup( position );
+			SetMoveGroup( CreateMoveGroup( position ) );
 			OnTargetChanged();
 		}
 
@@ -264,8 +264,8 @@ namespace Facepunch.RTS
 
 			ResetTarget();
 			Target = building;
-			MoveGroup = moveGroup;
 			FollowTarget = true;
+			SetMoveGroup( moveGroup );
 			SetTargetRange( Item.InteractRange );
 			OnTargetChanged();
 
@@ -284,8 +284,8 @@ namespace Facepunch.RTS
 
 			ResetTarget();
 			Target = building;
-			MoveGroup = moveGroup;
 			FollowTarget = true;
+			SetMoveGroup( moveGroup );
 			SetTargetRange( Item.InteractRange );
 			OnTargetChanged();
 
@@ -304,11 +304,11 @@ namespace Facepunch.RTS
 
 			ResetTarget();
 			Target = resource;
-			MoveGroup = moveGroup;
 			FollowTarget = true;
 			LastResourceType = resource.Resource;
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
+			SetMoveGroup( moveGroup );
 			SetTargetRange( Item.InteractRange );
 			OnTargetChanged();
 
@@ -327,8 +327,8 @@ namespace Facepunch.RTS
 
 			ResetTarget();
 			Target = building;
-			MoveGroup = moveGroup;
 			FollowTarget = true;
+			SetMoveGroup( moveGroup );
 			SetTargetRange( Item.InteractRange );
 			OnTargetChanged();
 
@@ -379,10 +379,10 @@ namespace Facepunch.RTS
 		public void OnMoveGroupDisposed()
 		{
 			Target = null;
-			MoveGroup = null;
 			TargetPosition = null;
 			IsGathering = false;
 			FollowTarget = false;
+			SetMoveGroup( null );
 			OnTargetChanged();
 		}
 
@@ -501,6 +501,12 @@ namespace Facepunch.RTS
 			TargetRange = range + Pathfinder.Scale;
 		}
 
+		private void SetMoveGroup( MoveGroup group )
+		{
+			MoveGroup = group;
+			MakeStatic( group == null );
+		}
+
 		private void ResetTarget()
 		{
 			Target = null;
@@ -517,7 +523,7 @@ namespace Facepunch.RTS
 				MoveGroup.Remove( this );
 			}
 
-			MoveGroup = null;
+			SetMoveGroup( null );
 		}
 
 		private void FindTargetResource()
@@ -633,20 +639,20 @@ namespace Facepunch.RTS
 						_animationValues.Speed = 0.5f;
 
 					InputVelocity = (pathDirection * Speed).WithZ( 0f );
-					MakeStatic( false );
 					Velocity = Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
 				}
 				else
 				{
-					MakeStatic( true );
 					Velocity = 0;
 				}
 
 				Position += Velocity;
 				AlignToGround();
 
+				/*
 				var worldPos = Pathfinder.CreateWorldPosition( Position );
 				Pathfinder.DrawBox( worldPos, Color.Green, Time.Delta );
+				*/
 
 				var walkVelocity = Velocity.WithZ( 0 );
 
