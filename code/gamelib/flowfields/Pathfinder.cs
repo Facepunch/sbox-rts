@@ -36,6 +36,7 @@ namespace Gamelib.FlowFields
 		public Vector3 PositionOffset { get; private set; }
 		public float CollisionScale { get; private set; } = 1f;
 		public Vector3 CenterOffset { get; private set; }
+		public Vector3 HalfExtents => _halfExtents;
 		public Vector3 Origin { get; private set; }
 
 		public GridDefinition ChunkSize => _chunkSize;
@@ -107,14 +108,14 @@ namespace Gamelib.FlowFields
 		public bool IsCollisionAt( Vector3 position, int worldIndex )
 		{
 			var trace = GetCollisionTrace( position, worldIndex );
-			return trace.Hit;
+			return trace.Hit || trace.StartedSolid;
 		}
 
 		public bool IsCollisionAt( Vector3 position, int worldIndex, out Entity entity )
 		{
 			var trace = GetCollisionTrace( position, worldIndex );
 			entity = trace.Entity;
-			return trace.Hit;
+			return trace.Hit || trace.StartedSolid;
 		}
 
 		public bool IsAvailable( GridWorldPosition position )
@@ -161,8 +162,8 @@ namespace Gamelib.FlowFields
 			var collisionScale = CollisionScale;
 			var transform = _physicsBody.Transform;
 			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );
-			DebugOverlay.Box( duration, transform.Position, -_halfExtents * collisionScale, _halfExtents * collisionScale, Color.Red );
-			DebugOverlay.Box( duration, transform.Position, -_halfExtents, _halfExtents, color.HasValue ? color.Value : Color.White );
+			DebugOverlay.Box( duration, transform.Position, -_halfExtents * collisionScale, _halfExtents * collisionScale, Color.Red, false );
+			DebugOverlay.Box( duration, transform.Position, -_halfExtents, _halfExtents, color.HasValue ? color.Value : Color.White, false );
 		}
 
 		public void DrawBox( int worldIndex, Color? color = null, float duration = 1f )
@@ -175,7 +176,7 @@ namespace Gamelib.FlowFields
 			DrawBox( GetPosition( position ), position.WorldIndex, color, duration );
 		}
 
-        public bool Initialize()
+        public async Task Initialize()
         {
 			PositionOffset = Origin + new Vector3(
 				_worldSize.Columns * _scale / 2f,
@@ -187,15 +188,14 @@ namespace Gamelib.FlowFields
 				Scale / 2f
 			);
 
-			if ( _chunks == null || !_chunks.Any() )
-                CreateChunks();
+			_chunkBuffer.Clear();
 
+			CreateChunks();
 			CreateHeightMap();
-            ClearCollisions();
-            _chunkBuffer.Clear();
-            ConnectPortals();
 
-			return true;
+			await UpdateCollisions();
+
+			ConnectPortals();
         }
 
 		public void CreateHeightMap()
@@ -224,7 +224,9 @@ namespace Gamelib.FlowFields
             Portals.Clear();
 
             for ( var i = 0; i < _numberOfChunks.Size; i++ )
+			{
                 GetChunk(i).ClearGateways();
+			}
 
             for ( var i = 0; i < _numberOfChunks.Size; i++ )
             {
@@ -360,7 +362,7 @@ namespace Gamelib.FlowFields
 				if ( GetChunk( i ) == null )
                     continue;
 
-                ResetChunk(i);
+                ResetChunk( i );
             }
 
             if ( _chunkBuffer.Any() )
@@ -406,13 +408,15 @@ namespace Gamelib.FlowFields
             var otherChunk = GetChunk( otherChunkIndex );
 
             var portalSize = 0;
-            var range = GridUtility.GetBorderRange(ChunkSize, direction);
+            var range = GridUtility.GetBorderRange( ChunkSize, direction );
 
             thisChunk.ClearGateways(  direction );
-            otherChunk.ClearGateways(direction.Opposite() );
+            otherChunk.ClearGateways( direction.Opposite() );
 
             var thisGateway = new Gateway( thisChunk, direction );
             var otherGateway = new Gateway( otherChunk, direction.Opposite() );
+
+			int portalIndex;
 
             for ( var x = range.MinX; x < range.MaxX; x++ )
             for ( var y = range.MinY; y < range.MaxY; y++ )
@@ -420,7 +424,7 @@ namespace Gamelib.FlowFields
                 var thisNode = GridUtility.GetIndex( ChunkSize, y, x );
                 var otherNode = GridUtility.GetMirrorIndex( ChunkSize, thisNode, direction );
 
-                if ( thisChunk.IsImpassable(thisNode) || otherChunk.IsImpassable(otherNode) )
+                if ( thisChunk.IsImpassable( thisNode ) || otherChunk.IsImpassable( otherNode ) )
                 {
                     if ( portalSize <= 0 )
                         continue;
@@ -430,40 +434,38 @@ namespace Gamelib.FlowFields
                         thisChunk.AddGateway( thisGateway );
                         otherChunk.AddGateway( otherGateway );
 
-                        var portalIndex =
+						portalIndex =
                             CreateWorldPosition( thisGateway.Chunk, thisGateway.Median() ).WorldIndex
                             + CreateWorldPosition( otherGateway.Chunk, otherGateway.Median() ).WorldIndex;
 
                         Portals.Add( new Portal( portalIndex, thisGateway, otherGateway) );
                     }
 
-                    thisGateway = new Gateway( thisChunk, direction);
+                    thisGateway = new Gateway( thisChunk, direction );
                     otherGateway = new Gateway( otherChunk, direction.Opposite() );
                 }
                 else
                 {
-                    thisGateway.AddNode(thisNode);
-                    otherGateway.AddNode(otherNode);
+                    thisGateway.AddNode( thisNode );
+                    otherGateway.AddNode( otherNode );
                 }
 
                 portalSize += 1;
             }
 
-            if (portalSize <= 0) return;
+            if ( portalSize <= 0 ) return;
 
-            {
-                if ( !thisGateway.Nodes.Any() )
-                    return;
+            if ( !thisGateway.Nodes.Any() )
+                return;
 
-                thisChunk.AddGateway( thisGateway );
-                otherChunk.AddGateway( otherGateway );
+            thisChunk.AddGateway( thisGateway );
+            otherChunk.AddGateway( otherGateway );
 
-                var portalIndex =
-                    CreateWorldPosition( thisGateway.Chunk, thisGateway.Median() ).WorldIndex
-                    + CreateWorldPosition( otherGateway.Chunk, otherGateway.Median() ).WorldIndex;
+            portalIndex =
+                CreateWorldPosition( thisGateway.Chunk, thisGateway.Median() ).WorldIndex
+                + CreateWorldPosition( otherGateway.Chunk, otherGateway.Median() ).WorldIndex;
 
-                Portals.Add( new Portal( portalIndex, thisGateway, otherGateway ) );
-            }
+            Portals.Add( new Portal( portalIndex, thisGateway, otherGateway ) );
         }
 
         public bool IsGateway( GridWorldPosition position )

@@ -8,7 +8,54 @@ namespace Gamelib.FlowFields
     {
 		public static PathManager Instance { get; private set; }
 
-		[ServerCmd( "ff_collisions" )]
+		[ServerCmd( "ff_update_collisions" )]
+		private static void UpdateCollisions()
+		{
+			_ = Instance.Pathfinder.UpdateCollisions();
+		}
+
+		[ServerCmd( "ff_show_chunks" )]
+		private static void ShowChunks()
+		{
+			var pathfinder = Instance.Pathfinder;
+			var chunks = pathfinder.Chunks;
+			var numberOfChunks = pathfinder.Chunks.Length;
+
+			for ( var i = 0; i < numberOfChunks; i++ )
+			{
+				var chunk = chunks[i];
+				var position = pathfinder.GetLocalChunkPosition( chunk.Index ) - pathfinder.PositionOffset;
+				var halfExtents = pathfinder.HalfExtents * chunk.Definition.Columns;
+
+				position += halfExtents;
+
+				DebugOverlay.Box( 10f, position - halfExtents, position + halfExtents, Color.White );
+			}
+		}
+
+		[ServerCmd( "ff_show_gateway_nodes" )]
+		private static void ShowGatewayNodes()
+		{
+			var pathfinder = Instance.Pathfinder;
+			var chunks = pathfinder.Chunks;
+			var numberOfChunks = pathfinder.Chunks.Length;
+
+			for ( var i = 0; i < numberOfChunks; i++ )
+			{
+				var chunk = chunks[i];
+				
+				foreach ( var gateway in chunk.GetGateways() )
+				{
+					foreach ( var node in gateway.Nodes )
+					{
+						var worldPosition = pathfinder.CreateWorldPosition( chunk.Index, node );
+						pathfinder.DrawBox( worldPosition, Color.Green, 10f );
+					}
+				}
+			}
+		}
+		
+		[ServerCmd( "ff_show_collisions" )]
 		private static void ShowCollisions()
 		{
 			var pathfinder = Instance.Pathfinder;
@@ -97,9 +144,7 @@ namespace Gamelib.FlowFields
 
 		private async Task Initialize()
 		{
-			_pathfinder.Initialize();
-
-			await _pathfinder.UpdateCollisions();
+			await _pathfinder.Initialize();
 
 			// Create a good amount of flow fields ready in the pool.
 			for ( var i = 0; i < 20; i++ )

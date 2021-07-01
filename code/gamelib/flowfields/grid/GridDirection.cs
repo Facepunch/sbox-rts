@@ -22,15 +22,15 @@ namespace Gamelib.FlowFields.Grid
     {
         private static readonly Dictionary<GridDirection, Vector2i> Vector2ds = new()
         {
-            {GridDirection.Up, new Vector2i(0, 1)},
-            {GridDirection.UpRight, new Vector2i(1, 1)},
-            {GridDirection.Right, new Vector2i(1, 0)},
-            {GridDirection.RightDown, new Vector2i(1, -1)},
-            {GridDirection.Down, new Vector2i(0, -1)},
-            {GridDirection.DownLeft, new Vector2i(-1, -1)},
-            {GridDirection.Left, new Vector2i(-1, 0)},
-            {GridDirection.LeftUp, new Vector2i(-1, 1)},
-            {GridDirection.Zero, new Vector2i(0, 0)}
+            {GridDirection.Up, new Vector2i(  0, 1 )},
+            {GridDirection.UpRight, new Vector2i( 1, 1 )},
+            {GridDirection.Right, new Vector2i( 1, 0 )},
+            {GridDirection.RightDown, new Vector2i( 1, -1 )},
+            {GridDirection.Down, new Vector2i( 0, -1 )},
+            {GridDirection.DownLeft, new Vector2i( -1, -1 )},
+            {GridDirection.Left, new Vector2i( -1, 0 )},
+            {GridDirection.LeftUp, new Vector2i( -1, 1 )},
+            {GridDirection.Zero, new Vector2i( 0, 0 )}
         };
 
         public static bool IsNeighbor( this GridDirection direction, GridDirection compare )

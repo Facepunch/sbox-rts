@@ -22,6 +22,7 @@ namespace Gamelib.FlowFields
 		private bool _isDivided;
 
 		public NodeCollision[] Collisions => _collisions;
+        public GridDefinition Definition => _definition;
         public int Size => _definition.Size;
         public int Index => _index;
 

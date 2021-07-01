@@ -526,7 +526,7 @@ namespace Facepunch.RTS
 
 		private void FindTargetUnit()
 		{
-			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRange );
+			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRange * 0.5f );
 			
 			foreach ( var entity in entities )
 			{
@@ -572,12 +572,16 @@ namespace Facepunch.RTS
 					else
 					{
 						var direction = MoveGroup.GetDirection( Position );
+
+						/*
 						var flocker = new Flocker();
 
 						flocker.Setup( this, MoveGroup.Agents, Position );
 						flocker.Flock( Position + direction.Normal * 50f );
+						*/
 
-						pathDirection = flocker.Force.Normal;
+						//pathDirection = flocker.Force.Normal;
+						pathDirection = direction.Normal;
 					}
 				}
 				else if ( TargetPosition.HasValue )
@@ -593,7 +597,7 @@ namespace Facepunch.RTS
 						_animationValues.Speed = 0.5f;
 
 					InputVelocity = (pathDirection * Speed).WithZ( 0f );
-					Velocity = Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
+					Velocity = InputVelocity * Time.Delta;// Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
 				}
 				else
 				{
@@ -648,6 +652,7 @@ namespace Facepunch.RTS
 
 			if ( Weapon.IsValid() )
 			{
+				_animationValues.Attacking = Weapon.LastAttack < 0.1f;
 				_animationValues.HoldType = Weapon.HoldType;
 			}
 

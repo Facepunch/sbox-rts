@@ -332,9 +332,13 @@ namespace Facepunch.RTS
 			if ( string.IsNullOrEmpty( csv ) )
 				return;
 
-			var eligible = new List<ISelectable>(); 
+			var eligible = new List<ISelectable>();
 			var entities = csv.Split( ',', StringSplitOptions.TrimEntries )
-				.Select( i => FindByIndex( Convert.ToInt32( i ) ) );
+				.Select( i => FindByIndex( Convert.ToInt32( i ) ) )
+				.OfType<ISelectable>()
+				.ToList();
+
+			entities.Sort( ( a, b ) => b.CanMultiSelect.CompareTo( a.CanMultiSelect ) );
 
 			foreach ( var entity in entities )
 			{

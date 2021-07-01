@@ -20,9 +20,9 @@ namespace Facepunch.RTS.Units
 		public virtual string[] DepositSounds => Array.Empty<string>();
 		public virtual string[] MoveSounds => Array.Empty<string>();
 		public virtual float Speed => 300f;
-		public virtual float LineOfSight => 600f;
+		public virtual float LineOfSight => 800f;
 		public virtual float ConstructRange => 1500f;
-		public virtual float AttackRange => 600f;
+		public virtual float AttackRange => 800f;
 		public virtual float InteractRange => 80f;
 		public virtual List<string> DamageDecals => new()
 		{
