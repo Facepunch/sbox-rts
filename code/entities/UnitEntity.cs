@@ -16,11 +16,22 @@ namespace Facepunch.RTS
 	{
 		private struct AnimationValues
 		{
-			public float Walking;
+			public float Speed;
+			public bool Attacking;
+			public int HoldType;
 
-			public void Lerp( AnimEntity entity, string name, float value )
+			public void Start()
 			{
-				entity.SetAnimFloat( name, entity.GetAnimFloat( name ).LerpTo( value, Time.Delta * 10f ) );
+				Speed = 0f;
+				HoldType = 0;
+				Attacking = false;
+			}
+
+			public void Finish( AnimEntity entity )
+			{
+				entity.SetAnimInt( "holdtype", HoldType );
+				entity.SetAnimBool( "attacking", Attacking );
+				entity.SetAnimFloat( "speed", entity.GetAnimFloat( "speed" ).LerpTo( Speed, Time.Delta * 10f ) );
 			}
 		}
 
@@ -532,7 +543,7 @@ namespace Facepunch.RTS
 		{
 			InputVelocity = 0;
 
-			_animationValues.Walking = 0f;
+			_animationValues.Start();
 
 			var isTargetInRange = IsTargetInRange();
 
@@ -576,10 +587,13 @@ namespace Facepunch.RTS
 
 				if ( pathDirection.Length > 0 )
 				{
-					_animationValues.Walking = 1f;
+					if ( Speed >= 300f )
+						_animationValues.Speed = 1f;
+					else
+						_animationValues.Speed = 0.5f;
 
 					InputVelocity = (pathDirection * Speed).WithZ( 0f );
-					Velocity = InputVelocity * Time.Delta;
+					Velocity = Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
 				}
 				else
 				{
@@ -632,7 +646,12 @@ namespace Facepunch.RTS
 				}
 			}
 
-			_animationValues.Lerp( this, "walking", _animationValues.Walking );
+			if ( Weapon.IsValid() )
+			{
+				_animationValues.HoldType = Weapon.HoldType;
+			}
+
+			_animationValues.Finish( this );
 		}
 
 		private void AlignToGround()

@@ -52,10 +52,10 @@
 					m_id = 575624988
 				}
 				m_previewButton = "ANIMPARAM_BUTTON_NONE"
-				m_bNetwork = false
+				m_bNetwork = true
 				m_bUseMostRecentValue = false
 				m_bAutoReset = false
-				m_bPredicted = false
+				m_bPredicted = true
 				m_bDefaultValue = false
 			},
 		]
@@ -122,7 +122,7 @@
 				{
 					m_id = 80652731
 				}
-				m_networkMode = "ServerAuthoritative"
+				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_children = 
 				[
@@ -453,7 +453,7 @@
 				{
 					m_id = 1299741520
 				}
-				m_networkMode = "ServerAuthoritative"
+				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_children = 
 				[
@@ -507,7 +507,7 @@
 				{
 					m_id = 1340635469
 				}
-				m_networkMode = "ServerAuthoritative"
+				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_commentText = ""
 				m_size = [ 826.0, 342.0 ]
@@ -528,7 +528,7 @@
 				{
 					m_id = 1466855399
 				}
-				m_networkMode = "ServerAuthoritative"
+				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_children = 
 				[

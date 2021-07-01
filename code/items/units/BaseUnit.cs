@@ -19,7 +19,7 @@ namespace Facepunch.RTS.Units
 		public virtual string[] SelectSounds => Array.Empty<string>();
 		public virtual string[] DepositSounds => Array.Empty<string>();
 		public virtual string[] MoveSounds => Array.Empty<string>();
-		public virtual float Speed => 200f;
+		public virtual float Speed => 300f;
 		public virtual float LineOfSight => 600f;
 		public virtual float ConstructRange => 1500f;
 		public virtual float AttackRange => 600f;
