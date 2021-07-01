@@ -78,7 +78,9 @@ namespace Gamelib.FlowFields
 
 		public Vector3 GetDirection( Vector3 position )
 		{
-			if ( IsValid() ) return PathRequest.GetDirection( position );
+			if ( IsValid() )
+				return PathRequest.GetDirection( position );
+
 			return Vector3.Zero;
 		}
 

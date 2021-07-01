@@ -17,11 +17,18 @@ namespace Gamelib.FlowFields
 
 		public bool IsDestination( Vector3 position )
 		{
+			// We've reached our destination if we don't have one.
+			if ( !FlowField.HasDestination() )
+				return true;
+
 			var indicies = FlowField.DestinationIndexes;
 			var pathfinder = FlowField.Pathfinder;
 			var worldPosition = pathfinder.CreateWorldPosition( position );
+
 			return indicies.Contains( worldPosition.WorldIndex );
 		}
+
+		public bool HasDestination() => FlowField.HasDestination();
 
 		public bool IsValid()
 		{

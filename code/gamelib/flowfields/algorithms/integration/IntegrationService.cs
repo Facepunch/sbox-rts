@@ -15,9 +15,9 @@ namespace Gamelib.FlowFields.Algorithms
             return new Integration( definition );
         }
 
-        public void Integrate(FlowField flowField, Integration integration, int integrationIndex)
+        public void Integrate( FlowField flowField, Integration integration, int integrationIndex )
         {
-            while (true)
+            while ( true )
             {
                 var index = integration.Dequeue();
 
@@ -35,15 +35,15 @@ namespace Gamelib.FlowFields.Algorithms
                 {
                     var neighborIndex = neighbor.Index;
 
-                    if ( !GridUtility.IsValid(neighborIndex) )
+                    if ( !GridUtility.IsValid( neighborIndex ) )
                         continue;
 
-                    if ( integration.GetValue(neighborIndex) != UnIntegrated )
+                    if ( integration.GetValue( neighborIndex ) != UnIntegrated )
                         continue;
 
-                    if ( !flowField.IsAvailable(integrationIndex, neighborIndex) )
+                    if ( !flowField.IsAvailable( integrationIndex, neighborIndex ) )
                     {
-                        integration.SetValue(neighborIndex, -currentIntegrationValue);
+                        integration.SetValue( neighborIndex, -currentIntegrationValue );
                     }
                     else
                     {

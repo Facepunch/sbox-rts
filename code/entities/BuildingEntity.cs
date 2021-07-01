@@ -109,12 +109,11 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			var modelSize = CollisionBounds.Size;
-			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
+			var radius = GetDiameterXY( 0.5f );
 
 			foreach ( var pathfinder in RTS.Path.All )
 			{
-				pathfinder.UpdateCollisions( Position, maxRadius * 0.5f );
+				pathfinder.UpdateCollisions( Position, radius );
 			}
 
 			IsUnderConstruction = true;
@@ -149,12 +148,11 @@ namespace Facepunch.RTS
 
 		public void PlaceNear( UnitEntity unit )
 		{
-			var modelSize = CollisionBounds.Size;
-			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
+			var bounds = GetDiameterXY( 0.75f );
 			var pathfinder = unit.Pathfinder;
 			var potentialNodes = new List<GridWorldPosition>();
 
-			unit.Pathfinder.GetGridPositions( Position, maxRadius * 0.75f, potentialNodes );
+			unit.Pathfinder.GetGridPositions( Position, bounds, potentialNodes );
 
 			var freeLocations = potentialNodes
 				.Where( v => pathfinder.IsAvailable( v ) )

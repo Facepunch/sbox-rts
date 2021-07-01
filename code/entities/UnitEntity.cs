@@ -175,7 +175,7 @@ namespace Facepunch.RTS
 		public override void ClientSpawn()
 		{
 			Circle = new();
-			Circle.Size = CollisionBounds.Size.Length * 0.8f;
+			Circle.Size = GetDiameterXY( 2f );
 			Circle.SetParent( this );
 			Circle.LocalPosition = Vector3.Zero;
 
@@ -255,7 +255,12 @@ namespace Facepunch.RTS
 		public bool Occupy( BuildingEntity building, MoveGroup moveGroup = null )
 		{
 			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
-			if ( !moveGroup.IsValid() ) return false;
+
+			if ( !moveGroup.IsValid() )
+			{
+				ClearTarget();
+				return false;
+			}
 
 			ResetTarget();
 			Target = building;
@@ -270,7 +275,12 @@ namespace Facepunch.RTS
 		public bool Deposit( BuildingEntity building, MoveGroup moveGroup = null )
 		{
 			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
-			if ( !moveGroup.IsValid() ) return false;
+
+			if ( !moveGroup.IsValid() )
+			{
+				ClearTarget();
+				return false;
+			}
 
 			ResetTarget();
 			Target = building;
@@ -285,7 +295,12 @@ namespace Facepunch.RTS
 		public bool Gather( ResourceEntity resource, MoveGroup moveGroup = null )
 		{
 			moveGroup ??= CreateMoveGroup( GetDestinations( resource ) );
-			if ( !moveGroup.IsValid() ) return false;
+
+			if ( !moveGroup.IsValid() )
+			{
+				ClearTarget();
+				return false;
+			}
 
 			ResetTarget();
 			Target = resource;
@@ -303,7 +318,12 @@ namespace Facepunch.RTS
 		public bool Construct( BuildingEntity building, MoveGroup moveGroup = null )
 		{
 			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
-			if ( !moveGroup.IsValid() ) return false;
+
+			if ( !moveGroup.IsValid() )
+			{
+				ClearTarget();
+				return false;
+			}
 
 			ResetTarget();
 			Target = building;
@@ -368,13 +388,12 @@ namespace Facepunch.RTS
 
 		public List<Vector3> GetDestinations( ModelEntity model )
 		{
-			var modelSize = model.CollisionBounds.Size;
-			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
+			// Round up the radius to the nearest node size.
+			var radius = MathF.Ceiling( model.GetDiameterXY( 0.5f ) / Pathfinder.Scale ) * Pathfinder.Scale;
 			var potentialTiles = new List<Vector3>();
-			var collisionSize = (maxRadius * 0.5f) + (RTS.Path.Default.Scale * 0.5f);
 			var possibleLocations = new List<GridWorldPosition>();
 
-			Pathfinder.GetGridPositions( model.Position, collisionSize, possibleLocations );
+			Pathfinder.GetGridPositions( model.Position, radius, possibleLocations );
 
 			var destinations = possibleLocations.ConvertAll( v =>
 			{

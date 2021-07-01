@@ -335,7 +335,8 @@ namespace Gamelib.FlowFields
         {
             _waitForPhysicsUpdate = 5;
 			GetGridPositions( position, gridSize, _collisionBuffer );
-        }
+			ProcessBuffers();
+		}
 
         public void ClearCollisions()
         {
@@ -425,8 +426,10 @@ namespace Gamelib.FlowFields
                 ResetChunk( i );
             }
 
-            if ( _chunkBuffer.Any() )
+            if ( _chunkBuffer.Count > 0 )
+			{
                 PropagateWorldChange( _chunkBuffer );
+			}
 
             _collisionBuffer.Clear();
             _chunkBuffer.Clear();
@@ -489,7 +492,7 @@ namespace Gamelib.FlowFields
                     if ( portalSize <= 0 )
                         continue;
 
-                    if ( thisGateway.Nodes.Any() )
+                    if ( thisGateway.Nodes.Count > 0 )
                     {
                         thisChunk.AddGateway( thisGateway );
                         otherChunk.AddGateway( otherGateway );
@@ -515,7 +518,7 @@ namespace Gamelib.FlowFields
 
             if ( portalSize <= 0 ) return;
 
-            if ( !thisGateway.Nodes.Any() )
+            if ( thisGateway.Nodes.Count == 0 )
                 return;
 
             thisChunk.AddGateway( thisGateway );

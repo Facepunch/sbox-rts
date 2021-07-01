@@ -5,6 +5,7 @@ using Steamworks.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Gamelib.Extensions;
 
 namespace Facepunch.RTS
 {
@@ -53,6 +54,11 @@ namespace Facepunch.RTS
 
 			OnItemChanged( item );
 			OnPlayerAssigned( player );
+		}
+
+		public float GetDiameterXY( float scalar = 1f )
+		{
+			return EntityExtension.GetDiameterXY( this, scalar );
 		}
 
 		public void Assign( Player player, string itemId )

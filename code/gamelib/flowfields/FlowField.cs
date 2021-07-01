@@ -49,17 +49,22 @@ namespace Gamelib.FlowFields
 
         public virtual Vector3 DestinationPosition => _destinationPosition;
 
-        public bool HasIntegration(int index)
+        public bool HasIntegration( int index )
         {
             return Integrations.ContainsKey(index);
         }
 
-        public Integration GetIntegration(int index)
+        public Integration GetIntegration( int index )
         {
             if (!Integrations.ContainsKey(index)) Integrations[index] = IntegrationService.CreateIntegration(Pathfinder.ChunkSize);
 
             return Integrations[index];
         }
+
+		public bool HasDestination()
+		{
+			return (DestinationIndexes.Count > 0);
+		}
 
         public Pathfinder GetPathfinder()
         {
@@ -71,7 +76,9 @@ namespace Gamelib.FlowFields
             if ( Pathfinder != pathfinder ) return;
 
             if ( Integrations.Any( integration => chunks.Contains( integration.Key ) ) )
-                UpdatePaths( chunks );
+			{
+                UpdatePaths();
+			}
         }
 
         public Dictionary<int, Integration> GetIntegrations()
@@ -106,7 +113,6 @@ namespace Gamelib.FlowFields
                 chunks[chunkIndex].Add( Pathfinder.GetNodeIndex( worldIndex ) );
             }
 
-
             foreach ( var data in chunks )
             {
                 var chunk = Pathfinder.GetChunk( data.Key );
@@ -117,7 +123,8 @@ namespace Gamelib.FlowFields
                 {
 					var gateway = gateways[i];
 
-					if ( !chunk.Connects(gateway, data.Value) ) continue;
+					if ( !chunk.Connects(gateway, data.Value) )
+						continue;
 
                     if ( !DestinationGateways.ContainsKey(data.Key) )
 						DestinationGateways[data.Key] = new();
@@ -156,14 +163,16 @@ namespace Gamelib.FlowFields
 			Flows.Clear();
 		}
 
-        public void UpdatePaths( List<int> changedChunks )
-        {
-			// TODO: Only update changed chunks.
-			CreateDestinationGateways( DestinationIndexes.ToList() );
-        }
-
         public void UpdatePaths()
         {
+			for ( int i = DestinationIndexes.Count - 1; i >= 0; i-- )
+			{
+				var position = Pathfinder.CreateWorldPosition( DestinationIndexes[i] );
+
+				if ( !IsAvailable( position ) )
+					DestinationIndexes.RemoveAt( i );
+			}
+
 			CreateDestinationGateways( DestinationIndexes.ToList() );
         }
 
