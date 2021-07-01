@@ -10,10 +10,12 @@ using Sandbox.UI;
 
 namespace Facepunch.RTS
 {
-	public partial class Ragdoll : ModelEntity
+	public partial class Ragdoll : ModelEntity, IFogCullable
 	{
 		public float FadeOutDuration { get; private set; }
 		public float FadeOutTime { get; private set; }
+		public float TargetAlpha { get; private set; }
+		public bool HasBeenSeen { get; set; }
 
 		public Ragdoll FadeOut( float duration )
 		{
@@ -94,25 +96,35 @@ namespace Facepunch.RTS
 		[Event.Tick]
 		public void ClientTick()
 		{
-			if ( FadeOutDuration == 0f ) return;
+			RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, Time.Delta * 8f );
 
-			var fraction = ((FadeOutTime - Time.Now) / FadeOutDuration).Clamp( 0f, 1f );
-
-			if ( fraction <= 0f )
+			if ( FadeOutDuration > 0f )
 			{
-				Delete();
-				return;
-			}
+				var fraction = ((FadeOutTime - Time.Now) / FadeOutDuration).Clamp( 0f, 1f );
 
-			RenderAlpha = fraction;
+				if ( fraction <= 0f )
+				{
+					Delete();
+					return;
+				}
+
+				RenderAlpha *= fraction;
+			}
 
 			foreach ( var child in Children )
 			{
 				if ( child is ModelEntity model )
 				{
-					model.RenderAlpha = fraction;
+					model.RenderAlpha = RenderAlpha;
 				}
 			}
+
+			EnableDrawing = (RenderAlpha > 0f);
+		}
+
+		public void MakeVisible( bool isVisible )
+		{
+			TargetAlpha = isVisible ? 1f : 0f;
 		}
 	}
 }

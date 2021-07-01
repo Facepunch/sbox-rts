@@ -719,21 +719,19 @@ namespace Facepunch.RTS
 
 			if ( IsLocalPlayers ) return;
 
-			var lerpSpeed = Time.Delta * 8f;
-
-			RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, lerpSpeed );
+			RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, Time.Delta * 8f );
 
 			for ( var i = 0; i < Children.Count; i++ )
 			{
 				if ( Children[i] is ModelEntity child )
 				{
-					child.RenderAlpha = child.RenderAlpha.LerpTo( TargetAlpha, lerpSpeed );
+					child.RenderAlpha = RenderAlpha;
 				}
 			}
 
 			if ( Circle.IsValid() )
 			{
-				Circle.Alpha = Circle.Alpha.LerpTo( TargetAlpha, lerpSpeed );
+				Circle.Alpha = RenderAlpha;
 			}
 
 			EnableDrawing = (RenderAlpha > 0f);

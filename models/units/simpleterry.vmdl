@@ -1042,6 +1042,455 @@
 				]
 			},
 			{
+				_class = "WeightListList"
+				children = 
+				[
+					{
+						_class = "Folder"
+						name = "Weighlist_Weapon_2H"
+						children = 
+						[
+							{
+								_class = "WeightList"
+								name = "Weapon_2H_Idle"
+								default_weight = 0.0
+								weights = 
+								[
+									{
+										bone = "arm_elbow_helper_L"
+										weight = 1.0
+									},
+									{
+										bone = "arm_elbow_helper_R"
+										weight = 1.0
+									},
+									{
+										bone = "arm_lower_L_twist"
+										weight = 1.0
+									},
+									{
+										bone = "arm_lower_R_twist"
+										weight = 1.0
+									},
+									{
+										bone = "arm_upper_L_twist"
+										weight = 1.0
+									},
+									{
+										bone = "arm_upper_R_twist"
+										weight = 1.0
+									},
+									{
+										bone = "clavicle_L"
+										weight = 0.64186
+									},
+									{
+										bone = "clavicle_R"
+										weight = 0.637209
+									},
+									{
+										bone = "eye_L"
+										weight = 0.0
+									},
+									{
+										bone = "eye_R"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_lower_L"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_lower_R"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_upper_L"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_upper_R"
+										weight = 0.0
+									},
+									{
+										bone = "foot_L_IK_target"
+										weight = 0.0
+									},
+									{
+										bone = "foot_R_IK_target"
+										weight = 0.0
+									},
+									{
+										bone = "hand_L"
+										weight = 1.0
+									},
+									{
+										bone = "hand_L_IK_target"
+										weight = 1.0
+									},
+									{
+										bone = "hand_R"
+										weight = 1.0
+									},
+									{
+										bone = "hand_R_IK_target"
+										weight = 1.0
+									},
+									{
+										bone = "head"
+										weight = 0.353488
+									},
+									{
+										bone = "hold_R"
+										weight = 1.0
+									},
+									{
+										bone = "leg_upper_L"
+										weight = 0.0
+									},
+									{
+										bone = "leg_upper_R"
+										weight = 0.0
+									},
+									{
+										bone = "neck_0"
+										weight = 0.553488
+									},
+									{
+										bone = "pelvis"
+										weight = 0.0
+									},
+									{
+										bone = "root_IK"
+										weight = 0.0
+									},
+									{
+										bone = "spine_0"
+										weight = 0.24186
+									},
+									{
+										bone = "spine_1"
+										weight = 0.362791
+									},
+									{
+										bone = "spine_2"
+										weight = 0.469767
+									},
+								]
+								master_morph_weight = -1.0
+								morph_weights = [  ]
+							},
+							{
+								_class = "WeightList"
+								name = "Weapon_2H_Move"
+								default_weight = 0.0
+								weights = 
+								[
+									{
+										bone = "arm_elbow_helper_L"
+										weight = 1.0
+									},
+									{
+										bone = "arm_elbow_helper_R"
+										weight = 1.0
+									},
+									{
+										bone = "arm_lower_L"
+										weight = 0.888889
+									},
+									{
+										bone = "arm_lower_L_twist"
+										weight = 1.0
+									},
+									{
+										bone = "arm_lower_R"
+										weight = 0.758893
+									},
+									{
+										bone = "arm_lower_R_twist"
+										weight = 1.0
+									},
+									{
+										bone = "arm_upper_L"
+										weight = 0.915033
+									},
+									{
+										bone = "arm_upper_L_twist"
+										weight = 1.0
+									},
+									{
+										bone = "arm_upper_R"
+										weight = 0.960474
+									},
+									{
+										bone = "arm_upper_R_twist"
+										weight = 1.0
+									},
+									{
+										bone = "clavicle_L"
+										weight = 0.948617
+									},
+									{
+										bone = "clavicle_R"
+										weight = 0.920949
+									},
+									{
+										bone = "eye_L"
+										weight = 0.0
+									},
+									{
+										bone = "eye_R"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_lower_L"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_lower_R"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_upper_L"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_upper_R"
+										weight = 0.0
+									},
+									{
+										bone = "finger_index_meta_L"
+										weight = 1.0
+									},
+									{
+										bone = "finger_index_meta_R"
+										weight = 1.0
+									},
+									{
+										bone = "finger_middle_meta_L"
+										weight = 1.0
+									},
+									{
+										bone = "finger_middle_meta_R"
+										weight = 1.0
+									},
+									{
+										bone = "finger_ring_meta_L"
+										weight = 1.0
+									},
+									{
+										bone = "finger_ring_meta_R"
+										weight = 1.0
+									},
+									{
+										bone = "finger_thumb_0_L"
+										weight = 0.993464
+									},
+									{
+										bone = "finger_thumb_0_R"
+										weight = 1.0
+									},
+									{
+										bone = "foot_L_IK_target"
+										weight = 0.0
+									},
+									{
+										bone = "foot_R_IK_target"
+										weight = 0.0
+									},
+									{
+										bone = "hand_L"
+										weight = 1.0
+									},
+									{
+										bone = "hand_L_IK_target"
+										weight = 1.0
+									},
+									{
+										bone = "hand_L_to_R_ikrule"
+										weight = 1.0
+									},
+									{
+										bone = "hand_R"
+										weight = 1.0
+									},
+									{
+										bone = "hand_R_IK_target"
+										weight = 1.0
+									},
+									{
+										bone = "hand_R_to_L_ikrule"
+										weight = 1.0
+									},
+									{
+										bone = "head"
+										weight = 0.588235
+									},
+									{
+										bone = "hold_L"
+										weight = 1.0
+									},
+									{
+										bone = "hold_R"
+										weight = 1.0
+									},
+									{
+										bone = "leg_upper_L"
+										weight = 0.0
+									},
+									{
+										bone = "leg_upper_R"
+										weight = 0.0
+									},
+									{
+										bone = "neck_0"
+										weight = 0.653595
+									},
+									{
+										bone = "pelvis"
+										weight = 0.0
+									},
+									{
+										bone = "root_IK"
+										weight = 0.0
+									},
+									{
+										bone = "spine_0"
+										weight = 0.117647
+									},
+									{
+										bone = "spine_1"
+										weight = 0.287582
+									},
+									{
+										bone = "spine_2"
+										weight = 0.424837
+									},
+								]
+								master_morph_weight = -1.0
+								morph_weights = [  ]
+							},
+							{
+								_class = "WeightList"
+								name = "Weapon_2H_Full"
+								default_weight = 0.0
+								weights = 
+								[
+									{
+										bone = "clavicle_L"
+										weight = 1.0
+									},
+									{
+										bone = "eye_L"
+										weight = 1.0
+									},
+									{
+										bone = "eye_R"
+										weight = 1.0
+									},
+									{
+										bone = "face_lid_lower_L"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_lower_R"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_upper_L"
+										weight = 0.0
+									},
+									{
+										bone = "face_lid_upper_R"
+										weight = 0.0
+									},
+									{
+										bone = "foot_L_IK_target"
+										weight = 0.0
+									},
+									{
+										bone = "foot_R_IK_target"
+										weight = 0.0
+									},
+									{
+										bone = "hand_L_IK_target"
+										weight = 1.0
+									},
+									{
+										bone = "hand_R_IK_target"
+										weight = 1.0
+									},
+									{
+										bone = "head"
+										weight = 1.0
+									},
+									{
+										bone = "neck_0"
+										weight = 1.0
+									},
+									{
+										bone = "pelvis"
+										weight = 0.0
+									},
+									{
+										bone = "root_IK"
+										weight = 0.0
+									},
+									{
+										bone = "spine_0"
+										weight = 0.580282
+									},
+									{
+										bone = "spine_1"
+										weight = 0.788732
+									},
+									{
+										bone = "spine_2"
+										weight = 1.0
+									},
+								]
+								master_morph_weight = -1.0
+								morph_weights = [  ]
+							},
+						]
+					},
+					{
+						_class = "WeightList"
+						name = "Blend_UpperBody"
+						default_weight = 0.0
+						weights = 
+						[
+							{
+								bone = "clavicle_L"
+								weight = 1.0
+							},
+							{
+								bone = "clavicle_R"
+								weight = 1.0
+							},
+							{
+								bone = "neck_0"
+								weight = 1.0
+							},
+							{
+								bone = "spine_0"
+								weight = 0.315493
+							},
+							{
+								bone = "spine_1"
+								weight = 0.532394
+							},
+							{
+								bone = "spine_2"
+								weight = 0.743662
+							},
+						]
+						master_morph_weight = -1.0
+						morph_weights = [  ]
+					},
+				]
+			},
+			{
 				_class = "HitboxSetList"
 				children = 
 				[
