@@ -47,6 +47,7 @@ namespace Facepunch.RTS
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
 		public TimeSince LastAttackTime { get; set; }
+		public Pathfinder Pathfinder { get; private set; }
 		public bool HasBeenSeen { get; set; }
 		public bool FollowTarget { get; private set; }
 		public float TargetAlpha { get; private set; }
@@ -351,15 +352,15 @@ namespace Facepunch.RTS
 			var modelSize = model.CollisionBounds.Size;
 			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
 			var potentialTiles = new List<Vector3>();
-			var collisionSize = (maxRadius * 0.5f) + (RTS.Path.Pathfinder.Scale * 0.5f);
+			var collisionSize = (maxRadius * 0.5f) + (RTS.Path.Default.Scale * 0.5f);
 			var possibleLocations = new List<GridWorldPosition>();
 
-			RTS.Path.Pathfinder.GetGridPositions( model.Position, collisionSize, possibleLocations );
+			Pathfinder.GetGridPositions( model.Position, collisionSize, possibleLocations );
 
 			var destinations = possibleLocations.ConvertAll( v =>
 			{
-				RTS.Path.Pathfinder.DrawBox( v, Color.Blue, 10f );
-				return RTS.Path.Pathfinder.GetPosition( v );
+				Pathfinder.DrawBox( v, Color.Blue, 10f );
+				return Pathfinder.GetPosition( v );
 			} );
 
 			return destinations;
@@ -431,6 +432,7 @@ namespace Facepunch.RTS
 			LineOfSight = item.LineOfSight;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
+			Pathfinder = RTS.Path.GetPathfinder( item.NodeSize );
 
 			SetupPhysicsFromCapsule( PhysicsMotionType.Keyframed, Capsule.FromHeightAndRadius( 72, 8 ) );
 
@@ -458,7 +460,7 @@ namespace Facepunch.RTS
 
 		private void SetTargetRange( float range )
 		{
-			TargetRange = range + RTS.Path.Pathfinder.Scale;
+			TargetRange = range + Pathfinder.Scale;
 		}
 
 		private void ResetTarget()
@@ -572,16 +574,12 @@ namespace Facepunch.RTS
 					else
 					{
 						var direction = MoveGroup.GetDirection( Position );
-
-						/*
 						var flocker = new Flocker();
 
 						flocker.Setup( this, MoveGroup.Agents, Position );
 						flocker.Flock( Position + direction.Normal * 50f );
-						*/
 
-						//pathDirection = flocker.Force.Normal;
-						pathDirection = direction.Normal;
+						pathDirection = flocker.Force.Normal;
 					}
 				}
 				else if ( TargetPosition.HasValue )
@@ -607,8 +605,8 @@ namespace Facepunch.RTS
 				Position += Velocity;
 				AlignToGround();
 
-				var worldPos = RTS.Path.Pathfinder.CreateWorldPosition( Position );
-				RTS.Path.Pathfinder.DrawBox( worldPos, Color.Green, Time.Delta );
+				var worldPos = Pathfinder.CreateWorldPosition( Position );
+				Pathfinder.DrawBox( worldPos, Color.Green, Time.Delta );
 
 				var walkVelocity = Velocity.WithZ( 0 );
 
@@ -661,7 +659,7 @@ namespace Facepunch.RTS
 
 		private void AlignToGround()
 		{
-			Position = Position.WithZ( RTS.Path.Pathfinder.GetHeight( Position ) );
+			Position = Position.WithZ( Pathfinder.GetHeight( Position ) );
 		}
 
 		private void TickOccupy( BuildingEntity building )

@@ -2,6 +2,7 @@
 using Gamelib.FlowFields;
 using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gamelib.FlowFields
 {
@@ -10,18 +11,21 @@ namespace Gamelib.FlowFields
 		public HashSet<IFlockAgent> ReachedGoal { get; private set; }
 		public List<IFlockAgent> Agents { get; private set; }
 		public PathRequest PathRequest { get; private set; }
+		public Pathfinder Pathfinder { get; private set; }
 
 		public MoveGroup( List<IFlockAgent> agents, Vector3 destination )
 		{
+			Pathfinder = GetPathfinder( agents );
 			ReachedGoal = new();
-			PathRequest = PathManager.Instance.Request( destination );
+			PathRequest = Pathfinder.Request( destination );
 			Agents = agents;
 		}
 
 		public MoveGroup( IFlockAgent agent, Vector3 destination )
 		{
+			Pathfinder = GetPathfinder( agent );
 			ReachedGoal = new();
-			PathRequest = PathManager.Instance.Request( destination );
+			PathRequest = Pathfinder.Request( destination );
 			Agents = new List<IFlockAgent>() { agent };
 		}
 
@@ -29,8 +33,9 @@ namespace Gamelib.FlowFields
 		{
 			if ( destinations.Count > 0 )
 			{
+				Pathfinder = GetPathfinder( agents );
 				ReachedGoal = new();
-				PathRequest = PathManager.Instance.Request( destinations );
+				PathRequest = Pathfinder.Request( destinations );
 				Agents = agents;
 			}
 		}
@@ -39,8 +44,9 @@ namespace Gamelib.FlowFields
 		{
 			if ( destinations.Count > 0 )
 			{
+				Pathfinder = GetPathfinder( agent );
 				ReachedGoal = new();
-				PathRequest = PathManager.Instance.Request( destinations );
+				PathRequest = Pathfinder.Request( destinations );
 				Agents = new List<IFlockAgent>() { agent };
 			}
 		}
@@ -111,8 +117,7 @@ namespace Gamelib.FlowFields
 		{
 			if ( PathRequest != null && PathRequest.IsValid() )
 			{
-				RTS.Path.Complete( PathRequest );
-
+				Pathfinder.Complete( PathRequest );
 				PathRequest = null;
 
 				for ( int i = 0; i < Agents.Count; i++ )
@@ -127,6 +132,18 @@ namespace Gamelib.FlowFields
 
 				Agents = null;
 			}
+		}
+
+		private Pathfinder GetPathfinder( List<IFlockAgent> agents )
+		{
+			var pathfinders = agents.Select( a => a.Pathfinder ).ToList();
+			pathfinders.Sort( ( a, b ) => a.Scale.CompareTo( b.Scale ) );
+			return pathfinders[0];
+		}
+
+		private Pathfinder GetPathfinder( IFlockAgent agent )
+		{
+			return agent.Pathfinder;
 		}
 	}
 }

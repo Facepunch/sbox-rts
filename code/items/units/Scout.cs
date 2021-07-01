@@ -12,6 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Description => "A basic vehicle good for scouting large areas.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
 		public override bool UseRenderColor => true;
+		public override int NodeSize => 100;
 		public override float LineOfSight => 1000f;
 		public override string[] MoveSounds => new string[]
 		{

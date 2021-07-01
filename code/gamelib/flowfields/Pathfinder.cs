@@ -18,6 +18,7 @@ namespace Gamelib.FlowFields
 
 		private readonly List<GridWorldPosition> _collisionBuffer = new();
 		private readonly List<int> _chunkBuffer = new();
+		private readonly Queue<FlowField> _flowFields = new();
 
 		[ServerVar( "ff_debug", Saved = true )]
 		public static bool Debug { get; set; }
@@ -73,7 +74,44 @@ namespace Gamelib.FlowFields
             ProcessBuffers();
         }
 
-        public async Task UpdateCollisions()
+		public PathRequest Request( List<Vector3> destinations )
+		{
+			for ( int i = destinations.Count - 1; i >= 0; i-- )
+			{
+				var position = destinations[i];
+
+				if ( !IsAvailable( position ) )
+					destinations.RemoveAt( i );
+			}
+
+			if ( destinations.Count == 0 ) return null;
+
+			var pathRequest = GetRequest();
+			pathRequest.FlowField.SetDestinations( destinations );
+			return pathRequest;
+		}
+
+		public PathRequest Request( Vector3 destination )
+		{
+			if ( !IsAvailable( destination ) ) return null;
+
+			var pathRequest = GetRequest();
+			pathRequest.FlowField.SetDestination( destination );
+
+			return pathRequest;
+		}
+
+		public void Complete( PathRequest request )
+		{
+			if ( request == null || !request.IsValid() )
+				return;
+
+			request.FlowField.ResetAndClearDestination();
+			_flowFields.Enqueue( request.FlowField );
+			request.FlowField = null;
+		}
+
+		public async Task UpdateCollisions()
         {
 			var collisionsPerFrame = 1000;
 			var calculatedThisFrame = 0;
@@ -176,7 +214,7 @@ namespace Gamelib.FlowFields
 			DrawBox( GetPosition( position ), position.WorldIndex, color, duration );
 		}
 
-        public async Task Initialize()
+        public async void Initialize()
         {
 			PositionOffset = Origin + new Vector3(
 				_worldSize.Columns * _scale / 2f,
@@ -196,7 +234,14 @@ namespace Gamelib.FlowFields
 			await UpdateCollisions();
 
 			ConnectPortals();
-        }
+
+			// Create a good amount of flow fields ready in the pool.
+			for ( var i = 0; i < 10; i++ )
+			{
+				await Task.Delay( 10 );
+				_flowFields.Enqueue( new FlowField( this ) );
+			}
+		}
 
 		public void CreateHeightMap()
 		{
@@ -318,6 +363,21 @@ namespace Gamelib.FlowFields
 				_chunkSize.Columns * _numberOfChunks.Columns
 			);
 			_scale = scale;
+		}
+
+		private PathRequest GetRequest()
+		{
+			var isValid = _flowFields.TryDequeue( out var flowField );
+
+			if ( !isValid )
+			{
+				flowField = new FlowField( this );
+			}
+
+			return new PathRequest()
+			{
+				FlowField = flowField
+			};
 		}
 
 		private void CreateChunks()

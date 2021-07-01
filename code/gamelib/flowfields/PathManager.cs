@@ -1,5 +1,6 @@
 using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Gamelib.FlowFields
@@ -11,13 +12,14 @@ namespace Gamelib.FlowFields
 		[ServerCmd( "ff_update_collisions" )]
 		private static void UpdateCollisions()
 		{
-			_ = Instance.Pathfinder.UpdateCollisions();
+			foreach ( var pathfinder in Instance.All )
+				_ = pathfinder.UpdateCollisions();
 		}
 
 		[ServerCmd( "ff_show_chunks" )]
 		private static void ShowChunks()
 		{
-			var pathfinder = Instance.Pathfinder;
+			var pathfinder = Instance.Default;
 			var chunks = pathfinder.Chunks;
 			var numberOfChunks = pathfinder.Chunks.Length;
 
@@ -34,9 +36,9 @@ namespace Gamelib.FlowFields
 		}
 
 		[ServerCmd( "ff_show_gateway_nodes" )]
-		private static void ShowGatewayNodes()
+		private static void ShowGatewayNodes( int size )
 		{
-			var pathfinder = Instance.Pathfinder;
+			var pathfinder = Instance.GetPathfinder( size );
 			var chunks = pathfinder.Chunks;
 			var numberOfChunks = pathfinder.Chunks.Length;
 
@@ -56,9 +58,9 @@ namespace Gamelib.FlowFields
 		}
 		
 		[ServerCmd( "ff_show_collisions" )]
-		private static void ShowCollisions()
+		private static void ShowCollisions( int size )
 		{
-			var pathfinder = Instance.Pathfinder;
+			var pathfinder = Instance.GetPathfinder( size );
 			var chunks = pathfinder.Chunks;
 			var numberOfChunks = pathfinder.Chunks.Length;
 
@@ -78,96 +80,52 @@ namespace Gamelib.FlowFields
 			}
 		}
 
-		private Queue<FlowField> _flowFields = new();
-		private Pathfinder _pathfinder;
+		private Dictionary<int, Pathfinder> _pathfinders = new();
+		private Pathfinder _default;
 
-		public Pathfinder Pathfinder => _pathfinder;
+		public Pathfinder Default => _default;
+		public List<Pathfinder> All { get; private set; } = new();
 
 		public PathManager()
 		{
 			Instance = this;
 		}
 
-        public void Create( int numberOfChunks, int chunkSize, float scale = 1f )
+		public Pathfinder GetPathfinder( int size )
 		{
-			_pathfinder = new Pathfinder( numberOfChunks, chunkSize, scale );
-			_ = Initialize();
-		}
-
-		public void Create( int numberOfChunks, BBox bounds, float scale = 1f )
-		{
-			_pathfinder = new Pathfinder( numberOfChunks, bounds, scale );
-			_ = Initialize();
-		}
-
-		public PathRequest Request( List<Vector3> destinations )
-		{
-			for ( int i = destinations.Count - 1; i >= 0; i-- )
+			if ( _pathfinders.TryGetValue( size, out var pathfinder ) )
 			{
-				var position = destinations[i];
-
-				if ( !_pathfinder.IsAvailable( position ) )
-					destinations.RemoveAt( i );
+				return pathfinder;
 			}
 
-			if ( destinations.Count == 0 ) return null;
-
-			var pathRequest = GetRequest();
-			pathRequest.FlowField.SetDestinations( destinations );
-			return pathRequest;
+			return _default;
 		}
 
-		public PathRequest Request( Vector3 destination )
+        public void Create( int numberOfChunks, int chunkSize, int nodeSize = 100 )
 		{
-			if ( !_pathfinder.IsAvailable( destination ) ) return null;
-
-			var pathRequest = GetRequest();
-			pathRequest.FlowField.SetDestination( destination );
-
-			return pathRequest;
+			Register( new Pathfinder( numberOfChunks, chunkSize, nodeSize ), nodeSize );
 		}
 
-		public void Complete( PathRequest request )
+		public void Create( int numberOfChunks, BBox bounds, int nodeSize = 100 )
 		{
-			if ( request == null || !request.IsValid() )
-				return;
-
-			request.FlowField.ResetAndClearDestination();
-			_flowFields.Enqueue( request.FlowField );
-			request.FlowField = null;
+			Register( new Pathfinder( numberOfChunks, bounds, nodeSize ), nodeSize );
 		}
 
 		public void Update()
 		{
-			_pathfinder.Update();
+			for ( var i = 0; i < All.Count; i++ )
+				All[i].Update();
 		}
 
-		private async Task Initialize()
+		private void Register( Pathfinder pathfinder, int nodeSize )
 		{
-			await _pathfinder.Initialize();
+			pathfinder.Initialize();
+			_pathfinders[nodeSize] = pathfinder;
 
-			// Create a good amount of flow fields ready in the pool.
-			for ( var i = 0; i < 20; i++ )
-			{
-				await Task.Delay( 30 );
+			if ( _default == null )
+				_default = pathfinder;
 
-				_flowFields.Enqueue( new FlowField( _pathfinder ) );
-			}
-		}
-
-		private PathRequest GetRequest()
-		{
-			var isValid = _flowFields.TryDequeue( out var flowField );
-
-			if ( !isValid )
-			{
-				flowField = new FlowField( _pathfinder );
-			}
-
-			return new PathRequest()
-			{
-				FlowField = flowField
-			};
+			All.Add( pathfinder );
 		}
     }
 }

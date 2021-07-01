@@ -109,10 +109,13 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			var pathfinder = RTS.Path.Pathfinder;
-			var size = CollisionBounds.Size.Length;
+			var modelSize = CollisionBounds.Size;
+			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
 
-			pathfinder.UpdateCollisions( Position, size * 0.5f );
+			foreach ( var pathfinder in RTS.Path.All )
+			{
+				pathfinder.UpdateCollisions( Position, maxRadius * 0.5f );
+			}
 
 			IsUnderConstruction = true;
 			RenderAlpha = 0.25f;
@@ -146,14 +149,15 @@ namespace Facepunch.RTS
 
 		public void PlaceNear( UnitEntity unit )
 		{
-			var buildingMaxSize = CollisionBounds.Size.Length;
+			var modelSize = CollisionBounds.Size;
+			var maxRadius = MathF.Max( modelSize.x, modelSize.y );
+			var pathfinder = unit.Pathfinder;
 			var potentialNodes = new List<GridWorldPosition>();
-			var pathfinder = RTS.Path.Pathfinder;
 
-			pathfinder.GetGridPositions( Position, buildingMaxSize * 0.5f, potentialNodes );
+			unit.Pathfinder.GetGridPositions( Position, maxRadius * 0.75f, potentialNodes );
 
 			var freeLocations = potentialNodes
-				.Where( v => RTS.Path.Pathfinder.IsAvailable( v ) )
+				.Where( v => pathfinder.IsAvailable( v ) )
 				.ToList();
 
 			if ( freeLocations.Count == 0 )
@@ -335,7 +339,7 @@ namespace Facepunch.RTS
 		{
 			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRange )
 				.OfType<UnitEntity>()
-				//.Where( ( a ) => IsEnemy( a ) )
+				.Where( ( a ) => IsEnemy( a ) )
 				.OrderBy( ( a ) => a.Position.Distance( Position ) )
 				.FirstOrDefault();
 
