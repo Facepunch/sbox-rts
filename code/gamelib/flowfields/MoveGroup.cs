@@ -100,7 +100,7 @@ namespace Gamelib.FlowFields
 				{
 					var distance = agent.Position.Distance( other.Position );
 
-					if ( distance <= (agent.FlockSettings.Radius * 2f) )
+					if ( distance <= agent.FlockSettings.Radius )
 					{
 						return true;
 					}
