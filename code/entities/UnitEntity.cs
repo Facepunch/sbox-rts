@@ -54,6 +54,7 @@ namespace Facepunch.RTS
 		public Vector3? TargetPosition { get; private set; }
 		public float Speed { get; private set; }
 		public Entity Target { get; private set; }
+		public bool IsStatic { get; private set; }
 		public TimeSince LastGatherTime { get; private set; }
 		public ResourceEntity LastResourceEntity { get; private set; }
 		public DamageInfo LastDamageTaken { get; private set; }
@@ -90,6 +91,9 @@ namespace Facepunch.RTS
 
 			// Don't collide with anything but static shit.
 			CollisionGroup = CollisionGroup.Debris;
+
+			// We start out as a static obstacle.
+			IsStatic = true;
 		}
 
 		public bool CanConstruct => Item.CanConstruct;
@@ -98,6 +102,21 @@ namespace Facepunch.RTS
 		public bool CanGather( ResourceType type )
 		{
 			return Item.Gatherables.Contains( type );
+		}
+
+		public void MakeStatic( bool isStatic )
+		{
+			// Don't update if we don't have to.
+			if ( IsStatic == isStatic ) return;
+
+			if ( isStatic )
+				Tags.Remove( "flowfield" );
+			else
+				Tags.Add( "flowfield" );
+
+			Pathfinder.UpdateCollisions( Position, Item.NodeSize * 2f );
+
+			IsStatic = isStatic;
 		}
 
 		public bool IsTargetInRange()
@@ -595,10 +614,12 @@ namespace Facepunch.RTS
 						_animationValues.Speed = 0.5f;
 
 					InputVelocity = (pathDirection * Speed).WithZ( 0f );
-					Velocity = InputVelocity * Time.Delta;// Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
+					MakeStatic( false );
+					Velocity = Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
 				}
 				else
 				{
+					MakeStatic( true );
 					Velocity = 0;
 				}
 
