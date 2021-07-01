@@ -60,6 +60,7 @@ namespace Facepunch.RTS
 		public readonly FogBounds Bounds = new();
 		public Texture Texture;
 		public int Resolution;
+		public byte[] TargetData;
 		public byte[] Data;
 		public bool IsActive { get; private set; }
 		public Fog Fog { get; private set; }
@@ -177,13 +178,13 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public void Clear()
 		{
-
 			for ( int x = 0; x < Resolution; x++ )
 			{
 				for ( int y = 0; y < Resolution; y++ )
 				{
 					var index = ((x * Resolution) + y);
 
+					TargetData[index + 0] = 255;
 					Data[index + 0] = 255;
 				}
 			}
@@ -276,6 +277,7 @@ namespace Facepunch.RTS
 			}
 
 			Resolution = ((float)(Bounds.Size / 20f)).CeilToInt();
+			TargetData = new byte[Resolution * Resolution];
 			Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
 			Data = new byte[Resolution * Resolution];
 
@@ -301,8 +303,7 @@ namespace Facepunch.RTS
 			for ( int x = x1; x <= x2; x++ )
 			{
 				var index = ((y * Resolution) + x);
-
-				Data[index + 0] = alpha;
+				TargetData[index + 0] = alpha;
 			}
 		}
 
@@ -358,6 +359,23 @@ namespace Facepunch.RTS
 				AddRange( position, range, 0 );
 
 				viewer.LastPosition = position;
+			}
+
+			// Why do I have to loop 4 times like this instead of adding 4 to the byte value?
+			for ( var j = 1; j <= 4; j++ )
+			{
+				for ( var i = 0; i < Data.Length; i++ )
+				{
+					var target = TargetData[i];
+					var current = Data[i];
+
+					if ( current == target ) continue;
+
+					if ( current < target )
+						Data[i]++;
+					else if ( current > target )
+						Data[i]--;
+				}
 			}
 
 			Texture.Update( Data );
