@@ -6,20 +6,24 @@
 		children = 
 		[
 			{
-				_class = "MaterialGroupList"
+				_class = "RenderMeshList"
 				children = 
 				[
 					{
-						_class = "DefaultMaterialGroup"
-						remaps = 
-						[
-							{
-								from = "phong1.vmat"
-								to = "models/vehicles/humvee/material/humvee.vmat"
-							},
-						]
-						use_global_default = false
-						global_default_material = ""
+						_class = "RenderMeshFile"
+						filename = "models\\vehicles\\Humvee\\dmx\\mesh\\humvee.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 270.0, 0.0, 90.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = [  ]
+						}
 					},
 				]
 			},
@@ -32,31 +36,9 @@
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
-						origin = [ 0.065884, -2.088496, 42.683311 ]
+						origin = [ -4.725555, -0.96263, 37.456223 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 196.384979, 94.842636, 86.366623 ]
-					},
-				]
-			},
-			{
-				_class = "RenderMeshList"
-				children = 
-				[
-					{
-						_class = "RenderMeshFile"
-						filename = "models/vehicles/Humvee/Humvee_M.fbx"
-						import_translation = [ 0.0, 0.0, 2.9 ]
-						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 11.5
-						align_origin_x_type = "None"
-						align_origin_y_type = "None"
-						align_origin_z_type = "None"
-						parent_bone = ""
-						import_filter = 
-						{
-							exclude_by_default = false
-							exception_list = [  ]
-						}
+						dimensions = [ 184.191635, 94.096054, 75.912445 ]
 					},
 				]
 			},
