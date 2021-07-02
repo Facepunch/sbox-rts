@@ -116,7 +116,7 @@ namespace Gamelib.FlowFields.Algorithms
                 }
             }
 
-            return null;
+			return null;
         }
 
 		private int CompareValues( int a, int b )
