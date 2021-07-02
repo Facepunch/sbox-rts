@@ -1,0 +1,188 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:modeldoc29:version{3cec427c-1b0e-4d48-a90a-0436f33a6041} -->
+{
+	rootNode = 
+	{
+		_class = "RootNode"
+		children = 
+		[
+			{
+				_class = "RenderMeshList"
+				children = 
+				[
+					{
+						_class = "RenderMeshFile"
+						name = "base"
+						filename = "models/buildings/turret/dmx/mesh/turret.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 90.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = "base"
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = 
+							[
+								"hammermesh_58",
+								"hammermesh_5",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "gun"
+						filename = "models/buildings/turret/dmx/mesh/turret.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 90.0, 90.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = "gun"
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = 
+							[
+								"hammermesh_57",
+								"hammermesh_3",
+							]
+						}
+					},
+				]
+			},
+			{
+				_class = "Skeleton"
+				children = 
+				[
+					{
+						_class = "Bone"
+						name = "base"
+						children = 
+						[
+							{
+								_class = "Bone"
+								name = "gun"
+								origin = [ 0.0, 0.0, 0.0 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								do_not_discard = true
+							},
+						]
+						origin = [ 0.0, 0.0, 0.0 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						do_not_discard = true
+					},
+				]
+			},
+			{
+				_class = "PhysicsShapeList"
+				children = 
+				[
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = "base"
+						surface_prop = "default"
+						collision_prop = "default"
+						origin = [ -3.331547, -0.982559, 34.379898 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 135.662048, 143.618347, 69.759796 ]
+					},
+				]
+			},
+			{
+				_class = "AttachmentList"
+				children = 
+				[
+					{
+						_class = "Attachment"
+						name = "muzzle"
+						parent_bone = "gun"
+						relative_origin = [ 128.873337, 0.307423, 48.042465 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "aim"
+						parent_bone = "gun"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+				]
+			},
+			{
+				_class = "GameDataList"
+				children = 
+				[
+					{
+						_class = "LookAtChain"
+						name = "aim"
+						lookat_chain = 
+						{
+							name = ""
+							bones = 
+							[
+								{
+									name = "gun"
+									weight = 1.0
+								},
+							]
+						}
+					},
+				]
+			},
+			{
+				_class = "AnimationList"
+				children = 
+				[
+					{
+						_class = "EmptyAnim"
+						name = "aim"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						frame_count = 1
+						frame_rate = 30
+					},
+					{
+						_class = "AnimFile"
+						name = "fire"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/buildings/turret/dmx/turret_future@fire.dmx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
+				]
+				default_root_bone_name = ""
+			},
+		]
+		model_archetype = ""
+		primary_associated_entity = ""
+		anim_graph_name = "models/buildings/turret_future/turret.vanmgrph"
+	}
+}
