@@ -38,7 +38,7 @@ Layer0
 	g_nScaleTexCoordVByModelScaleAxis "0"
 	g_vTexCoordOffset "[0.000 0.000]"
 	g_vTexCoordScale "[1.000 1.000]"
-	g_vTexCoordScrollSpeed "[0.000 0.000]"
+	g_vTexCoordScrollSpeed "[0.100 0.100]"
 
 	//---- Translucent ----
 	g_flOpacityScale "1.000"
