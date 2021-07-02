@@ -9,7 +9,7 @@ namespace Gamelib.FlowFields
 
 		public Vector3 GetDirection( Vector3 position )
 		{
-			if ( !IsValid() || !FlowField.Ready( position ) )
+			if ( !IsValid() || FlowField.Ready( position ) != PathResult.Valid )
 				return Vector3.Zero;
 
 			return FlowField.GetDirection( position );
@@ -19,6 +19,10 @@ namespace Gamelib.FlowFields
 		{
 			// We've reached our destination if we don't have one.
 			if ( !FlowField.HasDestination() )
+				return true;
+
+			// We've reached our destination if we have an invalid path.
+			if ( FlowField.Ready( position ) == PathResult.Invalid )
 				return true;
 
 			var indicies = FlowField.DestinationIndexes;
