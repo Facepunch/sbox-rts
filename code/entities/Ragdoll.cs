@@ -1,12 +1,5 @@
 ﻿using Sandbox;
-using Facepunch.RTS.Units;
-using System.Collections.Generic;
-using Gamelib.Nav;
-using Facepunch.RTS.Buildings;
-using System.Linq;
 using System;
-using Gamelib.Extensions;
-using Sandbox.UI;
 
 namespace Facepunch.RTS
 {

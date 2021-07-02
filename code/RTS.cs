@@ -37,7 +37,7 @@ namespace Facepunch.RTS
 		public static RTS Game { get; private set; }
 
 		[Net] public float ServerTime { get; private set; }
-		[Net] public BaseRound Round { get; private set; }
+		[Net, OnChangedCallback] public BaseRound Round { get; private set; }
 		[Net] public GameConfig Config { get; private set; }
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
@@ -194,22 +194,22 @@ namespace Facepunch.RTS
 			Round?.OnSecond();
 		}
 
+		private void OnRoundChanged()
+		{
+			if ( LastRound != Round )
+			{
+				LastRound?.Finish();
+				LastRound = Round;
+				LastRound.Start();
+			}
+		}
+
 		[Event.Tick]
 		private void Tick()
 		{
 			Round?.OnTick();
 			
-			if ( IsClient )
-			{
-				// We have to hack around this for now until we can detect changes in net variables.
-				if ( LastRound != Round )
-				{
-					LastRound?.Finish();
-					LastRound = Round;
-					LastRound.Start();
-				}
-			}
-			else
+			if ( IsServer )
 			{
 				Path?.Update();
 				ServerTime = Time.Now;
