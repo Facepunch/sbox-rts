@@ -1,11 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Gamelib.FlowFields.Grid;
 
 namespace Gamelib.FlowFields.Connectors
 {
-    public sealed class Gateway : IEnumerable<int>
-    {
+    public sealed class Gateway : IEnumerable<int>, IComparable<Gateway>
+	{
         public readonly Chunk Chunk;
         public readonly List<int> Nodes = new();
         public readonly Dictionary<Gateway, int> Connections = new();
@@ -13,8 +14,9 @@ namespace Gamelib.FlowFields.Connectors
         public Portal Portal;
 		public int CachedNodeCount;
 		public int CachedMedian;
-        
-        public Gateway( Chunk chunk, GridDirection direction )
+		public Dictionary<Portal, long> HeuristicLookup;
+
+		public Gateway( Chunk chunk, GridDirection direction )
         {
             Chunk = chunk;
             Direction = direction;
@@ -60,5 +62,10 @@ namespace Gamelib.FlowFields.Connectors
             var otherMedian = otherGateway.Median();
             return median == otherMedian && Chunk == otherGateway.Chunk;
         }
-    }
+
+		public int CompareTo( Gateway other )
+		{
+			return HeuristicLookup[Portal].CompareTo( other.HeuristicLookup[Portal] );
+		}
+	}
 }

@@ -14,7 +14,8 @@ namespace Gamelib.FlowFields.Algorithms
         private readonly Dictionary<Portal, long> _f = new();
         private readonly Dictionary<Portal, long> _g = new();
 
-        private readonly HashSetList<Gateway> _openSet = new();
+        private readonly PriorityQueue<Gateway> _openSet = new();
+        private readonly HashSet<Gateway> _processing = new();
         private readonly HashSet<Gateway> _closedSet = new();
         
         private readonly Dictionary<Gateway, Gateway> _previous = new();
@@ -64,6 +65,7 @@ namespace Gamelib.FlowFields.Algorithms
         {
             var worldPosition = field.Pathfinder.CreateWorldPosition( startPosition );
 
+			_processing.Clear();
 			_closedSet.Clear();
             _openSet.Clear();
 
@@ -71,14 +73,6 @@ namespace Gamelib.FlowFields.Algorithms
             if ( chunk == null ) return null;
 
             var portals = chunk.GetConnectedPortals( worldPosition.NodeIndex );
-
-			for ( int i = 0; i < portals.Count; i++ )
-			{
-				var portal = portals[i];
-				var gateway = portal.GetGatewayInChunk( chunk );
-
-				_openSet.Add( gateway );
-			}
 
 			_f.Clear();
             _g.Clear();
@@ -90,19 +84,24 @@ namespace Gamelib.FlowFields.Algorithms
                 _g.Add( portal, long.MaxValue );
             }
 
-			for ( int i = 0; i < _openSet.Count; i++ )
-            {
-				var openGateway = _openSet[i];
-				_g[openGateway.Portal] = 0;
-                _f[openGateway.Portal] = H( field.Pathfinder, openGateway, field.DestinationIndex );
-            }
+			for ( int i = 0; i < portals.Count; i++ )
+			{
+				var portal = portals[i];
+				var gateway = portal.GetGatewayInChunk( chunk );
 
-            while ( _openSet.Count > 0 )
-            {
-                _openSet.Sort( (index1, index2) => _f[index1.Portal].CompareTo( _f[index2.Portal] ) );
+				gateway.HeuristicLookup = _f;
 
-				var current = _openSet[0];
-                var oppositeGateway = current.Portal.OppositeGateway(current);
+				_g[gateway.Portal] = 0;
+				_f[gateway.Portal] = H( field.Pathfinder, gateway, field.DestinationIndex );
+
+				_processing.Add( gateway );
+				_openSet.Enqueue( gateway );
+			}
+
+            while ( _openSet.Data.Count > 0 )
+            {
+				var current = _openSet.Dequeue();
+                var oppositeGateway = current.Portal.OppositeGateway( current );
 
                 if ( field.GatewayPath.ContainsKey( current ) )
 					return ReconstructPath( field, current );
@@ -114,8 +113,8 @@ namespace Gamelib.FlowFields.Algorithms
                     return ReconstructPath( field, oppositeGateway );
                 }
 
-                _openSet.Remove( current );
-                _closedSet.Add( current );
+				_processing.Remove( current );
+				_closedSet.Add( current );
 
                 AddGatewayConnections( field, current );
             }
@@ -134,7 +133,7 @@ namespace Gamelib.FlowFields.Algorithms
                 if ( _closedSet.Contains( connectedGateway ) )
                     continue;
 
-                if ( _openSet.Contains( connectedGateway ) )
+                if ( _processing.Contains( connectedGateway ) )
                     continue;
 
                 var tentativeGScore = _g[connectionGateway.Portal] + connection.Value;
@@ -143,8 +142,9 @@ namespace Gamelib.FlowFields.Algorithms
                 _previous[connectedGateway] = connectionGateway;
                 _g[connectedGateway.Portal] = tentativeGScore;
                 _f[connectedGateway.Portal] = _g[connectedGateway.Portal] + H( field.Pathfinder, connectedGateway, field.DestinationIndex );
+				connectedGateway.HeuristicLookup = _f;
 
-                _openSet.Add( connectedGateway );
+				_openSet.Enqueue( connectedGateway );
             }
         }
     }

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Gamelib.FlowFields.Grid;
 
 namespace Gamelib.FlowFields.Algorithms
@@ -9,7 +7,6 @@ namespace Gamelib.FlowFields.Algorithms
         public const int NoIndex = -1;
         public bool IsIntegrated;
 
-        private readonly List<int> _openIndexes = new();
         private readonly IntegrationSort _sort;
         private readonly int[] _values;
 
@@ -33,7 +30,6 @@ namespace Gamelib.FlowFields.Algorithms
             for ( var i = 0; i < Definition.Size; i++ )
                 _values[i] = IntegrationService.UnIntegrated;
 
-            _openIndexes.Clear();
             _sort.Reset();
         }
 
@@ -44,17 +40,12 @@ namespace Gamelib.FlowFields.Algorithms
 
         public void Enqueue( int index )
         {
-            _openIndexes.Add( index );
-            _openIndexes.Sort( (index1, index2) => _values[index1].CompareTo( _values[index2] ) );
+			_sort.Enqueue( index );
         }
 
         public int Dequeue()
         {
-            if (_openIndexes.Count == 0) return NoIndex;
-            
-            var index = _openIndexes[0];
-			_openIndexes.RemoveAt(0);
-            return index;
+			return _sort.Dequeue();
         }
     }
 }
