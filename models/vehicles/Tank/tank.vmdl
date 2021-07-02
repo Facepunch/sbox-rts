@@ -32,9 +32,9 @@
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
-						origin = [ -7.031796, -1.339895, 50.115234 ]
+						origin = [ -17.399826, -1.339895, 50.115234 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 250.179779, 135.973389, 101.230469 ]
+						dimensions = [ 240.03302, 135.973389, 101.230469 ]
 					},
 				]
 			},
@@ -45,10 +45,10 @@
 					{
 						_class = "RenderMeshFile"
 						name = "Body"
-						filename = "models/vehicles/Tank/Tank.fbx"
-						import_translation = [ 6.0, -1.0, 3.1 ]
-						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 8.0
+						filename = "models/vehicles/tank/tank.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 90.0, 0.0 ]
+						import_scale = 1.0
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
@@ -60,16 +60,18 @@
 							[
 								"Cannon",
 								"Turret",
+								"cannon1",
+								"turret1",
 							]
 						}
 					},
 					{
 						_class = "RenderMeshFile"
 						name = "Turret"
-						filename = "models/vehicles/Tank/Tank.fbx"
-						import_translation = [ 0.0, 0.0, 3.1 ]
-						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 8.0
+						filename = "models/vehicles/tank/tank.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 90.0, 0.0 ]
+						import_scale = 1.0
 						align_origin_x_type = "BoundsCenter"
 						align_origin_y_type = "BoundsCenter"
 						align_origin_z_type = "None"
@@ -80,16 +82,17 @@
 							exception_list = 
 							[
 								"Turret",
+								"turret1",
 							]
 						}
 					},
 					{
 						_class = "RenderMeshFile"
 						name = "Cannon"
-						filename = "models/vehicles/Tank/Tank.fbx"
-						import_translation = [ 6.0, -1.0, 3.1 ]
-						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 8.0
+						filename = "models/vehicles/tank/tank.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 90.0, 0.0 ]
+						import_scale = 1.0
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
@@ -100,6 +103,7 @@
 							exception_list = 
 							[
 								"Cannon",
+								"cannon1",
 							]
 						}
 					},
