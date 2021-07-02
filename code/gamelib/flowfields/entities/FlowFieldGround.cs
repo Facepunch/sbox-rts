@@ -52,6 +52,8 @@ namespace Gamelib.FlowFields.Entities
 			if ( groundMaxs.y > totalBounds.Maxs.y )
 				totalBounds.Maxs.y = groundMaxs.y;
 
+			totalBounds.Maxs.z = groundMaxs.z;
+
 			Bounds = totalBounds;
 		}
 	}

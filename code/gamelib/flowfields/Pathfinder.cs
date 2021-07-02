@@ -7,6 +7,7 @@ using Gamelib.FlowFields.Connectors;
 using Sandbox;
 using Gamelib.Extensions;
 using System.Threading.Tasks;
+using Gamelib.FlowFields.Entities;
 
 namespace Gamelib.FlowFields
 {
@@ -111,21 +112,11 @@ namespace Gamelib.FlowFields
 			request.FlowField = null;
 		}
 
-		public async Task UpdateCollisions()
+		public void UpdateCollisions()
         {
-			var collisionsPerFrame = 1000;
-			var calculatedThisFrame = 0;
-
             for ( var index = 0; index < WorldSize.Size; index++ )
             {
-				if ( calculatedThisFrame >= collisionsPerFrame )
-				{
-					await Task.Delay( 30 );
-					calculatedThisFrame = 0;
-				}
-
 				UpdateCollisions( index );
-				calculatedThisFrame++;
 			}
 		}
 
@@ -230,15 +221,12 @@ namespace Gamelib.FlowFields
 
 			CreateChunks();
 			CreateHeightMap();
-
-			await UpdateCollisions();
-
+			UpdateCollisions();
 			ConnectPortals();
 
 			// Create a good amount of flow fields ready in the pool.
 			for ( var i = 0; i < 10; i++ )
 			{
-				await Task.Delay( 10 );
 				_flowFields.Enqueue( new FlowField( this ) );
 			}
 		}
@@ -249,8 +237,11 @@ namespace Gamelib.FlowFields
 
 			_heightMap = new float[worldSizeLength];
 
+			var groundHeight = FlowFieldGround.Bounds.Maxs.z;
+
 			for ( var index = 0; index < worldSizeLength; index++ )
 			{
+				/*
 				var position = GetPosition( index );
 				var trace = Trace.Ray( position.WithZ( 1000f ), position )
 					.EntitiesOnly()
@@ -261,6 +252,10 @@ namespace Gamelib.FlowFields
 					_heightMap[index] = trace.EndPos.z;
 				else
 					_heightMap[index] = position.z;
+				*/
+
+				// TODO: The ground must be flat for now.
+				_heightMap[index] = groundHeight;
 			}
 		}
 
@@ -335,7 +330,6 @@ namespace Gamelib.FlowFields
         {
             _waitForPhysicsUpdate = 5;
 			GetGridPositions( position, gridSize, _collisionBuffer );
-			ProcessBuffers();
 		}
 
         public void ClearCollisions()
@@ -394,7 +388,9 @@ namespace Gamelib.FlowFields
 			for ( int i = 0; i < _collisionBuffer.Count; i++ )
             {
 				var collision = _collisionBuffer[i];
-				if ( collision.WorldIndex == int.MinValue ) continue;
+
+				if ( collision.WorldIndex == int.MinValue )
+					continue;
 
                 var chunk = GetChunk( collision.ChunkIndex );
 
@@ -405,7 +401,7 @@ namespace Gamelib.FlowFields
 				}
 
 				if ( IsCollisionAt( GetPosition( collision ), collision.WorldIndex ) )
-                    chunk.SetCollision( collision.NodeIndex );
+					chunk.SetCollision( collision.NodeIndex );
                 else
                     chunk.RemoveCollision( collision.NodeIndex );
 

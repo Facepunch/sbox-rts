@@ -21,7 +21,7 @@ namespace Gamelib.FlowFields
 			if ( !FlowField.HasDestination() )
 				return true;
 
-			// We've reached our destination if we have an invalid path.
+			// We've reached our destination if the path is invalid.
 			if ( FlowField.Ready( position ) == PathResult.Invalid )
 				return true;
 

@@ -13,7 +13,7 @@ namespace Gamelib.FlowFields
 		private static void UpdateCollisions()
 		{
 			foreach ( var pathfinder in Instance.All )
-				_ = pathfinder.UpdateCollisions();
+				pathfinder.UpdateCollisions();
 		}
 
 		[ServerCmd( "ff_show_chunks" )]

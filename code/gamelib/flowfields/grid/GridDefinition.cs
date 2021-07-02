@@ -40,7 +40,7 @@ namespace Gamelib.FlowFields.Grid
 
         public Vector2i GetCoordinates( int index )
         {
-            return index == 0 ? new Vector2i( 0, 0 ) : new Vector2i( index % Columns, index / Columns );
+            return index == 0 ? Vector2i.Zero : new Vector2i( index % Columns, index / Columns );
         }
     }
 }

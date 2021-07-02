@@ -507,7 +507,6 @@ namespace Facepunch.RTS
 		private void SetMoveGroup( MoveGroup group )
 		{
 			MoveGroup = group;
-			MakeStatic( group == null );
 		}
 
 		private void ResetTarget()
@@ -597,113 +596,9 @@ namespace Facepunch.RTS
 			var isTargetInRange = IsTargetInRange();
 
 			if ( !Target.IsValid() || !isTargetInRange )
-			{
-				if ( Target.IsValid() && FollowTarget )
-				{
-					TargetPosition = Target.Position;
-				}
-
-				var pathDirection = Vector3.Zero;
-
-				if ( MoveGroup != null && MoveGroup.IsValid() )
-				{
-					if ( MoveGroup.IsDestination( this, Position ) )
-					{
-						MoveGroup.Finish( this );
-					}
-					else
-					{
-						var direction = MoveGroup.GetDirection( Position );
-						var flocker = new Flocker();
-
-						flocker.Setup( this, MoveGroup.Agents, Position );
-						flocker.Flock( Position + direction.Normal * 50f );
-
-						pathDirection = flocker.Force.Normal;
-					}
-				}
-				else if ( TargetPosition.HasValue )
-				{
-					pathDirection = (TargetPosition.Value - Position).Normal;
-				}
-				else if( !IsSelected )
-				{
-					if ( Target is ResourceEntity )
-						FindTargetResource();
-					else if ( Weapon.IsValid() )
-						FindTargetUnit();
-				}
-
-				if ( pathDirection.Length > 0 )
-				{
-					if ( Speed >= 300f )
-						_animationValues.Speed = 1f;
-					else
-						_animationValues.Speed = 0.5f;
-
-					InputVelocity = (pathDirection * Speed).WithZ( 0f );
-					Velocity = Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
-				}
-				else
-				{
-					Velocity = 0;
-				}
-
-				Position += Velocity;
-				AlignToGround();
-
-				/*
-				var worldPos = Pathfinder.CreateWorldPosition( Position );
-				Pathfinder.DrawBox( worldPos, Color.Green, Time.Delta );
-				*/
-
-				var walkVelocity = Velocity.WithZ( 0 );
-
-				if ( walkVelocity.Length > 1 )
-				{
-					Rotation = Rotation.Lerp( Rotation, Rotation.LookAt( walkVelocity.Normal, Vector3.Up ), Time.Delta * 10f );
-				}
-			}
+				TickFindAndMove();
 			else
-			{
-				var lookAtDistance = 0f;
-
-				if ( SpinSpeed.HasValue )
-					Rotation = Rotation.FromYaw( Rotation.Yaw() + SpinSpeed.Value * Time.Delta );
-				else
-					lookAtDistance = LookAtEntity( Target, Time.Delta * Item.RotateToTargetSpeed );
-
-				if ( Target is BuildingEntity building && building.Player == Player )
-				{
-					if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
-					{
-						if ( building.IsUnderConstruction )
-							TickConstruct( building );
-						else if ( building.CanDepositResources )
-							DepositResources();
-						else if ( building.CanOccupyUnits )
-							TickOccupy( building );
-						else
-							ClearTarget();
-					}
-				}
-				else if ( Target is ResourceEntity resource )
-				{
-					if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
-					{
-						TickGather( resource );
-					}
-				}
-				else if ( Weapon.IsValid() && Weapon.CanAttack() )
-				{
-					if ( lookAtDistance.AlmostEqual( 0f, Weapon.RotationTolerance ) )
-					{
-						Weapon.Attack();
-					}
-				}
-
-				TargetPosition = null;
-			}
+				TickInteractWithTarget();
 
 			if ( Weapon.IsValid() )
 			{
@@ -712,6 +607,116 @@ namespace Facepunch.RTS
 			}
 
 			_animationValues.Finish( this );
+		}
+
+		private void TickInteractWithTarget()
+		{
+			var lookAtDistance = 0f;
+
+			if ( SpinSpeed.HasValue )
+				Rotation = Rotation.FromYaw( Rotation.Yaw() + SpinSpeed.Value * Time.Delta );
+			else
+				lookAtDistance = LookAtEntity( Target, Time.Delta * Item.RotateToTargetSpeed );
+
+			if ( Target is BuildingEntity building && building.Player == Player )
+			{
+				if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
+				{
+					if ( building.IsUnderConstruction )
+						TickConstruct( building );
+					else if ( building.CanDepositResources )
+						DepositResources();
+					else if ( building.CanOccupyUnits )
+						TickOccupy( building );
+					else
+						ClearTarget();
+				}
+			}
+			else if ( Target is ResourceEntity resource )
+			{
+				if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
+				{
+					TickGather( resource );
+				}
+			}
+			else if ( Weapon.IsValid() && Weapon.CanAttack() )
+			{
+				if ( lookAtDistance.AlmostEqual( 0f, Weapon.RotationTolerance ) )
+				{
+					Weapon.Attack();
+				}
+			}
+
+			TargetPosition = null;
+		}
+
+		private void TickFindAndMove()
+		{
+			if ( Target.IsValid() && FollowTarget )
+			{
+				TargetPosition = Target.Position;
+			}
+
+			var pathDirection = Vector3.Zero;
+
+			if ( MoveGroup != null && MoveGroup.IsValid() )
+			{
+				if ( MoveGroup.IsDestination( this, Position ) )
+				{
+					MoveGroup.Finish( this );
+				}
+				else
+				{
+					var direction = MoveGroup.GetDirection( Position );
+
+					/*
+					var flocker = new Flocker();
+
+					flocker.Setup( this, MoveGroup.Agents, Position );
+					flocker.Flock( Position + direction.Normal * 50f );
+
+					pathDirection = flocker.Force.Normal;
+					*/
+
+					pathDirection = direction.Normal;
+				}
+			}
+			else if ( TargetPosition.HasValue )
+			{
+				pathDirection = (TargetPosition.Value - Position).Normal;
+			}
+			else if ( !IsSelected )
+			{
+				if ( Target is ResourceEntity )
+					FindTargetResource();
+				else if ( Weapon.IsValid() )
+					FindTargetUnit();
+			}
+
+			if ( pathDirection.Length > 0 )
+			{
+				if ( Speed >= 300f )
+					_animationValues.Speed = 1f;
+				else
+					_animationValues.Speed = 0.5f;
+
+				InputVelocity = (pathDirection * Speed).WithZ( 0f );
+				Velocity = Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
+			}
+			else
+			{
+				Velocity = 0;
+			}
+
+			Position += Velocity;
+			AlignToGround();
+
+			var walkVelocity = Velocity.WithZ( 0 );
+
+			if ( walkVelocity.Length > 1 )
+			{
+				Rotation = Rotation.Lerp( Rotation, Rotation.LookAt( walkVelocity.Normal, Vector3.Up ), Time.Delta * 10f );
+			}
 		}
 
 		private void AlignToGround()

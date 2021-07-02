@@ -82,9 +82,12 @@ namespace Gamelib.FlowFields.Grid
         {
             results.Clear();
 
-            foreach ( var direction in GetGridDirections( diagonal ) )
+			var list = GetGridDirections( diagonal );
+
+			for ( int i = 0; i < list.Count; i++ )
             {
-                var neighborIndex = GetNeighborIndex( index, direction, definition );
+				var direction = list[i];
+				var neighborIndex = GetNeighborIndex( index, direction, definition );
 
                 if ( !IsValid( neighborIndex ) )
                     continue;

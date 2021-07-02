@@ -390,10 +390,10 @@ namespace Gamelib.FlowFields
 			if ( Flows.ContainsKey( position.ChunkIndex ) )
 				return PathResult.Valid;
 
-            if ( SeekPath( Pathfinder.GetPosition( position ) ) )
-				return PathResult.Processing;
+			if ( !SeekPath( Pathfinder.GetPosition( position ) ) )
+				return PathResult.Invalid;
 
-			return PathResult.Invalid;
+			return PathResult.Processing;
 		}
 
         public Vector3 GetDirection( Vector3 position )
