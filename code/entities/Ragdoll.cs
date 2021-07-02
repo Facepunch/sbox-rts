@@ -10,6 +10,18 @@ namespace Facepunch.RTS
 		public float TargetAlpha { get; private set; }
 		public bool HasBeenSeen { get; set; }
 
+		public override void Spawn()
+		{
+			RTS.Fog.AddCullable( this );
+			base.Spawn();
+		}
+
+		protected override void OnDestroy()
+		{
+			RTS.Fog.RemoveCullable( this );
+			base.OnDestroy();
+		}
+
 		public Ragdoll FadeOut( float duration )
 		{
 			FadeOutDuration = duration;
@@ -36,7 +48,6 @@ namespace Facepunch.RTS
 			ragdoll.CopyMaterialGroup( entity );
 			ragdoll.TakeDecalsFrom( entity );
 			ragdoll.EnableHitboxes = true;
-			ragdoll.EnableAllCollisions = true;
 			ragdoll.SurroundingBoundsMode = SurroundingBoundsType.Physics;
 			ragdoll.RenderColorAndAlpha = entity.RenderColorAndAlpha;
 

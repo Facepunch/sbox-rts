@@ -4,16 +4,17 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Scout : BaseUnit
+	public class Ranger : BaseUnit
 	{
-		public override string Name => "Scout";
-		public override string UniqueId => "unit.scout";
+		public override string Name => "Ranger";
+		public override string UniqueId => "unit.ranger";
 		public override string Model => "models/vehicles/humvee/humvee.vmdl";
 		public override string Description => "A basic vehicle good for scouting large areas.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
 		public override bool UseRenderColor => true;
+		public override bool UseModelPhysics => true;
 		public override int NodeSize => 100;
-		public override float LineOfSight => 1000f;
+		public override float LineOfSight => 2000f;
 		public override string[] MoveSounds => new string[]
 		{
 			"brute.alright_move_out",

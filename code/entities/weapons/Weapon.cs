@@ -8,9 +8,11 @@ namespace Facepunch.RTS
 	{
 		[Net] public AnimEntity Attacker { get; set; }
 		[Net] public Entity Target { get; set; }
+		public virtual bool BoneMerge => true;
 		public virtual bool IsMelee => false;
 		public virtual int BaseDamage => 10;
 		public virtual int HoldType => 1;
+		public virtual float RotationTolerance => 0.1f;
 		public virtual float FireRate => 1f;
 		public TimeSince LastAttack { get; set; }
 

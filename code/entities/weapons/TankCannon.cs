@@ -4,15 +4,15 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
-	[Library("weapon_turret_gun")]
-	public partial class TurretGun : Weapon
+	[Library("weapon_tank_cannon")]
+	public partial class TankCannon : Weapon
 	{
-		public override float FireRate => 0.1f;
-		public override int BaseDamage => 5;
+		public override float FireRate => 3f;
+		public override int BaseDamage => 30;
 		public override bool BoneMerge => false;
+		public override float RotationTolerance => 360f;
 
 		public Vector3 TargetDirection { get; private set; }
-		[Net] public float Recoil { get; private set; }
 
 		public override void Attack()
 		{
@@ -21,8 +21,6 @@ namespace Facepunch.RTS
 			ShootEffects();
 			PlaySound( "rust_smg.shoot" ).SetVolume( 0.5f );
 			ShootBullet( 5f, BaseDamage );
-
-			Recoil = 1f;
 		}
 
 		public override Transform? GetMuzzle()
@@ -39,6 +37,15 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public override bool CanAttack()
+		{
+			var goalDirection = (Target.Position - Attacker.Position).Normal;
+
+			if ( TargetDirection.Distance( goalDirection ) > 2f )
+				return false;
+
+			return base.CanAttack();
+		}
 
 		[ClientRpc]
 		protected override void ShootEffects()
@@ -51,18 +58,14 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[Event.Tick]
+		[Event.Tick.Server]
 		private void UpdateTargetRotation()
 		{
 			if ( Target.IsValid() )
 			{
-				TargetDirection = TargetDirection.LerpTo( (Target.Position - Attacker.Position).Normal, Time.Delta * 20f );
-				Attacker.SetAnimVector( "target", TargetDirection );
+				TargetDirection = TargetDirection.LerpTo( (Target.Position - Attacker.Position).Normal, Time.Delta * 10f );
+				Attacker.SetAnimVector( "target", Attacker.Transform.NormalToLocal( TargetDirection ) );
 			}
-
-			Attacker.SetAnimFloat( "fire", Recoil );
-
-			Recoil = Recoil.LerpTo( 0f, Time.Delta * 2f );
 		}
 	}
 }

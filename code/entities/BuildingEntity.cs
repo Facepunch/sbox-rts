@@ -23,6 +23,7 @@ namespace Facepunch.RTS
 		public float NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
 		public bool CanOccupyUnits => Occupants.Count < Item.MaxOccupants;
+		public Placeholder Placeholder { get; private set; }
 
 		#region UI
 		public EntityHudBar HealthBar { get; private set; }
@@ -213,6 +214,25 @@ namespace Facepunch.RTS
 			return removedItem;
 		}
 
+		public override void ClientSpawn()
+		{
+			var bounds = CollisionBounds * 1.05f;
+
+			bounds.Mins.z = 0;
+			bounds.Maxs.z = 400f;
+
+			Placeholder = new Placeholder();
+			Placeholder.SetParent( this );
+			Placeholder.RenderBounds = bounds;
+			Placeholder.EnableDrawing = true;
+			Placeholder.Position = Position;
+			Placeholder.Rotation = Rotation;
+			Placeholder.Color = Player.TeamColor;
+			Placeholder.Alpha = 0.5f;
+
+			base.ClientSpawn();
+		}
+
 		public override bool CanSelect()
 		{
 			return !IsUnderConstruction;
@@ -306,7 +326,7 @@ namespace Facepunch.RTS
 				else
 				{
 					Weapon.Position = Position;
-					Weapon.SetParent( this );
+					Weapon.SetParent( this, Weapon.BoneMerge );
 				}
 			}
 

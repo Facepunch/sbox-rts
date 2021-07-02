@@ -24,8 +24,6 @@ namespace Facepunch.RTS
 			Icon.Texture = icon;
 			Text.Text = text;
 
-			Log.Info( "Setting to " + icon.ToString() + " / " + icon.Width );
-
 			Icon.SetClass( "hidden", icon == null );
 
 			_endTime = Time.Now + 3f;

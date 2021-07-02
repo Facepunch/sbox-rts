@@ -3,6 +3,7 @@ using System.Linq;
 using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
 using Gamelib.Data;
+using Sandbox;
 
 namespace Gamelib.FlowFields.Algorithms
 {

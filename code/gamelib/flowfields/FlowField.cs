@@ -176,7 +176,7 @@ namespace Gamelib.FlowFields
 			CreateDestinationGateways( DestinationIndexes.ToList() );
         }
 
-        protected virtual void SeekPath( Vector3 startPosition )
+        protected virtual bool SeekPath( Vector3 startPosition )
         {
             var subPath = AStarPortal.Default.CalculatePath( this, startPosition );
 			var worldPosition = Pathfinder.CreateWorldPosition( startPosition );
@@ -199,7 +199,10 @@ namespace Gamelib.FlowFields
             }
 
             QueueFlow();
-        }
+
+			return Flows.Count > 0;
+
+		}
 
 		public bool IsAvailable( Vector3 position )
 		{
@@ -374,21 +377,24 @@ namespace Gamelib.FlowFields
             return Flows[position.ChunkIndex][position.NodeIndex];
         }
 
-        public bool Ready( Vector3 position )
+        public PathResult Ready( Vector3 position )
         {
             return Ready( Pathfinder.CreateWorldPosition( position ) );
         }
 
-        public bool Ready( GridWorldPosition position )
+        public PathResult Ready( GridWorldPosition position )
         {
             if ( _flowsToBeProcessed.Contains( position.ChunkIndex ) )
-                return false;
+                return PathResult.Processing;
 
-            if ( Flows.ContainsKey( position.ChunkIndex ) ) return true;
+			if ( Flows.ContainsKey( position.ChunkIndex ) )
+				return PathResult.Valid;
 
-            SeekPath( Pathfinder.GetPosition( position ) );
-            return false;
-        }
+            if ( SeekPath( Pathfinder.GetPosition( position ) ) )
+				return PathResult.Processing;
+
+			return PathResult.Invalid;
+		}
 
         public Vector3 GetDirection( Vector3 position )
         {
