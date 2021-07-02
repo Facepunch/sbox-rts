@@ -11,7 +11,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "models\\buildings\\Research_Lab\\dmx\\mesh\\research_lab.dmx"
+						filename = "models\\buildings\\vehiclefactory\\dmx\\mesh\\vehiclefactory.dmx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -32,12 +32,13 @@
 				children = 
 				[
 					{
-						_class = "PhysicsHullFromRender"
+						_class = "PhysicsShapeBox"
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
-						faceMergeAngle = 20.0
-						maxHullVertices = 32
+						origin = [ -0.124763, -26.504307, 98.932648 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 514.418823, 463.996704, 198.865295 ]
 					},
 				]
 			},
