@@ -306,7 +306,7 @@ namespace Facepunch.RTS
 				else
 				{
 					Weapon.Position = Position;
-					Weapon.SetParent( this );
+					Weapon.SetParent( this, Weapon.BoneMerge );
 				}
 			}
 

@@ -56,9 +56,9 @@ namespace Facepunch.RTS
 			OnPlayerAssigned( player );
 		}
 
-		public float GetDiameterXY( float scalar = 1f )
+		public float GetDiameterXY( float scalar = 1f, bool smallestSide = false )
 		{
-			return EntityExtension.GetDiameterXY( this, scalar );
+			return EntityExtension.GetDiameterXY( this, scalar, smallestSide );
 		}
 
 		public void Assign( Player player, string itemId )

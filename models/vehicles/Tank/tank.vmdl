@@ -32,9 +32,9 @@
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
-						origin = [ -10.786873, -2.16654, 65.82312 ]
+						origin = [ -7.031796, -1.339895, 50.115234 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 347.132141, 192.034149, 132.64624 ]
+						dimensions = [ 250.179779, 135.973389, 101.230469 ]
 					},
 				]
 			},
@@ -44,25 +44,172 @@
 				[
 					{
 						_class = "RenderMeshFile"
+						name = "Body"
 						filename = "models/vehicles/Tank/Tank.fbx"
 						import_translation = [ 6.0, -1.0, 3.1 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 11.5
+						import_scale = 8.0
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
-						parent_bone = ""
+						parent_bone = "root"
 						import_filter = 
 						{
 							exclude_by_default = false
-							exception_list = [  ]
+							exception_list = 
+							[
+								"Cannon",
+								"Turret",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Turret"
+						filename = "models/vehicles/Tank/Tank.fbx"
+						import_translation = [ 0.0, 0.0, 3.1 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 8.0
+						align_origin_x_type = "BoundsCenter"
+						align_origin_y_type = "BoundsCenter"
+						align_origin_z_type = "None"
+						parent_bone = "turret"
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"Turret",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Cannon"
+						filename = "models/vehicles/Tank/Tank.fbx"
+						import_translation = [ 6.0, -1.0, 3.1 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 8.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = "cannon"
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"Cannon",
+							]
 						}
 					},
 				]
 			},
+			{
+				_class = "GameDataList"
+				children = 
+				[
+					{
+						_class = "LookAtChain"
+						name = "aim"
+						lookat_chain = 
+						{
+							name = ""
+							bones = 
+							[
+								{
+									name = "turret"
+									weight = 1.0
+								},
+							]
+						}
+					},
+				]
+			},
+			{
+				_class = "Skeleton"
+				children = 
+				[
+					{
+						_class = "Bone"
+						name = "root"
+						children = 
+						[
+							{
+								_class = "Bone"
+								name = "turret"
+								children = 
+								[
+									{
+										_class = "Bone"
+										name = "cannon"
+										origin = [ 0.0, 0.0, 0.0 ]
+										angles = [ 0.0, 0.0, 0.0 ]
+										do_not_discard = true
+									},
+								]
+								origin = [ 0.0, 0.0, 0.0 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								do_not_discard = true
+							},
+						]
+						origin = [ 0.0, 0.0, 0.0 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						do_not_discard = true
+					},
+				]
+			},
+			{
+				_class = "AttachmentList"
+				children = 
+				[
+					{
+						_class = "Attachment"
+						name = "aim"
+						parent_bone = "turret"
+						relative_origin = [ 0.0, 0.0, 0.0 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle"
+						parent_bone = "cannon"
+						relative_origin = [ 215.673553, -0.712808, 65.785263 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+				]
+			},
+			{
+				_class = "AnimationList"
+				children = 
+				[
+					{
+						_class = "EmptyAnim"
+						name = "aim"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						frame_count = 1
+						frame_rate = 30
+					},
+				]
+				default_root_bone_name = ""
+			},
 		]
 		model_archetype = ""
 		primary_associated_entity = ""
-		anim_graph_name = ""
+		anim_graph_name = "models/vehicles/tank/tank.vanmgrph"
 	}
 }

@@ -174,7 +174,7 @@ namespace Facepunch.RTS
 		public override void ClientSpawn()
 		{
 			Circle = new();
-			Circle.Size = GetDiameterXY( 2f );
+			Circle.Size = GetDiameterXY( 1f, true );
 			Circle.SetParent( this );
 			Circle.LocalPosition = Vector3.Zero;
 
@@ -471,7 +471,11 @@ namespace Facepunch.RTS
 			EnableHitboxes = true;
 			Pathfinder = RTS.Path.GetPathfinder( item.NodeSize );
 
-			SetupPhysicsFromCapsule( PhysicsMotionType.Keyframed, Capsule.FromHeightAndRadius( 72, 8 ) );
+			
+			if ( item.UseModelPhysics )
+				SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
+			else
+				SetupPhysicsFromCapsule( PhysicsMotionType.Keyframed, Capsule.FromHeightAndRadius( 72, item.NodeSize * 0.5f ) );
 
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
 			{
@@ -485,10 +489,10 @@ namespace Facepunch.RTS
 					Weapon.SetParent( this );
 					Weapon.Position = attachment.Value.Position;
 				}
-				else
+				else 
 				{
 					Weapon.Position = Position;
-					Weapon.SetParent( this, true );
+					Weapon.SetParent( this, Weapon.BoneMerge );
 				}
 			}
 
@@ -598,13 +602,6 @@ namespace Facepunch.RTS
 				{
 					TargetPosition = Target.Position;
 				}
-				else if ( !IsSelected || !TargetPosition.HasValue )
-				{
-					if ( Target is ResourceEntity )
-						FindTargetResource();
-					else if ( Weapon.IsValid() )
-						FindTargetUnit();
-				}
 
 				var pathDirection = Vector3.Zero;
 
@@ -628,6 +625,13 @@ namespace Facepunch.RTS
 				else if ( TargetPosition.HasValue )
 				{
 					pathDirection = (TargetPosition.Value - Position).Normal;
+				}
+				else if( !IsSelected )
+				{
+					if ( Target is ResourceEntity )
+						FindTargetResource();
+					else if ( Weapon.IsValid() )
+						FindTargetUnit();
 				}
 
 				if ( pathDirection.Length > 0 )
@@ -667,11 +671,11 @@ namespace Facepunch.RTS
 				if ( SpinSpeed.HasValue )
 					Rotation = Rotation.FromYaw( Rotation.Yaw() + SpinSpeed.Value * Time.Delta );
 				else
-					lookAtDistance = LookAtEntity( Target, Time.Delta * 15f );
+					lookAtDistance = LookAtEntity( Target, Time.Delta * Item.RotateToTargetSpeed );
 
-				if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
+				if ( Target is BuildingEntity building && building.Player == Player )
 				{
-					if ( Target is BuildingEntity building && building.Player == Player )
+					if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
 					{
 						if ( building.IsUnderConstruction )
 							TickConstruct( building );
@@ -682,15 +686,23 @@ namespace Facepunch.RTS
 						else
 							ClearTarget();
 					}
-					else if ( Target is ResourceEntity resource )
+				}
+				else if ( Target is ResourceEntity resource )
+				{
+					if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
 					{
 						TickGather( resource );
 					}
-					else if ( Weapon.IsValid() && Weapon.CanAttack() )
+				}
+				else if ( Weapon.IsValid() && Weapon.CanAttack() )
+				{
+					if ( lookAtDistance.AlmostEqual( 0f, Weapon.RotationTolerance ) )
 					{
 						Weapon.Attack();
 					}
 				}
+
+				TargetPosition = null;
 			}
 
 			if ( Weapon.IsValid() )
