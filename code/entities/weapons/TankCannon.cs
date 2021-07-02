@@ -13,7 +13,6 @@ namespace Facepunch.RTS
 		public override float RotationTolerance => 360f;
 
 		public Vector3 TargetDirection { get; private set; }
-		[Net] public float Recoil { get; private set; }
 
 		public override void Attack()
 		{
@@ -22,8 +21,6 @@ namespace Facepunch.RTS
 			ShootEffects();
 			PlaySound( "rust_smg.shoot" ).SetVolume( 0.5f );
 			ShootBullet( 5f, BaseDamage );
-
-			Recoil = 1f;
 		}
 
 		public override Transform? GetMuzzle()
@@ -44,7 +41,7 @@ namespace Facepunch.RTS
 		{
 			var goalDirection = (Target.Position - Attacker.Position).Normal;
 
-			if ( TargetDirection.Distance( goalDirection ) > 1f )
+			if ( TargetDirection.Distance( goalDirection ) > 2f )
 				return false;
 
 			return base.CanAttack();
@@ -66,23 +63,8 @@ namespace Facepunch.RTS
 		{
 			if ( Target.IsValid() )
 			{
-				TargetDirection = TargetDirection.LerpTo( (Target.Position - Attacker.Position).Normal, Time.Delta * 20f );
+				TargetDirection = TargetDirection.LerpTo( (Target.Position - Attacker.Position).Normal, Time.Delta * 10f );
 				Attacker.SetAnimVector( "target", Attacker.Transform.NormalToLocal( TargetDirection ) );
-			}
-
-			Recoil = Recoil.LerpTo( 0f, Time.Delta * 2f );
-		}
-
-		[Event.Frame]
-		private void UpdateCannonPosition()
-		{
-			if ( IsServer ) return;
-
-			if ( Attacker.IsValid() )
-			{
-				var bone = Attacker.GetBoneTransform( "cannon" );
-				bone.Position = new Vector3( -Recoil * 50f, 0f, 0f );
-				Attacker.SetBoneTransform( "cannon", bone );
 			}
 		}
 	}
