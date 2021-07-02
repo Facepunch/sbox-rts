@@ -101,7 +101,7 @@
 	}
 	m_previewModels = 
 	[
-		"models/buildings/turret_future/turret.vmdl",
+		"models/buildings/turret/turret.vmdl",
 	]
 	m_nodes = 
 	[

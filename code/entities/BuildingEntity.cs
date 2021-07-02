@@ -214,25 +214,6 @@ namespace Facepunch.RTS
 			return removedItem;
 		}
 
-		public override void ClientSpawn()
-		{
-			var bounds = CollisionBounds * 1.05f;
-
-			bounds.Mins.z = 0;
-			bounds.Maxs.z = 400f;
-
-			Placeholder = new Placeholder();
-			Placeholder.SetParent( this );
-			Placeholder.RenderBounds = bounds;
-			Placeholder.EnableDrawing = true;
-			Placeholder.Position = Position;
-			Placeholder.Rotation = Rotation;
-			Placeholder.Color = Player.TeamColor;
-			Placeholder.Alpha = 0.5f;
-
-			base.ClientSpawn();
-		}
-
 		public override bool CanSelect()
 		{
 			return !IsUnderConstruction;

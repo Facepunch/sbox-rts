@@ -22,7 +22,7 @@ namespace Gamelib.FlowFields.Grid
     {
         private static readonly Dictionary<GridDirection, Vector2i> Vector2ds = new()
         {
-            {GridDirection.Up, new Vector2i(  0, 1 )},
+            {GridDirection.Up, new Vector2i( 0, 1 )},
             {GridDirection.UpRight, new Vector2i( 1, 1 )},
             {GridDirection.Right, new Vector2i( 1, 0 )},
             {GridDirection.RightDown, new Vector2i( 1, -1 )},

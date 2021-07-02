@@ -17,7 +17,7 @@ namespace Facepunch.RTS.Buildings
 			[ResourceType.Stone] = 200,
 			[ResourceType.Metal] = 100
 		};
-		public override string Model => "models/buildings/silo_future/silo.vmdl";
+		public override string Model => "models/buildings/silo/silo.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
 			"building.headquarters"
