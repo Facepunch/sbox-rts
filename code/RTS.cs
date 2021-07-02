@@ -1,7 +1,10 @@
-﻿using Gamelib.FlowFields;
+﻿using Gamelib.DayNight;
+using Gamelib.FlowFields;
 using Gamelib.FlowFields.Entities;
+using Gamelib.Network;
 using Sandbox;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Facepunch.RTS
@@ -25,6 +28,7 @@ namespace Facepunch.RTS
 			public CameraConfig Camera;
 		}
 
+		public static DayNightManager DayNight => DayNightManager.Instance;
 		public static ItemTooltip Tooltip => ItemTooltip.Instance;
 		public static SoundManager Sound => SoundManager.Instance;
 		public static ItemManager Item => ItemManager.Instance;
@@ -46,6 +50,7 @@ namespace Facepunch.RTS
 				LoadConfig();
 				LoadRatings();
 
+				_ = new DayNightManager();
 				_ = new SoundManager();
 				_ = new PathManager();
 				_ = new ItemManager();
@@ -133,10 +138,25 @@ namespace Facepunch.RTS
 
 			if ( IsServer )
 			{
+				// We want to make a pathfinder for each possible unit size.
+				var possibleUnitSizes = Item.GetUnitNodeSizes();
+
 				if ( FlowFieldGround.Exists )
-					Path.Create( 10, FlowFieldGround.Bounds, 50f );
+				{
+					for ( int i = 0; i < possibleUnitSizes.Count; i++ )
+					{
+						var size = possibleUnitSizes[i];
+						Path.Create( size / 5, FlowFieldGround.Bounds, size );
+					}
+				}
 				else
-					Path.Create( 10, 30, 100f );
+				{
+					for ( int i = 0; i < possibleUnitSizes.Count; i++ )
+					{
+						var size = possibleUnitSizes[i];
+						Path.Create( size / 5, 30, size );
+					}
+				}
 			}
 
 			base.PostLevelLoaded();
