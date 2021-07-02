@@ -32,6 +32,11 @@ namespace Gamelib.FlowFields
 			return indicies.Contains( worldPosition.WorldIndex );
 		}
 
+		public Vector3 GetDestination()
+		{
+			return FlowField.DestinationPosition;
+		}
+
 		public bool HasDestination() => FlowField.HasDestination();
 
 		public bool IsValid()

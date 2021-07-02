@@ -304,8 +304,10 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
-					var flockAgents = units.Cast<IFlockAgent>().ToList();
-					var moveGroup = new MoveGroup( flockAgents, position );
+					var agents = units.Cast<IMoveAgent>().ToList();
+					var moveGroup = new MoveGroup();
+
+					moveGroup.Initialize( agents, position, true );
 
 					for ( int i = 0; i < units.Count; i++ )
 					{

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 
 namespace Gamelib.FlowFields
 {
+	/*
 	public struct Flocker
 	{
 		public Vector3 Position;
 		public Vector3 Force;
-		public IFlockAgent Agent;
-		public List<IFlockAgent> Agents;
+		public IMoveAgent Agent;
+		public List<IMoveAgent> Agents;
 
-		public void Setup( IFlockAgent agent, List<IFlockAgent> agents, Vector3 position )
+		public void Setup( IMoveAgent agent, List<IMoveAgent> agents, Vector3 position )
 		{
 			Position = position;
 			Force = Vector3.Zero;
@@ -131,4 +132,5 @@ namespace Gamelib.FlowFields
 			return Seek( centerOfMass );
 		}
 	}
+	*/
 }

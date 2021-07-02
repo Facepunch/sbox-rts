@@ -309,6 +309,23 @@ namespace Gamelib.FlowFields
 			UpdateCollisions( position, Convert.ToInt32( radius / Scale ) );
 		}
 
+		public void GetGridPositions( Vector3 position, int gridSize, List<Vector3> output )
+		{
+			var grid = new GridDefinition( gridSize * 2 + 1, gridSize * 2 + 1 );
+			var worldPivotPosition = CreateWorldPosition( position );
+			var translation = new GridConverter( grid, WorldSize, grid.Size / 2, worldPivotPosition.WorldIndex );
+
+			for ( var i = 0; i < grid.Size; i++ )
+			{
+				output.Add( GetPosition( translation.Global( i ) ) );
+			}
+		}
+
+		public void GetGridPositions( Vector3 position, float radius, List<Vector3> output )
+		{
+			GetGridPositions( position, Convert.ToInt32( radius / Scale ), output );
+		}
+
 		public void GetGridPositions( Vector3 position, int gridSize, List<GridWorldPosition> output )
 		{
 			var grid = new GridDefinition( gridSize * 2 + 1, gridSize * 2 + 1 );

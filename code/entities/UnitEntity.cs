@@ -11,7 +11,7 @@ using Gamelib.FlowFields.Grid;
 
 namespace Facepunch.RTS
 {
-	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IFlockAgent
+	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IMoveAgent
 	{
 		private struct AnimationValues
 		{
@@ -50,6 +50,7 @@ namespace Facepunch.RTS
 		public bool HasBeenSeen { get; set; }
 		public bool FollowTarget { get; private set; }
 		public float TargetAlpha { get; private set; }
+		public float AgentRadius { get; private set; }
 		public Vector3? TargetPosition { get; private set; }
 		public float Speed { get; private set; }
 		public Entity Target { get; private set; }
@@ -70,7 +71,6 @@ namespace Facepunch.RTS
 		#endregion
 
 		private AnimationValues _animationValues;
-		private FlockSettings _flockSettings;
 
 		public UnitEntity() : base()
 		{
@@ -81,13 +81,6 @@ namespace Facepunch.RTS
 				Carrying = new();
 			}
 
-			_flockSettings = new FlockSettings()
-			{
-				Radius = 200f,
-				MaxSpeed = 300f,
-				MaxForce = 300f
-			};
-
 			// Don't collide with anything but static shit.
 			CollisionGroup = CollisionGroup.Debris;
 
@@ -96,7 +89,6 @@ namespace Facepunch.RTS
 		}
 
 		public bool CanConstruct => Item.CanConstruct;
-		public FlockSettings FlockSettings => _flockSettings;
 
 		public bool CanGather( ResourceType type )
 		{
@@ -243,12 +235,16 @@ namespace Facepunch.RTS
 
 		public MoveGroup CreateMoveGroup( Vector3 destination )
 		{
-			return new MoveGroup( this, destination );
+			var moveGroup = new MoveGroup();
+			moveGroup.Initialize( this, destination );
+			return moveGroup;
 		}
 
 		public MoveGroup CreateMoveGroup( List<Vector3> destinations )
 		{
-			return new MoveGroup( this, destinations );
+			var moveGroup = new MoveGroup();
+			moveGroup.Initialize( this, destinations );
+			return moveGroup;
 		}
 
 		public bool Occupy( BuildingEntity building, MoveGroup moveGroup = null )
@@ -470,12 +466,13 @@ namespace Facepunch.RTS
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
 			Pathfinder = RTS.Path.GetPathfinder( item.NodeSize );
-
 			
 			if ( item.UseModelPhysics )
 				SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 			else
 				SetupPhysicsFromCapsule( PhysicsMotionType.Keyframed, Capsule.FromHeightAndRadius( 72, item.NodeSize * 0.5f ) );
+
+			AgentRadius = GetDiameterXY( 2f, true );
 
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
 			{
@@ -658,6 +655,7 @@ namespace Facepunch.RTS
 			}
 
 			var pathDirection = Vector3.Zero;
+			var movementSpeed = Speed;
 
 			if ( MoveGroup != null && MoveGroup.IsValid() )
 			{
@@ -667,17 +665,9 @@ namespace Facepunch.RTS
 				}
 				else
 				{
+					MoveGroup.ScaleSpeed( this, ref movementSpeed );
+
 					var direction = MoveGroup.GetDirection( Position );
-
-					/*
-					var flocker = new Flocker();
-
-					flocker.Setup( this, MoveGroup.Agents, Position );
-					flocker.Flock( Position + direction.Normal * 50f );
-
-					pathDirection = flocker.Force.Normal;
-					*/
-
 					pathDirection = direction.Normal;
 				}
 			}
@@ -700,8 +690,8 @@ namespace Facepunch.RTS
 				else
 					_animationValues.Speed = 0.5f;
 
-				InputVelocity = (pathDirection * Speed).WithZ( 0f );
-				Velocity = Velocity.LerpTo( InputVelocity * Time.Delta, Time.Delta * 8f );
+				InputVelocity = (pathDirection * movementSpeed).WithZ( 0f );
+				Velocity = InputVelocity * Time.Delta;
 			}
 			else
 			{

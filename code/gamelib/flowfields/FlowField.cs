@@ -178,7 +178,7 @@ namespace Gamelib.FlowFields
 
         protected virtual bool SeekPath( Vector3 startPosition )
         {
-            var subPath = AStarPortal.Default.CalculatePath( this, startPosition );
+			var subPath = AStarPortal.Default.CalculatePath( this, startPosition );
 			var worldPosition = Pathfinder.CreateWorldPosition( startPosition );
 
             if ( DestinationGateways.ContainsKey( worldPosition.ChunkIndex ) )
@@ -323,7 +323,7 @@ namespace Gamelib.FlowFields
 
                     var otherCost = IntegrationService.H( thisCost, Pathfinder.GetCost( nw ) );
 
-                    if (neighbor.Key == GridDirection.RightDown || neighbor.Key == GridDirection.UpRight
+                    if ( neighbor.Key == GridDirection.RightDown || neighbor.Key == GridDirection.UpRight
 						|| neighbor.Key == GridDirection.LeftUp || neighbor.Key == GridDirection.DownLeft )
 					{
 						otherCost += 1;
