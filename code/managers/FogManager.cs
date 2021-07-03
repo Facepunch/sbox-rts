@@ -278,7 +278,7 @@ namespace Facepunch.RTS
 				Texture = null;
 			}
 
-			Resolution = ((float)(Bounds.Size / 20f)).CeilToInt();
+			Resolution = Math.Max( ((float)(Bounds.Size / 30f)).CeilToInt(), 128 );
 			Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
 			Data = new byte[Resolution * Resolution];
 
