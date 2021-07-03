@@ -20,8 +20,8 @@ namespace Gamelib.DayNight
 			Transmit = TransmitType.Always;
 		}
 
-		[Event.Tick.Client]
-		private void ClientTick()
+		[Event.Tick.Server]
+		private void Tick()
 		{
 			TimeOfDay += Speed * Time.Delta;
 
@@ -29,6 +29,8 @@ namespace Gamelib.DayNight
 			{
 				TimeOfDay = 0f;
 			}
+
+			Log.Info( TimeOfDay );
 		}
 	}
 }

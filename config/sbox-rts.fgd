@@ -6,15 +6,40 @@
 	rendercolor(color255) : "FX Color (R G B)" : "255 255 255" : "The FX color is used by the selected Render Mode."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	enabled(boolean) : "Enabled" : 0 : "Whether this func_brush is visible/active at all"
-	solid(boolean) : "Solid" : 0 : "Whether this func_brush has collisions"
+	enabled(boolean) : "Enabled" : 1 : "Whether this func_brush is visible/active at all"
+	solid(boolean) : "Solid" : 1 : "Whether this func_brush has collisions"
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
 	input DisableSolid(void) : "Make this func_brush non solid"
 	input EnableSolid(void) : "Make this func_brush solid"
 	input ToggleSolid(void) : "Toggle solidity of this func_brush"
 	input Enable(void) : "Enable this func_brush, making it visible"
 	input Disable(void) : "Disable this func_brush, making it invisible and non solid"
 	input Toggle(void) : "Toggle this func_brush"
+]
+
+// 
+// Gamelib.DayNight.DayNightCycle : Sandbox.ModelEntity 
+// 
+@PointClass 
+metadata
+{
+	entity_tool_name = "Day Night Cycle"
+	entity_tool_group = "Lightning"
+}
+= day_night_cycle : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	dawncolor(color255) : "Dawn Color" :  : ""
+	dawnskycolor(color255) : "Dawn Sky Color" :  : ""
+	daycolor(color255) : "Day Color" :  : ""
+	dayskycolor(color255) : "Day Sky Color" :  : ""
+	duskcolor(color255) : "Dusk Color" :  : ""
+	duskskycolor(color255) : "Dusk Sky Color" :  : ""
+	nightcolor(color255) : "Night Color" :  : ""
+	nightskycolor(color255) : "Night Sky Color" :  : ""
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 
@@ -91,6 +116,16 @@
 // Facepunch.RTS.Pistol : Facepunch.RTS.Weapon 
 // 
 @PointClass = weapon_pistol : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+]
+
+// 
+// Facepunch.RTS.TankCannon : Facepunch.RTS.Weapon 
+// 
+@PointClass = weapon_tank_cannon : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
