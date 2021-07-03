@@ -153,7 +153,7 @@ namespace Facepunch.RTS
 
 				if ( data.Object == viewer )
 				{
-					PunchHole( data.LastPosition, data.Object.LineOfSight, 200 );
+					FillRegion( data.LastPosition, data.Object.LineOfSight, 200 );
 					_viewers.RemoveAt( i );
 					break;
 				}
@@ -177,13 +177,11 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public void Clear()
 		{
-
 			for ( int x = 0; x < Resolution; x++ )
 			{
 				for ( int y = 0; y < Resolution; y++ )
 				{
 					var index = ((x * Resolution) + y);
-
 					Data[index + 0] = 255;
 				}
 			}
@@ -192,7 +190,8 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public void MakeVisible( Vector3 position, float range )
 		{
-			AddRange( position, range, 200 );
+			PunchHole( position, range );
+			FillRegion( position, range, 200 );
 		}
 
 		internal float SdCircle( Vector2 p, float r )
@@ -200,24 +199,19 @@ namespace Facepunch.RTS
 			return p.Length - r;
 		}
 
-		//Needs aggressive inlining
+		// TODO: Needs aggressive inlining.
 		public void PaintDot( Vector2 p, float r, int index, float smooth )
 		{
 			byte sdf =  Convert.ToByte( Math.Clamp( SdCircle(p, r) * smooth * 255, 0, 255 ) );
 			Data[ index ] = Math.Min( sdf, Data[ index ] );
 		} 
-		public void PunchHole( Vector3 location, float range, byte alpha )
-		{
-			const byte fogColor = 180;
 
+		public void PunchHole( Vector3 location, float range )
+		{
 			var pixelScale = (Resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
 			var radius = ((range * pixelScale) / 2f).CeilToInt();
 			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
-
-			var w = Resolution;
-			var h = Resolution;
-			
 			var renderRadius = radius * ( (float)Math.PI * 0.5 );
 			
 			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, Resolution - 1 ); x++ )
@@ -225,29 +219,23 @@ namespace Facepunch.RTS
 				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, Resolution - 1 ); y++ )
 				{
 					var index = ((y * Resolution) + x);
-					PaintDot( centerPixel - new Vector2(x,y), radius, index, 0.25f ); // Visible area
+					PaintDot( centerPixel - new Vector2(x,y), radius, index, 0.25f );
 				}	
 			}	
 		}
 
 		public void FillRegion( Vector3 location, float range, byte alpha )
 		{
-			const byte fogColor = 180;
-
 			var pixelScale = (Resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
 			var radius = ((range * pixelScale) / 2f).CeilToInt();
 			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
-
-			var w = Resolution;
-			var h = Resolution;
-			
 			var renderRadius = radius * ( (float)Math.PI * 0.5 );
+
 			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, Resolution - 1 ); x++ )
 			{
 				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, Resolution - 1 ); y++ )
 				{
-					
 					var index = ((y * Resolution) + x);
 					Data[ index ] = Math.Max( alpha, Data[ index ] );
 				}
@@ -303,11 +291,11 @@ namespace Facepunch.RTS
 			Fog.FogMaterial.OverrideTexture( "Color", Texture );
 		}
 
-		private void AddRange( Vector3 position, float range, byte alpha )
+		private void AddRange( Vector3 position, float range )
 		{
 			FogCullable cullable;
 
-			PunchHole( position, range, alpha );
+			PunchHole( position, range );
 
 			for ( var i = _cullables.Count - 1; i >= 0; i-- )
 			{
@@ -352,7 +340,7 @@ namespace Facepunch.RTS
 				var position = viewer.Object.Position;
 				var range = viewer.Object.LineOfSight;
 
-				AddRange( position, range, 0 );
+				AddRange( position, range );
 
 				viewer.LastPosition = position;
 			}

@@ -43,6 +43,19 @@ namespace Facepunch.RTS
 		public Dictionary<ulong, int> Ratings { get; private set; }
 		public BaseRound LastRound { get; private set; }
 
+		[ServerCmd("rts_kill")]
+		public static void KillSelected()
+		{
+			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			{
+				caller.ForEachSelected<UnitEntity>( ( unit ) =>
+				{
+					unit.TakeDamage( DamageInfo.Generic( unit.Health * 2f ) );
+					return false;
+				} );
+			}
+		}
+
 		public RTS()
 		{
 			if ( IsServer )

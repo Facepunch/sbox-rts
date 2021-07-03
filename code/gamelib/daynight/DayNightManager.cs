@@ -29,8 +29,6 @@ namespace Gamelib.DayNight
 			{
 				TimeOfDay = 0f;
 			}
-
-			Log.Info( TimeOfDay );
 		}
 	}
 }
