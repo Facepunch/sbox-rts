@@ -100,18 +100,6 @@ namespace Gamelib.DayNight
 
 		public override void Spawn()
 		{
-			DawnColor = Color.White;
-			DawnSkyColor = new Color32( 80, 11, 5 ).ToColor();
-
-			DayColor = Color.White;
-			DaySkyColor = Color.White;
-
-			DuskColor = Color.White;
-			DuskSkyColor = new Color32( 80, 40, 16 ).ToColor();
-
-			NightColor = new Color32( 150, 150, 150 ).ToColor();
-			NightSkyColor = new Color32( 6, 32, 75 ).ToColor();
-
 			_colorGradient = new DayNightGradient( DawnColor, DayColor, DuskColor, NightColor );
 			_skyColorGradient = new DayNightGradient( DawnSkyColor, DaySkyColor, DuskSkyColor, NightSkyColor );
 
