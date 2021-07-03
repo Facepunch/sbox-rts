@@ -127,14 +127,14 @@ namespace Gamelib.DayNight
 			var manager = DayNightManager.Instance;
 			if ( manager == null ) return;
 
-			var sunAngle = ((manager.TimeOfDay / 24f) * 360f) + 60f;
+			var sunAngle = ((manager.TimeOfDay / 24f) * 360f);
 			var radius = 10000f;
 
 			environment.Color = _colorGradient.Evaluate( (1f / 24f) * manager.TimeOfDay );
 			environment.SkyColor = _skyColorGradient.Evaluate( (1f / 24f) * manager.TimeOfDay );
 
-			environment.Position = Vector3.Zero + Rotation.From( 0, 0, sunAngle ) * ( radius * Vector3.Right );
-			environment.Position += Rotation.From( 0, sunAngle, 0 ) * ( radius * Vector3.Right );
+			environment.Position = Vector3.Zero + Rotation.From( 0, 0, sunAngle + 60f ) * ( radius * Vector3.Right );
+			environment.Position += Rotation.From( 0, sunAngle, 0 ) * ( radius * Vector3.Forward );
 
 			DebugOverlay.Sphere( environment.Position, 2000f, Color.Yellow );
 
