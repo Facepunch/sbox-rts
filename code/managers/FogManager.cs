@@ -177,6 +177,7 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public void Clear()
 		{
+
 			for ( int x = 0; x < Resolution; x++ )
 			{
 				for ( int y = 0; y < Resolution; y++ )
@@ -194,47 +195,62 @@ namespace Facepunch.RTS
 			AddRange( position, range, 200 );
 		}
 
+		internal float SdCircle( Vector2 p, float r )
+		{
+			return p.Length - r;
+		}
+
+		//Needs aggressive inlining
+		public void PaintDot( Vector2 p, float r, int index, float smooth )
+		{
+			byte sdf =  Convert.ToByte( Math.Clamp( SdCircle(p, r) * smooth * 255, 0, 255 ) );
+			Data[ index ] = Math.Min( sdf, Data[ index ] );
+		} 
 		public void PunchHole( Vector3 location, float range, byte alpha )
 		{
+			const byte fogColor = 180;
+
 			var pixelScale = (Resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
 			var radius = ((range * pixelScale) / 2f).CeilToInt();
-			var px = (origin.x * pixelScale).CeilToInt() + (Resolution / 2);
-			var py = (origin.y * pixelScale).CeilToInt() + (Resolution / 2);
+			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
 
-			if ( px + radius < 0 || px - radius >= Resolution || py + radius < 0 || py - radius >= Resolution )
-				return;
-
-			int x = 0;
-			int y = radius;
-			int p = 3 - (radius << 1);
-			int a, b, c, d, e, f, g, h;
-			int pb = py + radius + 1;
-			int pd = py + radius + 1;
-
-			while ( x <= y )
+			var w = Resolution;
+			var h = Resolution;
+			
+			var renderRadius = radius * ( (float)Math.PI * 0.5 );
+			
+			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, Resolution - 1 ); x++ )
 			{
-				a = px + x;
-				b = py + y;
-				c = px - x;
-				d = py - y;
-				e = px + y;
-				f = py + x;
-				g = px - y;
-				h = py - x;
+				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, Resolution - 1 ); y++ )
+				{
+					var index = ((y * Resolution) + x);
+					PaintDot( centerPixel - new Vector2(x,y), radius, index, 0.25f ); // Visible area
+				}	
+			}	
+		}
 
-				if ( b != pb ) FillLine( b, a, c, alpha );
-				if ( d != pd ) FillLine( d, a, c, alpha );
-				if ( f != b ) FillLine( f, e, g, alpha );
-				if ( h != d && h != f ) FillLine( h, e, g, alpha );
+		public void FillRegion( Vector3 location, float range, byte alpha )
+		{
+			const byte fogColor = 180;
 
-				pb = b;
-				pd = d;
+			var pixelScale = (Resolution / Bounds.Size);
+			var origin = location - Bounds.Origin;
+			var radius = ((range * pixelScale) / 2f).CeilToInt();
+			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
 
-				if ( p < 0 )
-					p += (x++ << 2) + 6;
-				else
-					p += ((x++ - y--) << 2) + 10;
+			var w = Resolution;
+			var h = Resolution;
+			
+			var renderRadius = radius * ( (float)Math.PI * 0.5 );
+			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, Resolution - 1 ); x++ )
+			{
+				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, Resolution - 1 ); y++ )
+				{
+					
+					var index = ((y * Resolution) + x);
+					Data[ index ] = Math.Max( alpha, Data[ index ] );
+				}
 			}
 		}
 
@@ -287,23 +303,6 @@ namespace Facepunch.RTS
 			Fog.FogMaterial.OverrideTexture( "Color", Texture );
 		}
 
-		private void FillLine( int y, int x1, int x2, byte alpha )
-		{
-			var w = Resolution;
-			var h = Resolution;
-
-			if ( x2 < x1 ) { x1 += x2; x2 = x1 - x2; x1 -= x2; }
-			if ( x2 < 0 || x1 >= w || y < 0 || y >= h ) return;
-			if ( x1 < 0 ) x1 = 0;
-			if ( x2 >= w ) x2 = w - 1;
-
-			for ( int x = x1; x <= x2; x++ )
-			{
-				var index = ((y * Resolution) + x);
-				Data[index + 0] = alpha;
-			}
-		}
-
 		private void AddRange( Vector3 position, float range, byte alpha )
 		{
 			FogCullable cullable;
@@ -343,7 +342,7 @@ namespace Facepunch.RTS
 			for ( var i = 0; i < _viewers.Count; i++ )
 			{
 				var viewer = _viewers[i];
-				PunchHole( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
+				FillRegion( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
 			}
 
 			// Our second pass will show what is currently visible.
