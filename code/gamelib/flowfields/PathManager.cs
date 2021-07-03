@@ -101,25 +101,22 @@ namespace Gamelib.FlowFields
 			return _default;
 		}
 
-        public void Create( int numberOfChunks, int chunkSize, int nodeSize = 100 )
+        public async Task Create( int numberOfChunks, int chunkSize, int nodeSize = 100 )
 		{
-			Register( new Pathfinder( numberOfChunks, chunkSize, nodeSize ), nodeSize );
+			var pathfinder = new Pathfinder( numberOfChunks, chunkSize, nodeSize );
+			await Task.Run( async () => await Register( pathfinder, nodeSize ) );
 		}
 
-		public void Create( int numberOfChunks, BBox bounds, int nodeSize = 100 )
+		public async Task Create( int numberOfChunks, BBox bounds, int nodeSize = 100 )
 		{
-			Register( new Pathfinder( numberOfChunks, bounds, nodeSize ), nodeSize );
+			var pathfinder = new Pathfinder( numberOfChunks, bounds, nodeSize );
+			await Task.Run( async () => await Register( pathfinder, nodeSize ) );
 		}
 
-		public void Update()
+		private async Task Register( Pathfinder pathfinder, int nodeSize )
 		{
-			for ( var i = 0; i < All.Count; i++ )
-				All[i].Update();
-		}
+			await pathfinder.Initialize();
 
-		private void Register( Pathfinder pathfinder, int nodeSize )
-		{
-			pathfinder.Initialize();
 			_pathfinders[nodeSize] = pathfinder;
 
 			if ( _default == null )

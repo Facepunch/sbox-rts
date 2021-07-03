@@ -8,6 +8,7 @@ using Sandbox;
 using Gamelib.Extensions;
 using System.Threading.Tasks;
 using Gamelib.FlowFields.Entities;
+using System.Threading;
 
 namespace Gamelib.FlowFields
 {
@@ -31,7 +32,6 @@ namespace Gamelib.FlowFields
         private Vector3 _halfExtents;
 		private float[] _heightMap;
         private Chunk[] _chunks;
-        private int _waitForPhysicsUpdate = 3;
         private float _scale = 1f;
 
 		public PhysicsBody PhysicsBody => _physicsBody;
@@ -62,18 +62,9 @@ namespace Gamelib.FlowFields
 			Origin = bounds.Center;
 
 			SetupSize( numberOfChunks, MathUtility.CeilToInt( squareSize / numberOfChunks / scale ), scale );
+
+			Task.Run( ProcessBuffers );
 		}
-
-		public void Update()
-        {
-            if (_waitForPhysicsUpdate > 0)
-            {
-                _waitForPhysicsUpdate--;
-                return;
-            }
-
-            ProcessBuffers();
-        }
 
 		public PathRequest Request( List<Vector3> destinations )
 		{
@@ -205,7 +196,7 @@ namespace Gamelib.FlowFields
 			DrawBox( GetPosition( position ), position.WorldIndex, color, duration );
 		}
 
-        public async void Initialize()
+        public async Task Initialize()
         {
 			PositionOffset = Origin + new Vector3(
 				_worldSize.Columns * _scale / 2f,
@@ -220,13 +211,21 @@ namespace Gamelib.FlowFields
 			_chunkBuffer.Clear();
 
 			CreateChunks();
+			await Task.Delay( 100 );
+
 			CreateHeightMap();
+			await Task.Delay( 100 );
+
 			UpdateCollisions();
+			await Task.Delay( 100 );
+
 			ConnectPortals();
+			await Task.Delay( 100 );
 
 			// Create a good amount of flow fields ready in the pool.
 			for ( var i = 0; i < 10; i++ )
 			{
+				await Task.Delay( 10 );
 				_flowFields.Enqueue( new FlowField( this ) );
 			}
 		}
@@ -345,7 +344,6 @@ namespace Gamelib.FlowFields
 
         public void UpdateCollisions( Vector3 position, int gridSize )
         {
-            _waitForPhysicsUpdate = 5;
 			GetGridPositions( position, gridSize, _collisionBuffer );
 		}
 
@@ -400,52 +398,57 @@ namespace Gamelib.FlowFields
 				_chunks[i] = new Chunk( i, _chunkSize );
 		}
 
-		private void ProcessBuffers()
+		private async Task ProcessBuffers()
         {
-			for ( int i = 0; i < _collisionBuffer.Count; i++ )
-            {
-				var collision = _collisionBuffer[i];
-
-				if ( collision.WorldIndex == int.MinValue )
-					continue;
-
-                var chunk = GetChunk( collision.ChunkIndex );
-
-				if ( chunk.GetCollision( collision.NodeIndex ) == NodeCollision.Static )
+			while ( true )
+			{
+				for ( int i = 0; i < _collisionBuffer.Count; i++ )
 				{
-					// Static collisions never change, let's not update this node.
-					continue;
+					var collision = _collisionBuffer[i];
+
+					if ( collision.WorldIndex == int.MinValue )
+						continue;
+
+					var chunk = GetChunk( collision.ChunkIndex );
+
+					if ( chunk.GetCollision( collision.NodeIndex ) == NodeCollision.Static )
+					{
+						// Static collisions never change, let's not update this node.
+						continue;
+					}
+
+					if ( IsCollisionAt( GetPosition( collision ), collision.WorldIndex ) )
+						chunk.SetCollision( collision.NodeIndex );
+					else
+						chunk.RemoveCollision( collision.NodeIndex );
+
+					if ( _chunkBuffer.Contains( chunk ) )
+						continue;
+
+					_chunkBuffer.Add( chunk );
 				}
 
-				if ( IsCollisionAt( GetPosition( collision ), collision.WorldIndex ) )
-					chunk.SetCollision( collision.NodeIndex );
-                else
-                    chunk.RemoveCollision( collision.NodeIndex );
 
-                if (_chunkBuffer.Contains( chunk ))
-                    continue;
+				for ( int j = 0; j < _chunkBuffer.Count; j++ )
+				{
+					var i = _chunkBuffer[j];
 
-                _chunkBuffer.Add( chunk );
-            }
+					if ( GetChunk( i ) == null )
+						continue;
 
+					ResetChunk( i );
+				}
 
-			for ( int j = 0; j < _chunkBuffer.Count; j++ )
-            {
-				var i = _chunkBuffer[j];
+				if ( _chunkBuffer.Count > 0 )
+				{
+					PropagateWorldChange( _chunkBuffer );
+				}
 
-				if ( GetChunk( i ) == null )
-                    continue;
+				_collisionBuffer.Clear();
+				_chunkBuffer.Clear();
 
-                ResetChunk( i );
-            }
-
-            if ( _chunkBuffer.Count > 0 )
-			{
-                PropagateWorldChange( _chunkBuffer );
+				await Task.Delay( 100 );
 			}
-
-            _collisionBuffer.Clear();
-            _chunkBuffer.Clear();
         }
 
         private void PropagateWorldChange( List<int> chunks )

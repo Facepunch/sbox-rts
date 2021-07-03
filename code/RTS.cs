@@ -5,6 +5,7 @@ using Gamelib.Network;
 using Sandbox;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Facepunch.RTS
@@ -138,25 +139,7 @@ namespace Facepunch.RTS
 
 			if ( IsServer )
 			{
-				// We want to make a pathfinder for each possible unit size.
-				var possibleUnitSizes = Item.GetUnitNodeSizes();
-
-				if ( FlowFieldGround.Exists )
-				{
-					for ( int i = 0; i < possibleUnitSizes.Count; i++ )
-					{
-						var size = possibleUnitSizes[i];
-						Path.Create( size / 5, FlowFieldGround.Bounds, size );
-					}
-				}
-				else
-				{
-					for ( int i = 0; i < possibleUnitSizes.Count; i++ )
-					{
-						var size = possibleUnitSizes[i];
-						Path.Create( size / 5, 30, size );
-					}
-				}
+				CreatePathfinders();
 			}
 
 			base.PostLevelLoaded();
@@ -188,6 +171,33 @@ namespace Facepunch.RTS
 			base.ClientJoined( client );
 		}
 
+		private async void CreatePathfinders()
+		{
+			// We want to make a pathfinder for each possible unit size.
+			var possibleUnitSizes = Item.GetUnitNodeSizes();
+
+			if ( FlowFieldGround.Exists )
+			{
+				for ( int i = 0; i < possibleUnitSizes.Count; i++ )
+				{
+					var size = possibleUnitSizes[i];
+					Log.Info( $"[RTS::CreatePathfinder] Initializing Pathfinder[{size}]" );
+					await Path.Create( size / 5, FlowFieldGround.Bounds, size );
+					Log.Info( $"[RTS::CreatePathfinder] Created Pathfinder[{size}]" );
+				}
+			}
+			else
+			{
+				for ( int i = 0; i < possibleUnitSizes.Count; i++ )
+				{
+					var size = possibleUnitSizes[i];
+					Log.Info( $"[RTS::CreatePathfinder] Initializing Pathfinder[{size}]" );
+					await Path.Create( size / 5, 30, size );
+					Log.Info( $"[RTS::CreatePathfinder] Created Pathfinder[{size}]" );
+				}
+			}
+		}
+
 		private void OnSecond()
 		{
 			CheckMinimumPlayers();
@@ -211,7 +221,6 @@ namespace Facepunch.RTS
 			
 			if ( IsServer )
 			{
-				Path?.Update();
 				ServerTime = Time.Now;
 				LoadConfig();
 			}
