@@ -7,38 +7,30 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public partial class SoundManager : Entity
+	public static partial class SoundManager
 	{
-		public static SoundManager Instance { get; private set; }
-
-		public SoundManager()
-		{
-			Instance = this;
-			Transmit = TransmitType.Always;
-		}
-
-		public void Play( Player player, string sound )
+		public static void Play( Player player, string sound )
 		{
 			Play( To.Single( player ), sound );
 		}
 
-		public void Play( Player player, string sound, Vector3 position )
+		public static void Play( Player player, string sound, Vector3 position )
 		{
 			Play( To.Single( player ), sound, position );
 		}
 
-		public void PlayAll( string sound )
+		public static void PlayAll( string sound )
 		{
 			Play( To.Everyone, sound );
 		}
 
-		public void PlayAll( string sound, Vector3 position )
+		public static void PlayAll( string sound, Vector3 position )
 		{
 			Play( To.Everyone, sound, position );
 		}
 
 		[ClientRpc]
-		public void Play( ItemCreateError error )
+		public static void Play( ItemCreateError error )
 		{
 			if ( error == ItemCreateError.NotEnoughStone )
 				Play( "announcer.not_enough_stone" );
@@ -57,13 +49,13 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		public void Play( string sound )
+		public static void Play( string sound )
 		{
 			Sound.FromScreen( sound );
 		}
 
 		[ClientRpc]
-		public void Play( string sound, Vector3 position )
+		public static void Play( string sound, Vector3 position )
 		{
 			Sound.FromWorld( sound, position );
 		}

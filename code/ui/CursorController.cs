@@ -41,7 +41,7 @@ namespace Facepunch.RTS
 				IsSelecting = true;
 			}
 
-			if ( builder.Released( InputButton.Attack2 ) && !RTS.Item.Ghost.IsValid() )
+			if ( builder.Released( InputButton.Attack2 ) && !ItemManager.Ghost.IsValid() )
 			{
 				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
 				{

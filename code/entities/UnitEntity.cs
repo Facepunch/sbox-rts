@@ -171,9 +171,9 @@ namespace Facepunch.RTS
 			Circle.LocalPosition = Vector3.Zero;
 
 			if ( Player.IsValid() && Player.IsLocalPawn )
-				RTS.Fog.AddViewer( this );
+				FogManager.AddViewer( this );
 			else
-				RTS.Fog.AddCullable( this );
+				FogManager.AddCullable( this );
 
 			base.ClientSpawn();
 		}
@@ -427,8 +427,8 @@ namespace Facepunch.RTS
 			if ( IsClient )
 			{
 				Circle?.Delete();
-				RTS.Fog.RemoveViewer( this );
-				RTS.Fog.RemoveCullable( this );
+				FogManager.RemoveViewer( this );
+				FogManager.RemoveCullable( this );
 			}
 			else
 			{
@@ -465,7 +465,7 @@ namespace Facepunch.RTS
 			LineOfSight = item.LineOfSight;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
-			Pathfinder = RTS.Path.GetPathfinder( item.NodeSize );
+			Pathfinder = PathManager.GetPathfinder( item.NodeSize );
 			
 			if ( item.UseModelPhysics )
 				SetupPhysicsFromModel( PhysicsMotionType.Keyframed );

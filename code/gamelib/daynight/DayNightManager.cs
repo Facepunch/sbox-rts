@@ -1,27 +1,14 @@
-﻿using Gamelib.Extensions;
-using Facepunch.RTS.Buildings;
-using Sandbox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Sandbox;
 
 namespace Gamelib.DayNight
 {
-	public partial class DayNightManager : Entity
+	public static partial class DayNightManager
 	{
-		public static DayNightManager Instance { get; private set; }
-
-		public float TimeOfDay { get; set; } = 0f;
-		public float Speed { get; set; } = 1f;
-
-		public DayNightManager()
-		{
-			Instance = this;
-			Transmit = TransmitType.Always;
-		}
+		public static float TimeOfDay { get; set; } = 0f;
+		public static float Speed { get; set; } = 1f;
 
 		[Event.Tick.Server]
-		private void Tick()
+		private static void Tick()
 		{
 			TimeOfDay += Speed * Time.Delta;
 

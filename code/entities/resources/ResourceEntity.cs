@@ -20,14 +20,14 @@ namespace Facepunch.RTS
 		{
 			if ( isVisible )
 			{
-				RTS.Fog.RemoveCullable( this );
+				FogManager.RemoveCullable( this );
 			}
 		}
 	
 
 		public override void ClientSpawn()
 		{
-			RTS.Fog.AddCullable( this );
+			FogManager.AddCullable( this );
 
 			base.ClientSpawn();
 		}
@@ -48,7 +48,7 @@ namespace Facepunch.RTS
 		{
 			if ( IsClient )
 			{
-				RTS.Fog.RemoveCullable( this );
+				FogManager.RemoveCullable( this );
 			}
 
 			base.OnDestroy();

@@ -13,12 +13,10 @@ namespace Facepunch.RTS
 
 		public override void DoRender( SceneObject sceneObject )
 		{
-			var manager = RTS.Fog;
-
-			if ( !Enabled || !manager.IsActive ) return;
+			if ( !Enabled || !FogManager.IsActive ) return;
 
 			var vertexBuffer = Render.GetDynamicVB( true );
-			var bounds = manager.Bounds;
+			var bounds = FogManager.Bounds;
 
 			var a = new Vertex( bounds.TopLeft, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
 			var b = new Vertex( bounds.TopRight, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );

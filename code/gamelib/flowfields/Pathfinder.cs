@@ -205,7 +205,7 @@ namespace Gamelib.FlowFields
 			DrawBox( GetPosition( position ), position.WorldIndex, color, duration );
 		}
 
-        public async void Initialize()
+        public void Initialize()
         {
 			PositionOffset = Origin + new Vector3(
 				_worldSize.Columns * _scale / 2f,

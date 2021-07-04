@@ -28,12 +28,12 @@ namespace Facepunch.RTS
 
 			if ( status != ItemCreateError.Success )
 			{
-				RTS.Sound.Play( status );
+				SoundManager.Play( status );
 				return;
 			}
 
 			if ( Selectable is UnitEntity worker && Item is BaseBuilding building )
-				RTS.Item.CreateGhost( worker, building );
+				ItemManager.CreateGhost( worker, building );
 			else
 				ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
 		}
@@ -330,7 +330,7 @@ namespace Facepunch.RTS
 
 			foreach ( var v in buildables )
 			{
-				var dependency = RTS.Item.Find<BaseItem>( v );
+				var dependency = ItemManager.Find<BaseItem>( v );
 
 				if ( dependency.CanHave( player ) )
 				{

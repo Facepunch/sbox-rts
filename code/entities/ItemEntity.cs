@@ -29,7 +29,7 @@ namespace Facepunch.RTS
 			get
 			{
 				if ( _itemCache == null )
-					_itemCache = RTS.Item.Find<T>( ItemId );
+					_itemCache = ItemManager.Find<T>( ItemId );
 				return _itemCache;
 			}
 		}
@@ -65,7 +65,7 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			var item = RTS.Item.Find<T>( itemId );
+			var item = ItemManager.Find<T>( itemId );
 
 			Assign( player, item );
 		}

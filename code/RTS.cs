@@ -28,12 +28,7 @@ namespace Facepunch.RTS
 			public CameraConfig Camera;
 		}
 
-		public static DayNightManager DayNight => DayNightManager.Instance;
 		public static ItemTooltip Tooltip => ItemTooltip.Instance;
-		public static SoundManager Sound => SoundManager.Instance;
-		public static ItemManager Item => ItemManager.Instance;
-		public static PathManager Path => PathManager.Instance;
-		public static FogManager Fog => FogManager.Instance;
 		public static RTS Game { get; private set; }
 
 		[Net] public float ServerTime { get; private set; }
@@ -63,12 +58,14 @@ namespace Facepunch.RTS
 				LoadConfig();
 				LoadRatings();
 
-				_ = new DayNightManager();
-				_ = new SoundManager();
-				_ = new PathManager();
-				_ = new ItemManager();
-				_ = new FogManager();
 				_ = new Hud();
+			}
+
+			ItemManager.Initialize();
+			
+			if ( IsClient )
+			{
+				FogManager.Initialize();
 			}
 
 			Game = this;
@@ -97,7 +94,7 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public void Toast( string text, uint itemId )
 		{
-			var item = Item.Find<BaseItem>( itemId );
+			var item = ItemManager.Find<BaseItem>( itemId );
 
 			if ( item != null )
 			{
@@ -152,14 +149,14 @@ namespace Facepunch.RTS
 			if ( IsServer )
 			{
 				// We want to make a pathfinder for each possible unit size.
-				var possibleUnitSizes = Item.GetUnitNodeSizes();
+				var possibleUnitSizes = ItemManager.GetUnitNodeSizes();
 
 				if ( FlowFieldGround.Exists )
 				{
 					for ( int i = 0; i < possibleUnitSizes.Count; i++ )
 					{
 						var size = possibleUnitSizes[i];
-						Path.Create( size / 5, FlowFieldGround.Bounds, size );
+						PathManager.Create( size / 5, FlowFieldGround.Bounds, size );
 					}
 				}
 				else
@@ -167,7 +164,7 @@ namespace Facepunch.RTS
 					for ( int i = 0; i < possibleUnitSizes.Count; i++ )
 					{
 						var size = possibleUnitSizes[i];
-						Path.Create( size / 5, 30, size );
+						PathManager.Create( size / 5, 30, size );
 					}
 				}
 			}
@@ -224,7 +221,7 @@ namespace Facepunch.RTS
 			
 			if ( IsServer )
 			{
-				Path?.Update();
+				PathManager.Update();
 				ServerTime = Time.Now;
 				LoadConfig();
 			}

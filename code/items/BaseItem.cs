@@ -25,7 +25,7 @@ namespace Facepunch.RTS
 		{
 			foreach ( var v in Dependencies )
 			{
-				var dependency = RTS.Item.Find<BaseItem>( v );
+				var dependency = ItemManager.Find<BaseItem>( v );
 
 				if ( dependency == null )
 					throw new Exception( "Unable to locate item by id: " + v );

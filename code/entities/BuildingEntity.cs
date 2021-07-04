@@ -1,6 +1,7 @@
 ﻿using Facepunch.RTS.Buildings;
 using Facepunch.RTS.Tech;
 using Facepunch.RTS.Units;
+using Gamelib.FlowFields;
 using Gamelib.FlowFields.Grid;
 using Sandbox;
 using Sandbox.UI;
@@ -103,7 +104,7 @@ namespace Facepunch.RTS
 
 			AddAsFogViewer( To.Single( Player ) );
 
-			RTS.Sound.Play( Player, "announcer.construction_complete" );
+			SoundManager.Play( Player, "announcer.construction_complete" );
 		}
 
 		public void StartConstruction()
@@ -112,7 +113,7 @@ namespace Facepunch.RTS
 
 			var radius = GetDiameterXY( 0.5f );
 
-			foreach ( var pathfinder in RTS.Path.All )
+			foreach ( var pathfinder in PathManager.All )
 			{
 				pathfinder.UpdateCollisions( Position, radius );
 			}
@@ -328,7 +329,7 @@ namespace Facepunch.RTS
 			}
 			else
 			{
-				RTS.Fog.RemoveViewer( this );
+				FogManager.RemoveViewer( this );
 			}
 
 			base.OnDestroy();
@@ -366,7 +367,7 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		private void AddAsFogViewer()
 		{
-			RTS.Fog.AddViewer( this );
+			FogManager.AddViewer( this );
 		}
 
 		[ClientRpc]
@@ -387,7 +388,7 @@ namespace Facepunch.RTS
 		{
 			var queueItem = new QueueItem
 			{
-				Item = RTS.Item.Find<BaseItem>( itemId ),
+				Item = ItemManager.Find<BaseItem>( itemId ),
 				Id = queueId
 			};
 

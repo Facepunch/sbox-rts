@@ -2,31 +2,23 @@
 using Facepunch.RTS.Buildings;
 using Facepunch.RTS.Units;
 using Sandbox;
-using Sandbox.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Gamelib.FlowFields;
 
 namespace Facepunch.RTS
 {
-	public partial class ItemManager : Entity
+	public static partial class ItemManager
 	{
-		public static ItemManager Instance { get; private set; }
+		public static Dictionary<string, BaseItem> Table { get; private set; }
+		public static List<BaseItem> List { get; private set; }
+		public static GhostBuilding Ghost { get; private set; }
+		public static Dictionary<uint,Texture> Icons { get; private set; }
 
-		public Dictionary<string, BaseItem> Table { get; private set; }
-		public List<BaseItem> List { get; private set; }
-		public GhostBuilding Ghost { get; private set; }
-		public Dictionary<uint,Texture> Icons { get; private set; }
-
-		public ItemManager()
+		public static void Initialize()
 		{
-			Instance = this;
-			Transmit = TransmitType.Always;
 			Icons = new();
-
 			BuildItemTable();
 		}
 
@@ -38,9 +30,9 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var item = Instance.Find<BaseBuilding>( itemId );
+			var item = Find<BaseBuilding>( itemId );
 
-			if ( FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct )
+			if ( Entity.FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct )
 			{
 				if ( item.CanCreate( caller ) != ItemCreateError.Success ) return;
 
@@ -79,9 +71,9 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var item = Instance.Find<BaseItem>( itemId );
+			var item = Find<BaseItem>( itemId );
 
-			if ( FindByIndex( entityId ) is BuildingEntity building )
+			if ( Entity.FindByIndex( entityId ) is BuildingEntity building )
 			{
 				if ( building.Player == caller && item.CanCreate( caller ) == ItemCreateError.Success )
 				{
@@ -100,7 +92,7 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			if ( FindByIndex( entityId ) is BuildingEntity building )
+			if ( Entity.FindByIndex( entityId ) is BuildingEntity building )
 			{
 				if ( building.Player == caller )
 				{
@@ -124,7 +116,7 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var target = FindByIndex( id );
+			var target = Entity.FindByIndex( id );
 
 			if ( target.IsValid() )
 			{
@@ -150,8 +142,8 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var building = FindByIndex( buildingId ) as BuildingEntity;
-			var unit = FindByIndex( unitId ) as UnitEntity;
+			var building = Entity.FindByIndex( buildingId ) as BuildingEntity;
+			var unit = Entity.FindByIndex( unitId ) as UnitEntity;
 
 			if ( building.IsValid() && unit.IsValid() )
 			{
@@ -173,7 +165,7 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var target = FindByIndex( id ) as BuildingEntity;
+			var target = Entity.FindByIndex( id ) as BuildingEntity;
 
 			if ( target.IsValid() )
 			{
@@ -198,7 +190,7 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var target = FindByIndex( id );
+			var target = Entity.FindByIndex( id );
 
 			if ( target.IsValid() && target is BuildingEntity building )
 			{
@@ -227,7 +219,7 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var target = FindByIndex( id );
+			var target = Entity.FindByIndex( id );
 
 			if ( target.IsValid() && target is ResourceEntity resource )
 			{
@@ -259,7 +251,7 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var target = FindByIndex( id );
+			var target = Entity.FindByIndex( id );
 
 			if ( target.IsValid() && target is BuildingEntity building )
 			{
@@ -336,7 +328,7 @@ namespace Facepunch.RTS
 
 			var eligible = new List<ISelectable>();
 			var entities = csv.Split( ',', StringSplitOptions.TrimEntries )
-				.Select( i => FindByIndex( Convert.ToInt32( i ) ) )
+				.Select( i => Entity.FindByIndex( Convert.ToInt32( i ) ) )
 				.OfType<ISelectable>()
 				.ToList();
 
@@ -373,7 +365,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public T Find<T>( string id ) where T : BaseItem
+		public static T Find<T>( string id ) where T : BaseItem
 		{
 			if ( Table.TryGetValue( id, out var item ) )
 				return (item as T);
@@ -381,7 +373,7 @@ namespace Facepunch.RTS
 			return null;
 		}
 
-		public T Find<T>( uint id ) where T : BaseItem
+		public static T Find<T>( uint id ) where T : BaseItem
 		{
 			if ( id < List.Count )
 				return (List[(int)id] as T);
@@ -389,14 +381,14 @@ namespace Facepunch.RTS
 			return null;
 		}
 
-		public List<int> GetUnitNodeSizes()
+		public static List<int> GetUnitNodeSizes()
 		{
 			var distinctSizes = List.OfType<BaseUnit>().Select( i => i.NodeSize ).Distinct().ToList();
 			distinctSizes.Sort( ( a, b ) => a.CompareTo( b ) );
 			return distinctSizes;
 		}
 
-		public void CreateGhost( UnitEntity worker, BaseBuilding building )
+		public static void CreateGhost( UnitEntity worker, BaseBuilding building )
 		{
 			if ( Ghost.IsValid() ) Ghost.Delete();
 
@@ -407,7 +399,7 @@ namespace Facepunch.RTS
 		}
 
 		[Event.Tick.Client]
-		private void ClientTick()
+		private static void ClientTick()
 		{
 			if ( !Ghost.IsValid() ) return;
 
@@ -440,7 +432,7 @@ namespace Facepunch.RTS
 			}
 		}
 		
-		private void BuildItemTable()
+		private static void BuildItemTable()
 		{
 			Table = new();
 			List = new();
