@@ -40,6 +40,11 @@ metadata
 	nightcolor(color255) : "Night Color" :  : ""
 	nightskycolor(color255) : "Night Sky Color" :  : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	output OnBecomeNight(void) : ""
+	output OnBecomeDusk(void) : ""
+	output OnBecomeDawn(void) : ""
+	output OnBecomeDay(void) : ""
 ]
 
 // 

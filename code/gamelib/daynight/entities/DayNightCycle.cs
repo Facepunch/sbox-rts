@@ -59,7 +59,7 @@ namespace Gamelib.DayNight
 
 	[Library( "day_night_cycle" )]
 	[Hammer.EntityTool( "Day Night Cycle", "Lightning" )]
-    public class DayNightCycle : ModelEntity
+    public partial class DayNightCycle : ModelEntity
 	{
 		[Property( "DawnColor", Title = "Dawn Color" )]
 		public Color DawnColor { get; set; }
@@ -84,6 +84,11 @@ namespace Gamelib.DayNight
 		[Property( "NightSkyColor", Title = "Night Sky Color" )]
 		public Color NightSkyColor { get; set; }
 
+		private Output OnBecomeNight { get; set; }
+		private Output OnBecomeDusk { get; set; }
+		private Output OnBecomeDawn { get; set; }
+		private Output OnBecomeDay { get; set; }
+
 		public EnvironmentLightEntity Environment
 		{
 			get
@@ -103,7 +108,21 @@ namespace Gamelib.DayNight
 			_colorGradient = new DayNightGradient( DawnColor, DayColor, DuskColor, NightColor );
 			_skyColorGradient = new DayNightGradient( DawnSkyColor, DaySkyColor, DuskSkyColor, NightSkyColor );
 
+			DayNightManager.OnSectionChanged += HandleSectionChanged;
+
 			base.Spawn();
+		}
+
+		private void HandleSectionChanged( TimeSection sector )
+		{
+			if ( sector == TimeSection.Dawn )
+				OnBecomeDawn.Fire( this );
+			else if ( sector == TimeSection.Day )
+				OnBecomeDay.Fire( this );
+			else if ( sector == TimeSection.Dusk )
+				OnBecomeDusk.Fire( this );
+			else if ( sector == TimeSection.Night )
+				OnBecomeNight.Fire( this );
 		}
 
 		[Event.Tick.Server]
