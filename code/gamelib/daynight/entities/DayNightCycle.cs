@@ -84,10 +84,10 @@ namespace Gamelib.DayNight
 		[Property( "NightSkyColor", Title = "Night Sky Color" )]
 		public Color NightSkyColor { get; set; }
 
-		private Output OnBecomeNight { get; set; }
-		private Output OnBecomeDusk { get; set; }
-		private Output OnBecomeDawn { get; set; }
-		private Output OnBecomeDay { get; set; }
+		protected Output OnBecomeNight { get; set; }
+		protected Output OnBecomeDusk { get; set; }
+		protected Output OnBecomeDawn { get; set; }
+		protected Output OnBecomeDay { get; set; }
 
 		public EnvironmentLightEntity Environment
 		{
@@ -113,15 +113,15 @@ namespace Gamelib.DayNight
 			base.Spawn();
 		}
 
-		private void HandleSectionChanged( TimeSection sector )
+		private void HandleSectionChanged( TimeSection section )
 		{
-			if ( sector == TimeSection.Dawn )
+			if ( section == TimeSection.Dawn )
 				OnBecomeDawn.Fire( this );
-			else if ( sector == TimeSection.Day )
+			else if ( section == TimeSection.Day )
 				OnBecomeDay.Fire( this );
-			else if ( sector == TimeSection.Dusk )
+			else if ( section == TimeSection.Dusk )
 				OnBecomeDusk.Fire( this );
-			else if ( sector == TimeSection.Night )
+			else if ( section == TimeSection.Night )
 				OnBecomeNight.Fire( this );
 		}
 
