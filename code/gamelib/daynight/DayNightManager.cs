@@ -4,14 +4,14 @@ namespace Gamelib.DayNight
 {
 	public static partial class DayNightManager
 	{
-		public delegate void SectionChanged( TimeSection sector );
+		public delegate void SectionChanged( TimeSection section );
 		public static event SectionChanged OnSectionChanged;
 
-		public static TimeSection Sector { get; private set; }
+		public static TimeSection Section { get; private set; }
 		public static float TimeOfDay { get; set; } = 0f;
 		public static float Speed { get; set; } = 1f;
 
-		public static TimeSection ToSector( float time )
+		public static TimeSection ToSection( float time )
 		{
 			if ( time > 5f && time <= 9f )
 				return TimeSection.Dawn;
@@ -35,13 +35,21 @@ namespace Gamelib.DayNight
 				TimeOfDay = 0f;
 			}
 
-			var currentSector = ToSector( TimeOfDay );
+			var currentSection = ToSection( TimeOfDay );
 
-			if ( currentSector != Sector )
+			if ( currentSection != Section )
 			{
-				Sector = currentSector;
-				OnSectionChanged?.Invoke( currentSector );
+				Section = currentSection;
+				OnSectionChanged?.Invoke( currentSection );
+				ChangeSectionForClient( To.Everyone, currentSection );
 			}
+		}
+
+		[ClientRpc]
+		public static void ChangeSectionForClient( TimeSection section )
+		{
+			Host.AssertClient();
+			OnSectionChanged?.Invoke( section );
 		}
 	}
 }

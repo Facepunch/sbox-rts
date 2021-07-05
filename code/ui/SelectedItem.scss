@@ -13,6 +13,8 @@
 
         itemmultidisplay {
             background-color: rgba(0 0 0 0.8);
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
             width: 100%;
 
             &.hidden {
@@ -23,6 +25,8 @@
         iteminformation {
             background-color: rgba(0 0 0 0.8);
             flex-direction: column;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
             display: flex;
             padding: 16px;
             width: 100%;
@@ -129,7 +133,9 @@
         height: 250px;
 
         itemcommandlist {
-            background-color: rgba(0 0 0 0.5);
+            background-color: rgba(15 0 0 1);
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
             padding: 16px;
             width: 100%;
 

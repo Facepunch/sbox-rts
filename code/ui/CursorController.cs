@@ -1,4 +1,5 @@
 ﻿
+using Gamelib.DayNight;
 using Gamelib.Extensions;
 using Sandbox;
 using Sandbox.UI;
@@ -12,21 +13,55 @@ namespace Facepunch.RTS
 	public class CursorController : Panel
 	{
 		public Vector2 StartSelection { get; private set; }
+		public SpotLightEntity SpotLight { get; private set; }
 		public Panel SelectionArea { get; private set; }
 		public Rect SelectionRect { get; private set; }
 		public bool IsSelecting { get; private set; }
 		public bool IsMultiSelect { get; private set; }
+
+		private float _spotLightBrightness;
 
 		public CursorController()
 		{
 			StyleSheet.Load( "/ui/CursorController.scss" );
 
 			SelectionArea = Add.Panel( "selection" );
+
+			SpotLight = new SpotLightEntity
+			{
+				Color = Color.White,
+				Range = 1500f,
+				Enabled = false,
+				OuterConeAngle = 50f,
+				InnerConeAngle = 30f,
+				BrightnessMultiplier = 5f,
+				Rotation = Rotation.LookAt( Vector3.Down ),
+				Falloff = 1000f
+			};
+
+			DayNightManager.OnSectionChanged += HandleTimeSectionChanged;
+		}
+
+		private void HandleTimeSectionChanged( TimeSection section )
+		{
+			if ( section == TimeSection.Dusk || section == TimeSection.Night )
+				_spotLightBrightness = 5f;
+			else
+				_spotLightBrightness = 0f;
 		}
 
 		public override void Tick()
 		{
 			SelectionArea.SetClass( "hidden", !IsSelecting || !IsMultiSelect );
+
+			if ( SpotLight.Enabled )
+			{
+				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).EntitiesOnly().Run();
+				SpotLight.Position = trace.EndPos + Vector3.Up * 750f;
+			}
+
+			SpotLight.Brightness = SpotLight.Brightness.LerpTo( _spotLightBrightness, Time.Delta * 5f );
+			SpotLight.Enabled = (SpotLight.Brightness > 0f);
 
 			base.Tick();
 		}

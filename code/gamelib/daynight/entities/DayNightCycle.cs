@@ -108,12 +108,12 @@ namespace Gamelib.DayNight
 			_colorGradient = new DayNightGradient( DawnColor, DayColor, DuskColor, NightColor );
 			_skyColorGradient = new DayNightGradient( DawnSkyColor, DaySkyColor, DuskSkyColor, NightSkyColor );
 
-			DayNightManager.OnSectionChanged += HandleSectionChanged;
+			DayNightManager.OnSectionChanged += HandleTimeSectionChanged;
 
 			base.Spawn();
 		}
 
-		private void HandleSectionChanged( TimeSection section )
+		private void HandleTimeSectionChanged( TimeSection section )
 		{
 			if ( section == TimeSection.Dawn )
 				OnBecomeDawn.Fire( this );
