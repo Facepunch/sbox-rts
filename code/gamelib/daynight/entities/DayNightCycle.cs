@@ -57,9 +57,9 @@ namespace Gamelib.DayNight
 		}
 	}
 
-	[Library( "day_night_cycle" )]
-	[Hammer.EntityTool( "Day Night Cycle", "Lightning" )]
-    public partial class DayNightCycle : ModelEntity
+	[Library( "daynight_controller" )]
+	[Hammer.EntityTool( "Day Night Controller", "Day Night System" )]
+    public partial class DayNightController : ModelEntity
 	{
 		[Property( "DawnColor", Title = "Dawn Color" )]
 		public Color DawnColor { get; set; }

@@ -19,15 +19,15 @@
 ]
 
 // 
-// Gamelib.DayNight.DayNightCycle : Sandbox.ModelEntity 
+// Gamelib.DayNight.DayNightController : Sandbox.ModelEntity 
 // 
 @PointClass 
 metadata
 {
-	entity_tool_name = "Day Night Cycle"
-	entity_tool_group = "Lightning"
+	entity_tool_name = "Day Night Controller"
+	entity_tool_group = "Day Night System"
 }
-= day_night_cycle : ""
+= daynight_controller : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -45,6 +45,86 @@ metadata
 	output OnBecomeDusk(void) : ""
 	output OnBecomeDawn(void) : ""
 	output OnBecomeDay(void) : ""
+]
+
+// 
+// Gamelib.DayNight.DayNightLight : Sandbox.PointLightEntity 
+// 
+@PointClass 
+metadata
+{
+	entity_tool_name = "Day Night Light"
+	entity_tool_group = "Day Night System"
+}
+= daynight_light : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enabledelay(float) : "Enable Delay Time" : 2 : ""
+	disabledelay(float) : "Disable Delay Time" : 2 : ""
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input TurnOn(void) : ""
+	input TurnOff(void) : ""
+	input Toggle(void) : ""
+	input SetLightColor(color255) : ""
+	input SetLightBrightness(float) : ""
+	input SetAppearance(integer) : ""
+	input SetCustomAppearance(string) : ""
+]
+
+// 
+// Gamelib.DayNight.DayNightSpotLight : Sandbox.PointLightEntity 
+// 
+@PointClass 
+metadata
+{
+	entity_tool_name = "Day Night Spot Light"
+	entity_tool_group = "Day Night System"
+}
+= daynight_spot_light : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enabledelay(float) : "Enable Delay Time" : 2 : ""
+	disabledelay(float) : "Disable Delay Time" : 2 : ""
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input TurnOn(void) : ""
+	input TurnOff(void) : ""
+	input Toggle(void) : ""
+	input SetLightColor(color255) : ""
+	input SetLightBrightness(float) : ""
+	input SetAppearance(integer) : ""
+	input SetCustomAppearance(string) : ""
+]
+
+// 
+// Gamelib.DayNight.DayNightWindow : Sandbox.FuncBrush 
+// 
+@SolidClass 
+metadata
+{
+	entity_tool_name = "Day Night Window Brush"
+	entity_tool_group = "Day Night System"
+}
+= daynight_window : ""
+[
+	rendercolor(color255) : "FX Color (R G B)" : "255 255 255" : "The FX color is used by the selected Render Mode."
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enabledelay(float) : "Enable Delay Time" : 3 : ""
+	disabledelay(float) : "Disable Delay Time" : 3 : ""
+	enabled(boolean) : "Enabled" : 1 : "Whether this func_brush is visible/active at all"
+	solid(boolean) : "Solid" : 1 : "Whether this func_brush has collisions"
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input DisableSolid(void) : "Make this func_brush non solid"
+	input EnableSolid(void) : "Make this func_brush solid"
+	input ToggleSolid(void) : "Toggle solidity of this func_brush"
+	input Enable(void) : "Enable this func_brush, making it visible"
+	input Disable(void) : "Disable this func_brush, making it invisible and non solid"
+	input Toggle(void) : "Toggle this func_brush"
 ]
 
 // 
