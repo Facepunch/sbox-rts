@@ -12,11 +12,13 @@ namespace Facepunch.RTS
 		public override string Name => "Plasma";
 		public Particles Effect { get; private set; }
 
-		public override void Spawn()
+		public override void ClientSpawn()
 		{
-			Effect = Particles.Create( "particles/plasma/plasma_effect.vpcf", this, "particles" );
+			base.ClientSpawn();
 
-			base.Spawn();
+			// TODO: We have to spawn them on the client for some reason.
+			Effect = Particles.Create( "particles/plasma/plasma_effect.vpcf" );
+			Effect.SetEntity( 0, this );
 		}
 
 		protected override void OnDestroy()
