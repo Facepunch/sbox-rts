@@ -253,10 +253,10 @@ namespace Facepunch.RTS
 				Camera = new CameraConfig
 				{
 					Ortho = false,
-					PanSpeed = 1000f,
+					PanSpeed = 5000f,
 					ZoomScale = 0.6f,
 					FOV = 30f,
-					ZNear = 2000f,
+					ZNear = 1000f,
 					ZFar = 7500f,
 					Backward = 2500f,
 					Left = 2500f,
