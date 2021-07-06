@@ -16,6 +16,8 @@ namespace Facepunch.RTS
 			}
 
 			FieldOfView = cameraConfig.FOV;
+			ZNear = cameraConfig.ZNear;
+			ZFar = cameraConfig.ZFar;
 			Ortho = cameraConfig.Ortho;
 
 			base.Activated();
@@ -30,11 +32,14 @@ namespace Facepunch.RTS
 			if ( cameraConfig.Ortho )
 			{
 				OrthoSize = 1f + ( (1f - player.ZoomLevel) * cameraConfig.ZoomScale );
+				ZNear = 1f;
 				Ortho = true;
 			}
 			else
 			{
 				FieldOfView = cameraConfig.FOV;
+				ZNear = cameraConfig.ZNear;
+				ZFar = cameraConfig.ZFar;
 				Ortho = false;
 			}
 

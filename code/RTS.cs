@@ -17,6 +17,8 @@ namespace Facepunch.RTS
 			public bool Ortho;
 			public float PanSpeed;
 			public float ZoomScale;
+			public float ZNear;
+			public float ZFar;
 			public float FOV;
 			public float Backward;
 			public float Left;
@@ -218,7 +220,7 @@ namespace Facepunch.RTS
 		private void Tick()
 		{
 			Round?.OnTick();
-			
+
 			if ( IsServer )
 			{
 				PathManager.Update();
@@ -251,9 +253,11 @@ namespace Facepunch.RTS
 				Camera = new CameraConfig
 				{
 					Ortho = false,
-					PanSpeed = 5000f,
+					PanSpeed = 1000f,
 					ZoomScale = 0.6f,
 					FOV = 30f,
+					ZNear = 2000f,
+					ZFar = 7500f,
 					Backward = 2500f,
 					Left = 2500f,
 					Up = 5000f
