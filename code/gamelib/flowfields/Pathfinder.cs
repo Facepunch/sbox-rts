@@ -63,8 +63,6 @@ namespace Gamelib.FlowFields
 			var squareSize = (MathF.Ceiling( Math.Max( width, height ) / 1000f ) * 1000f) + 1000f;
 			var chunkSize = MathUtility.CeilToInt( ((squareSize / 10f) / nodeSize) );
 
-			Log.Info( $"NumChunks: {numberOfChunks} Scale: {nodeSize} SquareSize: {squareSize} ChunkSize: {chunkSize} Delta: {delta}" );
-
 			Origin = bounds.Center;
 
 			SetupSize( numberOfChunks, chunkSize, nodeSize );
@@ -135,6 +133,7 @@ namespace Gamelib.FlowFields
 
 			var trace = Trace.Sweep( _physicsBody, transform, transform )
 				.WithoutTags( "flowfield" )
+				.HitLayer( CollisionLayer.PLAYER_CLIP, true )
 				.Run();
 
 			return trace;

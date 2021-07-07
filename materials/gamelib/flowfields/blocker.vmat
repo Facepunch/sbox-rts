@@ -1,0 +1,30 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "generic.vfx"
+
+	//---- Translucent ----
+	F_TRANSLUCENT 1
+
+	//---- Color ----
+	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
+	g_vTexCoordOffset "[0.000 0.000]"
+	g_vTexCoordScale "[1.000 1.000]"
+	TextureColor "materials/gamelib/flowfields/blocker_color.tga"
+
+	//---- Normal Map ----
+	TextureNormal "materials/default/default_normal.tga"
+
+	//---- Translucent ----
+	g_flOpacityScale "1.000"
+	TextureTranslucency "materials/gamelib/flowfields/blocker_trans.tga"
+
+	Attributes
+	{
+		mapbuilder.nodraw "1"
+		mapbuilder.playerclip "1"
+		mapbuilder.npcclip "1"
+		tools.toolsmaterial "1"
+	}
+}
