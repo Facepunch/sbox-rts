@@ -669,12 +669,16 @@ namespace Facepunch.RTS
 					var direction = MoveGroup.GetDirection( Position );
 					pathDirection = direction.Normal.WithZ( 0f );
 
-					var flocker = new Flocker();
+					if ( MoveGroup.Agents.Count > 1 )
+					{
+						var flocker = new Flocker();
 
-					flocker.Setup( this, MoveGroup.Agents, Position );
-					flocker.Flock( MoveGroup.GetDestination() );
+						// TODO: We should really use the real destination when flocking...
+						flocker.Setup( this, MoveGroup.Agents, Position );
+						flocker.Flock( Position + direction * Pathfinder.Scale );
 
-					steerDirection = flocker.Force.Normal.WithZ( 0f );
+						steerDirection = flocker.Force.Normal.WithZ( 0f );
+					}
 				}
 			}
 			else if ( TargetPosition.HasValue )

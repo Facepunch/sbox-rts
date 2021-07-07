@@ -80,8 +80,6 @@ namespace Gamelib.FlowFields
 
 			ReachedGoal.Add( agent );
 
-			Log.Info( ReachedGoal.Count + " / " + Agents.Count );
-
 			if ( ReachedGoal.Count == Agents.Count )
 			{
 				Dispose();
