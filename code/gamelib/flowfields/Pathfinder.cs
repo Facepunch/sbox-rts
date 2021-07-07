@@ -178,7 +178,7 @@ namespace Gamelib.FlowFields
 
 			if ( IsCollisionAt( position, worldIndex, out var entity ) )
 			{
-				if ( !entity.IsValid() || entity.IsWorld )
+				if ( !entity.IsValid() || entity.IsWorld || entity is FlowFieldBlocker )
 					chunk.SetCollision( nodeIndex, NodeCollision.Static );
 				else
 					chunk.SetCollision( nodeIndex );
