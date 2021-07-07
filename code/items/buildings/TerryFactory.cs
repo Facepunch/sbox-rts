@@ -23,7 +23,8 @@ namespace Facepunch.RTS.Buildings
 		public override HashSet<string> Buildables => new()
 		{
 			"unit.naked",
-			"unit.assault"
+			"unit.assault",
+			"unit.medic"
 		};
 	}
 }

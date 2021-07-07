@@ -11,8 +11,9 @@ namespace Facepunch.RTS
 {
 	public partial class Player : Entity
 	{
-		[Net, Local] public List<uint> Dependencies { get; set; }
-		[Net, Local] public List<Entity> Selection { get; set; }
+		[Net, Local, OnChangedCallback] public List<uint> Dependencies { get; set; }
+		[Net, Local, OnChangedCallback] public List<uint> Researching { get; set; }
+		[Net, Local, OnChangedCallback] public List<Entity> Selection { get; set; }
 		[Net, Local] public uint MaxPopulation { get; set; }
 		[Net, Local] public uint Population { get; private set; }
 		[Net, Local, Predicted] public float ZoomLevel { get; set; }
@@ -29,6 +30,7 @@ namespace Facepunch.RTS
 			Resources = new List<int>();
 			ZoomLevel = 1f;
 			Selection = new List<Entity>();
+			Researching = new List<uint>();
 			Dependencies = new List<uint>();
 			MaxPopulation = 100;
 		}
@@ -276,6 +278,21 @@ namespace Facepunch.RTS
 			}
 
 			base.Simulate( client );
+		}
+
+		private void OnResearchingChanged()
+		{
+			SelectedItem.Instance.Update( Selection );
+		}
+
+		private void OnSelectionChanged()
+		{
+			SelectedItem.Instance.Update( Selection );
+		}
+
+		private void OnDependenciesChanged()
+		{
+			SelectedItem.Instance.Update( Selection );
 		}
 	}
 }

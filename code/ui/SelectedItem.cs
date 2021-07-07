@@ -477,8 +477,6 @@ namespace Facepunch.RTS
 		public Panel Left { get; private set; }
 		public Panel Right { get; private set; }
 
-		private int _oldSelectedHashCode;
-
 		public SelectedItem()
 		{
 			StyleSheet.Load( "/ui/SelectedItem.scss" );
@@ -509,6 +507,11 @@ namespace Facepunch.RTS
 			CommandList.Update( items[0] );
 		}
 
+		public void Update( IList<Entity> entities )
+		{
+			Update( entities.Cast<ISelectable>().ToList() );
+		}
+
 		public override void Tick()
 		{
 			if ( RTS.Game == null ) return;
@@ -518,18 +521,6 @@ namespace Facepunch.RTS
 
 			if ( round is PlayRound )
 			{
-				if ( Local.Pawn is Player player )
-				{
-					var collection = player.Selection.Cast<ISelectable>().ToList();
-					var hashCode = collection.GetItemsHashCode();
-
-					if ( _oldSelectedHashCode != hashCode )
-					{
-						Update( collection );
-						_oldSelectedHashCode = hashCode;
-					}
-				}
-
 				if ( Items.Count > 0 )
 					isHidden = false;
 			}

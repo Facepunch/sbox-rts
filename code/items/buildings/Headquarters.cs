@@ -25,7 +25,8 @@ namespace Facepunch.RTS.Buildings
 			"unit.scientist",
 			"tech.brewing",
 			"tech.clothing",
-			"tech.wheels"
+			"tech.wheels",
+			"tech.syringes"
 		};
 	}
 }
