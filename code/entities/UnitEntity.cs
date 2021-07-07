@@ -8,6 +8,7 @@ using Gamelib.Extensions;
 using Sandbox.UI;
 using Gamelib.FlowFields;
 using Gamelib.FlowFields.Grid;
+using Facepunch.RTS.Ranks;
 
 namespace Facepunch.RTS
 {
@@ -41,7 +42,7 @@ namespace Facepunch.RTS
 		[Net, Local] public bool IsInsideBuilding { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
-		[Net, Local] public int Kills { get; set; }
+		[Net, OnChangedCallback] public int Kills { get; set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
@@ -64,10 +65,12 @@ namespace Facepunch.RTS
 		public Vector3 InputVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
 		public float TargetRange { get; private set; }
+		public BaseRank Rank { get; private set; }
 
 		#region UI
 		public EntityHudBar HealthBar { get; private set; }
 		public EntityHudBar GatherBar { get; private set; }
+		public EntityHudIcon RankIcon { get; private set; }
 		#endregion
 
 		private AnimationValues _animationValues;
@@ -89,6 +92,14 @@ namespace Facepunch.RTS
 		}
 
 		public bool CanConstruct => Item.CanConstruct;
+
+		public void AddKill()
+		{
+			Host.AssertServer();
+
+			Kills += 1;
+			Rank = RankManager.Find( Kills );
+		}
 
 		public bool CanGather( ResourceType type )
 		{
@@ -153,6 +164,11 @@ namespace Facepunch.RTS
 		public override void OnKilled()
 		{
 			base.OnKilled();
+
+			if ( LastDamageTaken.Attacker is UnitEntity unit )
+			{
+				unit.AddKill();
+			}
 
 			BecomeRagdoll( Velocity, LastDamageTaken.Flags, LastDamageTaken.Position, LastDamageTaken.Force, GetHitboxBone( LastDamageTaken.HitboxIndex ) );
 		}
@@ -494,6 +510,11 @@ namespace Facepunch.RTS
 			}
 
 			base.OnItemChanged( item );
+		}
+
+		private void OnKillsChanged()
+		{
+			Rank = RankManager.Find( Kills );
 		}
 
 		private void SetTargetRange( float range )
@@ -844,10 +865,13 @@ namespace Facepunch.RTS
 
 		protected override void AddHudComponents()
 		{
+			RankIcon = UI.AddChild<EntityHudIcon>( "rank" );
 			HealthBar = UI.AddChild<EntityHudBar>( "health" );
 
 			if ( IsLocalPlayers )
+			{
 				GatherBar = UI.AddChild<EntityHudBar>( "gather" );
+			}
 
 			base.AddHudComponents();
 		}
@@ -874,6 +898,16 @@ namespace Facepunch.RTS
 			else
 			{
 				GatherBar?.SetClass( "hidden", true );
+			}
+
+			if ( Rank != null )
+			{
+				RankIcon.SetClass( "hidden", false );
+				RankIcon.Texture = Rank.Icon;
+			}
+			else
+			{
+				RankIcon.SetClass( "hidden", true );
 			}
 
 			base.UpdateHudComponents();

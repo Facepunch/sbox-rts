@@ -15,6 +15,17 @@
             display: none;
         }
 
+        entityhudicon {
+            &.rank {
+                width: 16px;
+                height: 16px;
+            }
+
+            &.hidden {
+                display: none;
+            }
+        }
+
         entityhudbar {
             border: 1px black solid;
             background-color: black;

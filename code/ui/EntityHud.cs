@@ -6,6 +6,11 @@ using System;
 
 namespace Facepunch.RTS
 {
+	public class EntityHudIcon : Image
+	{
+
+	}
+
 	public class EntityHudBar : Panel
 	{
 		public Panel Foreground { get; private set; }

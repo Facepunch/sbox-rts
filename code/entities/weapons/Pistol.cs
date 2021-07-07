@@ -22,7 +22,7 @@ namespace Facepunch.RTS
 
 			ShootEffects();
 			PlaySound( "rust_pistol.shoot" );
-			ShootBullet( 1.5f, BaseDamage );
+			ShootBullet( 1.5f, GetDamage() );
 		}
 	}
 }

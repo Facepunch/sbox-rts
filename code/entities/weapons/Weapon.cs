@@ -29,6 +29,16 @@ namespace Facepunch.RTS
 			return (trace.Entity == Target);
 		}
 
+		public virtual int GetDamage()
+		{
+			if ( Attacker is UnitEntity unit && unit.Rank != null )
+			{
+				return BaseDamage + unit.Rank.DamageModifier;
+			}
+
+			return BaseDamage;
+		}
+
 		public virtual bool CanAttack()
 		{
 			if ( !CanSeeTarget() ) return false;
@@ -40,7 +50,7 @@ namespace Facepunch.RTS
 			LastAttack = 0f;
 
 			ShootEffects();
-			ShootBullet( 1.5f, BaseDamage );
+			ShootBullet( 1.5f, GetDamage() );
 		}
 
 		public virtual Transform? GetMuzzle()
@@ -70,7 +80,11 @@ namespace Facepunch.RTS
 
 		public virtual void DoImpactEffect( TraceResult trace, float damage )
 		{
-			trace.Surface.DoBulletImpact( trace );
+			// Don't go crazy with impact effects because we fire fast.
+			if ( Rand.Float( 1f ) >= 0.5f && Target is IDamageable damageable )
+			{
+				damageable.DoImpactEffects( trace );
+			}
 		}
 
 		[ClientRpc]

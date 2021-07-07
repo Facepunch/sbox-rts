@@ -350,6 +350,7 @@ namespace Facepunch.RTS
 		public Label Desc { get; private set; }
 		public Label Health { get; private set; }
 		public Label Kills { get; private set; }
+		public Label Damage { get; private set; }
 		public ISelectable Item { get; private set; }
 		public ItemQueueList QueueList { get; private set; }
 		public ItemOccupantList OccupantList { get; private set; }
@@ -360,6 +361,7 @@ namespace Facepunch.RTS
 			Name = Add.Label( "", "name" );
 			Desc = Add.Label( "", "desc" );
 			Health = Add.Label( "", "health" );
+			Damage = Add.Label( "", "damage" );
 			Kills = Add.Label( "", "kills" );
 			QueueList = AddChild<ItemQueueList>();
 			OccupantList = AddChild<ItemOccupantList>();
@@ -379,14 +381,23 @@ namespace Facepunch.RTS
 		{
 			if ( Item == null ) return;
 
+			Kills.SetClass( "hidden", true );
+			Damage.SetClass( "hidden", true );
+
 			if ( Item is UnitEntity unit )
 			{
-				Kills.Text = "Kills: " + unit.Kills.ToString();
+				Kills.Text = $"Kills: {unit.Kills}";
 				Kills.SetClass( "hidden", false );
-			}
-			else if ( Item is BuildingEntity building )
-			{
-				Kills.SetClass( "hidden", true );
+
+				if ( unit.Weapon.IsValid() )
+				{
+					if ( unit.Rank != null )
+						Damage.Text = $"Damage: {unit.Weapon.BaseDamage} (+{unit.Rank.DamageModifier})";
+					else
+						Damage.Text = $"Damage: {unit.Weapon.BaseDamage}";
+
+					Damage.SetClass( "hidden", false );
+				}
 			}
 
 			Health.Text = Item.Health.ToString() + "hp";

@@ -264,6 +264,17 @@ namespace Facepunch.RTS
 			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
 			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
+			if ( IsServer && Input.Released( InputButton.Use ) )
+			{
+				// TODO: This is just for testing, delete later.
+				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
+				var bot = RTS.Game.Round.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
+
+				var worker = new UnitEntity();
+				worker.Position = trace.EndPos;
+				worker.Assign( bot, "unit.worker" );
+			}
+
 			base.Simulate( client );
 		}
 	}

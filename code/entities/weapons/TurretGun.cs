@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 
 			ShootEffects();
 			PlaySound( "rust_smg.shoot" ).SetVolume( 0.5f );
-			ShootBullet( 5f, BaseDamage );
+			ShootBullet( 5f, GetDamage() );
 
 			Recoil = 1f;
 		}
@@ -28,15 +28,6 @@ namespace Facepunch.RTS
 		public override Transform? GetMuzzle()
 		{
 			return Attacker.GetAttachment( "muzzle", true );
-		}
-
-		public override void DoImpactEffect( TraceResult trace, float damage )
-		{
-			// Don't go crazy with impact effects because we fire fast.
-			if ( Rand.Float( 1f ) >= 0.5f && Target is IDamageable damageable )
-			{
-				damageable.DoImpactEffects( trace );
-			}
 		}
 
 

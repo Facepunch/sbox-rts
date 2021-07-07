@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 
 			ShootEffects();
 			PlaySound( "rust_smg.shoot" ).SetVolume( 0.5f );
-			ShootBullet( 5f, BaseDamage );
+			ShootBullet( 5f, GetDamage() );
 		}
 
 		public override Transform? GetMuzzle()

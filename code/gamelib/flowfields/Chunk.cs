@@ -41,7 +41,7 @@ namespace Gamelib.FlowFields
 
         public bool IsImpassable( int index )
         {
-            return GetCost(index) == Impassable || (_collisions[index] != NodeCollision.None);
+            return GetCost( index ) == Impassable || (_collisions[index] != NodeCollision.None);
         }
 
         public bool HasCollision( int index )

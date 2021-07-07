@@ -48,6 +48,16 @@
                 color: white;
             }
 
+            .damage {
+                margin-top: 8px;
+                font-size: 20px;
+                color: white;
+
+                &.hidden {
+                    display: none;
+                }
+            }
+
             .kills {
                 margin-top: 8px;
                 font-size: 20px;
