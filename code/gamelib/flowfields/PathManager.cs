@@ -31,6 +31,21 @@ namespace Gamelib.FlowFields
 			}
 		}
 
+		[ServerCmd( "ff_show_portals" )]
+		private static void ShowPortals( int size )
+		{
+			var pathfinder = GetPathfinder( size );
+			var portals = pathfinder.Portals;
+
+			for ( var i = 0; i < portals.Count; i++ )
+			{
+				var portal = portals[i];
+				var position = portal.GetVector( pathfinder );
+
+				DebugOverlay.Sphere( position, 64f, Color.Green, true, 5f );
+			}
+		}
+
 		[ServerCmd( "ff_show_gateway_nodes" )]
 		private static void ShowGatewayNodes( int size )
 		{

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Gamelib.FlowFields.Grid;
+using Sandbox;
 
 namespace Gamelib.FlowFields.Algorithms
 {
@@ -38,16 +39,16 @@ namespace Gamelib.FlowFields.Algorithms
                     if ( !GridUtility.IsValid( neighborIndex ) )
                         continue;
 
-                    if ( integration.GetValue( neighborIndex ) != UnIntegrated )
-                        continue;
+					if ( integration.GetValue( neighborIndex ) != UnIntegrated )
+						continue;
 
-                    if ( !flowField.IsAvailable( integrationIndex, neighborIndex ) )
+					if ( !flowField.IsAvailable( integrationIndex, neighborIndex ) )
                     {
-                        integration.SetValue( neighborIndex, -currentIntegrationValue );
+						integration.SetValue( neighborIndex, -currentIntegrationValue );
                     }
                     else
                     {
-                        if ( currentIntegrationValue < 0 )
+						if ( currentIntegrationValue < 0 )
                             continue;
 
                         var value = H( currentIntegrationValue, chunk.GetCost( index ) );

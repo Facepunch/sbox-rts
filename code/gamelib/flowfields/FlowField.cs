@@ -56,7 +56,8 @@ namespace Gamelib.FlowFields
 
         public Integration GetIntegration( int index )
         {
-            if (!Integrations.ContainsKey(index)) Integrations[index] = IntegrationService.CreateIntegration(Pathfinder.ChunkGridSize);
+            if ( !Integrations.ContainsKey(index) )
+				Integrations[index] = IntegrationService.CreateIntegration( Pathfinder.ChunkGridSize );
 
             return Integrations[index];
         }
@@ -217,7 +218,7 @@ namespace Gamelib.FlowFields
 
         public bool IsAvailable( int chunk, int index )
         {
-            return !Pathfinder.GetChunk(chunk).IsImpassable(index);
+            return !Pathfinder.GetChunk( chunk ).IsImpassable( index );
         }
 
         private void BuildIntegrationStack( Gateway fromGateway, Gateway untilGateway )
@@ -273,9 +274,9 @@ namespace Gamelib.FlowFields
             while ( IntegrationStack.Count > 0 )
             {
                 var gateway = IntegrationStack.Pop();
-                var integration = GetIntegration(gateway.Chunk);
+                var integration = GetIntegration( gateway.Chunk );
 
-                IntegrationsPathService.Default.Integrate( this, integration, gateway.Chunk );
+				IntegrationsPathService.Default.Integrate( this, integration, gateway.Chunk );
                 integration.IsIntegrated = true;
 
                 OpenIntegration( gateway.Chunk, GridDirection.Down );
@@ -285,7 +286,7 @@ namespace Gamelib.FlowFields
             }
         }
 
-        private void OpenIntegration(int index, GridDirection direction)
+        private void OpenIntegration( int index, GridDirection direction )
         {
             var otherChunkIndex = GridUtility.GetNeighborIndex( index, direction, Pathfinder.NumberOfChunks );
 
@@ -300,26 +301,30 @@ namespace Gamelib.FlowFields
 
             for ( var x = range.MinX; x < range.MaxX; x++ )
 				for ( var y = range.MinY; y < range.MaxY; y++ )
-					indexes.Add(GridUtility.GetIndex(Pathfinder.ChunkGridSize, y, x));
+					indexes.Add( GridUtility.GetIndex( Pathfinder.ChunkGridSize, y, x ) );
 
             indexes.Sort( ( index1, index2 ) => thisIntegration.GetValue( index1 ).CompareTo( thisIntegration.GetValue( index2 ) ) );
 
 			for ( int j = 0; j < indexes.Count; j++ )
             {
 				var i = indexes[j];
-				var globalIndex = translation.Global(i);
-                var thisCost = thisIntegration.GetValue(i);
+				var globalIndex = translation.Global( i );
+                var thisCost = thisIntegration.GetValue( i );
 
                 if ( thisCost == IntegrationService.Closed || thisCost == IntegrationService.UnIntegrated || thisCost < 0 )
                     continue;
 
                 foreach ( var neighbor in GridUtility.GetNeighborsIndex( globalIndex, Pathfinder.WorldGridSize, true ) )
                 {
-                    var nw = Pathfinder.CreateWorldPosition(neighbor.Value);
-                    var otherIntegration = GetIntegration(nw.ChunkIndex);
+                    var nw = Pathfinder.CreateWorldPosition( neighbor.Value );
+                    var otherIntegration = GetIntegration( nw.ChunkIndex );
 
-                    if ( otherIntegration.GetValue(nw.NodeIndex) != IntegrationService.UnIntegrated )
+                    if ( otherIntegration.GetValue( nw.NodeIndex ) != IntegrationService.UnIntegrated )
                         continue;
+
+					// This little bugger here is what stops agents moving through collisions at chunk borders.
+					if ( !Pathfinder.IsAvailable( nw ) )
+						continue;
 
                     var otherCost = IntegrationService.H( thisCost, Pathfinder.GetCost( nw ) );
 
@@ -365,7 +370,7 @@ namespace Gamelib.FlowFields
             _flowsToBeProcessed.Remove(chunkIndex);
         }
 
-        public int GetIntegrationValue(GridWorldPosition position)
+        public int GetIntegrationValue( GridWorldPosition position )
         {
             if ( !Integrations.ContainsKey( position.ChunkIndex ) ) return 0;
             return Integrations[position.ChunkIndex].GetValue( position.NodeIndex );
@@ -405,14 +410,14 @@ namespace Gamelib.FlowFields
         {
             var gridDirection = GetGridDirection( position );
 
-            if (gridDirection != GridDirection.Zero)
+            if ( gridDirection != GridDirection.Zero )
 			{
 				return gridDirection.GetVector();
 			}
 
             foreach ( var gatewayLink in GatewayPath )
             {
-                if (gatewayLink.Key.Chunk != position.ChunkIndex)
+                if ( gatewayLink.Key.Chunk != position.ChunkIndex )
 					continue;
 
                 if ( gatewayLink.Key is Gateway connectionGateway )
@@ -424,7 +429,7 @@ namespace Gamelib.FlowFields
 
         public GridDirection GetGridDirection( GridWorldPosition position )
         {
-            if ( !Flows.ContainsKey(position.ChunkIndex) )
+            if ( !Flows.ContainsKey( position.ChunkIndex ) )
                 return GridDirection.Zero;
 
             if ( Flows[position.ChunkIndex][position.NodeIndex] != -1 )

@@ -73,7 +73,7 @@ namespace Gamelib.FlowFields.Grid
             return index % definition.Columns + offset < definition.Columns && index % definition.Columns + offset >= 0;
         }
 
-        public static bool IsValid(int index)
+        public static bool IsValid( int index )
         {
             return MinValue != index;
         }

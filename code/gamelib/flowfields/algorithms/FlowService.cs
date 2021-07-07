@@ -35,8 +35,8 @@ namespace Gamelib.FlowFields.Algorithms
             var integrations = new Dictionary<int, Integration> {{chunkIndex, integration}};
             var neighbors = new List<GridNeighbor>( 8 );
 
-            foreach ( var nIntegration in GridUtility.GetNeighborsIndex( chunkIndex, definition, true ) )
-                integrations.Add(nIntegration.Value, container.GetIntegration(nIntegration.Value));
+            foreach ( var neighborIntegration in GridUtility.GetNeighborsIndex( chunkIndex, definition, true ) )
+                integrations.Add( neighborIntegration.Value, container.GetIntegration( neighborIntegration.Value ) );
 
             for ( var i = 0; i < chunkDefinition.Size; i++ )
             {
@@ -58,8 +58,8 @@ namespace Gamelib.FlowFields.Algorithms
             
                 foreach ( var neighbor in neighbors )
                 {
-                    var neighborChunk = pathfinder.GetChunkIndex(neighbor.Index);
-                    var neighborIndex = pathfinder.GetNodeIndex(neighbor.Index);
+                    var neighborChunk = pathfinder.GetChunkIndex( neighbor.Index );
+                    var neighborIndex = pathfinder.GetNodeIndex( neighbor.Index );
 
                     if ( !IsIntegrationValid( integrations[neighborChunk], neighborIndex ) )
                         continue;

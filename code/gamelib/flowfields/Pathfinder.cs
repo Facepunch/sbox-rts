@@ -28,16 +28,19 @@ namespace Gamelib.FlowFields
         private GridDefinition _chunkGridSize = new( 10, 10 );
         private GridDefinition _worldGridSize = new( 100, 100 );
         private PhysicsBody _physicsBody;
+        private Vector3 _positionOffset;
+        private Vector3 _centerOffset;
         private Vector3 _halfExtents;
+		private float _collisionScale = 1.1f;
 		private float[] _heightMap;
         private Chunk[] _chunks;
         private int _waitForPhysicsUpdate = 3;
         private int _nodeSize = 50;
 
 		public PhysicsBody PhysicsBody => _physicsBody;
-		public Vector3 PositionOffset { get; private set; }
-		public float CollisionScale { get; private set; } = 1f;
-		public Vector3 CenterOffset { get; private set; }
+		public Vector3 PositionOffset => _positionOffset;
+		public float CollisionScale => _collisionScale;
+		public Vector3 CenterOffset => _centerOffset;
 		public Vector3 HalfExtents => _halfExtents;
 		public Vector3 Origin { get; private set; }
 
@@ -128,7 +131,7 @@ namespace Gamelib.FlowFields
 			var transform = _physicsBody.Transform;
 			var heightMap = _heightMap[worldIndex];
 
-			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + heightMap + 5f );
+			transform.Position = (position + _centerOffset).WithZ( _halfExtents.z + heightMap + 5f );
 
 			var trace = Trace.Sweep( _physicsBody, transform, transform )
 				.WithoutTags( "flowfield" )
@@ -193,7 +196,7 @@ namespace Gamelib.FlowFields
 
 			var collisionScale = CollisionScale;
 			var transform = _physicsBody.Transform;
-			transform.Position = (position + CenterOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );
+			transform.Position = (position + _centerOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );
 			DebugOverlay.Box( duration, transform.Position, -_halfExtents * collisionScale, _halfExtents * collisionScale, Color.Red, false );
 			DebugOverlay.Box( duration, transform.Position, -_halfExtents, _halfExtents, color.HasValue ? color.Value : Color.White, false );
 		}
@@ -210,13 +213,13 @@ namespace Gamelib.FlowFields
 
         public void Initialize()
         {
-			PositionOffset = Origin + new Vector3(
+			_positionOffset = Origin + new Vector3(
 				_worldGridSize.Columns * _nodeSize / 2f,
 				_worldGridSize.Rows * _nodeSize / 2f,
 				0f
 			);
 
-			CenterOffset = new Vector3(
+			_centerOffset = new Vector3(
 				NodeSize / 2f,
 				NodeSize / 2f,
 				0f
@@ -270,7 +273,8 @@ namespace Gamelib.FlowFields
 
             for ( var i = 0; i < _numberOfChunks.Size; i++ )
 			{
-                GetChunk(i).ClearGateways();
+				var chunk = GetChunk( i );
+				chunk.ClearGateways();
 			}
 
             for ( var i = 0; i < _numberOfChunks.Size; i++ )
@@ -465,22 +469,31 @@ namespace Gamelib.FlowFields
 
         private void ResetChunk( int i )
         {
-            CreatePortalsBetweenChunks( i, GridDirection.Up );
+			var chunk = GetChunk( i );
+
+			CreatePortalsBetweenChunks( i, GridDirection.Up );
             CreatePortalsBetweenChunks( i, GridDirection.Right );
             CreatePortalsBetweenChunks( i, GridDirection.Left );
             CreatePortalsBetweenChunks( i, GridDirection.Down );
 
-            GetChunk( i ).ConnectGateways();
+			chunk.ConnectGateways();
 
-            GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Up, _numberOfChunks) )?.ConnectGateways();
-            GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Right, _numberOfChunks) )?.ConnectGateways();
-            GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Down, _numberOfChunks) )?.ConnectGateways();
-            GetChunk( GridUtility.GetNeighborIndex(i, GridDirection.Left, _numberOfChunks) )?.ConnectGateways();
+			var north = GetChunk( GridUtility.GetNeighborIndex( i, GridDirection.Up, _numberOfChunks ) );
+			north?.ConnectGateways();
+
+			var east = GetChunk( GridUtility.GetNeighborIndex( i, GridDirection.Right, _numberOfChunks ) );
+			east?.ConnectGateways();
+
+			var south = GetChunk( GridUtility.GetNeighborIndex( i, GridDirection.Down, _numberOfChunks ) );
+			south?.ConnectGateways();
+
+			var west = GetChunk( GridUtility.GetNeighborIndex( i, GridDirection.Left, _numberOfChunks ) );
+			west?.ConnectGateways();
         }
 
         private void CreatePortalsBetweenChunks( int index, GridDirection direction )
         {
-            var otherChunkIndex = GridUtility.GetNeighborIndex( index, direction, NumberOfChunks );
+            var otherChunkIndex = GridUtility.GetNeighborIndex( index, direction, _numberOfChunks );
 
             if ( !GridUtility.IsValid( otherChunkIndex ) )
                 return;
@@ -489,7 +502,7 @@ namespace Gamelib.FlowFields
             var otherChunk = GetChunk( otherChunkIndex );
 
             var portalSize = 0;
-            var range = GridUtility.GetBorderRange( ChunkGridSize, direction );
+            var range = GridUtility.GetBorderRange( _chunkGridSize, direction );
 
             thisChunk.ClearGateways(  direction );
             otherChunk.ClearGateways( direction.Opposite() );
@@ -502,8 +515,8 @@ namespace Gamelib.FlowFields
             for ( var x = range.MinX; x < range.MaxX; x++ )
             for ( var y = range.MinY; y < range.MaxY; y++ )
             {
-                var thisNode = GridUtility.GetIndex( ChunkGridSize, y, x );
-                var otherNode = GridUtility.GetMirrorIndex( ChunkGridSize, thisNode, direction );
+                var thisNode = GridUtility.GetIndex( _chunkGridSize, y, x );
+                var otherNode = GridUtility.GetMirrorIndex( _chunkGridSize, thisNode, direction );
 
                 if ( thisChunk.IsImpassable( thisNode ) || otherChunk.IsImpassable( otherNode ) )
                 {
@@ -561,7 +574,7 @@ namespace Gamelib.FlowFields
 
         public GridWorldPosition CreateWorldPosition( Vector3 position )
         {
-			position += PositionOffset;
+			position += _positionOffset;
 			return CreateWorldPosition( GridUtility.GetIndex( WorldGridSize, MathUtility.FloorToInt( position.y / NodeSize ), MathUtility.FloorToInt( position.x / NodeSize ) ) );
         }
 
@@ -619,7 +632,7 @@ namespace Gamelib.FlowFields
 
 		public Vector3 GetCenterPosition( GridWorldPosition worldPosition )
 		{
-			return GetPosition( worldPosition ) + CenterOffset;
+			return GetPosition( worldPosition ) + _centerOffset;
 		}
 
         public Vector3 GetPosition( GridWorldPosition worldPosition )

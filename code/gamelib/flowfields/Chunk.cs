@@ -127,7 +127,9 @@ namespace Gamelib.FlowFields
             _isDivided = false;
 
             foreach ( var gateway in _gateways )
+			{
                 gateway.Connections.Clear();
+			}
 
             for ( var i = 0; i < _gateways.Count; i++ )
             for ( var j = i + 1; j < _gateways.Count; j++ )
@@ -174,17 +176,15 @@ namespace Gamelib.FlowFields
 
         public List<Portal> GetConnectedPortals( int index )
         {
-            if (_connectedPortals == null)
-                _connectedPortals = new();
-
-            _connectedPortals.Clear();
+			_connectedPortals ??= new();
+			_connectedPortals.Clear();
 
             if ( _isDivided )
                 _connectedPortals.AddRange( from gateway in _gateways
-                    where AStarGateway.Default.GetPath(_definition, _costs, gateway.Median(), index) != null
+                    where AStarGateway.Default.GetPath( _definition, _costs, gateway.Median(), index ) != null
                     select gateway.Portal );
             else
-                _connectedPortals.AddRange( _gateways.Select(gateway => gateway.Portal) );
+                _connectedPortals.AddRange( _gateways.Select( gateway => gateway.Portal ) );
 
             return _connectedPortals;
         }
