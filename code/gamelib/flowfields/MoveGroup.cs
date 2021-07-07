@@ -31,7 +31,7 @@ namespace Gamelib.FlowFields
 			{
 				Pathfinder = GetPathfinder( agents );
 
-				var targetRadius = Pathfinder.Scale * agents.Count * 0.5f;
+				var targetRadius = Pathfinder.NodeSize * agents.Count * 0.5f;
 				var destinations = new List<Vector3>();
 
 				Pathfinder.GetGridPositions( destination, targetRadius, destinations );
@@ -204,7 +204,7 @@ namespace Gamelib.FlowFields
 		private Pathfinder GetPathfinder( List<IMoveAgent> agents )
 		{
 			var pathfinders = agents.Select( a => a.Pathfinder ).ToList();
-			pathfinders.Sort( ( a, b ) => a.Scale.CompareTo( b.Scale ) );
+			pathfinders.Sort( ( a, b ) => a.NodeSize.CompareTo( b.NodeSize ) );
 			return pathfinders[0];
 		}
 

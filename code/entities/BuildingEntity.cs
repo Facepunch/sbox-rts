@@ -111,7 +111,7 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			var radius = GetDiameterXY( 0.5f );
+			var radius = GetDiameterXY( 0.75f );
 
 			foreach ( var pathfinder in PathManager.All )
 			{

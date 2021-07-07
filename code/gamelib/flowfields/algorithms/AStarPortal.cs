@@ -46,7 +46,7 @@ namespace Gamelib.FlowFields.Algorithms
         {
             var from = pathfinder.CreateWorldPosition( gateway.Chunk, gateway.Median() );
             var to = worldIndex;
-            return GridUtility.Distance( pathfinder.WorldSize, from.WorldIndex, to );
+            return GridUtility.Distance( pathfinder.WorldGridSize, from.WorldIndex, to );
         }
 
         public GatewaySubPath CalculatePath( FlowField field, Vector3 startPosition )

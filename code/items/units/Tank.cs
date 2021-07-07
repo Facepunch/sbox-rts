@@ -15,7 +15,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseRenderColor => true;
 		public override float RotateToTargetSpeed => 0.5f;
 		public override string Weapon => "weapon_tank_cannon";
-		public override int NodeSize => 100;
+		public override int NodeSize => 200;
 		public override float AttackRange => 1500f;
 		public override float LineOfSight => 1500f;
 		public override string[] MoveSounds => new string[]

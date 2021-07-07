@@ -384,7 +384,7 @@ namespace Facepunch.RTS
 		public List<Vector3> GetDestinations( ModelEntity model )
 		{
 			// Round up the radius to the nearest node size.
-			var radius = MathF.Ceiling( model.GetDiameterXY( 0.5f ) / Pathfinder.Scale ) * Pathfinder.Scale;
+			var radius = MathF.Ceiling( model.GetDiameterXY( 0.5f ) / Pathfinder.NodeSize ) * Pathfinder.NodeSize;
 			var potentialTiles = new List<Vector3>();
 			var possibleLocations = new List<GridWorldPosition>();
 
@@ -498,7 +498,7 @@ namespace Facepunch.RTS
 
 		private void SetTargetRange( float range )
 		{
-			TargetRange = range + Pathfinder.Scale;
+			TargetRange = range + Pathfinder.NodeSize;
 		}
 
 		private void SetMoveGroup( MoveGroup group )
@@ -675,7 +675,7 @@ namespace Facepunch.RTS
 
 						// TODO: We should really use the real destination when flocking...
 						flocker.Setup( this, MoveGroup.Agents, Position );
-						flocker.Flock( Position + direction * Pathfinder.Scale );
+						flocker.Flock( Position + direction * Pathfinder.NodeSize );
 
 						steerDirection = flocker.Force.Normal.WithZ( 0f );
 					}
@@ -703,7 +703,7 @@ namespace Facepunch.RTS
 				// First we'll try our steer direction and see if we can go there.
 				if ( steerDirection.Length > 0 )
 				{
-					var steerVelocity = (steerDirection * Pathfinder.Scale);
+					var steerVelocity = (steerDirection * Pathfinder.NodeSize);
 
 					if ( Pathfinder.IsAvailable( Position + steerVelocity ) )
 					{
