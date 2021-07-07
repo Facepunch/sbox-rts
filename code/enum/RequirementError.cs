@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS
 {
-	public enum ItemCreateError
+	public enum RequirementError
 	{
 		Success = 0,
 		NotEnoughStone = 1,

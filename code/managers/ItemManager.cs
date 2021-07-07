@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 		public static void Initialize()
 		{
 			Icons = new();
-			BuildItemTable();
+			BuildTable();
 		}
 
 		[ServerCmd]
@@ -34,7 +34,7 @@ namespace Facepunch.RTS
 
 			if ( Entity.FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct )
 			{
-				if ( item.CanCreate( caller ) != ItemCreateError.Success ) return;
+				if ( item.CanCreate( caller ) != RequirementError.Success ) return;
 
 				if ( worker.Player == caller && worker.Item.Buildables.Contains( item.UniqueId ) )
 				{
@@ -48,7 +48,7 @@ namespace Facepunch.RTS
 
 					if ( valid )
 					{
-						caller.TakeResourcesForItem( item );
+						caller.TakeResources( item );
 
 						var building = new BuildingEntity();
 
@@ -75,9 +75,9 @@ namespace Facepunch.RTS
 
 			if ( Entity.FindByIndex( entityId ) is BuildingEntity building )
 			{
-				if ( building.Player == caller && item.CanCreate( caller ) == ItemCreateError.Success )
+				if ( building.Player == caller && item.CanCreate( caller ) == RequirementError.Success )
 				{
-					caller.TakeResourcesForItem( item );
+					caller.TakeResources( item );
 					building.QueueItem( item );
 					item.OnQueued( caller );
 				}
@@ -100,7 +100,7 @@ namespace Facepunch.RTS
 
 					if ( item != null )
 					{
-						caller.GiveResourcesForItem( item );
+						caller.GiveResources( item );
 						building.UnqueueItem( queueId );
 						item.OnUnqueued( caller );
 					}
@@ -432,7 +432,7 @@ namespace Facepunch.RTS
 			}
 		}
 		
-		private static void BuildItemTable()
+		private static void BuildTable()
 		{
 			Table = new();
 			List = new();

@@ -69,6 +69,9 @@ namespace Facepunch.RTS
 		[Event.BuildInput]
 		private void BuildInput( InputBuilder builder )
 		{
+			if ( ItemManager.Ghost.IsValid() || AbilityManager.Selector.HasValue )
+				return;
+
 			if ( builder.Pressed( InputButton.Attack1 ) )
 			{
 				StartSelection = Mouse.Position;
@@ -76,7 +79,7 @@ namespace Facepunch.RTS
 				IsSelecting = true;
 			}
 
-			if ( builder.Released( InputButton.Attack2 ) && !ItemManager.Ghost.IsValid() )
+			if ( builder.Released( InputButton.Attack2 ) )
 			{
 				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
 				{

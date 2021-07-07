@@ -30,21 +30,21 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		public static void Play( ItemCreateError error )
+		public static void Play( RequirementError error )
 		{
-			if ( error == ItemCreateError.NotEnoughStone )
+			if ( error == RequirementError.NotEnoughStone )
 				Play( "announcer.not_enough_stone" );
 
-			if ( error == ItemCreateError.NotEnoughMetal )
+			if ( error == RequirementError.NotEnoughMetal )
 				Play( "announcer.not_enough_metal" );
 
-			if ( error == ItemCreateError.NotEnoughPlasma )
+			if ( error == RequirementError.NotEnoughPlasma )
 				Play( "announcer.not_enough_plasma" );
 
-			if ( error == ItemCreateError.NotEnoughBeer )
+			if ( error == RequirementError.NotEnoughBeer )
 				Play( "announcer.not_enough_beer" );
 
-			if ( error == ItemCreateError.NotEnoughPopulation )
+			if ( error == RequirementError.NotEnoughPopulation )
 				Play( "announcer.need_additional_pubs" );
 		}
 

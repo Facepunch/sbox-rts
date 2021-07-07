@@ -29,19 +29,19 @@ namespace Facepunch.RTS
 			return null;
 		}
 
-		public static ItemCreateError ToCreateError( this ResourceType type )
+		public static RequirementError ToRequirementError( this ResourceType type )
 		{
 			if ( type == ResourceType.Stone )
-				return ItemCreateError.NotEnoughStone;
+				return RequirementError.NotEnoughStone;
 
 			if ( type == ResourceType.Metal )
-				return ItemCreateError.NotEnoughMetal;
+				return RequirementError.NotEnoughMetal;
 
 			if ( type == ResourceType.Plasma )
-				return ItemCreateError.NotEnoughPlasma;
+				return RequirementError.NotEnoughPlasma;
 
 			if ( type == ResourceType.Beer )
-				return ItemCreateError.NotEnoughBeer;
+				return RequirementError.NotEnoughBeer;
 
 			return default;
 		}

@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 
 		public static void Initialize()
 		{
-			BuildRankTable();
+			BuildTable();
 		}
 
 		public static BaseRank Find( int kills )
@@ -27,7 +27,7 @@ namespace Facepunch.RTS
 			return null;
 		}
 
-		private static void BuildRankTable()
+		private static void BuildTable()
 		{
 			Table = new();
 			List = new();

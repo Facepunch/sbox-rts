@@ -38,6 +38,7 @@ namespace Facepunch.RTS.Units
 		public virtual uint Population => 1;
 		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";
+		public virtual HashSet<string> Abilities => new();
 		public virtual HashSet<string> Buildables => new();
 
 		public override void OnQueued( Player player )
@@ -57,10 +58,10 @@ namespace Facepunch.RTS.Units
 			base.OnCreated( player );
 		}
 
-		public override ItemCreateError CanCreate( Player player )
+		public override RequirementError CanCreate( Player player )
 		{
 			if ( !player.HasPopulationCapacity( Population ) )
-				return ItemCreateError.NotEnoughPopulation;
+				return RequirementError.NotEnoughPopulation;
 
 			return base.CanCreate( player );
 		}

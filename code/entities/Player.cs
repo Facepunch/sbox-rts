@@ -6,6 +6,7 @@ using System.Linq;
 using Facepunch.RTS.Units;
 using System;
 using Gamelib.Extensions;
+using Facepunch.RTS.Abilities;
 
 namespace Facepunch.RTS
 {
@@ -96,20 +97,9 @@ namespace Facepunch.RTS
 			return (Population + population <= MaxPopulation);
 		}
 
-		public bool CanAffordItem( BaseItem item )
+		public bool CanAfford( Dictionary<ResourceType, int> costs, out ResourceType missingResource )
 		{
-			foreach ( var kv in item.Costs )
-			{
-				if ( GetResource( kv.Key ) < kv.Value )
-					return false;
-			}
-
-			return true;
-		}
-
-		public bool CanAffordItem( BaseItem item, out ResourceType missingResource )
-		{
-			foreach ( var kv in item.Costs )
+			foreach ( var kv in costs )
 			{
 				if ( GetResource( kv.Key ) < kv.Value )
 				{
@@ -119,23 +109,74 @@ namespace Facepunch.RTS
 			}
 
 			missingResource = default;
+
 			return true;
 		}
 
-		public void GiveResourcesForItem( BaseItem item )
+		public bool CanAfford( Dictionary<ResourceType,int> costs )
 		{
-			foreach ( var kv in item.Costs )
+			foreach ( var kv in costs )
+			{
+				if ( GetResource( kv.Key ) < kv.Value )
+					return false;
+			}
+
+			return true;
+		}
+		public bool CanAfford( BaseAbility ability )
+		{
+			return CanAfford( ability.Costs );
+		}
+
+		public bool CanAfford( BaseAbility ability, out ResourceType missingResource )
+		{
+			return CanAfford( ability.Costs, out missingResource );
+		}
+
+		public bool CanAfford( BaseItem item )
+		{
+			return CanAfford( item.Costs );
+		}
+
+		public bool CanAfford( BaseItem item, out ResourceType missingResource )
+		{
+			return CanAfford( item.Costs, out missingResource );
+		}
+
+		public void GiveResources( Dictionary<ResourceType, int> resources )
+		{
+			foreach ( var kv in resources )
 			{
 				GiveResource( kv.Key, kv.Value );
 			}
 		}
 
-		public void TakeResourcesForItem( BaseItem item )
+		public void TakeResources( Dictionary<ResourceType, int> resources )
 		{
-			foreach ( var kv in item.Costs )
+			foreach ( var kv in resources )
 			{
 				TakeResource( kv.Key, kv.Value );
 			}
+		}
+
+		public void GiveResources( BaseAbility ability )
+		{
+			GiveResources( ability.Costs );
+		}
+
+		public void TakeResources( BaseAbility ability )
+		{
+			TakeResources( ability.Costs );
+		}
+
+		public void GiveResources( BaseItem item )
+		{
+			GiveResources( item.Costs );
+		}
+
+		public void TakeResources( BaseItem item )
+		{
+			TakeResources( item.Costs );
 		}
 
 		public void ClearResources()
@@ -274,7 +315,7 @@ namespace Facepunch.RTS
 
 				var worker = new UnitEntity();
 				worker.Position = trace.EndPos;
-				worker.Assign( bot, "unit.worker" );
+				worker.Assign( bot, "unit.assault" );
 			}
 
 			base.Simulate( client );

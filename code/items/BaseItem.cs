@@ -28,7 +28,7 @@ namespace Facepunch.RTS
 				var dependency = ItemManager.Find<BaseItem>( v );
 
 				if ( dependency == null )
-					throw new Exception( "Unable to locate item by id: " + v );
+					throw new Exception( "[BaseItem::HasDependencies] Unable to locate item by id: " + v );
 
 				if ( !player.Dependencies.Contains( dependency.NetworkId ) )
 					return false;
@@ -52,16 +52,16 @@ namespace Facepunch.RTS
 
 		}
 
-		public virtual ItemCreateError CanCreate( Player player )
+		public virtual RequirementError CanCreate( Player player )
 		{
-			if ( !CanHave( player ) ) return ItemCreateError.Unknown;
+			if ( !CanHave( player ) ) return RequirementError.Unknown;
 
-			if ( !player.CanAffordItem( this, out var resource ) )
+			if ( !player.CanAfford( this, out var resource ) )
 			{
-				return resource.ToCreateError();
+				return resource.ToRequirementError();
 			}
 
-			return ItemCreateError.Success;
+			return RequirementError.Success;
 		}
 
 		public virtual bool CanHave( Player player )

@@ -7,6 +7,7 @@ using Sandbox.UI.Construct;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Facepunch.RTS.Abilities;
 
 namespace Facepunch.RTS
 {
@@ -150,6 +151,33 @@ namespace Facepunch.RTS
 		{
 			Target = panel;
 			UpdatePosition();
+		}
+
+		public void Update( BaseAbility ability )
+		{
+			var player = Local.Pawn as Player;
+
+			Name.Style.FontColor = ability.Color;
+			Name.Style.Dirty();
+
+			Name.Text = ability.Name;
+			Desc.Text = ability.Description;
+
+			foreach ( var kv in Costs )
+			{
+				if ( ability.Costs.TryGetValue( kv.Key, out var cost ) )
+				{
+					kv.Value.Label.Text = cost.ToString();
+					kv.Value.SetClass( "affordable", player.GetResource( kv.Key ) >= cost );
+					kv.Value.SetClass( "hidden", false );
+				}
+				else
+				{
+					kv.Value.SetClass( "hidden", true );
+				}
+			}
+
+			Population.SetClass( "hidden", true );
 		}
 
 		public void Update( ResourceEntity entity )

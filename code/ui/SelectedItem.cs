@@ -8,25 +8,68 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System.Collections.Generic;
 using System.Linq;
+using Facepunch.RTS.Abilities;
 
 namespace Facepunch.RTS
 {
-	public class ItemCommand : Button
+	public class ItemCommandAbility : ItemCommand
 	{
-		public ISelectable Selectable { get; private set; } 
-		public BaseItem Item { get; private set; }
+		public BaseAbility Ability { get; private set; }
 
-		public ItemCommand() : base()
+		protected override void OnClick( MousePanelEvent e )
 		{
+			var player = (Local.Pawn as Player);
+			var status = Ability.CanUse( player );
 
+			if ( status != RequirementError.Success )
+			{
+				SoundManager.Play( status );
+				return;
+			}
+
+			if ( Ability.TargetType == AbilityTargetType.Self )
+				AbilityManager.UseOnSelf( Selectable.NetworkIdent, Ability.UniqueId );
+			else
+				AbilityManager.SelectLocation( Selectable, Ability );
 		}
+
+		protected override void OnMouseOver( MousePanelEvent e )
+		{
+			var tooltip = RTS.Tooltip;
+			tooltip.Update( Ability );
+			tooltip.Hover( this );
+			tooltip.Show();
+		}
+
+		public void Update( ISelectable selectable, BaseAbility ability )
+		{
+			Selectable = selectable;
+			Ability = ability;
+
+			if ( ability.Icon != null )
+			{
+				Style.Background = new PanelBackground
+				{
+					SizeX = Length.Percent( 100f ),
+					SizeY = Length.Percent( 100f ),
+					Texture = ability.Icon
+				};
+
+				Style.Dirty();
+			}
+		}
+	}
+
+	public class ItemCommandQueueable : ItemCommand
+	{
+		public BaseItem Item { get; private set; }
 
 		protected override void OnClick( MousePanelEvent e )
 		{
 			var player = (Local.Pawn as Player);
 			var status = Item.CanCreate( player );
 
-			if ( status != ItemCreateError.Success )
+			if ( status != RequirementError.Success )
 			{
 				SoundManager.Play( status );
 				return;
@@ -46,11 +89,6 @@ namespace Facepunch.RTS
 			tooltip.Show();
 		}
 
-		protected override void OnMouseOut( MousePanelEvent e )
-		{
-			RTS.Tooltip.Hide();
-		}
-
 		public void Update( ISelectable selectable, BaseItem item )
 		{
 			Selectable = selectable;
@@ -67,6 +105,21 @@ namespace Facepunch.RTS
 
 				Style.Dirty();
 			}
+		}
+	}
+
+	public abstract class ItemCommand : Button
+	{
+		public ISelectable Selectable { get; protected set; }
+
+		public ItemCommand() : base()
+		{
+
+		}
+
+		protected override void OnMouseOut( MousePanelEvent e )
+		{
+			RTS.Tooltip.Hide();
 		}
 	}
 
@@ -319,24 +372,40 @@ namespace Facepunch.RTS
 			Buttons.Clear();
 
 			if ( item is UnitEntity unit )
-				UpdateCommands( unit.Item.Buildables );
+				UpdateCommands( unit.Item.Buildables, unit.Item.Abilities );
 			else if ( item is BuildingEntity building )
 				UpdateCommands( building.Item.Buildables );
 		}
 
-		private void UpdateCommands( HashSet<string> buildables )
+		private void UpdateCommands( HashSet<string> buildables, HashSet<string> abilities = null )
 		{
 			var player = Local.Pawn as Player;
 
 			foreach ( var v in buildables )
 			{
-				var dependency = ItemManager.Find<BaseItem>( v );
+				var buildable = ItemManager.Find<BaseItem>( v );
 
-				if ( dependency.CanHave( player ) )
+				if ( buildable.CanHave( player ) )
 				{
-					var button = AddChild<ItemCommand>( v.Replace( '.', '_' ) );
+					var button = AddChild<ItemCommandQueueable>( "command" );
 
-					button.Update( Item, dependency );
+					button.Update( Item, buildable );
+
+					Buttons.Add( button );
+				}
+			}
+
+			if ( abilities == null ) return;
+
+			foreach ( var v in abilities )
+			{
+				var ability = AbilityManager.Find<BaseAbility>( v );
+
+				if ( ability.HasDependencies( player ) )
+				{
+					var button = AddChild<ItemCommandAbility>( "command" );
+
+					button.Update( Item, ability );
 
 					Buttons.Add( button );
 				}

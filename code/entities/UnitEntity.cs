@@ -106,6 +106,13 @@ namespace Facepunch.RTS
 			return Item.Gatherables.Contains( type );
 		}
 
+		public void GiveHealth( float health )
+		{
+			Host.AssertServer();
+
+			Health = Math.Min( Health + health, MaxHealth );
+		}
+
 		public void MakeStatic( bool isStatic )
 		{
 			// Don't update if we don't have to.
