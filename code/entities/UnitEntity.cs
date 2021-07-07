@@ -586,7 +586,7 @@ namespace Facepunch.RTS
 		[Event.Tick.Server]
 		private void ServerTick()
 		{
-			InputVelocity = 0;
+			Velocity = 0;
 
 			_animationValues.Start();
 
@@ -654,6 +654,7 @@ namespace Facepunch.RTS
 				TargetPosition = Target.Position;
 			}
 
+			var steerDirection = Vector3.Zero;
 			var pathDirection = Vector3.Zero;
 			var movementSpeed = Speed;
 
@@ -665,15 +666,20 @@ namespace Facepunch.RTS
 				}
 				else
 				{
-					MoveGroup.ScaleSpeed( this, ref movementSpeed );
-
 					var direction = MoveGroup.GetDirection( Position );
-					pathDirection = direction.Normal;
+					pathDirection = direction.Normal.WithZ( 0f );
+
+					var flocker = new Flocker();
+
+					flocker.Setup( this, MoveGroup.Agents, Position );
+					flocker.Flock( MoveGroup.GetDestination() );
+
+					steerDirection = flocker.Force.Normal.WithZ( 0f );
 				}
 			}
 			else if ( TargetPosition.HasValue )
 			{
-				pathDirection = (TargetPosition.Value - Position).Normal;
+				pathDirection = (TargetPosition.Value - Position).Normal.WithZ( 0f );
 			}
 			else if ( !IsSelected )
 			{
@@ -690,8 +696,21 @@ namespace Facepunch.RTS
 				else
 					_animationValues.Speed = 0.5f;
 
-				InputVelocity = (pathDirection * movementSpeed).WithZ( 0f );
-				Velocity = InputVelocity * Time.Delta;
+				// First we'll try our steer direction and see if we can go there.
+				if ( steerDirection.Length > 0 )
+				{
+					var steerVelocity = (steerDirection * Pathfinder.Scale);
+
+					if ( Pathfinder.IsAvailable( Position + steerVelocity ) )
+					{
+						Velocity = (steerDirection * movementSpeed) * Time.Delta;
+					}
+				}
+
+				if ( Velocity.Length == 0 )
+				{
+					Velocity = (pathDirection * movementSpeed) * Time.Delta;
+				}
 			}
 			else
 			{

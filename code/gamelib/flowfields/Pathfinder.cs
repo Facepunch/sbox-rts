@@ -209,12 +209,14 @@ namespace Gamelib.FlowFields
         {
 			PositionOffset = Origin + new Vector3(
 				_worldSize.Columns * _scale / 2f,
-				_worldSize.Rows * _scale / 2f
+				_worldSize.Rows * _scale / 2f,
+				0f
 			);
 
 			CenterOffset = new Vector3(
 				Scale / 2f,
-				Scale / 2f
+				Scale / 2f,
+				0f
 			);
 
 			_chunkBuffer.Clear();
@@ -605,6 +607,11 @@ namespace Gamelib.FlowFields
 		public Vector3 GetPosition( int chunkIndex, int nodeIndex )
         {
             return GetLocalChunkPosition( chunkIndex ) + GetLocalNodePosition( nodeIndex ) - PositionOffset;
+		}
+
+		public Vector3 GetCenterPosition( Vector3 worldPosition )
+		{
+			return GetCenterPosition( CreateWorldPosition( worldPosition ) );
 		}
 
 		public Vector3 GetCenterPosition( GridWorldPosition worldPosition )

@@ -299,7 +299,7 @@ namespace Facepunch.RTS
 					var agents = units.Cast<IMoveAgent>().ToList();
 					var moveGroup = new MoveGroup();
 
-					moveGroup.Initialize( agents, position, true );
+					moveGroup.Initialize( agents, position );
 
 					for ( int i = 0; i < units.Count; i++ )
 					{

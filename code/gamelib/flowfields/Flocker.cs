@@ -3,13 +3,14 @@ using System.Collections.Generic;
 
 namespace Gamelib.FlowFields
 {
-	/*
 	public struct Flocker
 	{
 		public Vector3 Position;
 		public Vector3 Force;
 		public IMoveAgent Agent;
 		public List<IMoveAgent> Agents;
+		public float MaxForce;
+		public float MaxSpeed;
 
 		public void Setup( IMoveAgent agent, List<IMoveAgent> agents, Vector3 position )
 		{
@@ -17,14 +18,16 @@ namespace Gamelib.FlowFields
 			Force = Vector3.Zero;
 			Agent = agent;
 			Agents = agents;
+			MaxForce = 1f;
+			MaxSpeed = 1f;
 		}
 
-		public void Flock( Vector3 target )//
+		public void Flock( Vector3 target )
 		{
 			var seek = Seek( target );
-			var sep = Separate() * 2.5f;
+			var sep = Separate() * 4f;
 			var coh = Cohesion() * 0.1f;
-			var ali = Align() * 0.7f;
+			var ali = Align() * 0.5f;
 
 			Force = ((seek + sep) + coh) + ali;
 		}
@@ -34,18 +37,16 @@ namespace Gamelib.FlowFields
 			if ( target.Distance( Position ) <= 1f )
 				return Vector3.Zero;
 
-			var settings = Agent.FlockSettings;
 			var desired = target - Position;
-			desired *= (settings.MaxSpeed / desired.Length );
+			desired *= (MaxSpeed / desired.Length);
 			var velocityChange = desired - Agent.Velocity;
-			return velocityChange * (settings.MaxForce / settings.MaxSpeed);
+			return velocityChange * (MaxForce / MaxSpeed);
 		}
 
 		private Vector3 Separate()
 		{
 			var totalForce = Vector3.Zero;
 			var neighboursCount = 0;
-			var settings = Agent.FlockSettings;
 
 			foreach ( var agent in Agents )
 			{
@@ -53,10 +54,10 @@ namespace Gamelib.FlowFields
 				{
 					var distance = Agent.Position.Distance( agent.Position );
 
-					if ( distance < settings.Radius && distance > 0 )
+					if ( distance < Agent.AgentRadius && distance > 0 )
 					{
 						var pushForce = Agent.Position - agent.Position;
-						pushForce = pushForce.Normal * (1f - (pushForce.Length / settings.Radius));
+						pushForce = pushForce.Normal * (1f - (pushForce.Length / Agent.AgentRadius));
 						totalForce += pushForce;
 						neighboursCount++;
 					}
@@ -69,20 +70,19 @@ namespace Gamelib.FlowFields
 			}
 
 			totalForce /= neighboursCount;
-			return totalForce * settings.MaxForce;
+			return totalForce * MaxForce;
 		}
 
 		private Vector3 Align()
 		{
 			var averageHeading = Vector3.Zero;
 			var neighboursCount = 0;
-			var settings = Agent.FlockSettings;
 
 			foreach ( var agent in Agents )
 			{
 				var distance = Agent.Position.Distance( agent.Position );
 
-				if ( distance < settings.Radius && agent.Velocity.Length > 0 )
+				if ( distance < Agent.AgentRadius && agent.Velocity.Length > 0 )
 				{
 					averageHeading = averageHeading + agent.Velocity.Normal;
 					neighboursCount++;
@@ -96,17 +96,16 @@ namespace Gamelib.FlowFields
 
 			averageHeading /= neighboursCount;
 
-			var desired = averageHeading * settings.MaxSpeed;
+			var desired = averageHeading * MaxSpeed;
 			var force = desired - Agent.Velocity;
 
-			return force * (settings.MaxForce / settings.MaxSpeed);
+			return force * (MaxForce / MaxSpeed);
 		}
 
 		private Vector3 Cohesion()
 		{
 			var centerOfMass = Agent.Position;
 			var neighboursCount = 1;
-			var settings = Agent.FlockSettings;
 
 			foreach ( var agent in Agents )
 			{
@@ -114,7 +113,7 @@ namespace Gamelib.FlowFields
 				{
 					var distance = Agent.Position.Distance( agent.Position );
 
-					if ( distance < settings.Radius )
+					if ( distance < Agent.AgentRadius )
 					{
 						centerOfMass = centerOfMass + agent.Position;
 						neighboursCount++;
@@ -132,5 +131,4 @@ namespace Gamelib.FlowFields
 			return Seek( centerOfMass );
 		}
 	}
-	*/
 }

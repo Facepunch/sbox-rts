@@ -15,16 +15,19 @@ namespace Gamelib.FlowFields
 		public PathRequest PathRequest { get; private set; }
 		public Pathfinder Pathfinder { get; private set; }
 
-		public MoveGroup()
+		public MoveGroup( bool autoSortAgents = false )
 		{
-			Event.Register( this );
+			if ( autoSortAgents )
+			{
+				Event.Register( this );
+			}
 
 			ReachedGoal = new();
 		}
 
-		public void Initialize( List<IMoveAgent> agents, Vector3 destination, bool addVariety = false )
+		public void Initialize( List<IMoveAgent> agents, Vector3 destination, bool addNearbyNodes = false )
 		{
-			if ( addVariety && agents.Count > 1 )
+			if ( addNearbyNodes && agents.Count > 1 )
 			{
 				Pathfinder = GetPathfinder( agents );
 
@@ -70,11 +73,14 @@ namespace Gamelib.FlowFields
 			}
 		}
 
-		public void Finish( UnitEntity unit )
+		public void Finish( IMoveAgent agent )
 		{
-			if ( !IsValid() ) return;
+			if ( !IsValid() || ReachedGoal.Contains( agent) )
+				return;
 
-			ReachedGoal.Add( unit );
+			ReachedGoal.Add( agent );
+
+			Log.Info( ReachedGoal.Count + " / " + Agents.Count );
 
 			if ( ReachedGoal.Count == Agents.Count )
 			{
@@ -82,17 +88,24 @@ namespace Gamelib.FlowFields
 			}
 		}
 
-		public void Remove( UnitEntity unit )
+		public void Remove( IMoveAgent agent )
 		{
 			if ( !IsValid() ) return;
 
-			ReachedGoal.Remove( unit );
-			Agents.Remove( unit );
+			ReachedGoal.Remove( agent );
+			Agents.Remove( agent );
 
 			if ( Agents.Count == 0 )
 			{
 				Dispose();
 			}
+		}
+
+		public Vector3 GetDestination()
+		{
+			if ( !IsValid() ) return Vector3.Zero;
+
+			return PathRequest.GetDestination();
 		}
 
 		public Vector3 GetDirection( Vector3 position )
@@ -178,7 +191,6 @@ namespace Gamelib.FlowFields
 		{
 			if ( !IsValid() )
 			{
-				Log.Error( "[MoveGroup] SortByDistance was called but the MoveGroup is invalid!" );
 				Event.Unregister( this );
 				return;
 			}
