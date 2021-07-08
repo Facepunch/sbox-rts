@@ -10,7 +10,12 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.brewery";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/brewery.png" );
 		public override string Description => "Assign up to 4 workers to generate Beer over time.";
-		public override int BuildTime => 60;
+		public override HashSet<string> AllowedOccupants => new()
+		{
+			"unit.worker"
+		};
+		public override int BuildTime => 5;
+		public override uint MaxOccupants => 4;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 200,
@@ -21,6 +26,12 @@ namespace Facepunch.RTS.Buildings
 		{
 			"building.headquarters",
 			"tech.brewing"
+		};
+		public override ResourceGenerator Generator => new()
+		{
+			PerOccupant = true,
+			Resources = new() {{ ResourceType.Beer, 5 }},
+			Interval = 10f
 		};
 	}
 }

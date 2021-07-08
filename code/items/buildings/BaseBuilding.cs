@@ -5,7 +5,9 @@ namespace Facepunch.RTS.Buildings
     public abstract class BaseBuilding : BaseItem
 	{
 		public override Color Color => new Color( 0.8f, 0.8f, 0.8f );
+		public virtual HashSet<string> AllowedOccupants => new();
 		public virtual HashSet<string> Buildables => new();
+		public virtual ResourceGenerator Generator => null;
 		public virtual bool CanDepositResources => false;
 		public virtual float MinLineOfSight => 200f;
 		public virtual uint PopulationBoost => 0;

@@ -1,0 +1,36 @@
+﻿resourcehint {
+    position: absolute;
+    pointer-events: none;
+    flex-direction: column;
+    pixel-snap: 1;
+    display: flex;
+    color: white;
+    transform: translateX(-50%) translateY(-100%);
+    left: 0px;
+    top: 0px;
+
+    .container {
+        display: flex;
+
+        itemresourcevalue {
+            margin-right: 16px;
+
+            .icon {
+                background-color: white;
+                margin-right: 4px;
+                width: 24px;
+                height: 24px;
+            }
+
+            .label {
+                color: red;
+                font-weight: bold;
+                font-size: 17px;
+            }
+
+            &.hidden {
+                display: none;
+            }
+        }
+    }
+}

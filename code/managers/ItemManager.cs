@@ -53,6 +53,8 @@ namespace Facepunch.RTS
 
 					if ( valid )
 					{
+						ResourceHint.Send( caller, 2f, trace.EndPos, item.Costs, Color.Red );
+
 						caller.TakeResources( item );
 
 						var building = new BuildingEntity();
@@ -82,6 +84,7 @@ namespace Facepunch.RTS
 			{
 				if ( building.Player == caller && item.CanCreate( caller ) == RequirementError.Success )
 				{
+					ResourceHint.Send( caller, 2f, building.Position, item.Costs, Color.Red );
 					caller.TakeResources( item );
 					building.QueueItem( item );
 					item.OnQueued( caller );
@@ -105,6 +108,7 @@ namespace Facepunch.RTS
 
 					if ( item != null )
 					{
+						ResourceHint.Send( caller, 5f, building.Position, item.Costs, Color.Green );
 						caller.GiveResources( item );
 						building.UnqueueItem( queueId );
 						item.OnUnqueued( caller );
@@ -186,6 +190,9 @@ namespace Facepunch.RTS
 						return false;
 
 					if ( unit.IsUsingAbility() )
+						return false;
+
+					if ( !unit.CanOccupy( target ) )
 						return false;
 
 					unit.Occupy( target );

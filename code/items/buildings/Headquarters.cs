@@ -23,10 +23,7 @@ namespace Facepunch.RTS.Buildings
 		{
 			"unit.worker",
 			"unit.scientist",
-			"tech.brewing",
-			"tech.clothing",
-			"tech.wheels",
-			"tech.syringes"
+			"tech.machinery"
 		};
 	}
 }

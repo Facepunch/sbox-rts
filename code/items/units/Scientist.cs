@@ -43,7 +43,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.clothing"
+			"tech.extraction"
 		};
 		public override HashSet<string> Clothing => new()
 		{

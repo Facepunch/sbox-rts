@@ -14,6 +14,7 @@ namespace Facepunch.RTS
 {
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer
 	{
+		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
 		[Net] public List<UnitEntity> Occupants { get; private set; }
 		[Net] public bool IsUnderConstruction { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
@@ -27,6 +28,7 @@ namespace Facepunch.RTS
 		public Placeholder Placeholder { get; private set; }
 
 		#region UI
+		public EntityHudBar GeneratorBar { get; private set; }
 		public EntityHudBar HealthBar { get; private set; }
 		#endregion
 
@@ -224,6 +226,8 @@ namespace Facepunch.RTS
 		{
 			base.ServerTick();
 
+			TickGenerator();
+
 			if ( Queue.Count > 0 )
 			{
 				var firstItem = Queue[0];
@@ -254,6 +258,33 @@ namespace Facepunch.RTS
 				{
 					FindTargetUnit();
 				}
+			}
+		}
+
+		protected virtual void TickGenerator()
+		{
+			var generator = Item.Generator;
+			if ( generator == null ) return;
+
+			if ( NextGenerateResources )
+			{
+				var multiplier = 1;
+
+				if ( generator.PerOccupant )
+					multiplier = Occupants.Count;
+
+				if ( multiplier > 0 )
+				{
+					var resources = new Dictionary<ResourceType, int>();
+
+					foreach ( var kv in generator.Resources )
+						resources.Add( kv.Key, kv.Value * multiplier );
+
+					ResourceHint.Send( Player, 2f, Position, resources, Color.Green );
+					Player.GiveResources( resources );
+				}
+
+				NextGenerateResources = generator.Interval;
 			}
 		}
 
@@ -289,6 +320,11 @@ namespace Facepunch.RTS
 				SetModel( item.Model );
 				SetupPhysicsFromModel( PhysicsMotionType.Static );
 			}
+
+			if ( item.Generator != null )
+				NextGenerateResources = item.Generator.Interval;
+			else
+				NextGenerateResources = 0;
 
 			LineOfSight = item.MinLineOfSight + CollisionBounds.Size.Length;
 			MaxHealth = item.MaxHealth;
@@ -398,6 +434,12 @@ namespace Facepunch.RTS
 
 		protected override void AddHudComponents()
 		{
+			// We only want a generator bar is it's our building.
+			if ( IsLocalPlayers && Item.Generator != null )
+			{
+				GeneratorBar = UI.AddChild<EntityHudBar>( "generator" );
+			}
+
 			HealthBar = UI.AddChild<EntityHudBar>( "health" );
 
 			base.AddHudComponents();
@@ -414,6 +456,23 @@ namespace Facepunch.RTS
 			else
 			{
 				HealthBar.SetClass( "hidden", true );
+			}
+
+			if ( GeneratorBar != null )
+			{
+				var generator = Item.Generator;
+
+				if ( !generator.PerOccupant || Occupants.Count > 0 )
+				{
+					var timeLeft = NextGenerateResources.Relative;
+					GeneratorBar.Foreground.Style.Width = Length.Fraction( 1f - (timeLeft / Item.Generator.Interval) );
+					GeneratorBar.Foreground.Style.Dirty();
+					GeneratorBar.SetClass( "hidden", false );
+				}
+				else
+				{
+					GeneratorBar.SetClass( "hidden", true );
+				}
 			}
 
 			base.UpdateHudComponents();

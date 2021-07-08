@@ -63,6 +63,22 @@ metadata
 ]
 
 // 
+// Gamelib.DayNight.DayNightProp : Sandbox.ModelEntity 
+// 
+@PointClass model() = prop_daynight : ""
+[
+	model(studio) [report]: "World Model" : ""
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
+	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
+	disableshadows(boolean) [ group="Misc" ] : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." 
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	skinday(integer) : "Skin For Day" : 0 : ""
+	skinnight(integer) : "Skin For Night" : 1 : ""
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+]
+
+// 
 // Gamelib.DayNight.DayNightWindow : Sandbox.FuncBrush 
 // 
 @SolidClass 

@@ -21,7 +21,7 @@ namespace Facepunch.RTS.Buildings
 		{
 			"building.headquarters",
 			"building.terryfactory",
-			"tech.wheels"
+			"tech.machinery"
 		};
 		public override HashSet<string> Buildables => new()
 		{

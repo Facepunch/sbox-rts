@@ -48,6 +48,12 @@
                 }
             }
 
+            &.generator {
+                .foreground {
+                    background-color: yellow;
+                }
+            }
+
             &.gather {
                 .foreground {
                     background-color: steelblue;

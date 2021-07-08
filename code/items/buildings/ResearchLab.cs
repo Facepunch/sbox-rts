@@ -14,13 +14,20 @@ namespace Facepunch.RTS.Buildings
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 400,
-			[ResourceType.Metal] = 400,
-			[ResourceType.Plasma] = 300
+			[ResourceType.Metal] = 600
 		};
 		public override string Model => "models/buildings/research_lab/research_lab.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters"
+			"building.headquarters",
+			"building.terryfactory",
+			"tech.machinery"
+		};
+		public override HashSet<string> Buildables => new()
+		{
+			"tech.brewing",
+			"tech.extraction",
+			"tech.syringes"
 		};
 	}
 }

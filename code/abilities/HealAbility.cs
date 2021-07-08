@@ -15,12 +15,6 @@ namespace Facepunch.RTS.Abilities
 		public override float AreaOfEffect => 500f;
 		public virtual float HealAmount => 10f;
 
-		// TODO: This is just a test, it won't really require wheels.
-		public override HashSet<string> Dependencies => new()
-		{
-			"tech.wheels"
-		};
-
 		public override void OnFinished()
 		{
 			if ( Host.IsServer )

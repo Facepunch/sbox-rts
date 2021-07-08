@@ -143,11 +143,11 @@ namespace Facepunch.RTS
 			return CanAfford( item.Costs, out missingResource );
 		}
 
-		public void GiveResources( Dictionary<ResourceType, int> resources )
+		public void GiveResources( Dictionary<ResourceType, int> resources, int multiplier = 1 )
 		{
 			foreach ( var kv in resources )
 			{
-				GiveResource( kv.Key, kv.Value );
+				GiveResource( kv.Key, kv.Value * multiplier );
 			}
 		}
 

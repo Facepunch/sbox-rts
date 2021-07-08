@@ -277,6 +277,16 @@ namespace Facepunch.RTS
 			return moveGroup;
 		}
 
+		public bool CanOccupy( BuildingEntity building )
+		{
+			var allowedOccupants = building.Item.AllowedOccupants;
+
+			if ( allowedOccupants.Count == 0 )
+				return true;
+
+			return allowedOccupants.Contains( Item.UniqueId );
+		}
+
 		public bool Occupy( BuildingEntity building, MoveGroup moveGroup = null )
 		{
 			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
@@ -802,6 +812,8 @@ namespace Facepunch.RTS
 
 		private void DepositResources()
 		{
+			ResourceHint.Send( Player, 2f, Position, Carrying, Color.Green );
+
 			foreach ( var kv in Carrying )
 			{
 				Player.GiveResource( kv.Key, kv.Value );

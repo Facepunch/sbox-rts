@@ -43,7 +43,8 @@ namespace Facepunch.RTS.Units
 			"building.silo",
 			"building.turret",
 			"building.terryfactory",
-			"building.vehiclefactory"
+			"building.vehiclefactory",
+			"building.researchlab"
 		};
 		public override HashSet<string> Clothing => new()
 		{
