@@ -5,8 +5,8 @@ using System;
 namespace Gamelib.DayNight
 {
 	[Library("prop_daynight")]
-	[Hammer.Model(Model = "models/sbox_props/street_lamp/street_lamp_light_unit.vmdl" , MaterialGroup = "default")]
-	public class PropDayNight : ModelEntity
+	[Hammer.Model(Model = "" , MaterialGroup = "default")]
+	public class DayNightProp : ModelEntity
 	{
 		[Property(Title = "Skin For Day")]
 		public int SkinDay { get; set; } = 0;
