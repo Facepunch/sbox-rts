@@ -38,7 +38,6 @@ namespace Facepunch.RTS.Units
 		public virtual uint Population => 1;
 		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";
-		public virtual HashSet<string> Abilities => new();
 		public virtual HashSet<string> Buildables => new();
 
 		public override void OnQueued( Player player )

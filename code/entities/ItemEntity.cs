@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gamelib.Extensions;
+using Facepunch.RTS.Abilities;
 
 namespace Facepunch.RTS
 {
@@ -14,7 +15,9 @@ namespace Facepunch.RTS
 		public virtual bool CanMultiSelect => false;
 		public virtual bool HasSelectionGlow => true;
 
-		[Net] public uint ItemId { get; set; }
+		public Dictionary<string, BaseAbility> Abilities { get; private set; }
+		public BaseAbility UsingAbility { get; private set; }
+		[Net, OnChangedCallback] public uint ItemId { get; set; }
 		[Net] public Player Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }
 		public EntityHudAnchor UI { get; private set; }
@@ -37,6 +40,70 @@ namespace Facepunch.RTS
 		public ItemEntity()
 		{
 			Transmit = TransmitType.Always;
+		}
+
+		public BaseAbility GetAbility( string id )
+		{
+			if ( Abilities.TryGetValue( id, out var ability ) )
+				return ability;
+
+			return null;
+		}
+
+		public bool IsUsingAbility()
+		{
+			return (UsingAbility != null);
+		}
+
+		public virtual void StartAbility( BaseAbility ability, AbilityTargetInfo info )
+		{
+			CancelAbility();
+
+			ability.LastUsedTime = 0;
+			ability.NextUseTime = ability.Cooldown;
+			ability.TargetInfo = info;
+
+			ability.OnStarted();
+
+			if ( IsServer )
+			{
+				ClientStartAbility( To.Single( Player ), ability.UniqueId, (Entity)info.Target, info.Origin );
+			}
+
+			UsingAbility = ability;
+
+			if ( ability.Cooldown == 0f )
+			{
+				FinishAbility();
+			}
+		}
+
+		public virtual void FinishAbility()
+		{
+			if ( UsingAbility != null )
+			{
+				UsingAbility.OnFinished();
+				UsingAbility = null;
+
+				if ( IsServer )
+				{
+					ClientFinishAbility( To.Single( Player ) );
+				}
+			}
+		}
+
+		public virtual void CancelAbility()
+		{
+			if ( UsingAbility != null )
+			{
+				UsingAbility.OnCancelled();
+				UsingAbility = null;
+
+				if ( IsServer )
+				{
+					ClientCancelAbility( To.Single( Player ) );
+				}
+			}
 		}
 
 		public bool IsEnemy( ISelectable other )
@@ -112,6 +179,35 @@ namespace Facepunch.RTS
 			}
 		}
 
+		[Event.Tick]
+		protected virtual void Tick()
+		{
+			if ( UsingAbility != null )
+			{
+				UsingAbility.Tick();
+			}
+		}
+
+		[Event.Tick.Server]
+		protected virtual void ServerTick()
+		{
+			var ability = UsingAbility;
+			if ( ability == null ) return;
+
+			if ( ability.LastUsedTime >= ability.Duration )
+			{
+				FinishAbility();
+			}
+		}
+
+		[Event.Tick.Client]
+		protected virtual void ClientTick() { }
+
+		protected virtual void OnItemIdChanged()
+		{
+			CreateAbilities();
+		}
+
 		protected virtual void AddHudComponents() { }
 
 		protected virtual void UpdateHudComponents() { }
@@ -123,6 +219,7 @@ namespace Facepunch.RTS
 
 		protected override void OnDestroy()
 		{
+			if ( IsServer ) CancelAbility();
 			if ( IsClient ) UI.Delete();
 
 			base.OnDestroy();
@@ -152,7 +249,44 @@ namespace Facepunch.RTS
 
 		protected virtual void OnPlayerAssigned( Player player) { }
 
-		protected virtual void OnItemChanged( T item ) { }
+		protected virtual void OnItemChanged( T item )
+		{
+			CreateAbilities();
+		}
+
+		protected virtual void CreateAbilities()
+		{
+			Abilities = new();
+
+			foreach ( var id in Item.Abilities )
+			{
+				var ability = AbilityManager.Create( id );
+				ability.Initialize( id, this );
+				Abilities[id] = ability;
+			}
+		}
+
+		[ClientRpc]
+		private void ClientStartAbility( string id, Entity target, Vector3 origin )
+		{
+			StartAbility( GetAbility( id ), new AbilityTargetInfo()
+			{
+				Target = target as ISelectable,
+				Origin = origin
+			} );
+		}
+
+		[ClientRpc]
+		private void ClientFinishAbility()
+		{
+			FinishAbility();
+		}
+
+		[ClientRpc]
+		private void ClientCancelAbility()
+		{
+			CancelAbility();
+		}
 	}
 }
 

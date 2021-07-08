@@ -220,9 +220,10 @@ namespace Facepunch.RTS
 			return !IsUnderConstruction;
 		}
 
-		[Event.Tick.Server]
-		public virtual void ServerTick()
+		protected override void ServerTick()
 		{
+			base.ServerTick();
+
 			if ( Queue.Count > 0 )
 			{
 				var firstItem = Queue[0];

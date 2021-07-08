@@ -66,7 +66,6 @@ namespace Facepunch.RTS
 
 			RankManager.Initialize();
 			ItemManager.Initialize();
-			AbilityManager.Initialize();
 			
 			if ( IsClient )
 			{

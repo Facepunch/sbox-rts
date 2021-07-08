@@ -13,7 +13,7 @@ namespace Facepunch.RTS.Units
 		public override int BuildTime => 10;
 		public override HashSet<string> Abilities => new()
 		{
-			"ability.heal"
+			"ability_heal"
 		};
 		public override string[] MoveSounds => new string[]
 		{

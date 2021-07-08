@@ -10,6 +10,9 @@ namespace Facepunch.RTS
 		NotEnoughMetal = 3,
 		NotEnoughPlasma = 4,
 		NotEnoughPopulation = 5,
-		Unknown
+		InvalidTarget = 6,
+		InvalidPlayer = 7,
+		Cooldown = 8,
+		Unknown = 9
 	}
 }

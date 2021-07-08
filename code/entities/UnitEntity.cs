@@ -1,7 +1,6 @@
 ﻿using Sandbox;
 using Facepunch.RTS.Units;
 using System.Collections.Generic;
-using Facepunch.RTS.Buildings;
 using System.Linq;
 using System;
 using Gamelib.Extensions;
@@ -9,6 +8,7 @@ using Sandbox.UI;
 using Gamelib.FlowFields;
 using Gamelib.FlowFields.Grid;
 using Facepunch.RTS.Ranks;
+using Facepunch.RTS.Abilities;
 
 namespace Facepunch.RTS
 {
@@ -184,6 +184,13 @@ namespace Facepunch.RTS
 		{
 			LastDamageTaken = info;
 			base.TakeDamage( info );
+		}
+
+		public override void StartAbility( BaseAbility ability, AbilityTargetInfo info )
+		{
+			if ( IsServer ) ClearTarget();
+
+			base.StartAbility( ability, info );
 		}
 
 		public override void ClientSpawn()
@@ -363,9 +370,9 @@ namespace Facepunch.RTS
 			OnTargetChanged();
 		}
 
-		public float LookAtEntity( Entity target, float? interpolation = null )
+		public float LookAtPosition( Vector3 position, float? interpolation = null )
 		{
-			var targetDirection = target.Position - Position;
+			var targetDirection = position - Position;
 			var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
 
 			if ( interpolation.HasValue )
@@ -374,6 +381,11 @@ namespace Facepunch.RTS
 				Rotation = targetRotation;
 
 			return Rotation.Distance( targetRotation );
+		}
+
+		public float LookAtEntity( Entity target, float? interpolation = null )
+		{
+			return LookAtPosition( target.Position, interpolation );
 		}
 
 		public void MakeVisible( bool isVisible )
@@ -464,6 +476,37 @@ namespace Facepunch.RTS
 			base.OnDestroy();
 		}
 
+		protected override void ServerTick()
+		{
+			base.ServerTick();
+
+			Velocity = 0;
+
+			_animationValues.Start();
+
+			if ( !IsUsingAbility() )
+			{
+				var isTargetInRange = IsTargetInRange();
+
+				if ( !Target.IsValid() || !isTargetInRange )
+					TickFindAndMove();
+				else
+					TickInteractWithTarget();
+			}
+			else
+			{
+				TickAbility();
+			}
+
+			if ( Weapon.IsValid() )
+			{
+				_animationValues.Attacking = Weapon.LastAttack < 0.1f;
+				_animationValues.HoldType = Weapon.HoldType;
+			}
+
+			_animationValues.Finish( this );
+		}
+
 		protected override void OnItemChanged( BaseUnit item )
 		{
 			if ( !string.IsNullOrEmpty( item.Model ) )
@@ -489,7 +532,7 @@ namespace Facepunch.RTS
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
 			Pathfinder = PathManager.GetPathfinder( item.NodeSize );
-			
+
 			if ( item.UseModelPhysics )
 				SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 			else
@@ -611,29 +654,6 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[Event.Tick.Server]
-		private void ServerTick()
-		{
-			Velocity = 0;
-
-			_animationValues.Start();
-
-			var isTargetInRange = IsTargetInRange();
-
-			if ( !Target.IsValid() || !isTargetInRange )
-				TickFindAndMove();
-			else
-				TickInteractWithTarget();
-
-			if ( Weapon.IsValid() )
-			{
-				_animationValues.Attacking = Weapon.LastAttack < 0.1f;
-				_animationValues.HoldType = Weapon.HoldType;
-			}
-
-			_animationValues.Finish( this );
-		}
-
 		private void TickInteractWithTarget()
 		{
 			var lookAtDistance = 0f;
@@ -673,6 +693,16 @@ namespace Facepunch.RTS
 			}
 
 			TargetPosition = null;
+		}
+
+		private void TickAbility()
+		{
+			var ability = UsingAbility;
+
+			if ( ability == null || !ability.LookAtTarget )
+				return;
+
+			LookAtPosition( ability.TargetInfo.Origin, Time.Delta * Item.RotateToTargetSpeed );
 		}
 
 		private void TickFindAndMove()
@@ -821,9 +851,10 @@ namespace Facepunch.RTS
 			FindResourceDepo();
 		}
 
-		[Event.Tick.Client]
-		private void ClientTick()
+		protected override void ClientTick()
 		{
+			base.ClientTick();
+
 			if ( IsInsideBuilding )
 			{
 				Circle.EnableDrawing = false;

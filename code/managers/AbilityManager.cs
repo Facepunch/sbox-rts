@@ -8,23 +8,11 @@ namespace Facepunch.RTS
 {
 	public static partial class AbilityManager
 	{
-		public struct LocationSelector
+		private static BaseAbility SelectingTargetFor { get; set; }
+
+		public static bool IsSelectingTarget()
 		{
-			public ISelectable User;
-			public BaseAbility Ability;
-		}
-
-		public static Dictionary<string, BaseAbility> Table { get; private set; }
-		public static List<BaseAbility> List { get; private set; }
-
-		public static LocationSelector? Selector { get; private set; }
-
-		public static T Find<T>( string id ) where T : BaseAbility
-		{
-			if ( Table.TryGetValue( id, out var item ) )
-				return (item as T);
-
-			return null;
+			return (SelectingTargetFor != null);
 		}
 
 		[ServerCmd]
@@ -41,10 +29,10 @@ namespace Facepunch.RTS
 			if ( Entity.FindByIndex( targetId ) is not ISelectable target )
 				return;
 
-			var ability = Find<BaseAbility>( abilityId );
+			var ability = unit.GetAbility( abilityId );
 			if ( ability == null ) return;
 
-			if ( !ability.IsTargetValid( caller, target ) )
+			if ( !ability.IsTargetValid( target ) )
 				return;
 
 			if ( unit.Player == caller && unit.Item.Abilities.Contains( abilityId ) )
@@ -54,15 +42,14 @@ namespace Facepunch.RTS
 				if ( unit.Position.Distance( position ) > ability.MaxDistance )
 					return;
 
-				if ( ability.CanUse( caller ) == RequirementError.Success )
+				if ( ability.CanUse() == RequirementError.Success )
 				{
 					caller.TakeResources( ability );
 
-					ability.Use( caller, new UseAbilityInfo()
+					unit.StartAbility( ability, new AbilityTargetInfo()
 					{
-						user = unit,
-						target = target,
-						origin = position
+						Target = target,
+						Origin = position
 					} );
 				}
 			}
@@ -79,7 +66,8 @@ namespace Facepunch.RTS
 			if ( Entity.FindByIndex( entityId ) is not UnitEntity unit )
 				return;
 
-			var ability = Find<BaseAbility>( abilityId );
+
+			var ability = unit.GetAbility( abilityId );
 			if ( ability == null ) return;
 
 			if ( ability.TargetType != AbilityTargetType.None )
@@ -92,15 +80,14 @@ namespace Facepunch.RTS
 				if ( unit.Position.Distance( position ) > ability.MaxDistance )
 					return;
 
-				if ( ability.CanUse( caller ) == RequirementError.Success )
+				if ( ability.CanUse() == RequirementError.Success )
 				{
 					caller.TakeResources( ability );
 
-					ability.Use( caller, new UseAbilityInfo()
+					unit.StartAbility( ability, new AbilityTargetInfo()
 					{
-						user = unit,
-						target = null,
-						origin = position
+						Target = null,
+						Origin = position
 					} );
 				}
 			}
@@ -117,7 +104,7 @@ namespace Facepunch.RTS
 			if ( Entity.FindByIndex( entityId ) is not UnitEntity unit )
 				return;
 
-			var ability = Find<BaseAbility>( abilityId );
+			var ability = unit.GetAbility( abilityId );
 			if ( ability == null ) return;
 
 			if ( ability.TargetType != AbilityTargetType.Self )
@@ -125,123 +112,93 @@ namespace Facepunch.RTS
 
 			if ( unit.Player == caller && unit.Item.Abilities.Contains( abilityId ) )
 			{
-				if ( ability.CanUse( caller ) == RequirementError.Success )
+				if ( ability.CanUse() == RequirementError.Success )
 				{
 					caller.TakeResources( ability );
 
-					ability.Use( caller, new UseAbilityInfo() {
-						user = unit,
-						target = unit,
-						origin = unit.Position
+					unit.StartAbility( ability, new AbilityTargetInfo()
+					{
+						Target = unit,
+						Origin = unit.Position
 					} );
 				}
 			}
 		}
 
-		public static void Initialize()
+		public static BaseAbility Create( string id )
 		{
-			BuildTable();
+			return Library.Create<BaseAbility>( id );
 		}
 
-		private static void BuildTable()
+		public static void SelectTarget( BaseAbility ability )
 		{
-			Table = new();
-			List = new();
-
-			var list = new List<BaseAbility>();
-
-			foreach ( var type in Library.GetAll<BaseAbility>() )
-			{
-				var ability = Library.Create<BaseAbility>( type );
-				list.Add( ability );
-			}
-
-			for ( var i = 0; i < list.Count; i++ )
-			{
-				var ability = list[i];
-
-				Table.Add( ability.UniqueId, ability );
-				List.Add( ability );
-
-				Log.Info( $"Adding {ability.UniqueId} to the available abilities (id = {i})" );
-			}
-
-			List.Sort();
-		}
-
-		public static void SelectLocation( ISelectable user, BaseAbility ability )
-		{
-			Selector = new LocationSelector()
-			{
-				User = user,
-				Ability = ability
-			};
+			SelectingTargetFor = ability;
 		}
 
 		[Event.Tick.Client]
 		private static void ClientTick()
 		{
-			if ( !Selector.HasValue ) return;
+			if ( SelectingTargetFor == null ) return;
 
-			var selector = Selector.Value;
+			var ability = SelectingTargetFor;
 			var player = Local.Pawn as Player;
 
-			if ( selector.User == null || selector.User.Health == 0f )
+			if ( ability.User == null || ability.User.Health == 0f )
 			{
-				Selector = null;
+				SelectingTargetFor = null;
 				return;
 			}
 
 			var cursorOrigin = Input.Cursor.Origin;
 			var cursorAim = Input.Cursor.Direction;
 
-			if ( selector.Ability.TargetType == AbilityTargetType.None )
+			if ( ability.TargetType == AbilityTargetType.None )
 			{
 				var trace = TraceExtension.RayDirection( cursorOrigin, cursorAim )
 					.WithTag( "flowfield" )
 					.Run();
 
-				if ( selector.User.Position.Distance( trace.EndPos ) < selector.Ability.MaxDistance )
+				if ( ability.User.Position.Distance( trace.EndPos ) < ability.MaxDistance )
 				{
-					DebugOverlay.Sphere( trace.EndPos, selector.Ability.AreaOfEffect, Color.Green );
+					DebugOverlay.Sphere( trace.EndPos, ability.AreaOfEffect, Color.Green );
 
 					if ( Input.Released( InputButton.Attack1 ) )
 					{
-						Selector = null;
-						UseAtLocation( selector.User.NetworkIdent, selector.Ability.UniqueId, trace.EndPos.ToCSV() );
+						SelectingTargetFor = null;
+						UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPos.ToCSV() );
 					}
 				}
 				else
 				{
-					DebugOverlay.Sphere( trace.EndPos, selector.Ability.AreaOfEffect, Color.Red );
+					DebugOverlay.Sphere( trace.EndPos, ability.AreaOfEffect, Color.Red );
 				}
 			}
 			else
 			{
 				var trace = TraceExtension.RayDirection( cursorOrigin, cursorAim ).Run();
 
-				if ( trace.Entity is ISelectable target && target.Position.Distance( selector.User.Position ) < selector.Ability.MaxDistance )
+				if ( trace.Entity is ISelectable target && target.Position.Distance( ability.User.Position ) < ability.MaxDistance )
 				{
-					if ( selector.Ability.IsTargetValid( player, target ) )
+					if ( ability.IsTargetValid( target ) )
 					{
 						if ( Input.Released( InputButton.Attack1 ) )
 						{
-							Selector = null;
-							UseOnTarget( selector.User.NetworkIdent, selector.Ability.UniqueId, target.NetworkIdent );
+							SelectingTargetFor = null;
+							UseOnTarget( ability.User.NetworkIdent, ability.UniqueId, target.NetworkIdent );
 						}
 
-						DebugOverlay.Sphere( trace.EndPos, selector.Ability.AreaOfEffect, Color.Green );
+						DebugOverlay.Sphere( trace.EndPos, ability.AreaOfEffect, Color.Green );
 					}
 				}
 				else
 				{
-					DebugOverlay.Sphere( trace.EndPos, selector.Ability.AreaOfEffect, Color.Red );
+					DebugOverlay.Sphere( trace.EndPos, ability.AreaOfEffect, Color.Red );
 				}
 			}
 
 			if ( Input.Released( InputButton.Attack2 ) )
 			{
-				Selector = null;
+				SelectingTargetFor = null;
 			}
 		}
 	}

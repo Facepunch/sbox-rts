@@ -13,6 +13,7 @@ namespace Facepunch.RTS
 		public virtual Color Color => Color.White;
 		public virtual Texture Icon => null;
 		public virtual int BuildTime => 0;
+		public virtual HashSet<string> Abilities => new();
 		public virtual Dictionary<ResourceType, int> Costs => new();
 		public virtual HashSet<string> Dependencies => new();
 

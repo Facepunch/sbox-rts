@@ -69,7 +69,7 @@ namespace Facepunch.RTS
 		[Event.BuildInput]
 		private void BuildInput( InputBuilder builder )
 		{
-			if ( ItemManager.Ghost.IsValid() || AbilityManager.Selector.HasValue )
+			if ( ItemManager.IsPlacingBuilding() || AbilityManager.IsSelectingTarget() )
 				return;
 
 			if ( builder.Pressed( InputButton.Attack1 ) )

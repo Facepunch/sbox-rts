@@ -22,6 +22,11 @@ namespace Facepunch.RTS
 			BuildTable();
 		}
 
+		public static bool IsPlacingBuilding()
+		{
+			return Ghost.IsValid();
+		}
+
 		[ServerCmd]
 		public static void StartBuilding( int workerId, uint itemId, string cursorOrigin, string cursorAim )
 		{
@@ -122,6 +127,9 @@ namespace Facepunch.RTS
 			{
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
+					if ( unit.IsUsingAbility() )
+						return false;
+
 					unit.Attack( target );
 					return true;
 				} );
@@ -172,13 +180,17 @@ namespace Facepunch.RTS
 				if ( target.Player != caller ) return;
 				if ( !target.CanOccupyUnits ) return;
 
-				foreach ( var entity in caller.Selection )
+				caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( entity is UnitEntity unit && unit.Item.CanEnterBuildings )
-					{
-						unit.Occupy( target );
-					}
-				}
+					if ( !unit.Item.CanEnterBuildings )
+						return false;
+
+					if ( unit.IsUsingAbility() )
+						return false;
+
+					unit.Occupy( target );
+					return true;
+				} );
 			}
 		}
 
@@ -199,6 +211,9 @@ namespace Facepunch.RTS
 
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
+					if ( unit.IsUsingAbility() )
+						return false;
+
 					unit.Deposit( building );
 					return true;
 				} );
@@ -226,6 +241,9 @@ namespace Facepunch.RTS
 				var resourceType = resource.Resource;
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
+					if ( unit.IsUsingAbility() )
+						return false;
+
 					if ( unit.CanGather( resourceType ) )
 					{
 						unit.Gather( resource );
@@ -259,6 +277,9 @@ namespace Facepunch.RTS
 				{
 					var units = caller.ForEachSelected<UnitEntity>( unit =>
 					{
+						if ( unit.IsUsingAbility() )
+							return false;
+
 						if ( unit.CanConstruct )
 						{
 							unit.Construct( building );
@@ -292,7 +313,13 @@ namespace Facepunch.RTS
 			if ( entries.Count == 3 )
 			{
 				var position = new Vector3( entries[0], entries[1], entries[2] );
-				var units = caller.GetSelected<UnitEntity>();
+				var units = caller.ForEachSelected<UnitEntity>( unit =>
+				{
+					if ( unit.IsUsingAbility() )
+						return false;
+
+					return true;
+				} );
 
 				if ( units.Count > 0 )
 				{

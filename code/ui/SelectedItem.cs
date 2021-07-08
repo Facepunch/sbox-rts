@@ -15,11 +15,21 @@ namespace Facepunch.RTS
 	public class ItemCommandAbility : ItemCommand
 	{
 		public BaseAbility Ability { get; private set; }
+		public Panel Countdown { get; private set; }
+		public ItemCommandAbility() : base()
+		{
+			Countdown = Add.Panel( "countdown" );
+		}
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			var player = (Local.Pawn as Player);
-			var status = Ability.CanUse( player );
+			if ( Selectable.IsUsingAbility() )
+			{
+				// We can't use another while once is being used.
+				return;
+			}
+			
+			var status = Ability.CanUse();
 
 			if ( status != RequirementError.Success )
 			{
@@ -30,7 +40,7 @@ namespace Facepunch.RTS
 			if ( Ability.TargetType == AbilityTargetType.Self )
 				AbilityManager.UseOnSelf( Selectable.NetworkIdent, Ability.UniqueId );
 			else
-				AbilityManager.SelectLocation( Selectable, Ability );
+				AbilityManager.SelectTarget( Ability );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -57,6 +67,18 @@ namespace Facepunch.RTS
 
 				Style.Dirty();
 			}
+		}
+
+		public override void Tick()
+		{
+			var cooldownTimeLeft = Ability.GetCooldownTimeLeft();
+
+			Countdown.Style.Width = Length.Percent( (100f / Ability.Cooldown) * cooldownTimeLeft );
+			Countdown.Style.Dirty();
+
+			Countdown.SetClass( "hidden", cooldownTimeLeft == 0f );
+
+			base.Tick();
 		}
 	}
 
@@ -399,14 +421,12 @@ namespace Facepunch.RTS
 
 			foreach ( var v in abilities )
 			{
-				var ability = AbilityManager.Find<BaseAbility>( v );
+				var ability = Item.GetAbility( v );
 
-				if ( ability.HasDependencies( player ) )
+				if ( ability != null && ability.HasDependencies() )
 				{
 					var button = AddChild<ItemCommandAbility>( "command" );
-
 					button.Update( Item, ability );
-
 					Buttons.Add( button );
 				}
 			}

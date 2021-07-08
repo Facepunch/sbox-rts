@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS.Abilities
 {
-	[Library]
+	[Library( "ability_heal" )]
 	public class HealAbility : BaseAbility
 	{
 		public override string Name => "Heal";
-		public override string UniqueId => "ability.heal";
 		public override string Description => "Heal friendly units in range.";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
@@ -22,19 +21,23 @@ namespace Facepunch.RTS.Abilities
 			"tech.wheels"
 		};
 
-		public override void Use( Player player, UseAbilityInfo info )
+		public override void OnFinished()
 		{
-			var entities = Physics.GetEntitiesInSphere( info.origin, AreaOfEffect / 2f );
-
-			foreach ( var entity in entities )
+			if ( Host.IsServer )
 			{
-				if ( entity is UnitEntity unit && unit.Player == player )
+				var targetInfo = TargetInfo;
+				var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffect / 2f );
+
+				foreach ( var entity in entities )
 				{
-					unit.GiveHealth( HealAmount );
+					if ( entity is UnitEntity unit && unit.Player == User.Player )
+					{
+						unit.GiveHealth( HealAmount );
+					}
 				}
 			}
 
-			base.Use( player, info );
+			base.OnFinished();
 		}
 	}
 }
