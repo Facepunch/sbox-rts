@@ -12,6 +12,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Description => "Increases the maximum population of your empire.";
 		public override uint PopulationBoost => 6;
 		public override uint MaxOccupants => 3;
+		public override float OccupantDamageScale => 0.5f;
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
@@ -21,8 +22,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/pub/pub.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters",
-			"tech.brewing"
+			"building.headquarters"
 		};
 	}
 }

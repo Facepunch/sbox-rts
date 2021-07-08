@@ -14,6 +14,7 @@ namespace Facepunch.RTS
 	{
 		public virtual bool CanMultiSelect => false;
 		public virtual bool HasSelectionGlow => true;
+		public virtual int AttackPriority => 0;
 
 		public Dictionary<string, BaseAbility> Abilities { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }

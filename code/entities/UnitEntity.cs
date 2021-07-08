@@ -1,14 +1,14 @@
-﻿using Sandbox;
+﻿using Facepunch.RTS.Abilities;
+using Facepunch.RTS.Ranks;
 using Facepunch.RTS.Units;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using Gamelib.Extensions;
-using Sandbox.UI;
 using Gamelib.FlowFields;
 using Gamelib.FlowFields.Grid;
-using Facepunch.RTS.Ranks;
-using Facepunch.RTS.Abilities;
+using Sandbox;
+using Sandbox.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Facepunch.RTS
 {
@@ -36,10 +36,12 @@ namespace Facepunch.RTS
 		}
 
 		public override bool HasSelectionGlow => false;
+		public override int AttackPriority => 1;
+
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
+		[Net, Local] public BuildingEntity Occupying { get; private set; }
 		[Net, Local] public float GatherProgress { get; private set; }
 		[Net, Local] public bool IsGathering { get; private set; }
-		[Net, Local] public bool IsInsideBuilding { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
 		[Net, OnChangedCallback] public int Kills { get; set; }
@@ -73,7 +75,9 @@ namespace Facepunch.RTS
 		public EntityHudIcon RankIcon { get; private set; }
 		#endregion
 
+		private List<ISelectable> _targetBuffer = new();
 		private AnimationValues _animationValues;
+		private RealTimeUntil _nextFindTarget;
 
 		public UnitEntity() : base()
 		{
@@ -104,6 +108,18 @@ namespace Facepunch.RTS
 		public bool CanGather( ResourceType type )
 		{
 			return Item.Gatherables.Contains( type );
+		}
+
+		public bool IsTargetValid()
+		{
+			if ( !Target.IsValid() ) return false;
+
+			if ( Target is UnitEntity unit )
+			{
+				return !unit.Occupying.IsValid();
+			}
+
+			return true;
 		}
 
 		public void GiveHealth( float health )
@@ -170,19 +186,28 @@ namespace Facepunch.RTS
 
 		public override void OnKilled()
 		{
-			base.OnKilled();
+			var damageInfo = LastDamageTaken;
 
-			if ( LastDamageTaken.Attacker is UnitEntity unit )
+			if ( damageInfo.Attacker is UnitEntity unit )
 			{
 				unit.AddKill();
 			}
 
-			BecomeRagdoll( Velocity, LastDamageTaken.Flags, LastDamageTaken.Position, LastDamageTaken.Force, GetHitboxBone( LastDamageTaken.HitboxIndex ) );
+			BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, GetHitboxBone( damageInfo.HitboxIndex ) );
+
+			if ( Occupying.IsValid() )
+			{
+				Occupying.EvictUnit( this );
+			}
+
+			LifeState = LifeState.Dead;
+			Delete();
 		}
 
 		public override void TakeDamage( DamageInfo info )
 		{
 			LastDamageTaken = info;
+
 			base.TakeDamage( info );
 		}
 
@@ -238,6 +263,11 @@ namespace Facepunch.RTS
 		public bool IsInMoveGroup( UnitEntity other )
 		{
 			return (other.MoveGroup == MoveGroup);
+		}
+
+		public void Attack( ISelectable target, bool autoFollow = true )
+		{
+			Attack( target as Entity, autoFollow );
 		}
 
 		public void Attack( Entity target, bool autoFollow = true )
@@ -454,7 +484,7 @@ namespace Facepunch.RTS
 		{
 			Deselect();
 			SetParent( this );
-			IsInsideBuilding = true;
+			Occupying = building;
 			EnableDrawing = false;
 			EnableAllCollisions = false;
 		}
@@ -462,7 +492,7 @@ namespace Facepunch.RTS
 		public virtual void OnLeaveBuilding( BuildingEntity building )
 		{
 			SetParent( null );
-			IsInsideBuilding = false;
+			Occupying = null;
 			EnableDrawing = true;
 			EnableAllCollisions = true;
 		}
@@ -494,18 +524,24 @@ namespace Facepunch.RTS
 
 			_animationValues.Start();
 
-			if ( !IsUsingAbility() )
+			if ( !Occupying.IsValid() )
 			{
-				var isTargetInRange = IsTargetInRange();
+				if ( !IsUsingAbility() )
+				{
+					var isTargetInRange = IsTargetInRange();
+					var isTargetValid = IsTargetValid();
 
-				if ( !Target.IsValid() || !isTargetInRange )
-					TickFindAndMove();
+					if ( !isTargetValid || !isTargetInRange )
+						TickMoveToTarget( isTargetValid );
+					else
+						TickInteractWithTarget();
+
+					TickFindTarget();
+				}
 				else
-					TickInteractWithTarget();
-			}
-			else
-			{
-				TickAbility();
+				{
+					TickAbility();
+				}
 			}
 
 			if ( Weapon.IsValid() )
@@ -650,17 +686,34 @@ namespace Facepunch.RTS
 				ClearTarget();
 		}
 
-		private void FindTargetUnit()
+		private void FindTargetEnemy()
 		{
 			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRange * 0.5f );
-			
+
+			_targetBuffer.Clear();
+
 			foreach ( var entity in entities )
 			{
-				if ( entity is UnitEntity unit && IsEnemy( unit ) )
+				if ( entity is ISelectable selectable && IsEnemy( selectable ) )
 				{
-					Attack( unit, false );
-					return;
+					_targetBuffer.Add( selectable );
 				}
+			}
+
+			_targetBuffer.OrderByDescending( s => s.AttackPriority ).ThenBy( s => s.Position.Distance( Position ) );
+
+			if ( _targetBuffer.Count > 0 )
+			{
+				Attack( _targetBuffer[0], false );
+			}
+		}
+
+		private void TickFindTarget()
+		{
+			if ( !IsSelected && !FollowTarget && Weapon.IsValid() && _nextFindTarget )
+			{
+				FindTargetEnemy();
+				_nextFindTarget = 1;
 			}
 		}
 
@@ -715,9 +768,9 @@ namespace Facepunch.RTS
 			LookAtPosition( ability.TargetInfo.Origin, Time.Delta * Item.RotateToTargetSpeed );
 		}
 
-		private void TickFindAndMove()
+		private void TickMoveToTarget( bool isTargetValid )
 		{
-			if ( Target.IsValid() && FollowTarget )
+			if ( isTargetValid && FollowTarget )
 			{
 				TargetPosition = Target.Position;
 			}
@@ -757,8 +810,6 @@ namespace Facepunch.RTS
 			{
 				if ( Target is ResourceEntity )
 					FindTargetResource();
-				else if ( Weapon.IsValid() )
-					FindTargetUnit();
 			}
 
 			if ( pathDirection.Length > 0 )
@@ -790,6 +841,7 @@ namespace Facepunch.RTS
 			}
 
 			Position += Velocity;
+
 			AlignToGround();
 
 			var walkVelocity = Velocity.WithZ( 0 );
@@ -867,7 +919,7 @@ namespace Facepunch.RTS
 		{
 			base.ClientTick();
 
-			if ( IsInsideBuilding )
+			if ( Occupying.IsValid() )
 			{
 				Circle.EnableDrawing = false;
 				EnableDrawing = false;

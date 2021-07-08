@@ -80,6 +80,17 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public void EvictAll()
+		{
+			for ( int i = 0; i < Occupants.Count; i++ )
+			{
+				var occupant = Occupants[i];
+				occupant.OnLeaveBuilding( this );
+			}
+
+			Occupants.Clear();
+		}
+
 		public void Attack( Entity target )
 		{
 			Target = target;
@@ -220,6 +231,37 @@ namespace Facepunch.RTS
 		public override bool CanSelect()
 		{
 			return !IsUnderConstruction;
+		}
+
+		public override void OnKilled()
+		{
+			LifeState = LifeState.Dead;
+			Delete();
+		}
+
+		public override void TakeDamage( DamageInfo info )
+		{
+			DamageOccupants( info );
+
+			base.TakeDamage( info );
+		}
+
+		protected virtual void DamageOccupants( DamageInfo info )
+		{
+			var scale = Item.OccupantDamageScale;
+			if ( scale <= 0f ) return;
+
+			var occupants = Occupants;
+			var occupantsCount = occupants.Count;
+			if ( occupantsCount == 0 ) return;
+
+			info.Damage *= scale;
+
+			for ( var i = occupantsCount - 1; i >= 0; i-- )
+			{
+				var occupant = occupants[i];
+				occupant.TakeDamage( info );
+			}
 		}
 
 		protected override void ServerTick()
@@ -363,6 +405,8 @@ namespace Facepunch.RTS
 
 				if ( Player.IsValid() )
 					Player.MaxPopulation -= Item.PopulationBoost;
+
+				EvictAll();
 			}
 			else
 			{

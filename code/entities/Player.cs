@@ -16,7 +16,7 @@ namespace Facepunch.RTS
 		[Net, Local, OnChangedCallback] public List<uint> Researching { get; set; }
 		[Net, Local, OnChangedCallback] public List<Entity> Selection { get; set; }
 		[Net, Local] public uint MaxPopulation { get; set; }
-		[Net, Local] public uint Population { get; private set; }
+		[Net, Local] public int Population { get; private set; }
 		[Net, Local, Predicted] public float ZoomLevel { get; set; }
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
@@ -51,12 +51,12 @@ namespace Facepunch.RTS
 			return All.OfType<BuildingEntity>().Where( i => i.Player == this ).ToList();
 		}
 
-		public void AddPopulation( uint population )
+		public void AddPopulation( int population )
 		{
 			Population += population;
 		}
 
-		public void TakePopulation( uint population )
+		public void TakePopulation( int population )
 		{
 			Population = Math.Max( Population - population, 0 );
 		}
@@ -92,7 +92,7 @@ namespace Facepunch.RTS
 			return output;
 		}
 
-		public bool HasPopulationCapacity( uint population )
+		public bool HasPopulationCapacity( int population )
 		{
 			return (Population + population <= MaxPopulation);
 		}

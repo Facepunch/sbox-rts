@@ -162,7 +162,7 @@ namespace Facepunch.RTS
 				if ( unit.Player != caller || building.Player != caller )
 					return;
 
-				if ( unit.IsInsideBuilding )
+				if ( unit.Occupying.IsValid() )
 				{
 					building.EvictUnit( unit );
 				}

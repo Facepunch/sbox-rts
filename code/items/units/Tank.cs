@@ -13,7 +13,7 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;
-		public override float RotateToTargetSpeed => 0.5f;
+		public override float RotateToTargetSpeed => 10f;
 		public override string Weapon => "weapon_tank_cannon";
 		public override int NodeSize => 200;
 		public override float AttackRange => 1500f;

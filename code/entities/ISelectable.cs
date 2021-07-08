@@ -8,6 +8,7 @@ namespace Facepunch.RTS
 		public Player Player { get; }
 		public bool IsSelected { get; }
 		public bool CanMultiSelect { get; }
+		public int AttackPriority { get; }
 		public float Health { get; set; }
 		public float MaxHealth { get; set; }
 		public Vector3 Position { get; set; }

@@ -9,6 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public virtual HashSet<string> Buildables => new();
 		public virtual ResourceGenerator Generator => null;
 		public virtual bool CanDepositResources => false;
+		public virtual float OccupantDamageScale => 0f;
 		public virtual float MinLineOfSight => 200f;
 		public virtual uint PopulationBoost => 0;
 		public virtual uint MaxOccupants => 0;

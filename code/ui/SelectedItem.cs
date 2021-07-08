@@ -145,10 +145,26 @@ namespace Facepunch.RTS
 		}
 	}
 
+	public class ItemOccupantHealth : Panel
+	{
+		public Panel Foreground { get; private set; }
+
+		public ItemOccupantHealth()
+		{
+			Foreground = Add.Panel( "foreground" );
+		}
+	}
+
 	public class ItemOccupantButton : Button
 	{
+		public ItemOccupantHealth Health { get; private set; }
 		public BuildingEntity Building { get; private set; }
 		public UnitEntity Unit { get; private set; }
+
+		public ItemOccupantButton() : base()
+		{
+			Health = AddChild<ItemOccupantHealth>( "health" );
+		}
 
 		protected override void OnClick( MousePanelEvent e )
 		{
@@ -194,7 +210,15 @@ namespace Facepunch.RTS
 						Texture = item.Icon
 					};
 				}
+
+				Health.SetClass( "hidden", false );
 			}
+			else
+			{
+				Health.SetClass( "hidden", true );
+			}
+
+			SetClass( "empty", !unit.IsValid() );
 
 			Style.Dirty();
 		}
@@ -202,6 +226,12 @@ namespace Facepunch.RTS
 		public override void Tick()
 		{
 			SetClass( "hidden", !Building.IsValid() );
+
+			if ( Unit.IsValid() )
+			{
+				Health.Foreground.Style.Width = Length.Fraction( Unit.Health / Unit.MaxHealth );
+				Health.Foreground.Style.Dirty();
+			}
 		}
 	}
 

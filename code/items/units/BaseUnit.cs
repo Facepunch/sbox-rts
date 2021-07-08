@@ -22,7 +22,7 @@ namespace Facepunch.RTS.Units
 		public virtual string[] MoveSounds => Array.Empty<string>();
 		public virtual int NodeSize => 50;
 		public virtual float Speed => 300f;
-		public virtual float RotateToTargetSpeed => 10f;
+		public virtual float RotateToTargetSpeed => 50f;
 		public virtual float LineOfSight => 1000f;
 		public virtual float ConstructRange => 1500f;
 		public virtual float AttackRange => 1000f;
@@ -35,7 +35,7 @@ namespace Facepunch.RTS.Units
 		{
 			"particles/impact.flesh.vpcf"
 		};
-		public virtual uint Population => 1;
+		public virtual int Population => 1;
 		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";
 		public virtual HashSet<string> Buildables => new();
