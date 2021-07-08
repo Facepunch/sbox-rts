@@ -66,7 +66,7 @@ namespace Facepunch.RTS
 		public MoveGroup MoveGroup { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
-		public float TargetRange { get; private set; }
+		public float TargetRadius { get; private set; }
 		public BaseRank Rank { get; private set; }
 
 		#region UI
@@ -153,11 +153,11 @@ namespace Facepunch.RTS
 				// We can try to see if our range overlaps the bounding box of the target.
 				var targetBounds = entity.CollisionBounds + entity.Position;
 
-				if ( targetBounds.Overlaps( Position, TargetRange ) )
+				if ( targetBounds.Overlaps( Position, TargetRadius ) )
 					return true;
 			}
 
-			return (Target.IsValid() && Target.Position.Distance( Position ) < TargetRange);
+			return (Target.IsValid() && Target.Position.Distance( Position ) < TargetRadius);
 		}
 
 		public bool TakeFrom( ResourceEntity resource )
@@ -274,7 +274,7 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 			Target = target;
-			SetTargetRange( Item.AttackRange );
+			SetTargetRange( Item.AttackRadius );
 			FollowTarget = autoFollow;
 			OnTargetChanged();
 		}
@@ -331,7 +331,7 @@ namespace Facepunch.RTS
 			Target = building;
 			FollowTarget = true;
 			SetMoveGroup( moveGroup );
-			SetTargetRange( Item.InteractRange );
+			SetTargetRange( Item.InteractRadius );
 			OnTargetChanged();
 
 			return true;
@@ -351,7 +351,7 @@ namespace Facepunch.RTS
 			Target = building;
 			FollowTarget = true;
 			SetMoveGroup( moveGroup );
-			SetTargetRange( Item.InteractRange );
+			SetTargetRange( Item.InteractRadius );
 			OnTargetChanged();
 
 			return true;
@@ -374,7 +374,7 @@ namespace Facepunch.RTS
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
 			SetMoveGroup( moveGroup );
-			SetTargetRange( Item.InteractRange );
+			SetTargetRange( Item.InteractRadius );
 			OnTargetChanged();
 
 			return true;
@@ -394,7 +394,7 @@ namespace Facepunch.RTS
 			Target = building;
 			FollowTarget = true;
 			SetMoveGroup( moveGroup );
-			SetTargetRange( Item.InteractRange );
+			SetTargetRange( Item.InteractRadius );
 			OnTargetChanged();
 
 			return true;
@@ -574,7 +574,7 @@ namespace Facepunch.RTS
 			Health = item.MaxHealth;
 			MaxHealth = item.MaxHealth;
 			EyePos = Position + Vector3.Up * 64;
-			LineOfSight = item.LineOfSight;
+			LineOfSight = item.LineOfSightRadius;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
 			Pathfinder = PathManager.GetPathfinder( item.NodeSize );
@@ -615,7 +615,7 @@ namespace Facepunch.RTS
 
 		private void SetTargetRange( float range )
 		{
-			TargetRange = range + Pathfinder.NodeSize;
+			TargetRadius = range + Pathfinder.NodeSize;
 		}
 
 		private void SetMoveGroup( MoveGroup group )
@@ -688,7 +688,7 @@ namespace Facepunch.RTS
 
 		private void FindTargetEnemy()
 		{
-			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRange * 0.5f );
+			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRadius );
 
 			_targetBuffer.Clear();
 

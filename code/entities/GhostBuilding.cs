@@ -92,7 +92,7 @@ namespace Facepunch.RTS
 			if ( entities.Count() > 0 )
 				return false;
 
-			if ( position.Distance( Worker.Position ) > Worker.Item.ConstructRange )
+			if ( position.Distance( Worker.Position ) > Worker.Item.ConstructRadius )
 				return false;
 
 			var groundBounds = bounds;

@@ -22,11 +22,13 @@ namespace Facepunch.RTS
 			var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
 				.EntitiesOnly()
 				.HitLayer( CollisionLayer.Debris, false )
+				.WithoutTags( "unit" )
 				.Ignore( Attacker )
 				.Ignore( this )
 				.Run();
 
-			return (trace.Entity == Target);
+			// Did we make it mostly to our target position?
+			return (trace.Fraction >= 0.95f);
 		}
 
 		public virtual int GetDamage()

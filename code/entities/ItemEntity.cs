@@ -220,7 +220,12 @@ namespace Facepunch.RTS
 
 		protected override void OnDestroy()
 		{
-			if ( IsServer ) CancelAbility();
+			if ( IsServer )
+			{
+				CancelAbility();
+				Deselect();
+			}
+
 			if ( IsClient ) UI.Delete();
 
 			base.OnDestroy();

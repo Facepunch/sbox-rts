@@ -218,7 +218,7 @@ namespace Facepunch.RTS
 		{
 			var pixelScale = (Resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
-			var radius = ((range * pixelScale) / 2f).CeilToInt();
+			var radius = (range * pixelScale).CeilToInt();
 			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
 			var renderRadius = radius * ( (float)Math.PI * 0.5 );
 			
@@ -236,7 +236,7 @@ namespace Facepunch.RTS
 		{
 			var pixelScale = (Resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
-			var radius = ((range * pixelScale) / 2f).CeilToInt();
+			var radius = (range * pixelScale).CeilToInt();
 			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
 			var renderRadius = radius * ( (float)Math.PI * 0.5 );
 
@@ -289,7 +289,7 @@ namespace Facepunch.RTS
 
 				if ( cullable.IsVisible ) continue;
 
-				if ( cullable.Object.Position.Distance( position ) <= range / 2f )
+				if ( cullable.Object.Position.Distance( position ) <= range )
 				{
 					cullable.Object.HasBeenSeen = true;
 					cullable.Object.MakeVisible( true );

@@ -23,10 +23,10 @@ namespace Facepunch.RTS.Units
 		public virtual int NodeSize => 50;
 		public virtual float Speed => 300f;
 		public virtual float RotateToTargetSpeed => 50f;
-		public virtual float LineOfSight => 1000f;
-		public virtual float ConstructRange => 1500f;
-		public virtual float AttackRange => 1000f;
-		public virtual float InteractRange => 80f;
+		public virtual float LineOfSightRadius => 700f;
+		public virtual float ConstructRadius => 1500f;
+		public virtual float AttackRadius => 700f;
+		public virtual float InteractRadius => 80f;
 		public virtual List<string> DamageDecals => new()
 		{
 			"materials/rts/blood/blood1.vmat"

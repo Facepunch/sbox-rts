@@ -16,8 +16,8 @@ namespace Facepunch.RTS.Units
 		public override float RotateToTargetSpeed => 10f;
 		public override string Weapon => "weapon_tank_cannon";
 		public override int NodeSize => 200;
-		public override float AttackRange => 1500f;
-		public override float LineOfSight => 1500f;
+		public override float AttackRadius => 1000f;
+		public override float LineOfSightRadius => 1000f;
 		public override string[] MoveSounds => new string[]
 		{
 			"brute.alright_move_out",

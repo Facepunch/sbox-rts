@@ -14,7 +14,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
 		public override int NodeSize => 100;
-		public override float LineOfSight => 2000f;
+		public override float LineOfSightRadius => 1500f;
 		public override string[] MoveSounds => new string[]
 		{
 			"brute.alright_move_out",
