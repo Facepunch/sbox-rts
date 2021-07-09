@@ -198,7 +198,7 @@ namespace Facepunch.RTS
 			base.ClientSpawn();
 		}
 
-		[Event.Tick]
+		[Event.Frame]
 		protected void UpdateHudAnchor()
 		{
 			if ( IsClient && ShouldUpdateHud() )
