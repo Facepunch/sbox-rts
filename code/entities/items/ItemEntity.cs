@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamelib.Extensions;
 using Facepunch.RTS.Abilities;
+using Gamelib.FlowFields.Grid;
 
 namespace Facepunch.RTS
 {
@@ -110,6 +111,33 @@ namespace Facepunch.RTS
 		public bool IsEnemy( ISelectable other )
 		{
 			return (other.Player != Player);
+		}
+
+		public Vector3 GetFreePosition( UnitEntity unit, float diameterScale = 0.75f )
+		{
+			var bounds = GetDiameterXY( diameterScale );
+			var pathfinder = unit.Pathfinder;
+			var potentialNodes = new List<GridWorldPosition>();
+
+			unit.Pathfinder.GetGridPositions( Position, bounds, potentialNodes );
+
+			var freeLocations = potentialNodes
+				.Where( v => pathfinder.IsAvailable( v ) )
+				.ToList();
+
+			if ( freeLocations.Count == 0 )
+			{
+				throw new Exception( "[ItemEntity::PlaceNear] Unable to find a free location to spawn the unit!" );
+			}
+
+			var randomLocation = freeLocations[Rand.Int( freeLocations.Count - 1 )];
+			
+			return pathfinder.GetPosition( randomLocation ) + new Vector3( 0f, 0f, pathfinder.GetHeight( randomLocation ) );
+		}
+
+		public void PlaceNear( UnitEntity unit, float diameterScale = 0.75f )
+		{
+			unit.Position = GetFreePosition( unit, diameterScale );
 		}
 
 		public void Assign( Player player, T item )

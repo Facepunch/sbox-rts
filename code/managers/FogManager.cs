@@ -220,7 +220,7 @@ namespace Facepunch.RTS
 			var origin = location - Bounds.Origin;
 			var radius = (range * pixelScale).CeilToInt();
 			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
-			var renderRadius = radius * ( (float)Math.PI * 0.5 );
+			var renderRadius = radius * ((float)Math.PI * 0.5f);
 			
 			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, Resolution - 1 ); x++ )
 			{
@@ -238,7 +238,7 @@ namespace Facepunch.RTS
 			var origin = location - Bounds.Origin;
 			var radius = (range * pixelScale).CeilToInt();
 			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
-			var renderRadius = radius * ( (float)Math.PI * 0.5 );
+			var renderRadius = radius * ((float)Math.PI * 0.5f);
 
 			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, Resolution - 1 ); x++ )
 			{
@@ -283,13 +283,16 @@ namespace Facepunch.RTS
 
 			PunchHole( position, range );
 
+			// We multiply by 12.5% to cater for the render range.
+			var renderRange = range * 1.125f;
+
 			for ( var i = _cullables.Count - 1; i >= 0; i-- )
 			{
 				cullable = _cullables[i];
 
 				if ( cullable.IsVisible ) continue;
 
-				if ( cullable.Object.Position.Distance( position ) <= range )
+				if ( cullable.Object.Position.Distance( position ) <= renderRange )
 				{
 					cullable.Object.HasBeenSeen = true;
 					cullable.Object.MakeVisible( true );

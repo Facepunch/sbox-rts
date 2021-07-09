@@ -158,7 +158,7 @@ namespace Facepunch.RTS
 	public class ItemOccupantButton : Button
 	{
 		public ItemOccupantHealth Health { get; private set; }
-		public BuildingEntity Building { get; private set; }
+		public IOccupiableEntity Occupiable { get; private set; }
 		public UnitEntity Unit { get; private set; }
 
 		public ItemOccupantButton() : base()
@@ -170,7 +170,7 @@ namespace Facepunch.RTS
 		{
 			if ( !Unit.IsValid() ) return;
 
-			ItemManager.Evict( Building.NetworkIdent, Unit.NetworkIdent );
+			ItemManager.Evict( Occupiable.NetworkIdent, Unit.NetworkIdent );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -190,11 +190,11 @@ namespace Facepunch.RTS
 			RTS.Tooltip.Hide();
 		}
 
-		public void Update( BuildingEntity building = null, UnitEntity unit = null )
+		public void Update( IOccupiableEntity occupiable = null, UnitEntity unit = null )
 		{
 			Style.Background = null;
 
-			Building = building;
+			Occupiable = occupiable;
 			Unit = unit;
 
 			if ( unit.IsValid() )
@@ -225,7 +225,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			SetClass( "hidden", !Building.IsValid() );
+			SetClass( "hidden", Occupiable == null );
 
 			if ( Unit.IsValid() )
 			{
@@ -237,7 +237,7 @@ namespace Facepunch.RTS
 
 	public class ItemOccupantList : Panel
 	{
-		public BuildingEntity Building { get; private set; }
+		public IOccupiableEntity Occupiable { get; private set; }
 		public List<ItemOccupantButton> Buttons { get; private set; }
 
 		public ItemOccupantList()
@@ -250,31 +250,32 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public void Update( BuildingEntity building )
+		public void Update( IOccupiableEntity occupiable )
 		{
-			Building = building;
+			Occupiable = occupiable;
 		}
 
 		public override void Tick()
 		{
-			SetClass( "hidden", Building == null );
+			SetClass( "hidden", Occupiable == null );
 
-			if ( Building.IsValid() )
+			if ( Occupiable != null )
 			{
-				if ( Building.Item.MaxOccupants > 0 )
+				var item = Occupiable.OccupiableItem;
+				var occupants = Occupiable.GetOccupantsList();
+
+				if ( item.MaxOccupants > 0 && occupants != null )
 				{
-					var occupants = Building.Occupants;
 					var occupantsCount = occupants.Count;
-					var buildingItem = Building.Item;
 
 					for ( var i = 0; i < 10; i++ )
 					{
-						if ( buildingItem.MaxOccupants > i )
+						if ( item.MaxOccupants > i )
 						{
 							if ( occupantsCount > i )
-								Buttons[i].Update( Building, occupants[i] );
+								Buttons[i].Update( Occupiable, occupants[i] );
 							else
-								Buttons[i].Update( Building );
+								Buttons[i].Update( Occupiable );
 						}
 						else
 						{
@@ -549,7 +550,7 @@ namespace Facepunch.RTS
 			Name.Style.Dirty();
 
 			QueueList.Update( null );
-			OccupantList.Update( null );
+			OccupantList.Update( entity );
 		}
 	}
 

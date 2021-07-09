@@ -4,14 +4,14 @@ using Sandbox;
 
 namespace Facepunch.RTS.Units
 {
-    public abstract class BaseUnit : BaseItem
+    public abstract class BaseUnit : BaseItem, IOccupiableItem
 	{
 		public override Color Color => Color.Cyan;
 		public virtual float MaxHealth => 100f;
 		public virtual string Model => "models/units/simpleterry.vmdl";
 		public virtual HashSet<string> Clothing => new();
 		public virtual bool CanConstruct => false;
-		public virtual bool CanEnterBuildings => false;
+		public virtual bool CanOccupy => false;
 		public virtual bool UseModelPhysics => false;
 		public virtual HashSet<ResourceType> Gatherables => new();
 		public virtual Dictionary<ResourceType, string[]> GatherSounds => new();
@@ -20,6 +20,9 @@ namespace Facepunch.RTS.Units
 		public virtual string[] SelectSounds => Array.Empty<string>();
 		public virtual string[] DepositSounds => Array.Empty<string>();
 		public virtual string[] MoveSounds => Array.Empty<string>();
+		public virtual HashSet<string> AllowedOccupants => new();
+		public virtual float OccupantDamageScale => 0f;
+		public virtual uint MaxOccupants => 0;
 		public virtual int NodeSize => 50;
 		public virtual float Speed => 300f;
 		public virtual float RotateToTargetSpeed => 50f;

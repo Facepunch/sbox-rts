@@ -11,6 +11,7 @@ namespace Facepunch.RTS
 		public int AttackPriority { get; }
 		public float Health { get; set; }
 		public float MaxHealth { get; set; }
+		public bool IsLocalPlayers { get; }
 		public Vector3 Position { get; set; }
 		public BaseAbility GetAbility( string id );
 		public void StartAbility( BaseAbility ability, AbilityTargetInfo info );

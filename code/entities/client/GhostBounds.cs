@@ -4,7 +4,7 @@ namespace Facepunch.RTS
 {
 	public partial class GhostBounds : RenderEntity
 	{
-		public Material Material = Material.Load( "materials/rts/blueprint.vmat" );
+		public Material Material => Material.Load( "materials/rts/blueprint.vmat" );
 		public Color Color { get; set; }
 		public float Alpha { get; set; } = 1f;
 
@@ -25,7 +25,10 @@ namespace Facepunch.RTS
 			Render.Set( "TintColor", Color );
 			Render.Set( "Translucency", Alpha );
 
-			vertexBuffer.Draw( Material );
+			if ( Material != null )
+			{
+				vertexBuffer.Draw( Material );
+			}
 		}
 	}
 }

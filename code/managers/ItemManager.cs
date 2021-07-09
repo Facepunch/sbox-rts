@@ -147,46 +147,46 @@ namespace Facepunch.RTS
 		}
 
 		[ServerCmd]
-		public static void Evict( int buildingId, int unitId )
+		public static void Evict( int occupiableId, int unitId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var building = Entity.FindByIndex( buildingId ) as BuildingEntity;
+			var occupiable = Entity.FindByIndex( occupiableId ) as IOccupiableEntity;
 			var unit = Entity.FindByIndex( unitId ) as UnitEntity;
 
-			if ( building.IsValid() && unit.IsValid() )
+			if ( occupiable != null && unit.IsValid() )
 			{
-				if ( unit.Player != caller || building.Player != caller )
+				if ( unit.Player != caller || occupiable.Player != caller )
 					return;
 
 				if ( unit.Occupying.IsValid() )
 				{
-					building.EvictUnit( unit );
+					occupiable.EvictUnit( unit );
 				}
 			}
 		}
 
 		[ServerCmd]
-		public static void Occupy( int id )
+		public static void Occupy( int occupiableId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var target = Entity.FindByIndex( id ) as BuildingEntity;
+			var target = Entity.FindByIndex( occupiableId ) as IOccupiableEntity;
 
-			if ( target.IsValid() )
+			if ( target != null )
 			{
 				if ( target.Player != caller ) return;
 				if ( !target.CanOccupyUnits ) return;
 
 				caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( !unit.Item.CanEnterBuildings )
+					if ( !unit.Item.CanOccupy )
 						return false;
 
 					if ( unit.IsUsingAbility() )

@@ -8,7 +8,6 @@ namespace Facepunch.RTS
 {
 	public partial class GhostBuilding : ModelEntity
 	{
-		public static Material BlueprintMaterial => Material.Load( "materials/rts/blueprint.vmat" );
 		public GhostBounds BoundsEntity { get; private set; }
 		public BaseBuilding Building { get; private set; }
 		public UnitEntity Worker { get; private set; }
@@ -33,7 +32,10 @@ namespace Facepunch.RTS
 
 			if ( IsClient )
 			{
-				SceneObject.SetMaterialOverride( BlueprintMaterial );
+				var material = Material.Load( "materials/rts/blueprint.vmat" );
+
+				if ( material != null )
+					SceneObject.SetMaterialOverride( material );
 
 				if ( IsClient )
 				{

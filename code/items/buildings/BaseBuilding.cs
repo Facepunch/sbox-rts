@@ -2,17 +2,17 @@
 
 namespace Facepunch.RTS.Buildings
 {
-    public abstract class BaseBuilding : BaseItem
+    public abstract class BaseBuilding : BaseItem, IOccupiableItem
 	{
 		public override Color Color => new Color( 0.8f, 0.8f, 0.8f );
-		public virtual HashSet<string> AllowedOccupants => new();
 		public virtual HashSet<string> Buildables => new();
 		public virtual ResourceGenerator Generator => null;
 		public virtual bool CanDepositResources => false;
+		public virtual HashSet<string> AllowedOccupants => new();
 		public virtual float OccupantDamageScale => 0f;
+		public virtual uint MaxOccupants => 0;
 		public virtual float MinLineOfSight => 200f;
 		public virtual uint PopulationBoost => 0;
-		public virtual uint MaxOccupants => 0;
 		public virtual float MaxHealth => 100f;
 		public virtual string Model => "";
 		public virtual float AttackRange => 600f;

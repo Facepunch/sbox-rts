@@ -89,20 +89,27 @@ namespace Facepunch.RTS
 
 					if ( trace.Entity is ISelectable selectable )
 					{
-						if ( selectable.Player != Local.Pawn )
+						var targetNetworkId = ((Entity)selectable).NetworkIdent;
+
+						if ( selectable is IOccupiableEntity occupiable )
+						{
+							if ( occupiable.CanOccupyUnits )
+							{
+								ItemManager.Occupy( targetNetworkId );
+								return;
+							}
+						}
+
+						if ( !selectable.IsLocalPlayers )
 						{
 							ItemManager.Attack( ((Entity)selectable).NetworkIdent );
 						}
 						else if ( selectable is BuildingEntity building  )
 						{
-							var selectedNetworkId = ((Entity)selectable).NetworkIdent;
-
 							if ( building.IsUnderConstruction )
-								ItemManager.Construct( selectedNetworkId );
+								ItemManager.Construct( targetNetworkId );
 							else if ( building.CanDepositResources )
-								ItemManager.Deposit( selectedNetworkId );
-							else if ( building.CanOccupyUnits )
-								ItemManager.Occupy( selectedNetworkId );
+								ItemManager.Deposit( targetNetworkId );
 						}
 					}
 					else if ( trace.Entity is ResourceEntity resource)

@@ -2,20 +2,21 @@
 using Facepunch.RTS.Tech;
 using Facepunch.RTS.Units;
 using Gamelib.FlowFields;
-using Gamelib.FlowFields.Grid;
 using Sandbox;
 using Sandbox.UI;
-using Steamworks.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer
+	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity
 	{
-		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
 		[Net] public List<UnitEntity> Occupants { get; private set; }
+		public bool CanOccupyUnits => Occupants.Count < Item.MaxOccupants;
+		public IOccupiableItem OccupiableItem => Item;
+
+		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
 		[Net] public bool IsUnderConstruction { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
@@ -24,7 +25,6 @@ namespace Facepunch.RTS
 		public List<QueueItem> Queue { get; set; }
 		public float NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
-		public bool CanOccupyUnits => Occupants.Count < Item.MaxOccupants;
 		public Placeholder Placeholder { get; private set; }
 
 		#region UI
@@ -39,6 +39,8 @@ namespace Facepunch.RTS
 			Occupants = new List<UnitEntity>();
 			Queue = new List<QueueItem>();
 		}
+
+		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
 
 		public void UpdateConstruction()
 		{
@@ -61,7 +63,7 @@ namespace Facepunch.RTS
 
 			if ( CanOccupyUnits )
 			{
-				unit.OnEnterBuilding( this );
+				unit.OnOccupy( this );
 				Occupants.Add( unit );
 				return true;
 			} 
@@ -75,7 +77,7 @@ namespace Facepunch.RTS
 
 			if ( Occupants.Contains( unit ) )
 			{
-				unit.OnLeaveBuilding( this );
+				unit.OnVacate( this );
 				Occupants.Remove( unit );
 			}
 		}
@@ -85,7 +87,7 @@ namespace Facepunch.RTS
 			for ( int i = 0; i < Occupants.Count; i++ )
 			{
 				var occupant = Occupants[i];
-				occupant.OnLeaveBuilding( this );
+				occupant.OnVacate( this );
 			}
 
 			Occupants.Clear();
@@ -161,30 +163,6 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public void PlaceNear( UnitEntity unit )
-		{
-			var bounds = GetDiameterXY( 0.75f );
-			var pathfinder = unit.Pathfinder;
-			var potentialNodes = new List<GridWorldPosition>();
-
-			unit.Pathfinder.GetGridPositions( Position, bounds, potentialNodes );
-
-			var freeLocations = potentialNodes
-				.Where( v => pathfinder.IsAvailable( v ) )
-				.ToList();
-
-			if ( freeLocations.Count == 0 )
-			{
-				throw new Exception( "[BuildingEntity::PlaceNear] Unable to find a free location to spawn the unit!" );
-			}
-
-			var randomLocation = freeLocations[Rand.Int( freeLocations.Count - 1 )];
-			var withHeightMap = pathfinder.GetPosition( randomLocation ) + new Vector3( 0f, 0f, pathfinder.GetHeight( randomLocation ) );
-
-			// TODO: What we should do is have various attachments to buildings for spawn points that cannot be blocked.
-			unit.Position = withHeightMap;
-		}
-
 		public void SpawnUnit( BaseUnit unit )
 		{
 			var entity = new UnitEntity();
@@ -194,6 +172,11 @@ namespace Facepunch.RTS
 				entity.RenderColor = Player.TeamColor;
 
 			PlaceNear( entity );
+		}
+
+		public Vector3? GetVacatePosition( UnitEntity unit )
+		{
+			return null;
 		}
 
 		public BaseItem UnqueueItem( uint queueId )
@@ -246,7 +229,7 @@ namespace Facepunch.RTS
 			base.TakeDamage( info );
 		}
 
-		protected virtual void DamageOccupants( DamageInfo info )
+		public virtual void DamageOccupants( DamageInfo info )
 		{
 			var scale = Item.OccupantDamageScale;
 			if ( scale <= 0f ) return;
