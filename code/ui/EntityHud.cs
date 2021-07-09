@@ -24,15 +24,21 @@ namespace Facepunch.RTS
 	public class EntityHudAnchor : Panel
 	{
 		public Entity Entity { get; private set; }
+		public bool IsActive { get; private set; }
 
 		public void SetEntity( Entity entity)
 		{
 			Entity = entity;
 		}
 
-		public void SetVisible( bool isVisible )
+		public void SetActive( bool active )
 		{
-			SetClass( "hidden", !isVisible );
+			if ( IsActive != active )
+			{
+				IsActive = active;
+				SetClass( "hidden", !active );
+				if ( active ) UpdatePosition();
+			}
 		}
 
 		public void UpdatePosition()

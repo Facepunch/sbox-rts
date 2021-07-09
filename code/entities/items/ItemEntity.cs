@@ -198,7 +198,7 @@ namespace Facepunch.RTS
 			base.ClientSpawn();
 		}
 
-		[Event.Frame]
+		[Event.Tick]
 		protected void UpdateHudAnchor()
 		{
 			if ( IsClient && ShouldUpdateHud() )
@@ -243,7 +243,7 @@ namespace Facepunch.RTS
 
 		protected virtual bool ShouldUpdateHud()
 		{
-			return EnableDrawing && UI.IsVisibleSelf;
+			return EnableDrawing && UI.IsActive;
 		}
 
 		protected override void OnDestroy()

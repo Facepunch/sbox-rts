@@ -532,7 +532,7 @@ namespace Facepunch.RTS
 		public void MakeVisible( bool isVisible )
 		{
 			TargetAlpha = isVisible ? 1f : 0f;
-			UI.SetVisible( isVisible );
+			UI.SetActive( isVisible );
 		}
 
 		public ModelEntity AttachClothing( string modelName )
@@ -1087,9 +1087,15 @@ namespace Facepunch.RTS
 			FindResourceDepo();
 		}
 
+		// TODO: I don't want to do half of this shit each tick.
 		protected override void ClientTick()
 		{
 			base.ClientTick();
+
+			UI.Style.Opacity = RenderAlpha;
+			UI.Style.Dirty();
+
+			UI.SetActive( EnableDrawing );
 
 			if ( Occupying.IsValid() )
 			{
