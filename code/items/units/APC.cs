@@ -4,15 +4,17 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Ranger : BaseUnit
+	public class APC : BaseUnit
 	{
-		public override string Name => "Ranger";
-		public override string UniqueId => "unit.ranger";
-		public override string Model => "models/vehicles/humvee/humvee.vmdl";
-		public override string Description => "A basic vehicle good for scouting large areas.";
+		public override string Name => "APC";
+		public override string UniqueId => "unit.apc";
+		public override string Model => "models/vehicles/apc/apc.vmdl";
+		public override string Description => "An armored vehicle for transporting units long distance.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
+		public override uint MaxOccupants => 4;
+		public override float OccupantDamageScale => 0.2f;
 		public override int NodeSize => 100;
 		public override float LineOfSightRadius => 1500f;
 		public override string[] MoveSounds => new string[]
@@ -38,6 +40,10 @@ namespace Facepunch.RTS.Units
 		{
 			[ResourceType.Beer] = 150,
 			[ResourceType.Metal] = 100
+		};
+		public override HashSet<string> Dependencies => new()
+		{
+			"tech.armoredplating"
 		};
 	}
 }

@@ -27,7 +27,10 @@ namespace Facepunch.RTS.Buildings
 		{
 			"tech.brewing",
 			"tech.extraction",
-			"tech.syringes"
+			"tech.syringes",
+			"tech.armoredplating",
+			"tech.carbines",
+			"tech.pyrotechnics"
 		};
 	}
 }

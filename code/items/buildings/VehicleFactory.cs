@@ -26,6 +26,7 @@ namespace Facepunch.RTS.Buildings
 		public override HashSet<string> Buildables => new()
 		{
 			"unit.ranger",
+			"unit.apc",
 			"unit.tank"
 		};
 	}

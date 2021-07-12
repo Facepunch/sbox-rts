@@ -42,5 +42,10 @@ namespace Facepunch.RTS.Units
 			[ResourceType.Beer] = 150,
 			[ResourceType.Metal] = 100
 		};
+		public override HashSet<string> Dependencies => new()
+		{
+			"tech.armoredplating",
+			"tech.pyrotechnics"
+		};
 	}
 }
