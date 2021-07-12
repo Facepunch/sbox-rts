@@ -1473,6 +1473,7 @@
 					m_vDomainMaxs = [ 2.0, 2.0 ]
 				}
 			}
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_OP_SetFloat"
@@ -3260,9 +3261,6 @@
 	[
 		{
 			m_ChildRef = resource:"particles/weapons/flamethrower_smoke.vpcf"
-		},
-		{
-			m_ChildRef = resource:"particles/weapons/flamethrower_embers.vpcf"
 		},
 	]
 }
