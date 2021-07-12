@@ -3,7 +3,7 @@
 namespace Facepunch.RTS
 {
 	[Library]
-	public abstract class FireResistance : BaseResistance
+	public class FireResistance : BaseResistance
 	{
 		public override string Name => "Fire Resistance";
 		public override string UniqueId => "resistance.fire";

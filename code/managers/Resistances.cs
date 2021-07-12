@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 			BuildTable();
 		}
 
-		public static DamageInfo Apply( DamageInfo info, Dictionary<string,int> resistances )
+		public static DamageInfo Apply( DamageInfo info, Dictionary<string, float> resistances )
 		{
 			foreach ( var kv in resistances )
 			{

@@ -30,7 +30,7 @@ namespace Facepunch.RTS.Units
 		public virtual float ConstructRadius => 1500f;
 		public virtual float AttackRadius => 700f;
 		public virtual float InteractRadius => 80f;
-		public virtual Dictionary<string, int> Resistances => new();
+		public virtual Dictionary<string, float> Resistances => new();
 		public virtual List<string> DamageDecals => new()
 		{
 			"materials/rts/blood/blood1.vmat"

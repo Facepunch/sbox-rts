@@ -40,9 +40,9 @@ namespace Facepunch.RTS.Units
 			[ResourceType.Beer] = 150,
 			[ResourceType.Metal] = 100
 		};
-		public override Dictionary<string, int> Resistances => new()
+		public override Dictionary<string, float> Resistances => new()
 		{
-			["resistance.fire"] = 0.2
+			["resistance.fire"] = 0.2f
 		};
 	}
 }

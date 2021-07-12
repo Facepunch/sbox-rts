@@ -55,6 +55,11 @@ namespace Facepunch.RTS
 						worker.Assign( player, "unit.worker" );
 						player.AddPopulation( worker.Item.Population );
 
+						var flamethrower = new UnitEntity();
+						flamethrower.Position = spawnpoint.Position + (Vector3.Random * 20f).WithZ( spawnpoint.Position.z );
+						flamethrower.Assign( player, "unit.pyromaniac" );
+						player.AddPopulation( flamethrower.Item.Population );
+
 						/*
 						player.SetResource( ResourceType.Stone, 1000 );
 						player.SetResource( ResourceType.Metal, 500 );

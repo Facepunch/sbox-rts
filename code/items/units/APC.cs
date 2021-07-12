@@ -46,9 +46,9 @@ namespace Facepunch.RTS.Units
 		{
 			"tech.armoredplating"
 		};
-		public override Dictionary<string, int> Resistances => new()
+		public override Dictionary<string, float> Resistances => new()
 		{
-			["resistance.fire"] = 0.2
+			["resistance.fire"] = 0.2f
 		};
 	}
 }
