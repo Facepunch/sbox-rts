@@ -7,7 +7,7 @@ using Sandbox.UI.Construct;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Facepunch.RTS.Abilities;
+using Facepunch.RTS;
 
 namespace Facepunch.RTS
 {

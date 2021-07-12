@@ -8,7 +8,7 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System.Collections.Generic;
 using System.Linq;
-using Facepunch.RTS.Abilities;
+using Facepunch.RTS;
 
 namespace Facepunch.RTS
 {
@@ -33,14 +33,14 @@ namespace Facepunch.RTS
 
 			if ( status != RequirementError.Success )
 			{
-				SoundManager.Play( status );
+				Audio.Play( status );
 				return;
 			}
 
 			if ( Ability.TargetType == AbilityTargetType.Self )
-				AbilityManager.UseOnSelf( Selectable.NetworkIdent, Ability.UniqueId );
+				Abilities.UseOnSelf( Selectable.NetworkIdent, Ability.UniqueId );
 			else
-				AbilityManager.SelectTarget( Ability );
+				Abilities.SelectTarget( Ability );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -93,14 +93,14 @@ namespace Facepunch.RTS
 
 			if ( status != RequirementError.Success )
 			{
-				SoundManager.Play( status );
+				Audio.Play( status );
 				return;
 			}
 
 			if ( Selectable is UnitEntity worker && Item is BaseBuilding building )
-				ItemManager.CreateGhost( worker, building );
+				Items.CreateGhost( worker, building );
 			else
-				ItemManager.Queue( Selectable.NetworkIdent, Item.NetworkId );
+				Items.Queue( Selectable.NetworkIdent, Item.NetworkId );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -170,7 +170,7 @@ namespace Facepunch.RTS
 		{
 			if ( !Unit.IsValid() ) return;
 
-			ItemManager.Evict( Occupiable.NetworkIdent, Unit.NetworkIdent );
+			Items.Evict( Occupiable.NetworkIdent, Unit.NetworkIdent );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -306,7 +306,7 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			ItemManager.Unqueue( Building.NetworkIdent, QueueItem.Id );
+			Items.Unqueue( Building.NetworkIdent, QueueItem.Id );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -436,7 +436,7 @@ namespace Facepunch.RTS
 
 			foreach ( var v in buildables )
 			{
-				var buildable = ItemManager.Find<BaseItem>( v );
+				var buildable = Items.Find<BaseItem>( v );
 
 				if ( buildable.CanHave( player ) )
 				{

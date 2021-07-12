@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 
 namespace Facepunch.RTS.Units
@@ -44,6 +45,10 @@ namespace Facepunch.RTS.Units
 		public override HashSet<string> Dependencies => new()
 		{
 			"tech.armoredplating"
+		};
+		public override Dictionary<string, int> Resistances => new()
+		{
+			["resistance.fire"] = 0.2
 		};
 	}
 }

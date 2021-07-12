@@ -9,7 +9,7 @@ using Gamelib.FlowFields;
 
 namespace Facepunch.RTS
 {
-	public static partial class ItemManager
+	public static partial class Items
 	{
 		public static Dictionary<string, BaseItem> Table { get; private set; }
 		public static List<BaseItem> List { get; private set; }

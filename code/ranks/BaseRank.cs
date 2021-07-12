@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Facepunch.RTS.Ranks
+namespace Facepunch.RTS
 {
 	public abstract class BaseRank : IComparer<BaseRank>, IComparable<BaseRank>
 	{

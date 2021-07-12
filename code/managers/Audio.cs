@@ -1,13 +1,8 @@
-﻿using Gamelib.Extensions;
-using Facepunch.RTS.Buildings;
-using Sandbox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Sandbox;
 
 namespace Facepunch.RTS
 {
-	public static partial class SoundManager
+	public static partial class Audio
 	{
 		public static void Play( Player player, string sound )
 		{

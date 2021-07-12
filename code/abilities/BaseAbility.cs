@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Facepunch.RTS.Abilities
+namespace Facepunch.RTS
 {
 	public abstract class BaseAbility
 	{
@@ -50,7 +50,7 @@ namespace Facepunch.RTS.Abilities
 
 			foreach ( var v in Dependencies )
 			{
-				var dependency = ItemManager.Find<BaseItem>( v );
+				var dependency = Items.Find<BaseItem>( v );
 
 				if ( dependency == null )
 					throw new Exception( "[BaseAbility::HasDependencies] Unable to locate item by id: " + v );

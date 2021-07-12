@@ -25,7 +25,7 @@
 
 		public override void OnCreated( Player player )
 		{
-			SoundManager.Play( player, "announcer.technology_researched" );
+			Audio.Play( player, "announcer.technology_researched" );
 			RTS.Game.Toast( player, "Technology Researched", this );
 
 			player.Researching.Remove( NetworkId );

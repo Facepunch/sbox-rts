@@ -69,15 +69,15 @@ namespace Facepunch.RTS
 						player.MakeSpectator( false );
 						player.LookAt( spawnpoint );
 
-						FogManager.Show( player );
-						FogManager.Clear( player );
-						FogManager.MakeVisible( player, spawnpoint.Position, 2500f );
+						Fog.Show( player );
+						Fog.Clear( player );
+						Fog.MakeVisible( player, spawnpoint.Position, 2500f );
 
 						AddPlayer( player );
 					}
 					else
 					{
-						FogManager.Hide( player );
+						Fog.Hide( player );
 
 						player.MakeSpectator( true );
 						Spectators.Add( player );

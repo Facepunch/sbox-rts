@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
-	public static partial class FogManager
+	public static partial class Fog
 	{
 		internal class FogViewer
 		{
@@ -58,7 +58,7 @@ namespace Facepunch.RTS
 
 		public static readonly FogBounds Bounds = new();
 		public static bool IsActive { get; private set; }
-		public static Fog Fog { get; private set; }
+		public static FogRenderer Renderer { get; private set; }
 
 		private static readonly List<FogCullable> _cullables = new();
 		private static readonly List<FogViewer> _viewers = new();
@@ -70,7 +70,7 @@ namespace Facepunch.RTS
 		{
 			Host.AssertClient();
 
-			Fog = new Fog
+			Renderer = new FogRenderer
 			{
 				Texture = Texture,
 				Position = Vector3.Zero
@@ -81,7 +81,7 @@ namespace Facepunch.RTS
 			else
 				Bounds.SetSize( 30000f );
 
-			Fog.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
+			Renderer.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
 
 			UpdateTextureSize();
 
@@ -268,13 +268,13 @@ namespace Facepunch.RTS
 			Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
 			Data = new byte[Resolution * Resolution];
 
-			if ( Fog == null )
+			if ( Renderer == null )
 			{
-				Log.Error( "[FogManager::UpdateTextureSize] Unable to locate Fog entity!" );
+				Log.Error( "[Fog::UpdateTextureSize] Unable to locate Fog entity!" );
 				return;
 			}
 
-			Fog.FogMaterial.OverrideTexture( "Color", Texture );
+			Renderer.FogMaterial.OverrideTexture( "Color", Texture );
 		}
 
 		private static void AddRange( Vector3 position, float range )

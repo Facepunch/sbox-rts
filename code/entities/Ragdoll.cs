@@ -12,13 +12,13 @@ namespace Facepunch.RTS
 
 		public override void Spawn()
 		{
-			FogManager.AddCullable( this );
+			Fog.AddCullable( this );
 			base.Spawn();
 		}
 
 		protected override void OnDestroy()
 		{
-			FogManager.RemoveCullable( this );
+			Fog.RemoveCullable( this );
 			base.OnDestroy();
 		}
 

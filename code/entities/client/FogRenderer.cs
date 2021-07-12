@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public partial class Fog : RenderEntity
+	public partial class FogRenderer : RenderEntity
 	{
 		[ServerVar( "rts_fog", Saved = true )]
 		public static bool Enabled { get; set; } = true;
@@ -13,10 +13,10 @@ namespace Facepunch.RTS
 
 		public override void DoRender( SceneObject sceneObject )
 		{
-			if ( !Enabled || !FogManager.IsActive ) return;
+			if ( !Enabled || !Fog.IsActive ) return;
 
 			var vertexBuffer = Render.GetDynamicVB( true );
-			var bounds = FogManager.Bounds;
+			var bounds = Fog.Bounds;
 
 			var a = new Vertex( bounds.TopLeft, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
 			var b = new Vertex( bounds.TopRight, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );

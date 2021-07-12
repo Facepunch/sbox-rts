@@ -6,7 +6,7 @@ using System.Linq;
 using Facepunch.RTS.Units;
 using System;
 using Gamelib.Extensions;
-using Facepunch.RTS.Abilities;
+using Facepunch.RTS;
 
 namespace Facepunch.RTS
 {

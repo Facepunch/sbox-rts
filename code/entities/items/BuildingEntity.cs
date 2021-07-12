@@ -119,7 +119,7 @@ namespace Facepunch.RTS
 
 			AddAsFogViewer( To.Single( Player ) );
 
-			SoundManager.Play( Player, "announcer.construction_complete" );
+			Audio.Play( Player, "announcer.construction_complete" );
 		}
 
 		public void StartConstruction()
@@ -224,6 +224,8 @@ namespace Facepunch.RTS
 
 		public override void TakeDamage( DamageInfo info )
 		{
+			info = Resistances.Apply( info, Item.Resistances );
+
 			DamageOccupants( info );
 
 			base.TakeDamage( info );
@@ -393,7 +395,7 @@ namespace Facepunch.RTS
 			}
 			else
 			{
-				FogManager.RemoveViewer( this );
+				Fog.RemoveViewer( this );
 			}
 
 			base.OnDestroy();
@@ -431,7 +433,7 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		private void AddAsFogViewer()
 		{
-			FogManager.AddViewer( this );
+			Fog.AddViewer( this );
 		}
 
 		[ClientRpc]
@@ -452,7 +454,7 @@ namespace Facepunch.RTS
 		{
 			var queueItem = new QueueItem
 			{
-				Item = ItemManager.Find<BaseItem>( itemId ),
+				Item = Items.Find<BaseItem>( itemId ),
 				Id = queueId
 			};
 

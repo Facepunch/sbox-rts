@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
 
-namespace Facepunch.RTS.Abilities
+namespace Facepunch.RTS
 {
 	[Library( "ability_heal" )]
 	public class HealAbility : BaseAbility

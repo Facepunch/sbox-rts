@@ -88,7 +88,7 @@ namespace Facepunch.RTS
 			var entities = Physics.GetEntitiesInBox( bounds + position )
 				.Where( i => i != this && i is not FlowFieldGround );
 
-			if ( IsClient && !FogManager.IsAreaSeen( position ) )
+			if ( IsClient && !Fog.IsAreaSeen( position ) )
 				return false;
 
 			if ( entities.Count() > 0 )

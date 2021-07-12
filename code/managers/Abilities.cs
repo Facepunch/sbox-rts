@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Facepunch.RTS.Abilities;
 using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Sandbox;
 
 namespace Facepunch.RTS
 {
-	public static partial class AbilityManager
+	public static partial class Abilities
 	{
 		private static BaseAbility SelectingTargetFor { get; set; }
 

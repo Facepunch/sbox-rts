@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace Facepunch.RTS.Ranks
+namespace Facepunch.RTS
 {
 	[Library]
 	public class Sergeant : BaseRank

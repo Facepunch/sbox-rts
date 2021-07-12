@@ -1,4 +1,4 @@
-﻿namespace Facepunch.RTS.Abilities
+﻿namespace Facepunch.RTS
 {
 	public struct AbilityTargetInfo
 	{

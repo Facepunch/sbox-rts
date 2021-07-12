@@ -1,5 +1,5 @@
-﻿using Facepunch.RTS.Abilities;
-using Facepunch.RTS.Ranks;
+﻿using Facepunch.RTS;
+using Facepunch.RTS;
 using Facepunch.RTS.Units;
 using Gamelib.Extensions;
 using Gamelib.FlowFields;
@@ -125,7 +125,7 @@ namespace Facepunch.RTS
 			Host.AssertServer();
 
 			Kills += 1;
-			Rank = RankManager.Find( Kills );
+			Rank = Ranks.Find( Kills );
 		}
 
 		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
@@ -272,11 +272,18 @@ namespace Facepunch.RTS
 
 		public override void TakeDamage( DamageInfo info )
 		{
+			info = Resistances.Apply( info, Item.Resistances );
+
 			LastDamageTaken = info;
 
 			DamageOccupants( info );
 
 			base.TakeDamage( info );
+		}
+
+		public virtual void ApplyResistances( DamageInfo info )
+		{
+
 		}
 
 		public override void StartAbility( BaseAbility ability, AbilityTargetInfo info )
@@ -294,9 +301,9 @@ namespace Facepunch.RTS
 			Circle.LocalPosition = Vector3.Zero;
 
 			if ( Player.IsValid() && Player.IsLocalPawn )
-				FogManager.AddViewer( this );
+				Fog.AddViewer( this );
 			else
-				FogManager.AddCullable( this );
+				Fog.AddCullable( this );
 
 			base.ClientSpawn();
 		}
@@ -638,8 +645,8 @@ namespace Facepunch.RTS
 			if ( IsClient )
 			{
 				Circle?.Delete();
-				FogManager.RemoveViewer( this );
-				FogManager.RemoveCullable( this );
+				Fog.RemoveViewer( this );
+				Fog.RemoveCullable( this );
 			}
 			else
 			{
@@ -751,7 +758,7 @@ namespace Facepunch.RTS
 
 		private void OnKillsChanged()
 		{
-			Rank = RankManager.Find( Kills );
+			Rank = Ranks.Find( Kills );
 		}
 
 		private void SetMoveGroup( MoveGroup group )

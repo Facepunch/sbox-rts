@@ -1,12 +1,8 @@
-﻿using Gamelib.Network;
-using Facepunch.RTS.Buildings;
-using Sandbox;
-using Steamworks.Data;
+﻿using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gamelib.Extensions;
-using Facepunch.RTS.Abilities;
 using Gamelib.FlowFields.Grid;
 
 namespace Facepunch.RTS
@@ -17,7 +13,7 @@ namespace Facepunch.RTS
 		public virtual bool HasSelectionGlow => true;
 		public virtual int AttackPriority => 0;
 
-		public Dictionary<string, BaseAbility> Abilities { get; private set; }
+		public Dictionary<string, BaseAbility> AbilityTable { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, OnChangedCallback] public uint ItemId { get; set; }
 		[Net] public Player Player { get; private set; }
@@ -34,7 +30,7 @@ namespace Facepunch.RTS
 			get
 			{
 				if ( _itemCache == null )
-					_itemCache = ItemManager.Find<T>( ItemId );
+					_itemCache = Items.Find<T>( ItemId );
 				return _itemCache;
 			}
 		}
@@ -46,7 +42,7 @@ namespace Facepunch.RTS
 
 		public BaseAbility GetAbility( string id )
 		{
-			if ( Abilities.TryGetValue( id, out var ability ) )
+			if ( AbilityTable.TryGetValue( id, out var ability ) )
 				return ability;
 
 			return null;
@@ -161,7 +157,7 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			var item = ItemManager.Find<T>( itemId );
+			var item = Items.Find<T>( itemId );
 
 			Assign( player, item );
 		}
@@ -290,13 +286,13 @@ namespace Facepunch.RTS
 
 		protected virtual void CreateAbilities()
 		{
-			Abilities = new();
+			AbilityTable = new();
 
 			foreach ( var id in Item.Abilities )
 			{
-				var ability = AbilityManager.Create( id );
+				var ability = Abilities.Create( id );
 				ability.Initialize( id, this );
-				Abilities[id] = ability;
+				AbilityTable[id] = ability;
 			}
 		}
 

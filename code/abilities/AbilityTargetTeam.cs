@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace Facepunch.RTS.Abilities
+namespace Facepunch.RTS
 {
 	public enum AbilityTargetTeam
 	{

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Facepunch.RTS.Ranks;
+using Facepunch.RTS;
 using Sandbox;
 
 namespace Facepunch.RTS
 {
-	public static partial class RankManager
+	public static partial class Ranks
 	{
 		public static Dictionary<string, BaseRank> Table { get; private set; }
 		public static List<BaseRank> List { get; private set; }

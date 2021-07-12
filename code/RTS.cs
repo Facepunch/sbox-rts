@@ -1,11 +1,7 @@
-﻿using Gamelib.DayNight;
-using Gamelib.FlowFields;
+﻿using Gamelib.FlowFields;
 using Gamelib.FlowFields.Entities;
-using Gamelib.Network;
 using Sandbox;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Facepunch.RTS
@@ -64,12 +60,13 @@ namespace Facepunch.RTS
 				_ = new Hud();
 			}
 
-			RankManager.Initialize();
-			ItemManager.Initialize();
-			
+			Ranks.Initialize();
+			Items.Initialize();
+			Resistances.Initialize();
+
 			if ( IsClient )
 			{
-				FogManager.Initialize();
+				Fog.Initialize();
 			}
 
 			Game = this;
@@ -98,7 +95,7 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public void Toast( string text, uint itemId )
 		{
-			var item = ItemManager.Find<BaseItem>( itemId );
+			var item = Items.Find<BaseItem>( itemId );
 
 			if ( item != null )
 			{
@@ -153,7 +150,7 @@ namespace Facepunch.RTS
 			if ( IsServer )
 			{
 				// We want to make a pathfinder for each possible unit size.
-				var possibleUnitSizes = ItemManager.GetUnitNodeSizes();
+				var possibleUnitSizes = Items.GetUnitNodeSizes();
 
 				if ( FlowFieldGround.Exists )
 				{

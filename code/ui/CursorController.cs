@@ -69,7 +69,7 @@ namespace Facepunch.RTS
 		[Event.BuildInput]
 		private void BuildInput( InputBuilder builder )
 		{
-			if ( ItemManager.IsPlacingBuilding() || AbilityManager.IsSelectingTarget() )
+			if ( Items.IsPlacingBuilding() || Abilities.IsSelectingTarget() )
 				return;
 
 			if ( builder.Pressed( InputButton.Attack1 ) )
@@ -95,30 +95,30 @@ namespace Facepunch.RTS
 						{
 							if ( occupiable.CanOccupyUnits )
 							{
-								ItemManager.Occupy( targetNetworkId );
+								Items.Occupy( targetNetworkId );
 								return;
 							}
 						}
 
 						if ( !selectable.IsLocalPlayers )
 						{
-							ItemManager.Attack( ((Entity)selectable).NetworkIdent );
+							Items.Attack( ((Entity)selectable).NetworkIdent );
 						}
 						else if ( selectable is BuildingEntity building  )
 						{
 							if ( building.IsUnderConstruction )
-								ItemManager.Construct( targetNetworkId );
+								Items.Construct( targetNetworkId );
 							else if ( building.CanDepositResources )
-								ItemManager.Deposit( targetNetworkId );
+								Items.Deposit( targetNetworkId );
 						}
 					}
 					else if ( trace.Entity is ResourceEntity resource)
 					{
-						ItemManager.Gather( resource.NetworkIdent );
+						Items.Gather( resource.NetworkIdent );
 					}
 					else
 					{
-						ItemManager.MoveToLocation( trace.EndPos.ToCSV() );
+						Items.MoveToLocation( trace.EndPos.ToCSV() );
 					}
 				}
 			}
@@ -165,16 +165,16 @@ namespace Facepunch.RTS
 
 					var list = string.Join( ",", entities );
 
-					ItemManager.Select( list );
+					Items.Select( list );
 				}
 				else
 				{
 					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
 
 					if ( trace.Entity is ISelectable selectable && selectable.CanSelect() )
-						ItemManager.Select( trace.Entity.NetworkIdent.ToString() );
+						Items.Select( trace.Entity.NetworkIdent.ToString() );
 					else
-						ItemManager.Select();
+						Items.Select();
 				}
 
 				IsSelecting = false;
