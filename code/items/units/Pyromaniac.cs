@@ -9,9 +9,12 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Pyromaniac";
 		public override string UniqueId => "unit.pyromaniac";
 		public override string Description => "This Terry loves fire. A little too much, perhaps.";
-		public override bool CanOccupy => true;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 1;
+		public override OccupantSettings Occupant => new()
+		{
+			CanAttack = true
+		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 150

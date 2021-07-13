@@ -10,12 +10,13 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.brewery";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/brewery.png" );
 		public override string Description => "Assign up to 4 workers to generate Beer over time.";
-		public override HashSet<string> AllowedOccupants => new()
-		{
-			"unit.worker"
-		};
 		public override int BuildTime => 5;
-		public override uint MaxOccupants => 4;
+		public override OccupiableSettings Occupiable => new()
+		{
+			Whitelist = new() { "unit.worker" },
+			MaxOccupants = 4,
+			Enabled = true
+		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 200,

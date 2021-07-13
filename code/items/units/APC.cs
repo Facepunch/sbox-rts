@@ -14,10 +14,14 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
-		public override uint MaxOccupants => 4;
-		public override float OccupantDamageScale => 0.2f;
 		public override int NodeSize => 100;
 		public override float LineOfSightRadius => 1500f;
+		public override OccupiableSettings Occupiable => new()
+		{
+			MaxOccupants = 4,
+			DamageScale = 0.2f,
+			Enabled = true
+		};
 		public override string[] MoveSounds => new string[]
 		{
 			"brute.alright_move_out",

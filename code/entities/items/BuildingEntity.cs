@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity
 	{
 		[Net] public List<UnitEntity> Occupants { get; private set; }
-		public bool CanOccupyUnits => Occupants.Count < Item.MaxOccupants;
+		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
 		public IOccupiableItem OccupiableItem => Item;
 
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
@@ -70,6 +70,33 @@ namespace Facepunch.RTS
 			} 
 
 			return false;
+		}
+
+		public Transform? GetAttackAttachment( Entity target )
+		{
+			var attachments = OccupiableItem.Occupiable.AttackAttachments;
+			if ( attachments == null ) return null;
+
+			Transform? closestTransform = null;
+			var closestDistance = 0f;
+			var targetPosition = target.Position;
+
+			for ( var i = 0; i < attachments.Length; i++ )
+			{
+				var attachment = GetAttachment( attachments[i], true );
+				if ( !attachment.HasValue ) continue;
+
+				var position = attachment.Value.Position;
+				var distance = targetPosition.Distance( position );
+
+				if ( !closestTransform.HasValue || distance < closestDistance )
+				{
+					closestTransform = attachment;
+					closestDistance = distance;
+				}
+			}
+
+			return closestTransform;
 		}
 
 		public void EvictUnit( UnitEntity unit )
@@ -234,7 +261,7 @@ namespace Facepunch.RTS
 
 		public virtual void DamageOccupants( DamageInfo info )
 		{
-			var scale = Item.OccupantDamageScale;
+			var scale = Item.Occupiable.DamageScale;
 			if ( scale <= 0f ) return;
 
 			var occupants = Occupants;

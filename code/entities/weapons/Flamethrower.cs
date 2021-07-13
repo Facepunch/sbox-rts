@@ -34,12 +34,20 @@ namespace Facepunch.RTS
 		{
 			Host.AssertClient();
 
-			if ( Fire == null )
-				Fire = Particles.Create( "particles/weapons/flamethrower.vpcf", this, "muzzle" );
+			var muzzle = GetMuzzle();
 
-			Fire.SetPosition( 1, Target.Position );
+			if ( muzzle.HasValue )
+			{
+				if ( Fire == null )
+				{
+					Fire = Particles.Create( "particles/weapons/flamethrower.vpcf" );
+					Fire.SetPosition( 0, muzzle.Value.Position );
+				}
 
-			KillFireTime = 0.2f;
+				Fire.SetPosition( 1, Target.Position );
+
+				KillFireTime = 0.5f;
+			}
 		}
 
 		protected override void OnDestroy()

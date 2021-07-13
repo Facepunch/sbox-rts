@@ -4,18 +4,19 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Buildings
 {
 	[Library]
-	public class Pub : BaseBuilding
+	public class Watchtower : BaseBuilding
 	{
-		public override string Name => "Pub";
-		public override string UniqueId => "building.pub";
+		public override string Name => "Watchtower";
+		public override string UniqueId => "building.watchtower";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/pub.png" );
-		public override string Description => "Increases the maximum population of your empire.";
-		public override uint PopulationBoost => 6;
+		public override string Description => "Useful for seeing across large distances and can hold one unit.";
 		public override int BuildTime => 10;
+		public override float MinLineOfSight => 1000f;
 		public override OccupiableSettings Occupiable => new()
 		{
-			MaxOccupants = 3,
+			AttackAttachments = new string[] { "muzzle" },
 			DamageScale = 0.5f,
+			MaxOccupants = 1,
 			Enabled = true
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
@@ -23,7 +24,7 @@ namespace Facepunch.RTS.Buildings
 			[ResourceType.Stone] = 150,
 			[ResourceType.Metal] = 100
 		};
-		public override string Model => "models/buildings/pub/pub.vmdl";
+		public override string Model => "models/buildings/watchtower/watchtower.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
 			"building.headquarters"

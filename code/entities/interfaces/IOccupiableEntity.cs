@@ -1,6 +1,5 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Facepunch.RTS
 {
@@ -14,6 +13,8 @@ namespace Facepunch.RTS
 		public IList<UnitEntity> GetOccupantsList();
 		public Vector3? GetVacatePosition( UnitEntity unit );
 		public void DamageOccupants( DamageInfo info );
+		public Transform? GetAttackAttachment( Entity target );
+		public Transform? GetAttachment( string name, bool worldspace );
 		public bool OccupyUnit( UnitEntity unit );
 		public void EvictUnit( UnitEntity unit );
 		public void EvictAll();

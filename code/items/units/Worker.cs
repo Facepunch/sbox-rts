@@ -10,7 +10,6 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.worker";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
 		public override bool CanConstruct => true;
-		public override bool CanOccupy => true;
 		public override string Description => "Gathers Wood, Stone and Beer for your empire and constructs buildings.";
 		public override string[] MoveSounds => new string[]
 		{
@@ -25,6 +24,10 @@ namespace Facepunch.RTS.Units
 			"worker.tell_me_what_to_do"
 		};
 		public override int BuildTime => 1;
+		public override OccupantSettings Occupant => new()
+		{
+			CanAttack = false
+		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 50
@@ -48,7 +51,9 @@ namespace Facepunch.RTS.Units
 			"building.turret",
 			"building.terryfactory",
 			"building.vehiclefactory",
-			"building.researchlab"
+			"building.researchlab",
+			"building.watchtower",
+			"building.pillbox"
 		};
 		public override HashSet<string> Clothing => new()
 		{

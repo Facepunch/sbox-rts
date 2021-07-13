@@ -9,10 +9,13 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Assault";
 		public override string UniqueId => "unit.assault";
 		public override string Description => "A more agile Terry equipped with a sub-machine gun.";
-		public override bool CanOccupy => true;
 		public override float Speed => 350f;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 1;
+		public override OccupantSettings Occupant => new()
+		{
+			CanAttack = true
+		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 150

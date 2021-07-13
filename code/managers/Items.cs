@@ -162,7 +162,7 @@ namespace Facepunch.RTS.Managers
 				if ( unit.Player != caller || occupiable.Player != caller )
 					return;
 
-				if ( unit.Occupying.IsValid() )
+				if ( unit.Occupiable.IsValid() )
 				{
 					occupiable.EvictUnit( unit );
 				}
@@ -177,16 +177,14 @@ namespace Facepunch.RTS.Managers
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			var target = Entity.FindByIndex( occupiableId ) as IOccupiableEntity;
-
-			if ( target != null )
+			if ( Entity.FindByIndex( occupiableId ) is IOccupiableEntity target )
 			{
 				if ( target.Player != caller ) return;
 				if ( !target.CanOccupyUnits ) return;
 
 				caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( !unit.Item.CanOccupy )
+					if ( unit.Item.Occupant == null )
 						return false;
 
 					if ( unit.IsUsingAbility() )
@@ -218,6 +216,9 @@ namespace Facepunch.RTS.Managers
 
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
+					if ( unit.Carrying.Count == 0 )
+						return false;
+
 					if ( unit.IsUsingAbility() )
 						return false;
 
