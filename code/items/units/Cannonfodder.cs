@@ -12,6 +12,10 @@ namespace Facepunch.RTS.Units
 		public override bool CanOccupy => true;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 1;
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.fire"] = -0.2f
+		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 150

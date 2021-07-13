@@ -23,17 +23,12 @@
         margin-top: 8px;
     }
 
-    .costs {
+    itemresourcevalues {
         margin-top: 8px;
-        display: flex;
+    }
 
-        itemresourcevalue {
-            margin-right: 16px;
-        }
-
-        &.hidden {
-            display: none;
-        }
+    resistancevalues {
+        margin-top: 4px;
     }
 
     .population {
@@ -59,37 +54,6 @@
 
         &.hidden {
             display: none;
-        }
-    }
-
-    &.hidden {
-        display: none;
-    }
-}
-
-itemresourcevalue {
-    .icon {
-        background-color: white;
-        margin-right: 4px;
-        width: 24px;
-        height: 24px;
-    }
-
-    .label {
-        color: red;
-        font-weight: bold;
-        font-size: 17px;
-    }
-
-    &.lerping {
-        .label {
-            font-size: 20px;
-        }
-    }
-
-    &.affordable {
-        .label {
-            color: white;
         }
     }
 

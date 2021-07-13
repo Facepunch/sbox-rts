@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System;
 using Sandbox;
+using Facepunch.RTS.Managers;
 
 namespace Facepunch.RTS.Units
 {
-    public abstract class BaseUnit : BaseItem, IOccupiableItem
+    public abstract class BaseUnit : BaseItem, IOccupiableItem, IResistorItem
 	{
 		public override Color Color => Color.Cyan;
 		public virtual float MaxHealth => 100f;

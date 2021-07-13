@@ -35,6 +35,10 @@ namespace Facepunch.RTS.Units
 			ResourceType.Metal,
 			ResourceType.Beer
 		};
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.fire"] = -0.2f
+		};
 		public override HashSet<string> Buildables => new()
 		{
 			"building.headquarters",

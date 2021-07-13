@@ -3,7 +3,7 @@ using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Sandbox;
 
-namespace Facepunch.RTS
+namespace Facepunch.RTS.Managers
 {
 	public static partial class Abilities
 	{

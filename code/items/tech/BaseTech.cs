@@ -1,4 +1,6 @@
-﻿namespace Facepunch.RTS.Tech
+﻿using Facepunch.RTS.Managers;
+
+namespace Facepunch.RTS.Tech
 {
     public abstract class BaseTech : BaseItem
 	{

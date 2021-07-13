@@ -15,6 +15,10 @@ namespace Facepunch.RTS.Units
 		{
 			"ability_heal"
 		};
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.fire"] = -0.2f
+		};
 		public override string[] MoveSounds => new string[]
 		{
 			"brute.alright_move_out",

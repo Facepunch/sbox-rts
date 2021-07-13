@@ -17,6 +17,10 @@ namespace Facepunch.RTS.Units
 		{
 			[ResourceType.Beer] = 150
 		};
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.fire"] = -0.2f
+		};
 		public override string[] AttackSounds => new string[]
 		{
 			"brute.alright",

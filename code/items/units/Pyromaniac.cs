@@ -40,6 +40,10 @@ namespace Facepunch.RTS.Units
 			"brute.tell_me_what_to_do2",
 			"brute.yes_boss"
 		};
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.fire"] = 0.2f
+		};
 		public override string Weapon => "weapon_flamethrower";
 		public override HashSet<string> Dependencies => new()
 		{
