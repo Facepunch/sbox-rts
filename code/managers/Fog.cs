@@ -3,6 +3,7 @@ using Gamelib.FlowFields.Grid;
 using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facepunch.RTS.Managers
 {
@@ -62,9 +63,11 @@ namespace Facepunch.RTS.Managers
 
 		private static readonly List<FogCullable> _cullables = new();
 		private static readonly List<FogViewer> _viewers = new();
-		private static int Resolution;
-		private static Texture Texture;
-		private static byte[] Data;
+
+		private static IEnumerable<SceneParticleObject> _particles;
+		private static Texture _texture;
+		private static int _resolution;
+		private static byte[] _data;
 
 		public static void Initialize()
 		{
@@ -72,7 +75,7 @@ namespace Facepunch.RTS.Managers
 
 			Renderer = new FogRenderer
 			{
-				Texture = Texture,
+				Texture = _texture,
 				Position = Vector3.Zero
 			};
 
@@ -171,27 +174,27 @@ namespace Facepunch.RTS.Managers
 
 		public static bool IsAreaSeen( Vector3 location )
 		{
-			var pixelScale = (Resolution / Bounds.Size);
+			var pixelScale = (_resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
-			var x = (origin.x * pixelScale).CeilToInt() + (Resolution / 2);
-			var y = (origin.y * pixelScale).CeilToInt() + (Resolution / 2);
-			var i = ((y * Resolution) + x);
+			var x = (origin.x * pixelScale).CeilToInt() + (_resolution / 2);
+			var y = (origin.y * pixelScale).CeilToInt() + (_resolution / 2);
+			var i = ((y * _resolution) + x);
 
-			if ( i <= 0 || i > Resolution * Resolution )
+			if ( i <= 0 || i > _resolution * _resolution )
 				return false;
 
-			return (Data[i] <= 200);
+			return (_data[i] <= 200);
 		}
 
 		[ClientRpc]
 		public static void Clear()
 		{
-			for ( int x = 0; x < Resolution; x++ )
+			for ( int x = 0; x < _resolution; x++ )
 			{
-				for ( int y = 0; y < Resolution; y++ )
+				for ( int y = 0; y < _resolution; y++ )
 				{
-					var index = ((x * Resolution) + y);
-					Data[index + 0] = 255;
+					var index = ((x * _resolution) + y);
+					_data[index + 0] = 255;
 				}
 			}
 		}
@@ -211,22 +214,22 @@ namespace Facepunch.RTS.Managers
 		public static void PaintDot( Vector2 p, float r, int index, float smooth )
 		{
 			byte sdf =  Convert.ToByte( Math.Clamp( SdCircle( p, r ) * smooth * 255, 0, 255 ) );
-			Data[ index ] = Math.Min( sdf, Data[ index ] );
+			_data[ index ] = Math.Min( sdf, _data[ index ] );
 		}
 
 		public static void PunchHole( Vector3 location, float range )
 		{
-			var pixelScale = (Resolution / Bounds.Size);
+			var pixelScale = (_resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
 			var radius = (range * pixelScale).CeilToInt();
-			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
+			var centerPixel = new Vector2( (origin * pixelScale) + (_resolution / 2) );
 			var renderRadius = radius * ((float)Math.PI * 0.5f);
 			
-			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, Resolution - 1 ); x++ )
+			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, _resolution - 1 ); x++ )
 			{
-				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, Resolution - 1 ); y++ )
+				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, _resolution - 1 ); y++ )
 				{
-					var index = ((y * Resolution) + x);
+					var index = ((y * _resolution) + x);
 					PaintDot( centerPixel - new Vector2( x, y ), radius, index, 0.25f );
 				}	
 			}
@@ -234,18 +237,18 @@ namespace Facepunch.RTS.Managers
 
 		public static void FillRegion( Vector3 location, float range, byte alpha )
 		{
-			var pixelScale = (Resolution / Bounds.Size);
+			var pixelScale = (_resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
 			var radius = (range * pixelScale).CeilToInt();
-			var centerPixel = new Vector2( (origin * pixelScale) + (Resolution / 2) );
+			var centerPixel = new Vector2( (origin * pixelScale) + (_resolution / 2) );
 			var renderRadius = radius * ((float)Math.PI * 0.5f);
 
-			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, Resolution - 1 ); x++ )
+			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, _resolution - 1 ); x++ )
 			{
-				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, Resolution - 1 ); y++ )
+				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, _resolution - 1 ); y++ )
 				{
-					var index = ((y * Resolution) + x);
-					Data[ index ] = Math.Max( alpha, Data[ index ] );
+					var index = ((y * _resolution) + x);
+					_data[ index ] = Math.Max( alpha, _data[ index ] );
 				}
 			}
 		}
@@ -258,15 +261,15 @@ namespace Facepunch.RTS.Managers
 
 		private static void UpdateTextureSize()
 		{
-			if ( Texture != null )
+			if ( _texture != null )
 			{
-				Texture.Dispose();
-				Texture = null;
+				_texture.Dispose();
+				_texture = null;
 			}
 
-			Resolution = Math.Max( ((float)(Bounds.Size / 30f)).CeilToInt(), 128 );
-			Texture = Texture.Create( Resolution, Resolution, ImageFormat.A8 ).Finish();
-			Data = new byte[Resolution * Resolution];
+			_resolution = Math.Max( ((float)(Bounds.Size / 30f)).CeilToInt(), 128 );
+			_texture = Texture.Create( _resolution, _resolution, ImageFormat.A8 ).Finish();
+			_data = new byte[_resolution * _resolution];
 
 			if ( Renderer == null )
 			{
@@ -274,7 +277,7 @@ namespace Facepunch.RTS.Managers
 				return;
 			}
 
-			Renderer.FogMaterial.OverrideTexture( "Color", Texture );
+			Renderer.FogMaterial.OverrideTexture( "Color", _texture );
 		}
 
 		private static void AddRange( Vector3 position, float range )
@@ -299,9 +302,33 @@ namespace Facepunch.RTS.Managers
 					cullable.IsVisible = true;
 				}
 			}
+
+			CheckParticleVisibility( position, renderRange );
 		}
 
-		[Event.Tick.Client]
+		private static void CheckParticleVisibility( Vector3 position, float range )
+		{
+			foreach ( var particle in _particles )
+			{
+				if ( particle.ShouldDrawParticles )
+					continue;
+
+				if ( particle.Transform.Position.Distance( position ) <= range )
+				{
+					particle.ShouldDrawParticles = true;
+				}
+			}
+		}
+
+		private static void CullParticles()
+		{
+			foreach ( var particle in _particles )
+			{
+				particle.ShouldDrawParticles = false;
+			}
+		}
+
+		[Event.Frame]
 		private static void Tick()
 		{
 			if ( !IsActive ) return;
@@ -314,6 +341,10 @@ namespace Facepunch.RTS.Managers
 				cullable.IsVisible = false;
 				cullable.Object.MakeVisible( false );
 			}
+
+			_particles = SceneObject.All.OfType<SceneParticleObject>();
+
+			CullParticles();
 
 			// Our first pass will create the seen history map.
 			for ( var i = 0; i < _viewers.Count; i++ )
@@ -334,7 +365,7 @@ namespace Facepunch.RTS.Managers
 				viewer.LastPosition = position;
 			}
 
-			Texture.Update( Data );
+			_texture.Update( _data );
 		}
 	}
 }

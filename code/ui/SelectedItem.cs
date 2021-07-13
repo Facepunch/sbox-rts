@@ -238,7 +238,7 @@ namespace Facepunch.RTS
 
 	public class ItemOccupantList : Panel
 	{
-		public IOccupiableEntity Occupiable { get; private set; }
+		public IOccupiableEntity Entity { get; private set; }
 		public List<ItemOccupantButton> Buttons { get; private set; }
 
 		public ItemOccupantList()
@@ -253,44 +253,43 @@ namespace Facepunch.RTS
 
 		public void Update( IOccupiableEntity occupiable )
 		{
-			Occupiable = occupiable;
+			Entity = occupiable;
 		}
 
 		public override void Tick()
 		{
-			SetClass( "hidden", Occupiable == null );
+			base.Tick();
 
-			if ( Occupiable != null )
+			SetClass( "hidden", Entity == null );
+
+			if ( Entity == null ) return;
+
+			var item = Entity.OccupiableItem;
+			var occupants = Entity.GetOccupantsList();
+
+			if ( item.Occupiable.MaxOccupants > 0 && occupants != null )
 			{
-				var item = Occupiable.OccupiableItem;
-				var occupants = Occupiable.GetOccupantsList();
+				var occupantsCount = occupants.Count;
 
-				if ( item.MaxOccupants > 0 && occupants != null )
+				for ( var i = 0; i < 10; i++ )
 				{
-					var occupantsCount = occupants.Count;
-
-					for ( var i = 0; i < 10; i++ )
+					if ( item.Occupiable.MaxOccupants > i )
 					{
-						if ( item.MaxOccupants > i )
-						{
-							if ( occupantsCount > i )
-								Buttons[i].Update( Occupiable, occupants[i] );
-							else
-								Buttons[i].Update( Occupiable );
-						}
+						if ( occupantsCount > i )
+							Buttons[i].Update( Entity, occupants[i] );
 						else
-						{
-							Buttons[i].Update( null );
-						}
+							Buttons[i].Update( Entity );
+					}
+					else
+					{
+						Buttons[i].Update( null );
 					}
 				}
-				else
-				{
-					SetClass( "hidden", true );
-				}
 			}
-
-			base.Tick();
+			else
+			{
+				SetClass( "hidden", true );
+			}
 		}
 	}
 

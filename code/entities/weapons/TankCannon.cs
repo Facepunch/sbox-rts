@@ -25,15 +25,20 @@ namespace Facepunch.RTS
 
 		public override Transform? GetMuzzle()
 		{
+			if ( Occupiable.IsValid() )
+			{
+				return base.GetMuzzle();
+			}
+
 			return Attacker.GetAttachment( "muzzle", true );
 		}
 
-		public override void DoImpactEffect( TraceResult trace, float damage )
+		public override void DoImpactEffect( Vector3 position, Vector3 normal, float damage )
 		{
 			// Don't go crazy with impact effects because we fire fast.
 			if ( Rand.Float( 1f ) >= 0.5f && Target is IDamageable damageable )
 			{
-				damageable.DoImpactEffects( trace );
+				damageable.DoImpactEffects( position, normal );
 			}
 		}
 
@@ -45,17 +50,6 @@ namespace Facepunch.RTS
 				return false;
 
 			return base.CanAttack();
-		}
-
-		[ClientRpc]
-		protected override void ShootEffects()
-		{
-			Host.AssertClient();
-			
-			if ( Attacker.IsValid() )
-			{
-				Particles.Create( "particles/turret/muzzleflash.vpcf", Attacker, "muzzle" );
-			}
 		}
 
 		[Event.Tick.Server]

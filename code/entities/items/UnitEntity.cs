@@ -60,11 +60,11 @@ namespace Facepunch.RTS
 		public override int AttackPriority => 1;
 
 		[Net] public List<UnitEntity> Occupants { get; private set; }
-		public bool CanOccupyUnits => Occupants.Count < Item.MaxOccupants;
+		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
 		public IOccupiableItem OccupiableItem => Item;
 
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
-		[Net, Local] public Entity Occupying { get; private set; }
+		[Net, Local] public Entity Occupiable { get; private set; }
 		[Net, Local] public float GatherProgress { get; private set; }
 		[Net, Local] public bool IsGathering { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
@@ -140,7 +140,7 @@ namespace Facepunch.RTS
 
 			if ( _target.Entity is UnitEntity unit )
 			{
-				return !unit.Occupying.IsValid();
+				return !unit.Occupiable.IsValid();
 			}
 
 			return true;
@@ -204,6 +204,33 @@ namespace Facepunch.RTS
 			IsStatic = isStatic;
 		}
 
+		public Transform? GetAttackAttachment( Entity target )
+		{
+			var attachments = OccupiableItem.Occupiable.AttackAttachments;
+			if ( attachments == null ) return null;
+
+			Transform? closestTransform = null;
+			var closestDistance = 0f;
+			var targetPosition = target.Position;
+
+			for ( var i = 0; i < attachments.Length; i++ )
+			{
+				var attachment = GetAttachment( attachments[i], true );
+				if ( !attachment.HasValue ) continue;
+
+				var position = attachment.Value.Position;
+				var distance = targetPosition.Distance( position );
+
+				if ( !closestTransform.HasValue || distance < closestDistance )
+				{
+					closestTransform = attachment;
+					closestDistance = distance;
+				}
+			}
+
+			return closestTransform;
+		}
+
 		public bool IsTargetInRange()
 		{
 			if ( !_target.HasEntity() ) return false;
@@ -246,7 +273,7 @@ namespace Facepunch.RTS
 
 		public override bool CanSelect()
 		{
-			return !Occupying.IsValid();
+			return !Occupiable.IsValid();
 		}
 
 		public override void OnKilled()
@@ -260,7 +287,7 @@ namespace Facepunch.RTS
 
 			BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, GetHitboxBone( damageInfo.HitboxIndex ) );
 
-			if ( Occupying.IsValid() && Occupying is IOccupiableEntity occupiable )
+			if ( Occupiable.IsValid() && Occupiable is IOccupiableEntity occupiable )
 			{
 				occupiable.EvictUnit( this );
 			}
@@ -307,15 +334,15 @@ namespace Facepunch.RTS
 			base.ClientSpawn();
 		}
 
-		public void DoImpactEffects( TraceResult trace )
+		public void DoImpactEffects( Vector3 position, Vector3 normal )
 		{
 			var impactEffects = Item.ImpactEffects;
 			var particleName = impactEffects[Rand.Int( 0, impactEffects.Count - 1 )];
 
 			if ( particleName != null )
 			{
-				var particles = Particles.Create( particleName, trace.EndPos );
-				particles.SetForward( 0, trace.Normal );
+				var particles = Particles.Create( particleName, position );
+				particles.SetForward( 0, normal );
 			}
 		}
 
@@ -392,12 +419,12 @@ namespace Facepunch.RTS
 
 		public bool CanOccupy( IOccupiableEntity occupiable )
 		{
-			var allowedOccupants = occupiable.OccupiableItem.AllowedOccupants;
+			var whitelist = occupiable.OccupiableItem.Occupiable.Whitelist;
 
-			if ( allowedOccupants.Count == 0 )
+			if ( whitelist.Count == 0 )
 				return true;
 
-			return allowedOccupants.Contains( Item.UniqueId );
+			return whitelist.Contains( Item.UniqueId );
 		}
 
 		public bool Occupy( IOccupiableEntity occupiable, MoveGroup moveGroup = null )
@@ -599,7 +626,7 @@ namespace Facepunch.RTS
 			Deselect();
 			SetParent( this );
 
-			Occupying = (Entity)occupiable;
+			Occupiable = (Entity)occupiable;
 			EnableDrawing = false;
 			EnableAllCollisions = false;
 		}
@@ -616,14 +643,14 @@ namespace Facepunch.RTS
 				ResetInterpolation();
 			}
 
-			Occupying = null;
+			Occupiable = null;
 			EnableDrawing = true;
 			EnableAllCollisions = true;
 		}
 
 		public virtual void DamageOccupants( DamageInfo info )
 		{
-			var scale = Item.OccupantDamageScale;
+			var scale = Item.Occupiable.DamageScale;
 			if ( scale <= 0f ) return;
 
 			var occupants = Occupants;
@@ -666,7 +693,7 @@ namespace Facepunch.RTS
 
 			_animationValues.Start();
 
-			if ( !Occupying.IsValid() )
+			if ( !Occupiable.IsValid() )
 			{
 				if ( !IsUsingAbility() )
 				{
@@ -689,6 +716,10 @@ namespace Facepunch.RTS
 				{
 					TickAbility();
 				}
+			}
+			else if ( Item.Occupant?.CanAttack == true )
+			{
+				TickOccupantAttack();
 			}
 
 			if ( Weapon.IsValid() )
@@ -860,6 +891,22 @@ namespace Facepunch.RTS
 				FindTargetEnemy();
 				_nextFindTarget = 1;
 			}
+		}
+
+		private void TickOccupantAttack()
+		{
+			var isTargetInRange = IsTargetInRange();
+			var isTargetValid = IsTargetValid();
+
+			if ( isTargetValid && isTargetInRange && _target.Type == TargetType.Attack )
+			{
+				if ( Weapon.IsValid() && Weapon.CanAttack() )
+				{
+					Weapon.Attack();
+				}
+			}
+
+			TickFindTarget();
 		}
 
 		private void TickInteractWithTarget()
@@ -1103,7 +1150,7 @@ namespace Facepunch.RTS
 
 			UI.SetActive( EnableDrawing );
 
-			if ( Occupying.IsValid() )
+			if ( Occupiable.IsValid() )
 			{
 				Circle.EnableDrawing = false;
 				EnableDrawing = false;
@@ -1148,7 +1195,10 @@ namespace Facepunch.RTS
 		protected virtual void OnTargetChanged()
 		{
 			if ( Weapon.IsValid() )
+			{
 				Weapon.Target = _target.Entity;
+				Weapon.Occupiable = Occupiable;
+			}
 
 			SpinSpeed = null;
 		}

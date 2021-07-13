@@ -9,9 +9,12 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Cannonfodder";
 		public override string UniqueId => "unit.cannonfodder";
 		public override string Description => "A basic dispensable Terry armed with only a pistol.";
-		public override bool CanOccupy => true;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 1;
+		public override OccupantSettings Occupant => new()
+		{
+			CanAttack = false
+		};
 		public override Dictionary<string, float> Resistances => new()
 		{
 			["resistance.fire"] = -0.2f

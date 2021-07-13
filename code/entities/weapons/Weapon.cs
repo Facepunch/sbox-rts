@@ -7,6 +7,7 @@ namespace Facepunch.RTS
 	public partial class Weapon : AnimEntity
 	{
 		[Net] public AnimEntity Attacker { get; set; }
+		[Net] public Entity Occupiable { get; set; }
 		[Net] public Entity Target { get; set; }
 		public virtual bool BoneMerge => true;
 		public virtual bool IsMelee => false;
@@ -16,6 +17,11 @@ namespace Facepunch.RTS
 		public virtual float FireRate => 1f;
 		public TimeSince LastAttack { get; set; }
 
+		public Weapon()
+		{
+			EnableAllCollisions = false;
+		}
+
 		public virtual bool CanSeeTarget()
 		{
 			var aimRay = GetAimRay();
@@ -23,8 +29,8 @@ namespace Facepunch.RTS
 				.EntitiesOnly()
 				.HitLayer( CollisionLayer.Debris, false )
 				.WithoutTags( "unit" )
+				.Ignore( Occupiable )
 				.Ignore( Attacker )
-				.Ignore( this )
 				.Run();
 
 			// Did we make it mostly to our target position?
@@ -57,6 +63,12 @@ namespace Facepunch.RTS
 
 		public virtual Transform? GetMuzzle()
 		{
+			if ( Occupiable is IOccupiableEntity occupiable )
+			{
+				var attachment = occupiable.GetAttackAttachment( Target );
+				if ( attachment.HasValue ) return attachment;
+			}
+
 			return GetAttachment( "muzzle", true );
 		}
 
@@ -80,12 +92,12 @@ namespace Facepunch.RTS
 			};
 		}
 
-		public virtual void DoImpactEffect( TraceResult trace, float damage )
+		public virtual void DoImpactEffect( Vector3 position, Vector3 normal, float damage )
 		{
 			// Don't go crazy with impact effects because we fire fast.
 			if ( Rand.Float( 1f ) >= 0.5f && Target is IDamageable damageable )
 			{
-				damageable.DoImpactEffects( trace );
+				damageable.DoImpactEffects( position, normal );
 			}
 		}
 
@@ -94,38 +106,33 @@ namespace Facepunch.RTS
 		{
 			Host.AssertClient();
 
-			if ( !IsMelee )
+			if ( IsMelee ) return;
+
+			var muzzle = GetMuzzle();
+
+			if ( muzzle.HasValue )
 			{
-				Particles.Create( "particles/pistol_muzzleflash.vpcf", this, "muzzle" );
+				var particles = Particles.Create( "particles/pistol_muzzleflash.vpcf" );
+				particles.SetPosition( 0, muzzle.Value.Position );
+				particles.SetForward( 0, muzzle.Value.Rotation.Forward );
 			}
 		}
 
 		public virtual void ShootBullet( float force, float damage )
 		{
 			var aimRay = GetAimRay();
-			var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
-				.EntitiesOnly()
-				.HitLayer( CollisionLayer.Debris, false )
-				.UseHitboxes()
-				.Ignore( Attacker )
-				.Ignore( this )
-				.Run();
+			var endPos = Target.WorldSpaceBounds.Center;
+			var damageInfo = DamageInfo.FromBullet( endPos, aimRay.Direction * 100 * force, damage )
+				.WithAttacker( Attacker )
+				.WithWeapon( this );
 
-			if ( trace.Entity == Target )
+			Target.TakeDamage( damageInfo );
+
+			DoImpactEffect( endPos, aimRay.Direction, damage );
+
+			if ( Target is IDamageable damageable && Rand.Float( 1f ) > 0.7f  )
 			{
-				var damageInfo = DamageInfo.FromBullet( trace.EndPos, trace.Direction * 100 * force, damage )
-					.UsingTraceResult( trace )
-					.WithAttacker( Attacker )
-					.WithWeapon( this );
-
-				trace.Entity.TakeDamage( damageInfo );
-
-				DoImpactEffect( trace, damage );
-
-				if ( Target is IDamageable damageable && Rand.Float( 1f ) > 0.7f  )
-				{
-					damageable.CreateDamageDecals( trace.EndPos );
-				}
+				damageable.CreateDamageDecals( endPos );
 			}
 		}
 	}

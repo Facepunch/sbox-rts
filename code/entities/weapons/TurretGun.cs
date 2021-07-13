@@ -27,19 +27,12 @@ namespace Facepunch.RTS
 
 		public override Transform? GetMuzzle()
 		{
-			return Attacker.GetAttachment( "muzzle", true );
-		}
-
-
-		[ClientRpc]
-		protected override void ShootEffects()
-		{
-			Host.AssertClient();
-			
-			if ( Attacker.IsValid() )
+			if ( Occupiable.IsValid() )
 			{
-				Particles.Create( "particles/turret/muzzleflash.vpcf", Attacker, "muzzle" );
+				return base.GetMuzzle();
 			}
+
+			return Attacker.GetAttachment( "muzzle", true );
 		}
 
 		[Event.Tick]
