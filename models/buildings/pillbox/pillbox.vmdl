@@ -1,0 +1,95 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:modeldoc29:version{3cec427c-1b0e-4d48-a90a-0436f33a6041} -->
+{
+	rootNode = 
+	{
+		_class = "RootNode"
+		children = 
+		[
+			{
+				_class = "RenderMeshList"
+				children = 
+				[
+					{
+						_class = "RenderMeshFile"
+						filename = "models\\buildings\\pillbox\\dmx\\mesh\\pillbox.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = [  ]
+						}
+					},
+				]
+			},
+			{
+				_class = "AttachmentList"
+				children = 
+				[
+					{
+						_class = "Attachment"
+						name = "window1"
+						parent_bone = ""
+						relative_origin = [ 81.223282, -41.984497, 53.580181 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "window2"
+						parent_bone = ""
+						relative_origin = [ 77.845673, 44.142189, 53.580181 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "window3"
+						parent_bone = ""
+						relative_origin = [ -0.583931, 85.503304, 53.580181 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "window4"
+						parent_bone = ""
+						relative_origin = [ -77.412346, 45.837433, 53.580181 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "window5"
+						parent_bone = ""
+						relative_origin = [ -78.651192, -40.917934, 53.580181 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "window6"
+						parent_bone = ""
+						relative_origin = [ -0.975861, -82.769867, 53.580181 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+				]
+			},
+		]
+		model_archetype = ""
+		primary_associated_entity = ""
+		anim_graph_name = ""
+	}
+}
