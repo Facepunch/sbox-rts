@@ -65,7 +65,6 @@
 					m_vDomainMaxs = [ 0.0, 0.0 ]
 				}
 			}
-			m_bDisableOperator = true
 		},
 		{
 			_class = "C_INIT_InitVec"
@@ -118,6 +117,7 @@
 				}
 			}
 			m_nOutputField = "1"
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_INIT_InitFloat"
@@ -130,8 +130,8 @@
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
 				m_nVectorComponent = 0
-				m_flRandomMin = 0.1
-				m_flRandomMax = 0.2
+				m_flRandomMin = 0.2
+				m_flRandomMax = 0.5
 				m_nRandomMode = "PF_RANDOM_MODE_CONSTANT"
 				m_flLOD0 = 0.0
 				m_flLOD1 = 0.0
@@ -272,22 +272,31 @@
 				m_nEndControlPointNumber = 1
 			}
 			m_fMaxDistance = 10.0
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_INIT_MoveBetweenPoints"
+			m_flSpeedMin = 800.0
+			m_flSpeedMax = 800.0
+			m_flEndSpread = 10.0
+			m_flEndOffset = 1.0
+			m_bTrailBias = true
 		},
 	]
 	m_Operators = 
 	[
 		{
 			_class = "C_OP_FadeAndKill"
-			m_bDisableOperator = true
+			m_flEndFadeInTime = 0.15
 		},
 		{
 			_class = "C_OP_BasicMovement"
-			m_fDrag = 0.1
 		},
 		{
 			_class = "C_OP_InterpolateRadius"
-			m_flEndScale = 4.0
-			m_bDisableOperator = true
+			m_flEndScale = 2.0
+			m_flStartScale = 0.0
+			m_bEaseInAndOut = true
 		},
 		{
 			_class = "C_OP_SetVec"
@@ -434,7 +443,7 @@
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 0.75
+				m_flLiteralValue = 0.8
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
