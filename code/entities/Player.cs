@@ -315,7 +315,7 @@ namespace Facepunch.RTS
 
 				var worker = new UnitEntity();
 				worker.Position = trace.EndPos;
-				worker.Assign( bot, "unit.assault" );
+				worker.Assign( bot, "unit.worker" );
 			}
 
 			base.Simulate( client );
