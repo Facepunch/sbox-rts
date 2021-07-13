@@ -3,8 +3,8 @@
 	_class = "CParticleSystemDefinition"
 	m_nBehaviorVersion = 10
 	m_flConstantRadius = 1.0
-	m_nMaxParticles = 125
-	m_flConstantLifespan = 2.0
+	m_nMaxParticles = 128
+	m_flConstantLifespan = 5.0
 	m_controlPointConfigurations = 
 	[
 		{
@@ -1391,6 +1391,7 @@
 		},
 		{
 			_class = "C_OP_Decay"
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_OP_SpinUpdate"
@@ -1473,6 +1474,11 @@
 					m_vDomainMaxs = [ 2.0, 2.0 ]
 				}
 			}
+		},
+		{
+			_class = "C_OP_FadeAndKill"
+			m_flEndFadeInTime = 2.0
+			m_bForcePreserveParticleOrder = true
 			m_bDisableOperator = true
 		},
 		{
@@ -1982,6 +1988,16 @@
 			m_flStartScale = 0.0
 			m_flEndScale = 2.0
 			m_bEaseInAndOut = true
+			m_bDisableOperator = true
+			m_flEndTime = 0.0
+		},
+		{
+			_class = "C_OP_EndCapTimedDecay"
+			m_flDecayTime = 5.0
+		},
+		{
+			_class = "C_OP_AlphaDecay"
+			m_flMinAlpha = 1.0
 			m_bDisableOperator = true
 		},
 	]
@@ -3038,6 +3054,7 @@
 			m_bSaturateColorPreAlphaBlend = false
 			m_bAdditive = true
 			m_hTexture = resource:"materials/particle/fire_particle_2/fire_particle_2.vtex"
+			m_nColorBlendType = "PARTICLE_COLOR_BLEND_ADD"
 		},
 		{
 			_class = "C_OP_RenderStandardLight"
@@ -3244,6 +3261,7 @@
 			}
 			m_bCastShadows = true
 			m_bCannotBeRefracted = false
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_OP_RenderDeferredLight"
