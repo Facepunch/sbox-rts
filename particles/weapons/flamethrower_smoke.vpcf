@@ -3,7 +3,7 @@
 	_class = "CParticleSystemDefinition"
 	m_nBehaviorVersion = 10
 	m_nMaxParticles = 128
-	m_flConstantLifespan = 10.0
+	m_flConstantLifespan = 7.0
 	m_controlPointConfigurations = 
 	[
 		{
@@ -372,7 +372,7 @@
 		},
 		{
 			_class = "C_OP_EndCapTimedDecay"
-			m_flDecayTime = 2.0
+			m_flDecayTime = 7.0
 		},
 		{
 			_class = "C_OP_AlphaDecay"
