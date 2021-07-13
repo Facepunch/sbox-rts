@@ -1,0 +1,30 @@
+﻿itemresourcevalue {
+    .icon {
+        background-color: white;
+        margin-right: 4px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .label {
+        color: red;
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    &.lerping {
+        .label {
+            font-size: 20px;
+        }
+    }
+
+    &.affordable {
+        .label {
+            color: white;
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

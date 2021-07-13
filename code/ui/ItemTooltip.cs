@@ -6,96 +6,9 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Facepunch.RTS;
 
 namespace Facepunch.RTS
 {
-	public class ItemResourceValue : Panel
-	{
-		public Panel Icon { get; private set; }
-		public Label Label { get; set; }
-		public int NumericValue
-		{
-			get
-			{
-				return Convert.ToInt32( Label.Text );
-			}
-
-			set
-			{
-				_lerpToStartValue = value;
-				_lerpToEndValue = value;
-				Label.Text = value.ToString();
-			}
-		}
-
-		private int _lerpToEndValue;
-		private int _lerpToStartValue;
-		private float _lerpToDuration;
-		private RealTimeUntil _lerpToEndTime;
-
-		public ItemResourceValue()
-		{
-			Icon = Add.Panel( "icon" );
-			Label = Add.Label( "", "label" );
-		}
-
-		public void LerpTo( int value, float duration )
-		{
-			_lerpToEndValue = value;
-			_lerpToEndTime = duration;
-			_lerpToDuration = duration;
-		}
-
-		public void Update( ResourceType type, int value )
-		{
-			var icon = type.GetIcon();
-
-			if ( icon != null )
-			{
-				Icon.Style.Background = new PanelBackground
-				{
-					SizeX = Length.Percent( 100f ),
-					SizeY = Length.Percent( 100f ),
-					Texture = icon
-				};
-
-				Icon.Style.Dirty();
-			}
-
-			NumericValue = value;
-		}
-
-		public override void Tick()
-		{
-			UpdateLerp();
-
-			base.Tick();
-		}
-
-		private void UpdateLerp()
-		{
-			if ( _lerpToStartValue == _lerpToEndValue )
-			{
-				SetClass( "lerping", false );
-				return;
-			}
-
-			var fraction = Easing.EaseInOut( ((_lerpToDuration - _lerpToEndTime) / _lerpToDuration).Clamp( 0f, 1f ) );
-
-			if ( fraction == 1f )
-			{
-				NumericValue = _lerpToEndValue;
-				return;
-			}
-
-			Label.Text = MathF.Ceiling( _lerpToStartValue + ((_lerpToEndValue - _lerpToStartValue) * fraction) ).ToString();
-
-			SetClass( "lerping", true );
-		}
-	}
-
 	public class ItemTooltip : Panel
 	{
 		public static ItemTooltip Instance { get; private set; }
@@ -106,8 +19,8 @@ namespace Facepunch.RTS
 		public bool IsShowing { get; private set; }
 		public object Target { get; private set; }
 		public PopulationLabel Population { get; private set; }
-		public Panel CostContainer { get; private set; }
-		public Dictionary<ResourceType, ItemResourceValue> Costs { get; private set; }
+		public ItemResourceValues Costs { get; private set; }
+		public ResistanceValues Resistances { get; private set; }
 
 		public ItemTooltip()
 		{
@@ -116,15 +29,20 @@ namespace Facepunch.RTS
 			Name = Add.Label( "", "name" );
 			Desc = Add.Label( "", "desc" );
 
-			Costs = new();
 			Instance = this;
 
-			CostContainer = Add.Panel( "costs" );
+			Costs = AddChild<ItemResourceValues>( "costs" );
+			Resistances = AddChild<ResistanceValues>( "resistances" );
 
-			AddResource( ResourceType.Stone );
-			AddResource( ResourceType.Beer );
-			AddResource( ResourceType.Metal );
-			AddResource( ResourceType.Plasma );
+			Costs.AddResource( ResourceType.Stone );
+			Costs.AddResource( ResourceType.Beer );
+			Costs.AddResource( ResourceType.Metal );
+			Costs.AddResource( ResourceType.Plasma );
+
+			foreach ( var kv in Managers.Resistances.Table )
+			{
+				Resistances.AddResistance( kv.Value );
+			}
 
 			Population = AddChild<PopulationLabel>( "population" );
 		}
@@ -163,7 +81,7 @@ namespace Facepunch.RTS
 			Name.Text = ability.Name;
 			Desc.Text = ability.Description;
 
-			foreach ( var kv in Costs )
+			foreach ( var kv in Costs.Values )
 			{
 				if ( ability.Costs.TryGetValue( kv.Key, out var cost ) )
 				{
@@ -177,6 +95,8 @@ namespace Facepunch.RTS
 				}
 			}
 
+			Resistances.SetVisible( false );
+
 			Population.SetClass( "hidden", true );
 		}
 
@@ -188,7 +108,7 @@ namespace Facepunch.RTS
 			Name.Text = entity.Name;
 			Desc.Text = entity.Description;
 
-			foreach ( var kv in Costs )
+			foreach ( var kv in Costs.Values )
 			{
 				if ( kv.Key == entity.Resource )
 				{
@@ -201,6 +121,8 @@ namespace Facepunch.RTS
 					kv.Value.SetClass( "hidden", true );
 				}
 			}
+
+			Resistances.SetVisible( false );
 
 			Population.SetClass( "hidden", true );
 		}
@@ -215,23 +137,45 @@ namespace Facepunch.RTS
 			Name.Text = item.Name;
 			Desc.Text = item.Description;
 
-			CostContainer.SetClass( "hidden", hideCosts );
+			Costs.SetVisible( !hideCosts );
 
 			if ( !hideCosts )
 			{
-				foreach ( var kv in Costs )
+				foreach ( var kv in Costs.Values )
 				{
 					if ( item.Costs.TryGetValue( kv.Key, out var cost ) )
 					{
 						kv.Value.Label.Text = cost.ToString();
-						kv.Value.SetClass( "affordable", player.GetResource( kv.Key ) >= cost );
-						kv.Value.SetClass( "hidden", false );
+						kv.Value.SetAffordable( player.GetResource( kv.Key ) >= cost );
+						kv.Value.SetVisible( true );
 					}
 					else
 					{
-						kv.Value.SetClass( "hidden", true );
+						kv.Value.SetVisible( false );
 					}
 				}
+			}
+
+			if ( item is IResistorItem resistor && resistor.Resistances.Count > 0 )
+			{
+				foreach ( var kv in Resistances.Values )
+				{
+					if ( resistor.Resistances.TryGetValue( kv.Key, out var resistance ) )
+					{
+						kv.Value.Update( resistance );
+						kv.Value.SetVisible( true );
+					}
+					else
+					{
+						kv.Value.SetVisible( false );
+					}
+				}
+
+				Resistances.SetVisible( true );
+			}
+			else
+			{
+				Resistances.SetVisible( false );
 			}
 
 			if ( item is BaseUnit unit )
@@ -280,13 +224,6 @@ namespace Facepunch.RTS
 				Style.Top = Length.Pixels( position.y - 32 );
 				Style.Dirty();
 			}
-		}
-
-		private void AddResource( ResourceType type )
-		{
-			var cost = CostContainer.AddChild<ItemResourceValue>();
-			cost.Update( type, 0 );
-			Costs.Add( type, cost );
 		}
 	}
 }

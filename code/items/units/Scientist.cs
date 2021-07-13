@@ -41,6 +41,10 @@ namespace Facepunch.RTS.Units
 		{
 			ResourceType.Plasma
 		};
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.fire"] = -0.2f
+		};
 		public override HashSet<string> Dependencies => new()
 		{
 			"tech.extraction"

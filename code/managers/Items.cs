@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamelib.FlowFields;
 
-namespace Facepunch.RTS
+namespace Facepunch.RTS.Managers
 {
 	public static partial class Items
 	{

@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS.Buildings
 {
-    public abstract class BaseBuilding : BaseItem, IOccupiableItem
+    public abstract class BaseBuilding : BaseItem, IOccupiableItem, IResistorItem
 	{
 		public override Color Color => new Color( 0.8f, 0.8f, 0.8f );
 		public virtual HashSet<string> Buildables => new();

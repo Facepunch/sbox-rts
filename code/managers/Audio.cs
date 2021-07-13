@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace Facepunch.RTS
+namespace Facepunch.RTS.Managers
 {
 	public static partial class Audio
 	{

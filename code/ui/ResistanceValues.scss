@@ -1,0 +1,11 @@
+﻿resistancevalues {
+    display: flex;
+
+    resistancevalue {
+        margin-right: 16px;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

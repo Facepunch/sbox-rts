@@ -1,0 +1,24 @@
+﻿resistancevalue {
+    .icon {
+        background-color: white;
+        margin-right: 4px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .label {
+        color: greenyellow;
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    &.weakness {
+        .label {
+            color: orangered;
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

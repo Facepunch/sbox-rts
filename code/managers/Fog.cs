@@ -4,7 +4,7 @@ using Sandbox;
 using System;
 using System.Collections.Generic;
 
-namespace Facepunch.RTS
+namespace Facepunch.RTS.Managers
 {
 	public static partial class Fog
 	{

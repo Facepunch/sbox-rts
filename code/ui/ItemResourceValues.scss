@@ -1,0 +1,11 @@
+﻿itemresourcevalues {
+    display: flex;
+
+    itemresourcevalue {
+        margin-right: 16px;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}
