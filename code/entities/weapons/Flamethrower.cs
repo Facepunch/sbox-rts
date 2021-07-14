@@ -46,7 +46,7 @@ namespace Facepunch.RTS
 
 				Fire.SetPosition( 1, Target.Position );
 
-				KillFireTime = 0.5f;
+				KillFireTime = FireRate * 2f;
 			}
 		}
 
@@ -58,13 +58,33 @@ namespace Facepunch.RTS
 			base.OnDestroy();
 		}
 
+		private void RemoveParticles()
+		{
+			Fire.Destroy();
+			Fire = null;
+		}
+
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
-			if ( KillFireTime && Fire != null )
+			if ( Fire == null ) return;
+
+			if ( !Target.IsValid() )
 			{
-				Fire.Destroy();
-				Fire = null;
+				RemoveParticles();
+				return;
+			}
+
+			var muzzle = GetMuzzle();
+
+			if ( muzzle.HasValue )
+			{
+				Fire.SetPosition( 0, muzzle.Value.Position );
+			}
+
+			if ( KillFireTime  )
+			{
+				RemoveParticles();
 			}
 		}
 	}

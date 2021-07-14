@@ -27,6 +27,7 @@ namespace Facepunch.RTS.Buildings
 		{
 			"unit.ranger",
 			"unit.apc",
+			"unit.buggy",
 			"unit.tank"
 		};
 	}

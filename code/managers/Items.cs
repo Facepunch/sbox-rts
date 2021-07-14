@@ -27,6 +27,26 @@ namespace Facepunch.RTS.Managers
 			return Ghost.IsValid();
 		}
 
+		public static UnitEntity CreateUnit( Player player, BaseUnit item )
+		{
+			UnitEntity unit;
+
+			if ( string.IsNullOrEmpty( item.Entity ) )
+				unit = new UnitEntity();
+			else
+				unit = Library.Create<UnitEntity>( item.Entity );
+
+			unit.Assign( player, item );
+
+			return unit;
+		}
+
+		public static UnitEntity CreateUnit( Player player, string itemId )
+		{
+			var item = Find<BaseUnit>( itemId );
+			return CreateUnit( player, item );
+		}
+
 		[ServerCmd]
 		public static void StartBuilding( int workerId, uint itemId, string cursorOrigin, string cursorAim )
 		{

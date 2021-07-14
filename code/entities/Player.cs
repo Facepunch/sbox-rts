@@ -7,6 +7,7 @@ using Facepunch.RTS.Units;
 using System;
 using Gamelib.Extensions;
 using Facepunch.RTS;
+using Facepunch.RTS.Managers;
 
 namespace Facepunch.RTS
 {
@@ -313,9 +314,8 @@ namespace Facepunch.RTS
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
 				var bot = RTS.Game.Round.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
 
-				var worker = new UnitEntity();
+				var worker = Items.CreateUnit( bot, "unit.worker" );
 				worker.Position = trace.EndPos;
-				worker.Assign( bot, "unit.worker" );
 			}
 
 			base.Simulate( client );

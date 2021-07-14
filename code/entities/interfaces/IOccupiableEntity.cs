@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		public bool CanOccupyUnits { get; }
 		public int NetworkIdent { get; }
 		public Player Player { get; }
-
+		public bool CanOccupantsAttack();
 		public IList<UnitEntity> GetOccupantsList();
 		public Vector3? GetVacatePosition( UnitEntity unit );
 		public void DamageOccupants( DamageInfo info );

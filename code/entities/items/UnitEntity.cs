@@ -127,6 +127,8 @@ namespace Facepunch.RTS
 			Rank = Ranks.Find( Kills );
 		}
 
+		public Entity GetTargetEntity() => _target.Entity;
+
 		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
 
 		public bool CanGather( ResourceType type )
@@ -307,9 +309,9 @@ namespace Facepunch.RTS
 			base.TakeDamage( info );
 		}
 
-		public virtual void ApplyResistances( DamageInfo info )
+		public virtual bool CanOccupantsAttack()
 		{
-
+			return true;
 		}
 
 		public override void StartAbility( BaseAbility ability, AbilityTargetInfo info )
@@ -895,14 +897,19 @@ namespace Facepunch.RTS
 
 		private void TickOccupantAttack()
 		{
-			var isTargetInRange = IsTargetInRange();
-			var isTargetValid = IsTargetValid();
+			if ( Occupiable is not IOccupiableEntity occupiable ) return;
 
-			if ( isTargetValid && isTargetInRange && _target.Type == TargetType.Attack )
+			if ( occupiable.CanOccupantsAttack() )
 			{
-				if ( Weapon.IsValid() && Weapon.CanAttack() )
+				var isTargetInRange = IsTargetInRange();
+				var isTargetValid = IsTargetValid();
+
+				if ( isTargetValid && isTargetInRange && _target.Type == TargetType.Attack )
 				{
-					Weapon.Attack();
+					if ( Weapon.IsValid() && Weapon.CanAttack() )
+					{
+						Weapon.Attack();
+					}
 				}
 			}
 

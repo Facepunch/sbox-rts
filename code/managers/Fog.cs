@@ -64,7 +64,7 @@ namespace Facepunch.RTS.Managers
 		private static readonly List<FogCullable> _cullables = new();
 		private static readonly List<FogViewer> _viewers = new();
 
-		private static IEnumerable<SceneParticleObject> _particles;
+		private static IEnumerable<SceneParticleObject> _particleContainers;
 		private static Texture _texture;
 		private static int _resolution;
 		private static byte[] _data;
@@ -308,23 +308,23 @@ namespace Facepunch.RTS.Managers
 
 		private static void CheckParticleVisibility( Vector3 position, float range )
 		{
-			foreach ( var particle in _particles )
+			foreach ( var container in _particleContainers )
 			{
-				if ( particle.ShouldDrawParticles )
+				if ( container.ParticleRenderingEnabled )
 					continue;
 
-				if ( particle.Transform.Position.Distance( position ) <= range )
+				if ( container.Transform.Position.Distance( position ) <= range )
 				{
-					particle.ShouldDrawParticles = true;
+					container.ParticleRenderingEnabled = true;
 				}
 			}
 		}
 
 		private static void CullParticles()
 		{
-			foreach ( var particle in _particles )
+			foreach ( var container in _particleContainers )
 			{
-				particle.ShouldDrawParticles = false;
+				container.ParticleRenderingEnabled = false;
 			}
 		}
 
@@ -342,7 +342,7 @@ namespace Facepunch.RTS.Managers
 				cullable.Object.MakeVisible( false );
 			}
 
-			_particles = SceneObject.All.OfType<SceneParticleObject>();
+			_particleContainers = SceneObject.All.OfType<SceneParticleObject>();
 
 			CullParticles();
 

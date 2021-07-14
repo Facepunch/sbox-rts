@@ -193,8 +193,7 @@ namespace Facepunch.RTS
 
 		public void SpawnUnit( BaseUnit unit )
 		{
-			var entity = new UnitEntity();
-			entity.Assign( Player, unit );
+			var entity = Items.CreateUnit( Player, unit );
 
 			if ( unit.UseRenderColor )
 				entity.RenderColor = Player.TeamColor;
@@ -275,6 +274,11 @@ namespace Facepunch.RTS
 				var occupant = occupants[i];
 				occupant.TakeDamage( info );
 			}
+		}
+
+		public virtual bool CanOccupantsAttack()
+		{
+			return true;
 		}
 
 		protected override void ServerTick()
