@@ -21,8 +21,6 @@ namespace Facepunch.RTS
 				Particles = Particles.Create( "particles/weapons/flamethrower_fire.vpcf" );
 				Particles.SetPosition( 0, Target.WorldSpaceBounds.Center );
 				Particles.SetPosition( 1, new Vector3( 1f, 0f, 0f ) );
-
-				Log.Info( "yes" );
 			}
 		}
 

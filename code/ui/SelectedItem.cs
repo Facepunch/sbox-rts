@@ -427,7 +427,7 @@ namespace Facepunch.RTS
 			if ( item is UnitEntity unit )
 				UpdateCommands( unit.Item.Buildables, unit.Item.Abilities );
 			else if ( item is BuildingEntity building )
-				UpdateCommands( building.Item.Buildables );
+				UpdateCommands( building.Item.Buildables, building.Item.Abilities );
 		}
 
 		private void UpdateCommands( HashSet<string> buildables, HashSet<string> abilities = null )
@@ -454,7 +454,7 @@ namespace Facepunch.RTS
 			{
 				var ability = Item.GetAbility( v );
 
-				if ( ability != null && ability.HasDependencies() )
+				if ( ability != null && ability.HasDependencies() && ability.IsAvailable() )
 				{
 					var button = AddChild<ItemCommandAbility>( "command" );
 					button.Update( Item, ability );

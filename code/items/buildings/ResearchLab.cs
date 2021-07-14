@@ -29,6 +29,7 @@ namespace Facepunch.RTS.Buildings
 			"tech.extraction",
 			"tech.syringes",
 			"tech.armoredplating",
+			"tech.infrastructure",
 			"tech.carbines",
 			"tech.pyrotechnics"
 		};

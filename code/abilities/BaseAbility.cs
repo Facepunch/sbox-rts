@@ -11,6 +11,7 @@ namespace Facepunch.RTS
 		public virtual string Description => "";
 		public virtual AbilityTargetType TargetType => AbilityTargetType.Self;
 		public virtual AbilityTargetTeam TargetTeam => AbilityTargetTeam.Self;
+		public virtual HashSet<string> TargetWhitelist => new();
 		public virtual Dictionary<ResourceType, int> Costs => new();
 		public virtual Color Color => Color.White;
 		public virtual Texture Icon => null;
@@ -32,6 +33,19 @@ namespace Facepunch.RTS
 		{
 			UniqueId = uniqueId;
 			User = user;
+		}
+
+		public virtual bool IsAvailable()
+		{
+			return true;
+		}
+
+		public virtual bool CanTarget( ISelectable target )
+		{
+			if ( TargetWhitelist.Count > 0 && !TargetWhitelist.Contains( target.ItemId ) )
+				return false;
+
+			return true;
 		}
 
 		public float GetCooldownTimeLeft()
@@ -86,6 +100,9 @@ namespace Facepunch.RTS
 
 			if ( TargetTeam == AbilityTargetTeam.Self && target.Player != player )
 				return false;
+
+			if ( TargetType == AbilityTargetType.Unit || TargetType == AbilityTargetType.Building )
+				return CanTarget( target );
 
 			return true;
 		}

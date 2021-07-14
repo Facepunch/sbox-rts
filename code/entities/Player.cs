@@ -314,7 +314,7 @@ namespace Facepunch.RTS
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
 				var bot = RTS.Game.Round.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
 
-				var worker = Items.CreateUnit( bot, "unit.worker" );
+				var worker = Items.Create<UnitEntity>( bot, "unit.worker" );
 				worker.Position = trace.EndPos;
 			}
 

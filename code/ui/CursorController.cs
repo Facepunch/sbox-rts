@@ -70,7 +70,7 @@ namespace Facepunch.RTS
 		[Event.BuildInput]
 		private void BuildInput( InputBuilder builder )
 		{
-			if ( Items.IsPlacingBuilding() || Abilities.IsSelectingTarget() )
+			if ( Items.IsGhostValid() || Abilities.IsSelectingTarget() )
 				return;
 
 			if ( builder.Pressed( InputButton.Attack1 ) )
@@ -92,25 +92,32 @@ namespace Facepunch.RTS
 					{
 						var targetNetworkId = ((Entity)selectable).NetworkIdent;
 
+						if ( !selectable.IsLocalPlayers )
+						{
+							Items.Attack( ((Entity)selectable).NetworkIdent );
+							return;
+						}
+						
+						if ( selectable is BuildingEntity building  )
+						{
+							if ( building.IsUnderConstruction )
+							{
+								Items.Construct( targetNetworkId );
+								return;
+							}
+							else if ( building.CanDepositResources )
+							{
+								Items.Deposit( targetNetworkId );
+								return;
+							}
+						}
+
 						if ( selectable is IOccupiableEntity occupiable )
 						{
 							if ( occupiable.CanOccupyUnits )
 							{
 								Items.Occupy( targetNetworkId );
-								return;
 							}
-						}
-
-						if ( !selectable.IsLocalPlayers )
-						{
-							Items.Attack( ((Entity)selectable).NetworkIdent );
-						}
-						else if ( selectable is BuildingEntity building  )
-						{
-							if ( building.IsUnderConstruction )
-								Items.Construct( targetNetworkId );
-							else if ( building.CanDepositResources )
-								Items.Deposit( targetNetworkId );
 						}
 					}
 					else if ( trace.Entity is ResourceEntity resource)

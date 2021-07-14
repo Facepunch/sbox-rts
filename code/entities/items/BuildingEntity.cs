@@ -66,6 +66,7 @@ namespace Facepunch.RTS
 			{
 				unit.OnOccupy( this );
 				Occupants.Add( unit );
+				OnOccupied( unit );
 				return true;
 			} 
 
@@ -107,6 +108,7 @@ namespace Facepunch.RTS
 			{
 				unit.OnVacate( this );
 				Occupants.Remove( unit );
+				OnEvicted( unit );
 			}
 		}
 
@@ -114,8 +116,9 @@ namespace Facepunch.RTS
 		{
 			for ( int i = 0; i < Occupants.Count; i++ )
 			{
-				var occupant = Occupants[i];
-				occupant.OnVacate( this );
+				var unit = Occupants[i];
+				unit.OnVacate( this );
+				OnEvicted( unit );
 			}
 
 			Occupants.Clear();
@@ -193,17 +196,12 @@ namespace Facepunch.RTS
 
 		public void SpawnUnit( BaseUnit unit )
 		{
-			var entity = Items.CreateUnit( Player, unit );
+			var entity = Items.Create( Player, unit );
 
 			if ( unit.UseRenderColor )
 				entity.RenderColor = Player.TeamColor;
 
 			PlaceNear( entity );
-		}
-
-		public Vector3? GetVacatePosition( UnitEntity unit )
-		{
-			return null;
 		}
 
 		public BaseItem UnqueueItem( uint queueId )
@@ -258,6 +256,11 @@ namespace Facepunch.RTS
 			base.TakeDamage( info );
 		}
 
+		public virtual Vector3? GetVacatePosition( UnitEntity unit )
+		{
+			return null;
+		}
+
 		public virtual void DamageOccupants( DamageInfo info )
 		{
 			var scale = Item.Occupiable.DamageScale;
@@ -280,6 +283,10 @@ namespace Facepunch.RTS
 		{
 			return true;
 		}
+
+		protected virtual void OnOccupied( UnitEntity unit ) { }
+
+		protected virtual void OnEvicted( UnitEntity unit ) { }
 
 		protected override void ServerTick()
 		{

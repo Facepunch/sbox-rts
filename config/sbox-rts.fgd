@@ -136,6 +136,18 @@ metadata
 ]
 
 // 
+// Facepunch.RTS.TunnelEntity : Facepunch.RTS.BuildingEntity 
+// 
+@PointClass = building_tunnel : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : ""
+]
+
+// 
 // Facepunch.RTS.BeerResource : Facepunch.RTS.ResourceEntity 
 // 
 @PointClass model() = resource_beer : ""

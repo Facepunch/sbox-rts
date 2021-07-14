@@ -17,12 +17,13 @@ namespace Facepunch.RTS
 		public Dictionary<string, BaseAbility> Abilities { get; private set; }
 		public Dictionary<string, BaseStatus> Statuses { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
-		[Net, OnChangedCallback] public uint ItemId { get; set; }
+		[Net, OnChangedCallback] public uint ItemNetworkId { get; set; }
 		[Net] public Player Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }
 		public EntityHudAnchor UI { get; private set; }
 		public EntityHudIcon StatusIcon { get; private set; }
 
+		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );
 		public bool IsLocalPlayers => Player.IsValid() && Player.IsLocalPawn;
 
@@ -33,7 +34,7 @@ namespace Facepunch.RTS
 			get
 			{
 				if ( _itemCache == null )
-					_itemCache = Items.Find<T>( ItemId );
+					_itemCache = Items.Find<T>( ItemNetworkId );
 				return _itemCache;
 			}
 		}
@@ -123,7 +124,7 @@ namespace Facepunch.RTS
 
 			UsingAbility = ability;
 
-			if ( ability.Cooldown == 0f )
+			if ( ability.Duration == 0f )
 			{
 				FinishAbility();
 			}
@@ -195,7 +196,7 @@ namespace Facepunch.RTS
 
 			Owner = player;
 			Player = player;
-			ItemId = item.NetworkId;
+			ItemNetworkId = item.NetworkId;
 
 			OnItemChanged( item );
 			OnPlayerAssigned( player );
@@ -293,7 +294,7 @@ namespace Facepunch.RTS
 
 		}
 
-		protected virtual void OnItemIdChanged()
+		protected virtual void OnItemNetworkIdChanged()
 		{
 			CreateAbilities();
 		}
@@ -404,18 +405,27 @@ namespace Facepunch.RTS
 				Target = target as ISelectable,
 				Origin = origin
 			} );
+			
+			RefreshSelection();
 		}
 
 		[ClientRpc]
 		private void ClientFinishAbility()
 		{
-			FinishAbility();
+			FinishAbility(); RefreshSelection();
 		}
 
 		[ClientRpc]
 		private void ClientCancelAbility()
 		{
 			CancelAbility();
+			RefreshSelection();
+		}
+
+		private void RefreshSelection()
+		{
+			if ( !IsLocalPlayers || !IsSelected ) return;
+			SelectedItem.Instance.Update( Player.Selection );
 		}
 	}
 }

@@ -22,32 +22,37 @@ namespace Facepunch.RTS.Managers
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			if ( Entity.FindByIndex( entityId ) is not UnitEntity unit )
+			if ( Entity.FindByIndex( entityId ) is not ISelectable selectable )
 				return;
 
 			if ( Entity.FindByIndex( targetId ) is not ISelectable target )
 				return;
 
-			var ability = unit.GetAbility( abilityId );
+			var ability = selectable.GetAbility( abilityId );
 			if ( ability == null ) return;
 
 			if ( !ability.IsTargetValid( target ) )
 				return;
 
-			if ( unit.Player == caller && unit.Item.Abilities.Contains( abilityId ) )
+			var item = Items.Find<BaseItem>( selectable.ItemId );
+
+			if ( selectable.Player == caller && item.Abilities.Contains( abilityId ) )
 			{
 				var position = target.Position;
 
-				if ( unit.Position.Distance( position ) > ability.MaxDistance )
+				if ( selectable.Position.Distance( position ) > ability.MaxDistance )
 					return;
 
 				if ( ability.CanUse() == RequirementError.Success )
 				{
+					if ( !ability.CanTarget( target ) )
+						return;
+
 					ResourceHint.Send( caller, 2f, position, ability.Costs, Color.Green );
 
 					caller.TakeResources( ability );
 
-					unit.StartAbility( ability, new AbilityTargetInfo()
+					selectable.StartAbility( ability, new AbilityTargetInfo()
 					{
 						Target = target,
 						Origin = position
@@ -64,21 +69,23 @@ namespace Facepunch.RTS.Managers
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			if ( Entity.FindByIndex( entityId ) is not UnitEntity unit )
+			if ( Entity.FindByIndex( entityId ) is not ISelectable selectable )
 				return;
 
 
-			var ability = unit.GetAbility( abilityId );
+			var ability = selectable.GetAbility( abilityId );
 			if ( ability == null ) return;
 
 			if ( ability.TargetType != AbilityTargetType.None )
 				return;
 
-			if ( unit.Player == caller && unit.Item.Abilities.Contains( abilityId ) )
+			var item = Items.Find<BaseItem>( selectable.ItemId );
+
+			if ( selectable.Player == caller && item.Abilities.Contains( abilityId ) )
 			{
 				var position = origin.ToVector3();
 
-				if ( unit.Position.Distance( position ) > ability.MaxDistance )
+				if ( selectable.Position.Distance( position ) > ability.MaxDistance )
 					return;
 
 				if ( ability.CanUse() == RequirementError.Success )
@@ -87,7 +94,7 @@ namespace Facepunch.RTS.Managers
 
 					caller.TakeResources( ability );
 
-					unit.StartAbility( ability, new AbilityTargetInfo()
+					selectable.StartAbility( ability, new AbilityTargetInfo()
 					{
 						Target = null,
 						Origin = position
@@ -104,27 +111,29 @@ namespace Facepunch.RTS.Managers
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			if ( Entity.FindByIndex( entityId ) is not UnitEntity unit )
+			if ( Entity.FindByIndex( entityId ) is not ISelectable selectable )
 				return;
 
-			var ability = unit.GetAbility( abilityId );
+			var ability = selectable.GetAbility( abilityId );
 			if ( ability == null ) return;
 
 			if ( ability.TargetType != AbilityTargetType.Self )
 				return;
 
-			if ( unit.Player == caller && unit.Item.Abilities.Contains( abilityId ) )
+			var item = Items.Find<BaseItem>( selectable.ItemId );
+
+			if ( selectable.Player == caller && item.Abilities.Contains( abilityId ) )
 			{
 				if ( ability.CanUse() == RequirementError.Success )
 				{
-					ResourceHint.Send( caller, 2f, unit.Position, ability.Costs, Color.Green );
+					ResourceHint.Send( caller, 2f, selectable.Position, ability.Costs, Color.Green );
 
 					caller.TakeResources( ability );
 
-					unit.StartAbility( ability, new AbilityTargetInfo()
+					selectable.StartAbility( ability, new AbilityTargetInfo()
 					{
-						Target = unit,
-						Origin = unit.Position
+						Target = selectable,
+						Origin = selectable.Position
 					} );
 				}
 			}

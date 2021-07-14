@@ -16,5 +16,9 @@ namespace Facepunch.RTS.Tech
 			[ResourceType.Beer] = 200,
 			[ResourceType.Metal] = 300
 		};
+		public override HashSet<string> Dependencies => new()
+		{
+			"tech.infrastructure"
+		};
 	}
 }

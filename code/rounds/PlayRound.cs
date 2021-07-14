@@ -51,11 +51,11 @@ namespace Facepunch.RTS
 						var spawnpoint = spawnpoints[0];
 						spawnpoints.RemoveAt( 0 );
 
-						var worker = Items.CreateUnit( player, "unit.worker" );
+						var worker = Items.Create<UnitEntity>( player, "unit.worker" );
 						worker.Position = spawnpoint.Position + (Vector3.Random * 20f).WithZ( spawnpoint.Position.z );
 						player.AddPopulation( worker.Item.Population );
 
-						var flamethrower = Items.CreateUnit( player, "unit.pyromaniac" );
+						var flamethrower = Items.Create<UnitEntity>( player, "unit.pyromaniac" );
 						flamethrower.Position = spawnpoint.Position + (Vector3.Random * 20f).WithZ( spawnpoint.Position.z );
 						player.AddPopulation( flamethrower.Item.Population );
 

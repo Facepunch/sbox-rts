@@ -22,12 +22,26 @@ namespace Facepunch.RTS.Managers
 			BuildTable();
 		}
 
-		public static bool IsPlacingBuilding()
+		public static bool IsGhostValid()
 		{
 			return Ghost.IsValid();
 		}
 
-		public static UnitEntity CreateUnit( Player player, BaseUnit item )
+		public static BuildingEntity Create( Player player, BaseBuilding item )
+		{
+			BuildingEntity building;
+
+			if ( string.IsNullOrEmpty( item.Entity ) )
+				building = new BuildingEntity();
+			else
+				building = Library.Create<BuildingEntity>( item.Entity );
+
+			building.Assign( player, item );
+
+			return building;
+		}
+
+		public static UnitEntity Create( Player player, BaseUnit item )
 		{
 			UnitEntity unit;
 
@@ -41,10 +55,20 @@ namespace Facepunch.RTS.Managers
 			return unit;
 		}
 
-		public static UnitEntity CreateUnit( Player player, string itemId )
+		public static T Create<T>( Player player, string itemId ) where T : ISelectable, new()
 		{
-			var item = Find<BaseUnit>( itemId );
-			return CreateUnit( player, item );
+			T output;
+
+			var item = Find<BaseItem>( itemId );
+
+			if ( string.IsNullOrEmpty( item.Entity ) )
+				output = new T();
+			else
+				output = Library.Create<T>( item.Entity );
+
+			output.Assign( player, itemId );
+
+			return output;
 		}
 
 		[ServerCmd]
@@ -77,10 +101,9 @@ namespace Facepunch.RTS.Managers
 
 						caller.TakeResources( item );
 
-						var building = new BuildingEntity();
+						var building = Items.Create( caller, item );
 
 						building.Position = trace.EndPos;
-						building.Assign( caller, item );
 						building.StartConstruction();
 
 						worker.Construct( building );
