@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	partial class SMG : Weapon
 	{
 		public override float FireRate => 0.1f;
-		public override int BaseDamage => 1.5f;
+		public override int BaseDamage => 1;
 		public override int HoldType => 2;
 
 		public override void Spawn()
