@@ -8,6 +8,7 @@ namespace Facepunch.RTS
 	{
 		public override float FireRate => 0.25f;
 		public override int BaseDamage => 3;
+		public override int HoldType => 2;
 
 		public override void Spawn()
 		{
