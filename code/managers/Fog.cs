@@ -4,6 +4,8 @@ using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Vector3n = System.Numerics.Vector3;
 
 namespace Facepunch.RTS.Managers
 {
@@ -27,7 +29,7 @@ namespace Facepunch.RTS.Managers
 			public Vector3 TopRight;
 			public Vector3 BottomRight;
 			public Vector3 BottomLeft;
-			public Vector3 Origin;
+			public Vector3n Origin;
 			public float HalfSize => Size * 0.5f;
 			public float Size;
 
@@ -91,6 +93,8 @@ namespace Facepunch.RTS.Managers
 			FlowFieldGround.OnUpdated += OnGroundUpdated;
 
 			Clear();
+
+			UpdateFogMap();
 		}
 
 		public static void MakeVisible( Player player, Vector3 position, float range )
@@ -172,12 +176,12 @@ namespace Facepunch.RTS.Managers
 			}
 		}
 
-		public static bool IsAreaSeen( Vector3 location )
+		public static bool IsAreaSeen( Vector3n location )
 		{
 			var pixelScale = (_resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
-			var x = (origin.x * pixelScale).CeilToInt() + (_resolution / 2);
-			var y = (origin.y * pixelScale).CeilToInt() + (_resolution / 2);
+			var x = (origin.X * pixelScale).CeilToInt() + (_resolution / 2);
+			var y = (origin.Y * pixelScale).CeilToInt() + (_resolution / 2);
 			var i = ((y * _resolution) + x);
 
 			if ( i <= 0 || i > _resolution * _resolution )
@@ -200,52 +204,54 @@ namespace Facepunch.RTS.Managers
 		}
 
 		[ClientRpc]
-		public static void MakeVisible( Vector3 position, float range )
+		public static void MakeVisible( Vector3n position, float range )
 		{
 			PunchHole( position, range );
 			FillRegion( position, range, 200 );
 		}
 
-		internal static float SdCircle( Vector2 p, float r )
+		internal static float SdCircle( Vector3n p, float r )
 		{
-			return p.Length - r;
+			return p.Length() - r;
 		}
 
-		public static void PaintDot( Vector2 p, float r, int index, float smooth )
+		public static void PaintDot( Vector3n p, float r, int index, float smooth )
 		{
 			byte sdf =  Convert.ToByte( Math.Clamp( SdCircle( p, r ) * smooth * 255, 0, 255 ) );
 			_data[ index ] = Math.Min( sdf, _data[ index ] );
 		}
 
-		public static void PunchHole( Vector3 location, float range )
+		public static void PunchHole( Vector3n location, float range )
 		{
 			var pixelScale = (_resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
 			var radius = (range * pixelScale).CeilToInt();
-			var centerPixel = new Vector2( (origin * pixelScale) + (_resolution / 2) );
+			var centerPixelX = (origin.X * pixelScale) + (_resolution / 2);
+			var centerPixelY = (origin.Y * pixelScale) + (_resolution / 2);
 			var renderRadius = radius * ((float)Math.PI * 0.5f);
 			
-			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, _resolution - 1 ); x++ )
+			for( int x = (int)Math.Max( centerPixelX - renderRadius, 0 ); x < (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 ); x++ )
 			{
-				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, _resolution - 1 ); y++ )
+				for( int y = (int)Math.Max( centerPixelY - renderRadius, 0 ); y < (int)Math.Min( centerPixelY + renderRadius, _resolution - 1 ); y++ )
 				{
 					var index = ((y * _resolution) + x);
-					PaintDot( centerPixel - new Vector2( x, y ), radius, index, 0.25f );
+					PaintDot( new Vector3n( centerPixelX - x, centerPixelY - y, 0f ), radius, index, 0.25f );
 				}	
 			}
 		}
 
-		public static void FillRegion( Vector3 location, float range, byte alpha )
+		public static void FillRegion( Vector3n location, float range, byte alpha )
 		{
 			var pixelScale = (_resolution / Bounds.Size);
 			var origin = location - Bounds.Origin;
 			var radius = (range * pixelScale).CeilToInt();
-			var centerPixel = new Vector2( (origin * pixelScale) + (_resolution / 2) );
+			var centerPixelX = (origin.X * pixelScale) + (_resolution / 2);
+			var centerPixelY = (origin.Y * pixelScale) + (_resolution / 2);
 			var renderRadius = radius * ((float)Math.PI * 0.5f);
 
-			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, _resolution - 1 ); x++ )
+			for( int x = (int)Math.Max( centerPixelX - renderRadius, 0 ); x < (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 ); x++ )
 			{
-				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, _resolution - 1 ); y++ )
+				for( int y = (int)Math.Max( centerPixelY - renderRadius, 0 ); y < (int)Math.Min( centerPixelY + renderRadius, _resolution - 1 ); y++ )
 				{
 					var index = ((y * _resolution) + x);
 					_data[ index ] = Math.Max( alpha, _data[ index ] );
@@ -280,7 +286,7 @@ namespace Facepunch.RTS.Managers
 			Renderer.FogMaterial.OverrideTexture( "Color", _texture );
 		}
 
-		private static void AddRange( Vector3 position, float range )
+		private static void AddRange( Vector3n position, float range )
 		{
 			FogCullable cullable;
 
@@ -306,7 +312,7 @@ namespace Facepunch.RTS.Managers
 			CheckParticleVisibility( position, renderRange );
 		}
 
-		private static void CheckParticleVisibility( Vector3 position, float range )
+		private static void CheckParticleVisibility( Vector3n position, float range )
 		{
 			/*
 			foreach ( var container in _particleContainers )
@@ -332,44 +338,52 @@ namespace Facepunch.RTS.Managers
 			*/
 		}
 
-		[Event.Frame]
-		private static void Tick()
+		private static async void UpdateFogMap()
 		{
-			if ( !IsActive ) return;
-
-			FogCullable cullable;
-
-			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			while ( true )
 			{
-				cullable = _cullables[i];
-				cullable.IsVisible = false;
-				cullable.Object.MakeVisible( false );
+				if ( !IsActive )
+				{
+					await GameTask.Delay( 60 );
+					continue;
+				}
+
+				FogCullable cullable;
+
+				for ( var i = _cullables.Count - 1; i >= 0; i-- )
+				{
+					cullable = _cullables[i];
+					cullable.IsVisible = false;
+					cullable.Object.MakeVisible( false );
+				}
+
+				//_particleContainers = SceneObject.All.OfType<SceneParticleObject>();
+
+				CullParticles();
+
+				// Our first pass will create the seen history map.
+				for ( var i = 0; i < _viewers.Count; i++ )
+				{
+					var viewer = _viewers[i];
+					FillRegion( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
+				}
+
+				// Our second pass will show what is currently visible.
+				for ( var i = 0; i < _viewers.Count; i++ )
+				{
+					var viewer = _viewers[i];
+					var position = viewer.Object.Position;
+					var range = viewer.Object.LineOfSight;
+
+					AddRange( position, range );
+
+					viewer.LastPosition = position;
+				}
+
+				_texture.Update( _data );
+
+				await GameTask.Delay( 100 );
 			}
-
-			//_particleContainers = SceneObject.All.OfType<SceneParticleObject>();
-
-			CullParticles();
-
-			// Our first pass will create the seen history map.
-			for ( var i = 0; i < _viewers.Count; i++ )
-			{
-				var viewer = _viewers[i];
-				FillRegion( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
-			}
-
-			// Our second pass will show what is currently visible.
-			for ( var i = 0; i < _viewers.Count; i++ )
-			{
-				var viewer = _viewers[i];
-				var position = viewer.Object.Position;
-				var range = viewer.Object.LineOfSight;
-
-				AddRange( position, range );
-
-				viewer.LastPosition = position;
-			}
-
-			_texture.Update( _data );
 		}
 	}
 }
