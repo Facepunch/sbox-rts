@@ -75,7 +75,7 @@ namespace Facepunch.RTS
 
 						Fog.Show( player );
 						Fog.Clear( player );
-						Fog.MakeVisible( player, spawnpoint.Position, 2500f );
+						Fog.MakeVisible( player, spawnpoint.Position, 2500 );
 
 						AddPlayer( player );
 					}

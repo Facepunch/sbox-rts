@@ -18,7 +18,7 @@ namespace Facepunch.RTS.Units
 		public override string Entity => "unit_buggy";
 		public override int NodeSize => 100;
 		public override float AttackRadius => 1000f;
-		public override float LineOfSightRadius => 1000f;
+		public override int LineOfSightRadius => 1000;
 		public override OccupiableSettings Occupiable => new()
 		{
 			AttackAttachments = new string[] { "muzzle" },

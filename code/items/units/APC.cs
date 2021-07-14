@@ -15,7 +15,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
 		public override int NodeSize => 100;
-		public override float LineOfSightRadius => 1500f;
+		public override int LineOfSightRadius => 1500;
 		public override OccupiableSettings Occupiable => new()
 		{
 			MaxOccupants = 4,

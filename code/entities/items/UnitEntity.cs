@@ -68,7 +68,7 @@ namespace Facepunch.RTS
 		[Net, Local] public float GatherProgress { get; private set; }
 		[Net, Local] public bool IsGathering { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
-		[Net] public float LineOfSight { get; private set; }
+		[Net] public int LineOfSight { get; private set; }
 		[Net, OnChangedCallback] public int Kills { get; set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();

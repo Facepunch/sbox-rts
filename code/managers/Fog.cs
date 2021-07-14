@@ -66,7 +66,10 @@ namespace Facepunch.RTS.Managers
 
 		private static IEnumerable<SceneParticleObject> _particleContainers;
 		private static Texture _texture;
+		private static float _pixelScale;
+		private static int _halfResolution;
 		private static int _resolution;
+		private static IntVector3 _origin;
 		private static byte[] _data;
 
 		public static void Initialize()
@@ -84,6 +87,8 @@ namespace Facepunch.RTS.Managers
 			else
 				Bounds.SetSize( 30000f );
 
+			_origin = IntVector3.From( Bounds.Origin );
+
 			Renderer.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
 
 			UpdateTextureSize();
@@ -93,7 +98,7 @@ namespace Facepunch.RTS.Managers
 			Clear();
 		}
 
-		public static void MakeVisible( Player player, Vector3 position, float range )
+		public static void MakeVisible( Player player, Vector3 position, int range )
 		{
 			MakeVisible( To.Single( player ), position, range );
 		}
@@ -165,7 +170,7 @@ namespace Facepunch.RTS.Managers
 
 				if ( data.Object == viewer )
 				{
-					FillRegion( data.LastPosition, data.Object.LineOfSight, 200 );
+					FillRegion( IntVector3.From( data.LastPosition ), data.Object.LineOfSight, 200 );
 					_viewers.RemoveAt( i );
 					break;
 				}
@@ -200,52 +205,110 @@ namespace Facepunch.RTS.Managers
 		}
 
 		[ClientRpc]
-		public static void MakeVisible( Vector3 position, float range )
+		public static void MakeVisible( Vector3 position, int range )
 		{
-			PunchHole( position, range );
-			FillRegion( position, range, 200 );
+			var vector = IntVector3.From( position );
+
+			PunchHole( vector, range );
+			FillRegion( vector, range, 200 );
 		}
 
-		internal static float SdCircle( Vector2 p, float r )
+		internal static float SdCircle( IntVector3 p, int r )
 		{
-			return p.Length - r;
+			return p.Length() - r;
 		}
 
-		public static void PaintDot( Vector2 p, float r, int index, float smooth )
+		public static void PaintDot( IntVector3 p, int r, int index, float smooth )
 		{
-			byte sdf =  Convert.ToByte( Math.Clamp( SdCircle( p, r ) * smooth * 255, 0, 255 ) );
+			byte sdf = (byte)Math.Clamp( SdCircle( p, r ) * smooth * 255, 0, 255 );
 			_data[ index ] = Math.Min( sdf, _data[ index ] );
 		}
 
-		public static void PunchHole( Vector3 location, float range )
+		public struct IntVector2
 		{
-			var pixelScale = (_resolution / Bounds.Size);
-			var origin = location - Bounds.Origin;
-			var radius = (range * pixelScale).CeilToInt();
-			var centerPixel = new Vector2( (origin * pixelScale) + (_resolution / 2) );
-			var renderRadius = radius * ((float)Math.PI * 0.5f);
-			
-			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, _resolution - 1 ); x++ )
+			public int x;
+			public int y;
+
+			public IntVector2( int x, int y )
 			{
-				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, _resolution - 1 ); y++ )
+				this.x = x;
+				this.y = y;
+			}
+		}
+
+		private static Dictionary<int, int> _squareRootCache = new();
+
+		public struct IntVector3
+		{
+			public static IntVector3 From( Vector3 position )
+			{
+				return new IntVector3()
+				{
+					x = (int)position.x,
+					y = (int)position.y,
+					z = (int)position.z
+				};
+			}
+
+			public IntVector3( int x, int y, int z )
+			{
+				this.x = x;
+				this.y = y;
+				this.z = z;
+			}
+
+			public int x;
+			public int y;
+			public int z;
+
+			public int Length()
+			{
+				var squared = x * x + y * y;
+
+				if ( _squareRootCache.TryGetValue( squared, out var length ) )
+					return length;
+
+				length = (int)Math.Sqrt( x * x + y * y );
+
+				_squareRootCache.Add( squared, length );
+
+				return length;
+			}
+
+			public static IntVector3 operator -( IntVector3 a, IntVector3 b ) => new( a.x - b.x, a.y - b.y, a.z - b.z );
+			public static IntVector3 operator -( IntVector3 a, IntVector2 b ) => new( a.x - b.x, a.y - b.y, a.z );
+			public static IntVector3 operator +( IntVector3 a, int b ) => new( a.x + b, a.y + b, a.z + b );
+			public static IntVector3 operator *( IntVector3 a, float b ) => new( (int)(a.x * b), (int)(a.y * b), (int)(a.z * b) );
+			public static IntVector3 operator *( IntVector3 a, int b ) => new( a.x * b, a.y * b, a.z * b );
+		}
+
+		public static void PunchHole( IntVector3 location, int range )
+		{
+			var origin = location - _origin;
+			var radius = (int)(range * _pixelScale);
+			var center = (origin * _pixelScale) + _halfResolution;
+			int renderRadius = (int)(radius * (MathF.PI * 0.5f));
+			
+			for ( int x = Math.Max( center.x - renderRadius, 0 ); x < Math.Min( center.x + renderRadius, _resolution - 1 ); x++ )
+			{
+				for ( int y = Math.Max( center.y - renderRadius, 0 ); y < Math.Min( center.y + renderRadius, _resolution - 1 ); y++ )
 				{
 					var index = ((y * _resolution) + x);
-					PaintDot( centerPixel - new Vector2( x, y ), radius, index, 0.25f );
+					PaintDot( center - new IntVector2( x, y ), radius, index, 0.25f );
 				}	
 			}
 		}
 
-		public static void FillRegion( Vector3 location, float range, byte alpha )
+		public static void FillRegion( IntVector3 location, int range, byte alpha )
 		{
-			var pixelScale = (_resolution / Bounds.Size);
-			var origin = location - Bounds.Origin;
-			var radius = (range * pixelScale).CeilToInt();
-			var centerPixel = new Vector2( (origin * pixelScale) + (_resolution / 2) );
-			var renderRadius = radius * ((float)Math.PI * 0.5f);
+			var origin = location - _origin;
+			var radius = (int)(range * _pixelScale);
+			var center = (origin * _pixelScale) + _halfResolution;
+			int renderRadius = (int)(radius * (MathF.PI * 0.5f));
 
-			for( int x = (int)Math.Max( centerPixel.x - renderRadius, 0 ); x < (int)Math.Min( centerPixel.x + renderRadius, _resolution - 1 ); x++ )
+			for ( int x = Math.Max( center.x - renderRadius, 0 ); x < Math.Min( center.x + renderRadius, _resolution - 1 ); x++ )
 			{
-				for( int y = (int)Math.Max( centerPixel.y - renderRadius, 0 ); y < (int)Math.Min( centerPixel.y + renderRadius, _resolution - 1 ); y++ )
+				for( int y = Math.Max( center.y - renderRadius, 0 ); y < Math.Min( center.y + renderRadius, _resolution - 1 ); y++ )
 				{
 					var index = ((y * _resolution) + x);
 					_data[ index ] = Math.Max( alpha, _data[ index ] );
@@ -268,6 +331,8 @@ namespace Facepunch.RTS.Managers
 			}
 
 			_resolution = Math.Max( ((float)(Bounds.Size / 30f)).CeilToInt(), 128 );
+			_halfResolution = _resolution / 2;
+			_pixelScale = _resolution / Bounds.Size;
 			_texture = Texture.Create( _resolution, _resolution, ImageFormat.A8 ).Finish();
 			_data = new byte[_resolution * _resolution];
 
@@ -280,11 +345,11 @@ namespace Facepunch.RTS.Managers
 			Renderer.FogMaterial.OverrideTexture( "Color", _texture );
 		}
 
-		private static void AddRange( Vector3 position, float range )
+		private static void AddRange( Vector3 position, int range )
 		{
 			FogCullable cullable;
 
-			PunchHole( position, range );
+			PunchHole( IntVector3.From( position ), range );
 
 			// We multiply by 12.5% to cater for the render range.
 			var renderRange = range * 1.125f;
@@ -332,7 +397,7 @@ namespace Facepunch.RTS.Managers
 			*/
 		}
 
-		[Event.Frame]
+		[Event.Tick]
 		private static void Tick()
 		{
 			if ( !IsActive ) return;
@@ -354,7 +419,7 @@ namespace Facepunch.RTS.Managers
 			for ( var i = 0; i < _viewers.Count; i++ )
 			{
 				var viewer = _viewers[i];
-				FillRegion( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
+				FillRegion( IntVector3.From( viewer.LastPosition ), viewer.Object.LineOfSight, 200 );
 			}
 
 			// Our second pass will show what is currently visible.

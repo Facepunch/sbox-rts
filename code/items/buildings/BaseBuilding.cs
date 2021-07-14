@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Buildings
 		public virtual OccupiableSettings Occupiable => new();
 		public virtual bool CanDepositResources => false;
 		public virtual Dictionary<string, float> Resistances => new();
-		public virtual float MinLineOfSight => 200f;
+		public virtual int MinLineOfSight => 200;
 		public virtual uint PopulationBoost => 0;
 		public virtual float MaxHealth => 100f;
 		public virtual string Model => "";

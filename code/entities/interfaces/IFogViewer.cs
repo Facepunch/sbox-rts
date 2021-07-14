@@ -9,6 +9,6 @@ namespace Facepunch.RTS
 	public interface IFogViewer
 	{
 		public Vector3 Position { get; set; }
-		public float LineOfSight { get; }
+		public int LineOfSight { get; }
 	}
 }

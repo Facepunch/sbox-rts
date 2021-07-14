@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
 		[Net] public bool IsUnderConstruction { get; private set; }
-		[Net] public float LineOfSight { get; private set; }
+		[Net] public int LineOfSight { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public Entity Target { get; private set; }
 		public uint LastQueueId { get; set; }
@@ -447,7 +447,7 @@ namespace Facepunch.RTS
 			else
 				NextGenerateResources = 0;
 
-			LineOfSight = item.MinLineOfSight + CollisionBounds.Size.Length;
+			LineOfSight = item.MinLineOfSight + (int)CollisionBounds.Size.Length;
 			MaxHealth = item.MaxHealth;
 			Health = item.MaxHealth;
 
