@@ -308,6 +308,7 @@ namespace Facepunch.RTS.Managers
 
 		private static void CheckParticleVisibility( Vector3 position, float range )
 		{
+			/*
 			foreach ( var container in _particleContainers )
 			{
 				if ( container.ParticleRenderingEnabled )
@@ -318,14 +319,17 @@ namespace Facepunch.RTS.Managers
 					container.ParticleRenderingEnabled = true;
 				}
 			}
+			*/
 		}
 
 		private static void CullParticles()
 		{
+			/*
 			foreach ( var container in _particleContainers )
 			{
 				container.ParticleRenderingEnabled = false;
 			}
+			*/
 		}
 
 		[Event.Frame]
@@ -342,7 +346,7 @@ namespace Facepunch.RTS.Managers
 				cullable.Object.MakeVisible( false );
 			}
 
-			_particleContainers = SceneObject.All.OfType<SceneParticleObject>();
+			//_particleContainers = SceneObject.All.OfType<SceneParticleObject>();
 
 			CullParticles();
 

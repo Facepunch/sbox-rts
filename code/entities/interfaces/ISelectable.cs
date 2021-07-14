@@ -27,6 +27,8 @@ namespace Facepunch.RTS
 		public void CancelAbility();
 		public bool IsUsingAbility();
 		public void Assign( Player player, string itemId );
+		public bool ShouldUpdateHud();
+		public void UpdateHudComponents();
 		public bool CanSelect();
 		public void Select();
 		public void Deselect();

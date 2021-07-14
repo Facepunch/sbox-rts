@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 {
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity
 	{
-		[Net] public List<UnitEntity> Occupants { get; private set; }
+		[Net, OnChangedCallback] public List<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
 		public IOccupiableItem OccupiableItem => Item;
 
@@ -29,6 +29,7 @@ namespace Facepunch.RTS
 		public Placeholder Placeholder { get; private set; }
 
 		#region UI
+		public EntityHudIconList OccupantsHud { get; private set; }
 		public EntityHudBar GeneratorBar { get; private set; }
 		public EntityHudBar HealthBar { get; private set; }
 		#endregion
@@ -284,9 +285,50 @@ namespace Facepunch.RTS
 			return true;
 		}
 
-		protected virtual void OnOccupied( UnitEntity unit ) { }
+		public override void UpdateHudComponents()
+		{
+			if ( Health <= MaxHealth * 0.9f || IsUnderConstruction )
+			{
+				HealthBar.Foreground.Style.Width = Length.Fraction( Health / MaxHealth );
+				HealthBar.Foreground.Style.Dirty();
+				HealthBar.SetClass( "hidden", false );
+			}
+			else
+			{
+				HealthBar.SetClass( "hidden", true );
+			}
 
-		protected virtual void OnEvicted( UnitEntity unit ) { }
+			if ( GeneratorBar != null )
+			{
+				var generator = Item.Generator;
+
+				if ( !generator.PerOccupant || Occupants.Count > 0 )
+				{
+					var timeLeft = NextGenerateResources.Relative;
+					GeneratorBar.Foreground.Style.Width = Length.Fraction( 1f - (timeLeft / Item.Generator.Interval) );
+					GeneratorBar.Foreground.Style.Dirty();
+					GeneratorBar.SetClass( "hidden", false );
+				}
+				else
+				{
+					GeneratorBar.SetClass( "hidden", true );
+				}
+			}
+
+			OccupantsHud.SetClass( "hidden", !IsLocalPlayers || Occupants.Count == 0 );
+
+			base.UpdateHudComponents();
+		}
+
+		protected virtual void OnOccupied( UnitEntity unit )
+		{
+			
+		}
+
+		protected virtual void OnEvicted( UnitEntity unit )
+		{
+
+		}
 
 		protected override void ServerTick()
 		{
@@ -351,6 +393,19 @@ namespace Facepunch.RTS
 				}
 
 				NextGenerateResources = generator.Interval;
+			}
+		}
+
+		protected virtual void OnOccupantsChanged()
+		{
+			if ( OccupantsHud == null ) return;
+
+			OccupantsHud.DeleteChildren( true );
+
+			foreach ( var occupant in Occupants )
+			{
+				var icon = OccupantsHud.AddChild<EntityHudIcon>();
+				icon.Texture = occupant.Item.Icon;
 			}
 		}
 
@@ -508,42 +563,14 @@ namespace Facepunch.RTS
 				GeneratorBar = Hud.AddChild<EntityHudBar>( "generator" );
 			}
 
+			if ( IsLocalPlayers )
+			{
+				OccupantsHud = Hud.AddChild<EntityHudIconList>();
+			}
+
 			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
 
 			base.AddHudComponents();
-		}
-
-		protected override void UpdateHudComponents()
-		{
-			if ( Health <= MaxHealth * 0.9f || IsUnderConstruction )
-			{
-				HealthBar.Foreground.Style.Width = Length.Fraction( Health / MaxHealth );
-				HealthBar.Foreground.Style.Dirty();
-				HealthBar.SetClass( "hidden", false );
-			}
-			else
-			{
-				HealthBar.SetClass( "hidden", true );
-			}
-
-			if ( GeneratorBar != null )
-			{
-				var generator = Item.Generator;
-
-				if ( !generator.PerOccupant || Occupants.Count > 0 )
-				{
-					var timeLeft = NextGenerateResources.Relative;
-					GeneratorBar.Foreground.Style.Width = Length.Fraction( 1f - (timeLeft / Item.Generator.Interval) );
-					GeneratorBar.Foreground.Style.Dirty();
-					GeneratorBar.SetClass( "hidden", false );
-				}
-				else
-				{
-					GeneratorBar.SetClass( "hidden", true );
-				}
-			}
-
-			base.UpdateHudComponents();
 		}
 	}
 }

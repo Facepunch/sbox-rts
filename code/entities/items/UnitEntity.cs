@@ -278,6 +278,43 @@ namespace Facepunch.RTS
 			return !Occupiable.IsValid();
 		}
 
+		public override void UpdateHudComponents()
+		{
+			if ( Health <= MaxHealth * 0.9f )
+			{
+				HealthBar.Foreground.Style.Width = Length.Fraction( Health / MaxHealth );
+				HealthBar.Foreground.Style.Dirty();
+				HealthBar.SetClass( "hidden", false );
+			}
+			else
+			{
+				HealthBar.SetClass( "hidden", true );
+			}
+
+			if ( IsGathering && IsLocalPlayers )
+			{
+				GatherBar.Foreground.Style.Width = Length.Fraction( GatherProgress );
+				GatherBar.Foreground.Style.Dirty();
+				GatherBar.SetClass( "hidden", false );
+			}
+			else
+			{
+				GatherBar?.SetClass( "hidden", true );
+			}
+
+			if ( Rank != null )
+			{
+				RankIcon.SetClass( "hidden", false );
+				RankIcon.Texture = Rank.Icon;
+			}
+			else
+			{
+				RankIcon.SetClass( "hidden", true );
+			}
+
+			base.UpdateHudComponents();
+		}
+
 		public override void OnKilled()
 		{
 			var damageInfo = LastDamageTaken;
@@ -1224,43 +1261,6 @@ namespace Facepunch.RTS
 			}
 
 			base.AddHudComponents();
-		}
-
-		protected override void UpdateHudComponents()
-		{
-			if ( Health <= MaxHealth * 0.9f )
-			{
-				HealthBar.Foreground.Style.Width = Length.Fraction( Health / MaxHealth );
-				HealthBar.Foreground.Style.Dirty();
-				HealthBar.SetClass( "hidden", false );
-			}
-			else
-			{
-				HealthBar.SetClass( "hidden", true );
-			}
-
-			if ( IsGathering && IsLocalPlayers )
-			{
-				GatherBar.Foreground.Style.Width = Length.Fraction( GatherProgress );
-				GatherBar.Foreground.Style.Dirty();
-				GatherBar.SetClass( "hidden", false );
-			}
-			else
-			{
-				GatherBar?.SetClass( "hidden", true );
-			}
-
-			if ( Rank != null )
-			{
-				RankIcon.SetClass( "hidden", false );
-				RankIcon.Texture = Rank.Icon;
-			}
-			else
-			{
-				RankIcon.SetClass( "hidden", true );
-			}
-
-			base.UpdateHudComponents();
 		}
 
 		[ClientRpc]

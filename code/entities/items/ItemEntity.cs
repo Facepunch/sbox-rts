@@ -16,6 +16,7 @@ namespace Facepunch.RTS
 
 		public Dictionary<string, BaseAbility> Abilities { get; private set; }
 		public Dictionary<string, BaseStatus> Statuses { get; private set; }
+		public Dictionary<string, ItemComponent> Components { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, OnChangedCallback] public uint ItemNetworkId { get; set; }
 		[Net] public Player Player { get; private set; }
@@ -43,7 +44,38 @@ namespace Facepunch.RTS
 		{
 			Transmit = TransmitType.Always;
 			Statuses = new();
+			Components = new();
 		}
+
+		public C GetComponent<C>() where C : ItemComponent
+		{
+			if ( Components.TryGetValue( typeof( C ).Name, out var component ) )
+				return (component as C);
+
+			return null;
+		}
+
+		public void RemoveComponent<C>() where C : ItemComponent
+		{
+			var componentName = typeof( C ).Name;
+
+			if ( Components.ContainsKey( componentName ) )
+			{
+				Components.Remove( componentName );
+			}
+		}
+
+		public C AddComponent<C>() where  C : ItemComponent
+		{
+			var component = GetComponent<C>();
+			if ( component != null ) return component;
+
+			var type = typeof( C );
+			component = Library.Create<C>( type );
+			Components.Add( type.Name, component );
+
+			return component;
+;		}
 
 		public BaseAbility GetAbility( string id )
 		{
@@ -239,6 +271,26 @@ namespace Facepunch.RTS
 			return true;
 		}
 
+		public virtual bool ShouldUpdateHud()
+		{
+			return EnableDrawing && Hud.IsActive;
+		}
+
+		public virtual void UpdateHudComponents()
+		{
+			var status = Statuses.FirstOrDefault();
+
+			if ( status.Value != null && status.Value.Icon != null )
+			{
+				StatusIcon.Texture = status.Value.Icon;
+				StatusIcon.SetClass( "hidden", false );
+			}
+			else
+			{
+				StatusIcon.SetClass( "hidden", true );
+			}
+		}
+
 		public override void ClientSpawn()
 		{
 			Hud = EntityHud.Instance.Create( this );
@@ -247,16 +299,6 @@ namespace Facepunch.RTS
 			AddHudComponents();
 
 			base.ClientSpawn();
-		}
-
-		[Event.Frame]
-		protected void UpdateHudAnchor()
-		{
-			if ( ShouldUpdateHud() )
-			{
-				UpdateHudComponents();
-				Hud.UpdatePosition();
-			}
 		}
 
 		[Event.Tick]
@@ -303,26 +345,6 @@ namespace Facepunch.RTS
 		protected virtual void AddHudComponents()
 		{
 			StatusIcon = Hud.AddChild<EntityHudIcon>( "status" );
-		}
-
-		protected virtual void UpdateHudComponents()
-		{
-			var status = Statuses.FirstOrDefault();
-
-			if ( status.Value != null && status.Value.Icon != null )
-			{
-				StatusIcon.Texture = status.Value.Icon;
-				StatusIcon.SetClass( "hidden", false );
-			}
-			else
-			{
-				StatusIcon.SetClass( "hidden", true );
-			}
-		}
-
-		protected virtual bool ShouldUpdateHud()
-		{
-			return EnableDrawing && Hud.IsActive;
 		}
 
 		protected override void OnDestroy()

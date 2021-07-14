@@ -271,6 +271,9 @@ namespace Facepunch.RTS
 
 		public override void Simulate( Client client )
 		{
+			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
+			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
+
 			var cameraConfig = RTS.Game.Config.Camera;
 			var velocity = Vector3.Zero;
 			var panSpeed = cameraConfig.PanSpeed - (cameraConfig.PanSpeed * ZoomLevel * 0.6f);
@@ -304,9 +307,6 @@ namespace Facepunch.RTS
 
 			var difference = Position - EyePos;
 			EyeRot = Rotation.LookAt( difference, Vector3.Up );
-
-			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
-			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
 			if ( IsServer && Input.Released( InputButton.Use ) )
 			{

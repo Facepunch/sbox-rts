@@ -1,11 +1,15 @@
 ﻿
 using Sandbox;
 using Sandbox.UI;
-using Sandbox.UI.Construct;
-using System;
+using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
+	public class EntityHudIconList : Panel
+	{
+
+	}
+
 	public class EntityHudIcon : Image
 	{
 
@@ -49,8 +53,26 @@ namespace Facepunch.RTS
 			position *= new Vector3( Screen.Width, Screen.Height ) * ScaleFromScreen;
 
 			Style.Left = Length.Pixels( position.x );
-			Style.Top = Length.Pixels( position.y - 32 );
+			Style.Top = Length.Pixels( position.y - 32f );
 			Style.Dirty();
+		}
+
+		public override void Tick()
+		{
+			if ( Entity is ISelectable selectable )
+			{
+				if ( selectable.ShouldUpdateHud() )
+				{
+					selectable.UpdateHudComponents();
+					UpdatePosition();
+				}
+			}
+			else
+            {
+				UpdatePosition();
+            }
+
+			base.Tick();
 		}
 	}
 
