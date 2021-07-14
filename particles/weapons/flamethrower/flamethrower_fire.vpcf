@@ -3280,7 +3280,7 @@
 	m_Children = 
 	[
 		{
-			m_ChildRef = resource:"particles/weapons/flamethrower_fire_smoke.vpcf"
+			m_ChildRef = resource:"particles/weapons/flamethrower/flamethrower_fire_smoke.vpcf"
 		},
 	]
 }
