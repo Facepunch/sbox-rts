@@ -68,7 +68,10 @@ namespace Facepunch.RTS.Managers
 
 		private static IEnumerable<SceneParticleObject> _particleContainers;
 		private static Texture _texture;
+		private static float _pixelScale;
+		private static int _halfResolution;
 		private static int _resolution;
+		private static Vector3n _origin;
 		private static byte[] _data;
 
 		public static void Initialize()
@@ -178,10 +181,9 @@ namespace Facepunch.RTS.Managers
 
 		public static bool IsAreaSeen( Vector3n location )
 		{
-			var pixelScale = (_resolution / Bounds.Size);
-			var origin = location - Bounds.Origin;
-			var x = (origin.X * pixelScale).CeilToInt() + (_resolution / 2);
-			var y = (origin.Y * pixelScale).CeilToInt() + (_resolution / 2);
+			var origin = location - _origin;
+			var x = (int)(origin.X * _pixelScale) + _halfResolution;
+			var y = (int)(origin.Y * _pixelScale) + _halfResolution;
 			var i = ((y * _resolution) + x);
 
 			if ( i <= 0 || i > _resolution * _resolution )
@@ -223,11 +225,10 @@ namespace Facepunch.RTS.Managers
 
 		public static void PunchHole( Vector3n location, float range )
 		{
-			var pixelScale = (_resolution / Bounds.Size);
-			var origin = location - Bounds.Origin;
-			var radius = (range * pixelScale).CeilToInt();
-			var centerPixelX = (origin.X * pixelScale) + (_resolution / 2);
-			var centerPixelY = (origin.Y * pixelScale) + (_resolution / 2);
+			var origin = location - _origin;
+			var radius = (int)(range * _pixelScale);
+			var centerPixelX = (origin.X * _pixelScale) + _halfResolution;
+			var centerPixelY = (origin.Y * _pixelScale) + _halfResolution;
 			var renderRadius = radius * ((float)Math.PI * 0.5f);
 			
 			for( int x = (int)Math.Max( centerPixelX - renderRadius, 0 ); x < (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 ); x++ )
@@ -242,11 +243,10 @@ namespace Facepunch.RTS.Managers
 
 		public static void FillRegion( Vector3n location, float range, byte alpha )
 		{
-			var pixelScale = (_resolution / Bounds.Size);
-			var origin = location - Bounds.Origin;
-			var radius = (range * pixelScale).CeilToInt();
-			var centerPixelX = (origin.X * pixelScale) + (_resolution / 2);
-			var centerPixelY = (origin.Y * pixelScale) + (_resolution / 2);
+			var origin = location - _origin;
+			var radius = (int)(range * _pixelScale);
+			var centerPixelX = (origin.X * _pixelScale) + _halfResolution;
+			var centerPixelY = (origin.Y * _pixelScale) + _halfResolution;
 			var renderRadius = radius * ((float)Math.PI * 0.5f);
 
 			for( int x = (int)Math.Max( centerPixelX - renderRadius, 0 ); x < (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 ); x++ )
@@ -274,7 +274,10 @@ namespace Facepunch.RTS.Managers
 			}
 
 			_resolution = Math.Max( ((float)(Bounds.Size / 30f)).CeilToInt(), 128 );
+			_halfResolution = _resolution / 2;
+			_pixelScale = (_resolution / Bounds.Size);
 			_texture = Texture.Create( _resolution, _resolution, ImageFormat.A8 ).Finish();
+			_origin = Bounds.Origin;
 			_data = new byte[_resolution * _resolution];
 
 			if ( Renderer == null )

@@ -26,7 +26,7 @@ namespace Facepunch.RTS
 
 		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );
-		public bool IsLocalPlayers => Player.IsValid() && Player.IsLocalPawn;
+		public bool IsLocalPlayers => Local.Pawn == Player;
 
 		private T _itemCache;
 
@@ -45,6 +45,12 @@ namespace Facepunch.RTS
 			Transmit = TransmitType.Always;
 			Statuses = new();
 			Components = new();
+		}
+
+		public bool IsOnScreen()
+		{
+			var position = Position.ToScreen();
+			return position.x > 0f && position.y > 0f && position.x < 1f && position.y < 1f;
 		}
 
 		public C GetComponent<C>() where C : ItemComponent

@@ -666,8 +666,8 @@ namespace Facepunch.RTS
 			SetParent( this );
 
 			Occupiable = (Entity)occupiable;
-			EnableDrawing = false;
 			EnableAllCollisions = false;
+			EnableDrawing = false;
 		}
 
 		public virtual void OnVacate( IOccupiableEntity occupiable )
@@ -683,8 +683,8 @@ namespace Facepunch.RTS
 			}
 
 			Occupiable = null;
-			EnableDrawing = true;
 			EnableAllCollisions = true;
+			EnableDrawing = true;
 		}
 
 		public virtual void DamageOccupants( DamageInfo info )
@@ -1195,12 +1195,12 @@ namespace Facepunch.RTS
 				Hud.Style.Dirty();
 			}
 
-			Hud.SetActive( EnableDrawing );
+			Hud.SetActive( RenderAlpha > 0f );
 
 			if ( Occupiable.IsValid() )
 			{
-				Circle.EnableDrawing = false;
-				EnableDrawing = false;
+				Circle.Alpha = 0f;
+				RenderAlpha = 0f;
 
 				return;
 			}
@@ -1212,12 +1212,16 @@ namespace Facepunch.RTS
 				else
 					Circle.Color = Player.TeamColor;
 
-				Circle.EnableDrawing = true;
+				Circle.Alpha = 1f;
 			}
 
 			if ( IsLocalPlayers )
 			{
-				EnableDrawing = true;
+				var isOnScreen = IsOnScreen();
+
+				Circle.Alpha = isOnScreen ? 1f : 0f;
+				RenderAlpha = isOnScreen ? 1f : 0f;
+				
 				return;
 			}
 
@@ -1235,8 +1239,6 @@ namespace Facepunch.RTS
 			{
 				Circle.Alpha = RenderAlpha;
 			}
-
-			EnableDrawing = (RenderAlpha > 0f);
 		}
 
 		protected virtual void OnTargetChanged()

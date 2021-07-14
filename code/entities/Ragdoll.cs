@@ -1,4 +1,5 @@
 ﻿using Facepunch.RTS.Managers;
+using Gamelib.Extensions;
 using Sandbox;
 using System;
 
@@ -124,7 +125,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			EnableDrawing = (RenderAlpha > 0f);
+			this.SetEnableDrawing( RenderAlpha > 0f );
 		}
 
 		public void MakeVisible( bool isVisible )
