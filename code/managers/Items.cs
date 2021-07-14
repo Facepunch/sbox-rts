@@ -499,12 +499,12 @@ namespace Facepunch.RTS.Managers
 			else
 				Ghost.ShowInvalid();
 
-			if ( valid && Input.Released( InputButton.Attack1 ) )
+			if ( valid && Input.Down( InputButton.Attack1 ) )
 			{
 				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorOrigin.ToCSV(), cursorAim.ToCSV() );
 				Ghost.Delete();
 			}
-			else if ( Input.Released( InputButton.Attack2 ) )
+			else if ( Input.Down( InputButton.Attack2 ) )
 			{
 				Ghost.Delete();
 			}

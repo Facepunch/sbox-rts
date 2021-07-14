@@ -116,8 +116,10 @@ namespace Facepunch.RTS
 				RenderAlpha *= fraction;
 			}
 
-			foreach ( var child in Children )
+			for ( int i = 0; i < Children.Count; i++ )
 			{
+				var child = Children[i];
+
 				if ( child is ModelEntity model )
 				{
 					model.RenderAlpha = RenderAlpha;

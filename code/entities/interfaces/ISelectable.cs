@@ -19,6 +19,7 @@ namespace Facepunch.RTS
 		public Vector3 Position { get; set; }
 		public bool HasStatus( string id );
 		public void TakeDamage( DamageInfo info );
+		public float GetDiameterXY( float scalar, bool smallestSide );
 		public BaseStatus ApplyStatus( string id );
 		public void RemoveStatus( string id );
 		public BaseAbility GetAbility( string id );

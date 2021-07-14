@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Sandbox;
@@ -8,6 +9,7 @@ namespace Facepunch.RTS.Managers
 	public static partial class Abilities
 	{
 		private static BaseAbility SelectingTargetFor { get; set; }
+		private static AbilityCircle TargetCircle { get; set; }
 
 		public static bool IsSelectingTarget()
 		{
@@ -146,7 +148,27 @@ namespace Facepunch.RTS.Managers
 
 		public static void SelectTarget( BaseAbility ability )
 		{
+			StopSelectingTarget();
+
 			SelectingTargetFor = ability;
+
+			TargetCircle = new AbilityCircle
+			{
+				EffectSize = ability.AreaOfEffect,
+				TargetSize = MathF.Max( ability.AreaOfEffect * 0.8f, 100f ),
+				EffectColor = Color.Orange
+			};
+		}
+
+		public static void StopSelectingTarget()
+		{
+			SelectingTargetFor = null;
+
+			if ( TargetCircle.IsValid() )
+			{
+				TargetCircle.Delete();
+				TargetCircle = null;
+			}
 		}
 
 		[Event.Tick.Client]
@@ -155,7 +177,6 @@ namespace Facepunch.RTS.Managers
 			if ( SelectingTargetFor == null ) return;
 
 			var ability = SelectingTargetFor;
-			var player = Local.Pawn as Player;
 
 			if ( ability.User == null || ability.User.Health == 0f )
 			{
@@ -172,19 +193,21 @@ namespace Facepunch.RTS.Managers
 					.WithTag( "flowfield" )
 					.Run();
 
+				TargetCircle.Position = trace.EndPos;
+
 				if ( ability.User.Position.Distance( trace.EndPos ) < ability.MaxDistance )
 				{
-					DebugOverlay.Sphere( trace.EndPos, ability.AreaOfEffect, Color.Green );
+					TargetCircle.TargetColor = Color.Green;
 
-					if ( Input.Released( InputButton.Attack1 ) )
+					if ( Input.Down( InputButton.Attack1 ) )
 					{
-						SelectingTargetFor = null;
+						StopSelectingTarget();
 						UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPos.ToCSV() );
 					}
 				}
 				else
 				{
-					DebugOverlay.Sphere( trace.EndPos, ability.AreaOfEffect, Color.Red );
+					TargetCircle.TargetColor = Color.Red;
 				}
 			}
 			else
@@ -193,26 +216,35 @@ namespace Facepunch.RTS.Managers
 
 				if ( trace.Entity is ISelectable target && target.Position.Distance( ability.User.Position ) < ability.MaxDistance )
 				{
+					TargetCircle.Position = target.Position;
+					TargetCircle.TargetSize = target.GetDiameterXY( 1.3f, true );
+
 					if ( ability.IsTargetValid( target ) )
 					{
-						if ( Input.Released( InputButton.Attack1 ) )
+						if ( Input.Down( InputButton.Attack1 ) )
 						{
-							SelectingTargetFor = null;
+							StopSelectingTarget();
 							UseOnTarget( ability.User.NetworkIdent, ability.UniqueId, target.NetworkIdent );
 						}
 
-						DebugOverlay.Sphere( trace.EndPos, ability.AreaOfEffect, Color.Green );
+						TargetCircle.TargetColor = Color.Green;
+					}
+					else
+					{
+						TargetCircle.TargetColor = Color.Red;
 					}
 				}
 				else
 				{
-					DebugOverlay.Sphere( trace.EndPos, ability.AreaOfEffect, Color.Red );
+					TargetCircle.Position = trace.EndPos;
+					TargetCircle.TargetColor = Color.Red;
+					TargetCircle.TargetSize = MathF.Max( ability.AreaOfEffect * 0.8f, 100f );
 				}
 			}
 
-			if ( Input.Released( InputButton.Attack2 ) )
+			if ( Input.Down( InputButton.Attack2 ) )
 			{
-				SelectingTargetFor = null;
+				StopSelectingTarget();
 			}
 		}
 	}

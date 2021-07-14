@@ -26,7 +26,6 @@ namespace Facepunch.RTS
 		public List<QueueItem> Queue { get; set; }
 		public float NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
-		public Placeholder Placeholder { get; private set; }
 
 		#region UI
 		public EntityHudIconList OccupantsHud { get; private set; }
