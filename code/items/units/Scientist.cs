@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Gamelib.Utility;
 using Sandbox;
 
 namespace Facepunch.RTS.Units
@@ -55,10 +56,9 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Clothing => new()
 		{
-			"models/citizen_clothes/jacket/labcoat.vmdl",
-			"models/citizen_clothes/gloves/gloves_workgloves.vmdl",
-			"models/citizen_clothes/trousers/trousers.lab.vmdl",
-			"models/citizen_clothes/shoes/shoes.workboots.vmdl",
+			CitizenClothing.Shoes.SmartBrown,
+			CitizenClothing.Trousers.Lab,
+			CitizenClothing.Shirt.Longsleeve.Scientist
 		};
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Gamelib.Utility;
+using Sandbox;
 using System.Collections.Generic;
 
 namespace Facepunch.RTS.Units
@@ -47,6 +48,13 @@ namespace Facepunch.RTS.Units
 		public override HashSet<string> Dependencies => new()
 		{
 			"tech.syringes"
+		};
+		public override HashSet<string> Clothing => new()
+		{
+			CitizenClothing.Shoes.Trainers,
+			CitizenClothing.Trousers.Jeans,
+			CitizenClothing.Jacket.Red,
+			CitizenClothing.Hat.Cap
 		};
 	}
 }
