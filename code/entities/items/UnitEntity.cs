@@ -567,7 +567,7 @@ namespace Facepunch.RTS
 		public void MakeVisible( bool isVisible )
 		{
 			TargetAlpha = isVisible ? 1f : 0f;
-			UI.SetActive( isVisible );
+			Hud.SetActive( isVisible );
 		}
 
 		public ModelEntity AttachClothing( string modelName )
@@ -1152,10 +1152,13 @@ namespace Facepunch.RTS
 		{
 			base.ClientTick();
 
-			UI.Style.Opacity = RenderAlpha;
-			UI.Style.Dirty();
+			if ( Hud.Style.Opacity != RenderAlpha )
+			{
+				Hud.Style.Opacity = RenderAlpha;
+				Hud.Style.Dirty();
+			}
 
-			UI.SetActive( EnableDrawing );
+			Hud.SetActive( EnableDrawing );
 
 			if ( Occupiable.IsValid() )
 			{
@@ -1212,12 +1215,12 @@ namespace Facepunch.RTS
 
 		protected override void AddHudComponents()
 		{
-			RankIcon = UI.AddChild<EntityHudIcon>( "rank" );
-			HealthBar = UI.AddChild<EntityHudBar>( "health" );
+			RankIcon = Hud.AddChild<EntityHudIcon>( "rank" );
+			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
 
 			if ( IsLocalPlayers )
 			{
-				GatherBar = UI.AddChild<EntityHudBar>( "gather" );
+				GatherBar = Hud.AddChild<EntityHudBar>( "gather" );
 			}
 
 			base.AddHudComponents();

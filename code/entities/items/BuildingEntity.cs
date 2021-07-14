@@ -505,10 +505,10 @@ namespace Facepunch.RTS
 			// We only want a generator bar is it's our building.
 			if ( IsLocalPlayers && Item.Generator != null )
 			{
-				GeneratorBar = UI.AddChild<EntityHudBar>( "generator" );
+				GeneratorBar = Hud.AddChild<EntityHudBar>( "generator" );
 			}
 
-			HealthBar = UI.AddChild<EntityHudBar>( "health" );
+			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
 
 			base.AddHudComponents();
 		}

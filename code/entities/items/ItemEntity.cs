@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 		[Net, OnChangedCallback] public uint ItemNetworkId { get; set; }
 		[Net] public Player Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }
-		public EntityHudAnchor UI { get; private set; }
+		public EntityHudAnchor Hud { get; private set; }
 		public EntityHudIcon StatusIcon { get; private set; }
 
 		public string ItemId => Item.UniqueId;
@@ -241,7 +241,8 @@ namespace Facepunch.RTS
 
 		public override void ClientSpawn()
 		{
-			UI = EntityHud.Instance.Create( this );
+			Hud = EntityHud.Instance.Create( this );
+			Hud.SetActive( true );
 
 			AddHudComponents();
 
@@ -251,10 +252,10 @@ namespace Facepunch.RTS
 		[Event.Frame]
 		protected void UpdateHudAnchor()
 		{
-			if ( IsClient && ShouldUpdateHud() )
+			if ( ShouldUpdateHud() )
 			{
 				UpdateHudComponents();
-				UI.UpdatePosition();
+				Hud.UpdatePosition();
 			}
 		}
 
@@ -301,7 +302,7 @@ namespace Facepunch.RTS
 
 		protected virtual void AddHudComponents()
 		{
-			StatusIcon = UI.AddChild<EntityHudIcon>( "status" );
+			StatusIcon = Hud.AddChild<EntityHudIcon>( "status" );
 		}
 
 		protected virtual void UpdateHudComponents()
@@ -321,7 +322,7 @@ namespace Facepunch.RTS
 
 		protected virtual bool ShouldUpdateHud()
 		{
-			return EnableDrawing && UI.IsActive;
+			return EnableDrawing && Hud.IsActive;
 		}
 
 		protected override void OnDestroy()
@@ -333,7 +334,7 @@ namespace Facepunch.RTS
 				Deselect();
 			}
 
-			if ( IsClient ) UI.Delete();
+			if ( IsClient ) Hud.Delete();
 
 			base.OnDestroy();
 		}

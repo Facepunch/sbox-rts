@@ -101,7 +101,7 @@ namespace Facepunch.RTS.Managers
 
 						caller.TakeResources( item );
 
-						var building = Items.Create( caller, item );
+						var building = Create( caller, item );
 
 						building.Position = trace.EndPos;
 						building.StartConstruction();
