@@ -1,9 +1,12 @@
-﻿using Facepunch.RTS;
+﻿using System.Collections.Generic;
+using Sandbox;
 
 namespace Facepunch.RTS
 {
 	public interface ISelectable
 	{
+		public Dictionary<string, BaseStatus> Statuses { get; }
+		public BBox WorldSpaceBounds { get; }
 		public int NetworkIdent { get; }
 		public Player Player { get; }
 		public bool IsSelected { get; }
@@ -13,6 +16,10 @@ namespace Facepunch.RTS
 		public float MaxHealth { get; set; }
 		public bool IsLocalPlayers { get; }
 		public Vector3 Position { get; set; }
+		public bool HasStatus( string id );
+		public void TakeDamage( DamageInfo info );
+		public BaseStatus ApplyStatus( string id );
+		public void RemoveStatus( string id );
 		public BaseAbility GetAbility( string id );
 		public void StartAbility( BaseAbility ability, AbilityTargetInfo info );
 		public void FinishAbility();

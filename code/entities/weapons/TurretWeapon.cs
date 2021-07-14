@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
-	[Library("weapon_turret_gun")]
-	public partial class TurretGun : Weapon
+	[Library("weapon_turret")]
+	public partial class TurretWeapon : Weapon
 	{
 		public override float FireRate => 0.1f;
 		public override int BaseDamage => 5;

@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Buildings
 		public override Texture Icon => Texture.Load( "textures/rts/icons/silo.png" );
 		public override int BuildTime => 10;
 		public override float AttackRange => 1200f;
-		public override string Weapon => "weapon_turret_gun";
+		public override string Weapon => "weapon_turret";
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 200,

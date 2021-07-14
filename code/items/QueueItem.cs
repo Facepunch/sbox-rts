@@ -1,6 +1,4 @@
-﻿using Sandbox;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Facepunch.RTS
 {
@@ -22,7 +20,7 @@ namespace Facepunch.RTS
 
 		public float GetTimeLeft()
 		{
-			return Math.Max(FinishTime - RTS.Game.ServerTime, 0f);
+			return Math.Max( FinishTime - RTS.Game.ServerTime, 0f );
 		}
 	}
 }

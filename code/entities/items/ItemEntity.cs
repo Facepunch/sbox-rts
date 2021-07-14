@@ -14,12 +14,14 @@ namespace Facepunch.RTS
 		public virtual bool HasSelectionGlow => true;
 		public virtual int AttackPriority => 0;
 
-		public Dictionary<string, BaseAbility> AbilityTable { get; private set; }
+		public Dictionary<string, BaseAbility> Abilities { get; private set; }
+		public Dictionary<string, BaseStatus> Statuses { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, OnChangedCallback] public uint ItemId { get; set; }
 		[Net] public Player Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }
 		public EntityHudAnchor UI { get; private set; }
+		public EntityHudIcon StatusIcon { get; private set; }
 
 		public bool IsSelected => Tags.Has( "selected" );
 		public bool IsLocalPlayers => Player.IsValid() && Player.IsLocalPawn;
@@ -39,14 +41,64 @@ namespace Facepunch.RTS
 		public ItemEntity()
 		{
 			Transmit = TransmitType.Always;
+			Statuses = new();
 		}
 
 		public BaseAbility GetAbility( string id )
 		{
-			if ( AbilityTable.TryGetValue( id, out var ability ) )
+			if ( Abilities.TryGetValue( id, out var ability ) )
 				return ability;
 
 			return null;
+		}
+
+		public bool HasStatus( string id )
+		{
+			return Statuses.ContainsKey( id );
+		}
+
+		public BaseStatus ApplyStatus( string id )
+		{
+			if ( IsServer ) ClientApplyStatus( To.Everyone, id );
+
+			if ( Statuses.TryGetValue( id, out var status ) )
+			{
+				status.Restart();
+				return status;
+			}
+
+			status = Managers.Statuses.Create( id );
+
+			Statuses.Add( id, status );
+
+			status.Initialize( id, this );
+			status.OnApplied();
+
+			return status;
+		}
+
+		public void RemoveAllStatuses()
+		{
+			if ( IsServer ) ClientRemoveAllStatuses( To.Everyone );
+
+			foreach ( var kv in Statuses )
+			{
+				kv.Value.OnRemoved();
+			}
+
+			Statuses.Clear();
+		}
+
+		public void RemoveStatus( string id )
+		{
+			if ( Statuses.TryGetValue( id, out var status ) )
+			{
+				if ( IsServer )
+					ClientRemoveStatus( To.Everyone, id );
+
+				Statuses.Remove( id );
+				status.OnRemoved();
+			}
 		}
 
 		public bool IsUsingAbility()
@@ -212,31 +264,59 @@ namespace Facepunch.RTS
 			{
 				UsingAbility.Tick();
 			}
+
+			foreach ( var kv in Statuses )
+			{
+				var status = kv.Value;
+
+				if ( status.EndTime )
+					RemoveStatus( status.UniqueId );
+				else
+					status.Tick();
+			}
 		}
 
 		[Event.Tick.Server]
 		protected virtual void ServerTick()
 		{
 			var ability = UsingAbility;
-			if ( ability == null ) return;
 
-			if ( ability.LastUsedTime >= ability.Duration )
+			if ( ability != null && ability.LastUsedTime >= ability.Duration )
 			{
 				FinishAbility();
 			}
 		}
 
 		[Event.Tick.Client]
-		protected virtual void ClientTick() { }
+		protected virtual void ClientTick()
+		{
+
+		}
 
 		protected virtual void OnItemIdChanged()
 		{
 			CreateAbilities();
 		}
 
-		protected virtual void AddHudComponents() { }
+		protected virtual void AddHudComponents()
+		{
+			StatusIcon = UI.AddChild<EntityHudIcon>( "status" );
+		}
 
-		protected virtual void UpdateHudComponents() { }
+		protected virtual void UpdateHudComponents()
+		{
+			var status = Statuses.FirstOrDefault();
+
+			if ( status.Value != null && status.Value.Icon != null )
+			{
+				StatusIcon.Texture = status.Value.Icon;
+				StatusIcon.SetClass( "hidden", false );
+			}
+			else
+			{
+				StatusIcon.SetClass( "hidden", true );
+			}
+		}
 
 		protected virtual bool ShouldUpdateHud()
 		{
@@ -247,6 +327,7 @@ namespace Facepunch.RTS
 		{
 			if ( IsServer )
 			{
+				RemoveAllStatuses();
 				CancelAbility();
 				Deselect();
 			}
@@ -287,14 +368,32 @@ namespace Facepunch.RTS
 
 		protected virtual void CreateAbilities()
 		{
-			AbilityTable = new();
+			Abilities = new();
 
 			foreach ( var id in Item.Abilities )
 			{
-				var ability = Abilities.Create( id );
+				var ability = Managers.Abilities.Create( id );
 				ability.Initialize( id, this );
-				AbilityTable[id] = ability;
+				Abilities[id] = ability;
 			}
+		}
+
+		[ClientRpc]
+		private void ClientRemoveAllStatuses()
+		{
+			RemoveAllStatuses();
+		}
+
+		[ClientRpc]
+		private void ClientApplyStatus( string id )
+		{
+			ApplyStatus( id );
+		}
+
+		[ClientRpc]
+		private void ClientRemoveStatus( string id )
+		{
+			RemoveStatus( id );
 		}
 
 		[ClientRpc]

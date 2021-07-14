@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Facepunch.RTS.Managers;
+using Sandbox;
 using System;
 
 namespace Facepunch.RTS
@@ -12,6 +13,7 @@ namespace Facepunch.RTS
 
 		private Particles Fire { get; set; }
 		private RealTimeUntil KillFireTime { get; set; }
+		private RealTimeUntil NextBurnTime { get; set; }
 
 		public override void Spawn()
 		{
@@ -27,6 +29,12 @@ namespace Facepunch.RTS
 			ShootEffects();
 			//PlaySound( "rust_pistol.shoot" );
 			ShootBullet( 1f, GetDamage() );
+
+			if ( NextBurnTime )
+			{
+				Statuses.Apply( "status_burning", Target.Position, 128f );
+				NextBurnTime = 3f;
+			}
 		}
 
 		[ClientRpc]
