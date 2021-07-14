@@ -49,7 +49,9 @@ namespace Facepunch.RTS
 
 		public C GetComponent<C>() where C : ItemComponent
 		{
-			if ( Components.TryGetValue( typeof( C ).Name, out var component ) )
+			var componentName = Library.GetAttribute( typeof( C ) ).Name;
+
+			if ( Components.TryGetValue( componentName, out var component ) )
 				return (component as C);
 
 			return null;
@@ -57,7 +59,7 @@ namespace Facepunch.RTS
 
 		public void RemoveComponent<C>() where C : ItemComponent
 		{
-			var componentName = typeof( C ).Name;
+			var componentName = Library.GetAttribute( typeof( C ) ).Name;
 
 			if ( Components.ContainsKey( componentName ) )
 			{
@@ -70,9 +72,9 @@ namespace Facepunch.RTS
 			var component = GetComponent<C>();
 			if ( component != null ) return component;
 
-			var type = typeof( C );
-			component = Library.Create<C>( type );
-			Components.Add( type.Name, component );
+			var componentName = Library.GetAttribute( typeof( C ) ).Name;
+			component = Library.Create<C>( componentName );
+			Components.Add( componentName, component );
 
 			return component;
 ;		}
