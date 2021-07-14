@@ -48,7 +48,7 @@ namespace Facepunch.RTS
 			{
 				if ( Fire == null )
 				{
-					Fire = Particles.Create( "particles/weapons/flamethrower.vpcf" );
+					Fire = Particles.Create( "particles/weapons/flamethrower/flamethrower.vpcf" );
 					Fire.SetPosition( 0, muzzle.Value.Position );
 				}
 

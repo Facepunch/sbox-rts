@@ -18,7 +18,7 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsClient )
 			{
-				Particles = Particles.Create( "particles/weapons/flamethrower_fire.vpcf" );
+				Particles = Particles.Create( "particles/weapons/flamethrower/flamethrower_fire.vpcf" );
 				Particles.SetPosition( 0, Target.WorldSpaceBounds.Center );
 				Particles.SetPosition( 1, new Vector3( 1f, 0f, 0f ) );
 			}
