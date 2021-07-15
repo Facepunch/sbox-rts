@@ -520,7 +520,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			Health.Text = Item.Health.ToString() + "hp";
+			Health.Text = $"{Item.Health.CeilToInt()} HP";
 
 			base.Tick();
 		}

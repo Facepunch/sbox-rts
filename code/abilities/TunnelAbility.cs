@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 		};
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
 		public override float MaxDistance => 10000f;
-		public override float AreaOfEffect => 200f;
+		public override float AreaOfEffectRadius => 200f;
 
 		public override bool IsAvailable()
 		{

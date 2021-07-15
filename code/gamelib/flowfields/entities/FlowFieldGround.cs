@@ -15,7 +15,7 @@ namespace Gamelib.FlowFields.Entities
 		{
 			base.Spawn();
 
-			Tags.Add( "flowfield.ground" );
+			Tags.Add( "ff_ground" );
 
 			CheckMinsMaxs();
 			Transmit = TransmitType.Always;

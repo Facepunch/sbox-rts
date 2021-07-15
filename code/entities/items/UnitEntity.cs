@@ -102,7 +102,7 @@ namespace Facepunch.RTS
 
 		public UnitEntity() : base()
 		{
-			Tags.Add( "unit", "selectable", "flowfield.ignore" );
+			Tags.Add( "unit", "selectable", "ff_ignore" );
 
 			if ( IsServer )
 			{
@@ -197,9 +197,9 @@ namespace Facepunch.RTS
 			if ( IsStatic == isStatic ) return;
 
 			if ( isStatic )
-				Tags.Remove( "flowfield.ignore" );
+				Tags.Remove( "ff_ignore" );
 			else
-				Tags.Add( "flowfield.ignore" );
+				Tags.Add( "ff_ignore" );
 
 			Pathfinder.UpdateCollisions( Position, Item.NodeSize * 2f );
 

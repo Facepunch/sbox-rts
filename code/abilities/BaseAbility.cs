@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 		public virtual string Sound => "";
 		public virtual float Cooldown => 10f;
 		public virtual float MaxDistance => 0f;
-		public virtual float AreaOfEffect => 0f;
+		public virtual float AreaOfEffectRadius => 0f;
 		public virtual HashSet<string> Dependencies => new();
 
 		public AbilityTargetInfo TargetInfo { get; set; }

@@ -12,7 +12,7 @@ namespace Facepunch.RTS
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
 		public override float Cooldown => 10f;
 		public override float MaxDistance => 750f;
-		public override float AreaOfEffect => 500f;
+		public override float AreaOfEffectRadius => 300f;
 		public virtual float HealAmount => 10f;
 
 		public override void OnFinished()
@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 			if ( Host.IsServer )
 			{
 				var targetInfo = TargetInfo;
-				var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffect / 2f );
+				var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffectRadius );
 
 				foreach ( var entity in entities )
 				{

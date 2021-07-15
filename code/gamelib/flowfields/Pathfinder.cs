@@ -132,8 +132,8 @@ namespace Gamelib.FlowFields
 			transform.Position = (position + _centerOffset).WithZ( _halfExtents.z + heightMap + 5f );
 
 			var trace = Trace.Sweep( _physicsBody, transform, transform )
-				.WithoutTags( "flowfield.ground" )
-				.WithoutTags( "flowfield.ignore" )
+				.WithoutTags( "ff_ground" )
+				.WithoutTags( "ff_ignore" )
 				.HitLayer( CollisionLayer.PLAYER_CLIP, true )
 				.Run();
 
@@ -253,7 +253,7 @@ namespace Gamelib.FlowFields
 				var position = GetPosition( index );
 				var trace = Trace.Ray( position.WithZ( 1000f ), position )
 					.EntitiesOnly()
-					.WithTag( "flowfield" )
+					.WithTag( "ff_ground" )
 					.Run();
 
 				if ( trace.Hit )

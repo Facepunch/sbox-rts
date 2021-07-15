@@ -155,8 +155,8 @@ namespace Facepunch.RTS.Managers
 
 			TargetCircle = new AbilityCircle
 			{
-				EffectSize = ability.AreaOfEffect,
-				TargetSize = MathF.Max( ability.AreaOfEffect * 0.8f, 100f ),
+				EffectSize = ability.AreaOfEffectRadius,
+				TargetSize = MathF.Max( ability.AreaOfEffectRadius * 0.8f, 100f ),
 				EffectColor = Color.Orange
 			};
 		}
@@ -191,7 +191,7 @@ namespace Facepunch.RTS.Managers
 			if ( ability.TargetType == AbilityTargetType.None )
 			{
 				var trace = TraceExtension.RayDirection( cursorOrigin, cursorAim )
-					.WithTag( "flowfield" )
+					.WithTag( "ff_ground" )
 					.Run();
 
 				TargetCircle.Position = trace.EndPos;
@@ -239,7 +239,7 @@ namespace Facepunch.RTS.Managers
 				{
 					TargetCircle.Position = trace.EndPos;
 					TargetCircle.TargetColor = Color.Red;
-					TargetCircle.TargetSize = MathF.Max( ability.AreaOfEffect * 0.8f, 100f );
+					TargetCircle.TargetSize = MathF.Max( ability.AreaOfEffectRadius * 0.8f, 100f );
 				}
 			}
 

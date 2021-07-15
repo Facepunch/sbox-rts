@@ -73,7 +73,7 @@ namespace Facepunch.RTS
 			var trace = TraceExtension.RayDirection( cursorOrigin, cursorAim );
 
 			if ( FlowFieldGround.Exists )
-				trace.WithTag( "flowfield" );
+				trace.WithTag( "ff_ground" );
 			else
 				trace.WorldOnly();
 
