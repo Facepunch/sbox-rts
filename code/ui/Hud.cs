@@ -76,8 +76,12 @@ namespace Facepunch.RTS
 			RootPanel.AddChild<EntityHud>();
 			RootPanel.AddChild<RoundInfo>();
 			RootPanel.AddChild<MiniMap>();
-			RootPanel.AddChild<ResourceList>();
-			RootPanel.AddChild<PopulationCount>();
+
+			var topBar = RootPanel.Add.Panel( "topbar" );
+			topBar.AddChild<ResourceList>();
+			topBar.AddChild<PopulationCount>();
+
+			RootPanel.AddChild<UnitGroups>();
 			RootPanel.AddChild<SelectedItem>();
 			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();

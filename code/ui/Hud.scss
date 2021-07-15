@@ -13,3 +13,15 @@ chatbox {
 	bottom: 25%;
 	left: 32px;
 }
+
+.topbar {
+	position: absolute;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	top: 16px;
+
+	resourcelist {
+		margin-right: 16px;
+	}
+}

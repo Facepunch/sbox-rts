@@ -1,33 +1,55 @@
 ﻿unitgroups {
     position: absolute;
-    width: 100%;
     pointer-events: none;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 8px;
-    background-color: rgba(0 0 0 0.6);
-    top: 96px;
-    left: 32px;
+    justify-content: center;
+    width: 100%;
+    top: 80px;
 
-    unitgroup {
-        width: 100px;
-        height: 100px;
+    .container {
+        flex-direction: row;
 
-        .icons {
+        unitgroup {
+            width: 116px;
+            padding: 8px;
+            margin-right: 16px;
+            border-radius: 8px;
+            background-color: rgba(0 0 0 0.6);
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
 
-            .icon {
-                width: 20px;
-                height: 20px;
-                margin-right: 2px;
+            .icons {
+                flex-wrap: wrap;
+
+                .icon {
+                    width: 20px;
+                    height: 20px;
+                    background-repeat: no-repeat;
+
+                    .health {
+                        background-color: red;
+                        background-size: 100%;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0.8;
+                    }
+                }
+            }
+
+            .slot {
+                font-size: 12px;
+                font-weight: bold;
+                color: white;
+                margin-bottom: 8px;
+            }
+
+            &.hidden {
+                display: none;
             }
         }
 
-        .label {
-            font-size: 16px;
-            font-weight: bold;
+        :last-child {
+            margin-right: 0px;
         }
     }
 

@@ -27,27 +27,31 @@ namespace Facepunch.RTS
 
 		public ConfigGlobals()
 		{
-			Config = new GameConfig
-			{
-				Camera = new CameraConfig
-				{
-					Ortho = false,
-					PanSpeed = 5000f,
-					ZoomScale = 0.6f,
-					FOV = 30f,
-					ZNear = 1000f,
-					ZFar = 7500f,
-					Backward = 2500f,
-					Left = 2500f,
-					Up = 5000f
-				}
-			};
+			Config = RTS.Config.Default;
 		}
 	}
 
 	public static partial class Config
 	{
 		private static Globals<ConfigGlobals> Variables = Globals.Define<ConfigGlobals>( "config" );
-		public static GameConfig Current => Variables.Value?.Config ?? default;
+
+		public static GameConfig Default => new()
+		{
+			Camera = new CameraConfig
+			{
+				Ortho = false,
+				PanSpeed = 5000f,
+				ZoomScale = 0.6f,
+				FOV = 30f,
+				ZNear = 1000f,
+				ZFar = 7500f,
+				Backward = 2500f,
+				Left = 2500f,
+				Up = 5000f
+			}
+		};
+
+		public static GameConfig Current => Variables.Value?.Config ?? Default;
+		public static bool IsValid => Variables.Value.IsValid();
 	}
 }

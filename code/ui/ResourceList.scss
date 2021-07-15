@@ -1,11 +1,12 @@
 ﻿resourcelist {
     background-color: rgba( 0 0 0 0.6 );
-    position: absolute;
     border-radius: 8px;
     pointer-events: none;
-    padding: 24px;
-    top: 32px;
-    left: 32px;
+    padding: 8px;
+
+    :last-child {
+        margin-right: 0px;
+    }
 
     &.hidden {
         display: none;

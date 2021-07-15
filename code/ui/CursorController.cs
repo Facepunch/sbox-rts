@@ -67,10 +67,42 @@ namespace Facepunch.RTS
 			base.Tick();
 		}
 
+		private InputButton SlotByIndex( int index )
+		{
+			switch ( index )
+			{
+				case 0:
+					return InputButton.Slot0;
+				case 1:
+					return InputButton.Slot1;
+				case 2:
+					return InputButton.Slot2;
+				case 3:
+					return InputButton.Slot3;
+				case 4:
+					return InputButton.Slot4;
+				case 5:
+					return InputButton.Slot5;
+				case 6:
+					return InputButton.Slot6;
+				case 7:
+					return InputButton.Slot7;
+				case 8:
+					return InputButton.Slot8;
+				case 9:
+					return InputButton.Slot0;
+			}
+
+			return InputButton.Slot0;
+		}
+
 		[Event.BuildInput]
 		private void BuildInput( InputBuilder builder )
 		{
 			if ( Items.IsGhostValid() || Abilities.IsSelectingTarget() )
+				return;
+
+			if ( Local.Pawn is not Player player )
 				return;
 
 			if ( builder.Pressed( InputButton.Attack1 ) )
@@ -80,9 +112,30 @@ namespace Facepunch.RTS
 				IsSelecting = true;
 			}
 
+			for ( var i = 1; i <= 9; i++ )
+			{
+				if ( builder.Pressed( SlotByIndex( i ) ) )
+				{
+					if ( builder.Down( InputButton.Run ) )
+					{
+						UnitGroups.Update( i, player.GetSelected<UnitEntity>() );
+						break;
+					}
+
+					var units = UnitGroups.GetUnits( i );
+
+					if ( units.Count > 0 )
+					{
+						var list = string.Join( ",", units.Select( u => u.NetworkIdent ) );
+						Items.Select( list );
+						break;
+					}
+				}
+			}
+
 			if ( builder.Released( InputButton.Attack2 ) )
 			{
-				if ( Local.Pawn is Player player && player.Selection.Count > 0 )
+				if ( player.Selection.Count > 0 )
 				{
 					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction )
 						.Radius( 5f )
