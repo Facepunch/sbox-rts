@@ -6,8 +6,8 @@ namespace Facepunch.RTS
 {
 	public static partial class Resistances
 	{
-		public static Dictionary<string, BaseResistance> Table { get; private set; }
-		public static List<BaseResistance> List { get; private set; }
+		public static Dictionary<string, BaseResistance> Table = new();
+		public static List<BaseResistance> List = new();
 
 		public static void Initialize()
 		{
@@ -45,9 +45,6 @@ namespace Facepunch.RTS
 
 		private static void BuildTable()
 		{
-			Table = new();
-			List = new();
-
 			var list = new List<BaseResistance>();
 
 			foreach ( var type in Library.GetAll<BaseResistance>() )
