@@ -1305,20 +1305,20 @@
 	m_Children = 
 	[
 		{
-			m_ChildRef = resource:"particles/weapons/explosion/explosion_gib.vpcf"
+			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_gib.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/weapons/explosion/explosion_smoke2.vpcf"
+			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_flash.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/weapons/explosion/explosion_smoke_ring.vpcf"
+			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_smoke_ring.vpcf"
 			m_flDelay = 0.25
 		},
 		{
-			m_ChildRef = resource:"particles/weapons/explosion/explosion_fire_ring.vpcf"
+			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_smoke2.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/weapons/explosion/explosion_flash.vpcf"
+			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_fire_ring.vpcf"
 		},
 	]
 }
