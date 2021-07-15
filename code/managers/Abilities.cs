@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Gamelib.Extensions;
 using Gamelib.FlowFields;
+using Gamelib.FlowFields.Entities;
 using Sandbox;
 
 namespace Facepunch.RTS.Managers
