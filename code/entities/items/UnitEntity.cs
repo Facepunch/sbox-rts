@@ -197,9 +197,9 @@ namespace Facepunch.RTS
 			if ( IsStatic == isStatic ) return;
 
 			if ( isStatic )
-				Tags.Remove( "flowfield" );
+				Tags.Remove( "flowfield.ignore" );
 			else
-				Tags.Add( "flowfield" );
+				Tags.Add( "flowfield.ignore" );
 
 			Pathfinder.UpdateCollisions( Position, Item.NodeSize * 2f );
 
