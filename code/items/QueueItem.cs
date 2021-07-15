@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 
 		public void Start()
 		{
-			FinishTime = RTS.Game.ServerTime + Item.BuildTime;
+			FinishTime = RTS.Gamemode.Instance.ServerTime + Item.BuildTime;
 		}
 
 		public float GetDuration()
@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 
 		public float GetTimeLeft()
 		{
-			return Math.Max( FinishTime - RTS.Game.ServerTime, 0f );
+			return Math.Max( FinishTime - RTS.Gamemode.Instance.ServerTime, 0f );
 		}
 	}
 }

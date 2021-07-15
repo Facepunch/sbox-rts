@@ -21,22 +21,13 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			SetClass( "hidden", true);
+			var round = Rounds.Current;
+			var showRoundInfo = round?.ShowRoundInfo ?? false;
 
-			var player = Local.Pawn as Player;
-			if ( player == null ) return;
+			SetClass( "hidden", !Hud.IsLocalPlaying() || !showRoundInfo );
 
-			var game = RTS.Game;
-			if ( game == null ) return;
-
-			var round = game.Round;
-			if ( round == null ) return;
-
-			if ( round.ShowRoundInfo )
-			{
-				SetClass( "hidden", false );
+			if ( showRoundInfo )
 				RoundName.Text = round.RoundName;
-			}
 		}
 	}
 }

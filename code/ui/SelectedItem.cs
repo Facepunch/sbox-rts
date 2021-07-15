@@ -1,15 +1,9 @@
-﻿
-using Gamelib.Extensions;
-using Facepunch.RTS.Buildings;
-using Facepunch.RTS.Tech;
-using Facepunch.RTS.Units;
+﻿using Facepunch.RTS.Buildings;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System.Collections.Generic;
 using System.Linq;
-using Facepunch.RTS;
-using Facepunch.RTS.Managers;
 
 namespace Facepunch.RTS
 {
@@ -46,7 +40,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseOver( MousePanelEvent e )
 		{
-			var tooltip = RTS.Tooltip;
+			var tooltip = Hud.Tooltip;
 			tooltip.Update( Ability );
 			tooltip.Hover( this );
 			tooltip.Show();
@@ -106,7 +100,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseOver( MousePanelEvent e )
 		{
-			var tooltip = RTS.Tooltip;
+			var tooltip = Hud.Tooltip;
 			tooltip.Update( Item );
 			tooltip.Hover( this );
 			tooltip.Show();
@@ -142,7 +136,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseOut( MousePanelEvent e )
 		{
-			RTS.Tooltip.Hide();
+			Hud.Tooltip.Hide();
 		}
 	}
 
@@ -178,7 +172,7 @@ namespace Facepunch.RTS
 		{
 			if ( !Unit.IsValid() ) return;
 
-			var tooltip = RTS.Tooltip;
+			var tooltip = Hud.Tooltip;
 			tooltip.Update( Unit.Item, true );
 			tooltip.Hover( this );
 			tooltip.Show();
@@ -188,7 +182,7 @@ namespace Facepunch.RTS
 		{
 			if ( !Unit.IsValid() ) return;
 			
-			RTS.Tooltip.Hide();
+			Hud.Tooltip.Hide();
 		}
 
 		public void Update( IOccupiableEntity occupiable = null, UnitEntity unit = null )
@@ -311,7 +305,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseOver( MousePanelEvent e )
 		{
-			var tooltip = RTS.Tooltip;
+			var tooltip = Hud.Tooltip;
 			tooltip.Update( QueueItem.Item );
 			tooltip.Hover( this );
 			tooltip.Show();
@@ -319,7 +313,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseOut( MousePanelEvent e )
 		{
-			RTS.Tooltip.Hide();
+			Hud.Tooltip.Hide();
 		}
 
 		public void Update( QueueItem queueItem, BuildingEntity building = null )
@@ -634,12 +628,11 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( RTS.Game == null ) return;
+			if ( RTS.Gamemode.Instance == null ) return;
 
 			var isHidden = true;
-			var round = RTS.Game.Round;
 
-			if ( round is PlayRound )
+			if ( Hud.IsLocalPlaying() )
 			{
 				if ( Items.Count > 0 )
 					isHidden = false;

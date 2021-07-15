@@ -39,7 +39,7 @@ namespace Facepunch.RTS
 			Costs.AddResource( ResourceType.Metal );
 			Costs.AddResource( ResourceType.Plasma );
 
-			foreach ( var kv in Managers.Resistances.Table )
+			foreach ( var kv in RTS.Resistances.Table )
 			{
 				Resistances.AddResistance( kv.Value );
 			}

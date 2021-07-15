@@ -3,7 +3,7 @@ using Facepunch.RTS.Buildings;
 using Sandbox;
 using System.Linq;
 using Gamelib.FlowFields.Entities;
-using Facepunch.RTS.Managers;
+using Facepunch.RTS;
 
 namespace Facepunch.RTS
 {

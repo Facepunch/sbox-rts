@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamelib.Extensions;
 using Gamelib.FlowFields.Grid;
-using Facepunch.RTS.Managers;
+using Facepunch.RTS;
 
 namespace Facepunch.RTS
 {
@@ -109,7 +109,7 @@ namespace Facepunch.RTS
 				return status;
 			}
 
-			status = Managers.Statuses.Create( id );
+			status = RTS.Statuses.Create( id );
 
 			Statuses.Add( id, status );
 
@@ -405,7 +405,7 @@ namespace Facepunch.RTS
 
 			foreach ( var id in Item.Abilities )
 			{
-				var ability = Managers.Abilities.Create( id );
+				var ability = RTS.Abilities.Create( id );
 				ability.Initialize( id, this );
 				Abilities[id] = ability;
 			}

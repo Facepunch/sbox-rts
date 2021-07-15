@@ -7,6 +7,61 @@ namespace Facepunch.RTS
 	[Library]
 	public partial class Hud : HudEntity<RootPanel>
 	{
+		public static ItemTooltip Tooltip => ItemTooltip.Instance;
+
+		public static void ToastAll( string text, BaseItem item )
+		{
+			Toast( To.Everyone, text, item.NetworkId );
+		}
+
+		public static void Toast( Player player, string text, BaseItem item )
+		{
+			Toast( To.Single( player ), text, item.NetworkId );
+		}
+
+		public static void ToastAll( string text, string icon = "" )
+		{
+			Toast( To.Everyone, text, icon );
+		}
+
+		public static void Toast( Player player, string text, string icon = "" )
+		{
+			Toast( To.Single( player ), text, icon );
+		}
+
+		[ClientRpc]
+		public static void Toast( string text, uint itemId )
+		{
+			var item = Items.Find<BaseItem>( itemId );
+
+			if ( item != null )
+			{
+				ToastList.Instance.AddItem( text, item.Icon );
+			}
+		}
+
+		[ClientRpc]
+		public static void Toast( string text, string icon = "" )
+		{
+			ToastList.Instance.AddItem( text, Texture.Load( icon ) );
+		}
+
+		public static bool IsLocalPlaying()
+		{
+			Host.AssertClient();
+
+			if ( Local.Pawn is not Player player )
+				return false;
+
+			if ( player.IsSpectator )
+				return false;
+
+			if ( Rounds.Current is not PlayRound )
+				return false;
+
+			return true;
+		}
+
 		public Panel Header { get; private set; }
 		public Panel Footer { get; private set; }
 

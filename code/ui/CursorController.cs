@@ -1,5 +1,5 @@
 ﻿
-using Facepunch.RTS.Managers;
+using Facepunch.RTS;
 using Gamelib.DayNight;
 using Gamelib.Extensions;
 using Sandbox;

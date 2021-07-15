@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	{
 		public override void Activated()
 		{
-			var cameraConfig = RTS.Game.Config.Camera;
+			var cameraConfig = Config.Current.Camera;
 
 			if ( Local.Pawn is Player player )
 			{
@@ -27,7 +27,7 @@ namespace Facepunch.RTS
 		{
 			if ( Local.Pawn is not Player player ) return;
 
-			var cameraConfig = RTS.Game.Config.Camera;
+			var cameraConfig = Config.Current.Camera;
 
 			if ( cameraConfig.Ortho )
 			{

@@ -1,4 +1,4 @@
-﻿using Facepunch.RTS.Managers;
+﻿using Facepunch.RTS;
 
 namespace Facepunch.RTS.Tech
 {
@@ -28,7 +28,7 @@ namespace Facepunch.RTS.Tech
 		public override void OnCreated( Player player )
 		{
 			Audio.Play( player, "announcer.technology_researched" );
-			RTS.Game.Toast( player, "Technology Researched", this );
+			Hud.Toast( player, "Technology Researched", this );
 
 			player.Researching.Remove( NetworkId );
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using Sandbox;
-using Facepunch.RTS.Managers;
+using Facepunch.RTS;
 
 namespace Facepunch.RTS.Units
 {
@@ -55,7 +55,7 @@ namespace Facepunch.RTS.Units
 
 		public override void OnCreated( Player player )
 		{
-			RTS.Game.Toast( player, "Unit Trained", this );
+			Hud.Toast( player, "Unit Trained", this );
 
 			base.OnCreated( player );
 		}

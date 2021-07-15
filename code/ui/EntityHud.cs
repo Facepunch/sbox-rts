@@ -1,7 +1,5 @@
-﻿
-using Sandbox;
+﻿using Sandbox;
 using Sandbox.UI;
-using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Vector3n = System.Numerics.Vector3;
 
-namespace Facepunch.RTS.Managers
+namespace Facepunch.RTS
 {
 	public static partial class Fog
 	{

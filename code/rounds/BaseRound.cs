@@ -1,9 +1,5 @@
 ﻿using Sandbox;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Facepunch.RTS
 {
@@ -15,7 +11,7 @@ namespace Facepunch.RTS
 		public virtual bool ShowRoundInfo => false;
 
 		public List<Player> Players = new();
-
+		public RealTimeUntil NextSecondTime { get; private set; }
 		public float RoundEndTime { get; set; }
 
 		public float TimeLeft
@@ -62,7 +58,14 @@ namespace Facepunch.RTS
 			Players.Remove( player );
 		}
 
-		public virtual void OnTick() { }
+		public virtual void OnTick()
+		{
+			if ( NextSecondTime )
+			{
+				OnSecond();
+				NextSecondTime = 1f;
+			}
+		}
 
 		public virtual void OnSecond()
 		{

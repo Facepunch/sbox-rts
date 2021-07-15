@@ -1,18 +1,21 @@
 ﻿
 using Sandbox;
 using Sandbox.UI;
-using Sandbox.UI.Construct;
-using System;
 
 namespace Facepunch.RTS
 {
-	public class MiniMap : Panel
+	public class UnitGroup : Panel
+	{
+
+	}
+
+	public class UnitGroups : Panel
 	{
 		public Scene Scene;
 
-		public MiniMap()
+		public UnitGroups()
 		{
-			StyleSheet.Load( "/ui/MiniMap.scss" );
+			StyleSheet.Load( "/ui/UnitGroups.scss" );
 		}
 
 		public override void Tick()

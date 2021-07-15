@@ -1,5 +1,5 @@
 ﻿using Facepunch.RTS.Buildings;
-using Facepunch.RTS.Managers;
+using Facepunch.RTS;
 using Facepunch.RTS.Tech;
 using Facepunch.RTS.Units;
 using Gamelib.FlowFields;
@@ -339,7 +339,7 @@ namespace Facepunch.RTS
 			{
 				var firstItem = Queue[0];
 
-				if ( firstItem.FinishTime > 0f && RTS.Game.ServerTime >= firstItem.FinishTime )
+				if ( firstItem.FinishTime > 0f && RTS.Gamemode.Instance.ServerTime >= firstItem.FinishTime )
 				{
 					OnQueueItemCompleted( firstItem );
 					UnqueueItem( firstItem.Id );

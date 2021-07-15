@@ -1,5 +1,4 @@
-﻿using Facepunch.RTS.Managers;
-using Gamelib.FlowFields;
+﻿using Gamelib.FlowFields;
 using Gamelib.FlowFields.Entities;
 using Sandbox;
 using System.Collections.Generic;
@@ -8,35 +7,13 @@ using System.Threading.Tasks;
 namespace Facepunch.RTS
 {
 	[Library( "rts", Title = "RTS" )]
-	public partial class RTS : Game
+	public partial class Gamemode : Game
 	{
-		public struct CameraConfig
-		{
-			public bool Ortho;
-			public float PanSpeed;
-			public float ZoomScale;
-			public float ZNear;
-			public float ZFar;
-			public float FOV;
-			public float Backward;
-			public float Left;
-			public float Up;
-		}
-
-		public struct GameConfig
-		{
-			public CameraConfig Camera;
-		}
-
-		public static ItemTooltip Tooltip => ItemTooltip.Instance;
-		public static RTS Game { get; private set; }
+		public static Gamemode Instance { get; private set; }
 
 		[Net] public float ServerTime { get; private set; }
-		[Net, OnChangedCallback] public BaseRound Round { get; private set; }
-		[Net] public GameConfig Config { get; private set; }
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
-		public BaseRound LastRound { get; private set; }
 
 		[ServerCmd("rts_kill")]
 		public static void KillSelected()
@@ -51,11 +28,10 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public RTS()
+		public Gamemode()
 		{
 			if ( IsServer )
 			{
-				LoadConfig();
 				LoadRatings();
 
 				_ = new Hud();
@@ -70,44 +46,7 @@ namespace Facepunch.RTS
 				Fog.Initialize();
 			}
 
-			Game = this;
-		}
-
-		public void ToastAll( string text, BaseItem item )
-		{
-			Toast( To.Everyone, text, item.NetworkId );
-		}
-
-		public void Toast( Player player, string text, BaseItem item )
-		{
-			Toast( To.Single( player ), text, item.NetworkId );
-		}
-
-		public void ToastAll( string text, string icon = "" )
-		{
-			Toast( To.Everyone, text, icon );
-		}
-
-		public void Toast( Player player, string text, string icon = "" )
-		{
-			Toast( To.Single( player ), text, icon );
-		}
-
-		[ClientRpc]
-		public void Toast( string text, uint itemId )
-		{
-			var item = Items.Find<BaseItem>( itemId );
-
-			if ( item != null )
-			{
-				ToastList.Instance.AddItem( text, item.Icon );
-			}
-		}
-
-		[ClientRpc]
-		public void Toast( string text, string icon = "" )
-		{
-			ToastList.Instance.AddItem( text, Texture.Load( icon ) );
+			Instance = this;
 		}
 
 		public void UpdateRating( Player player )
@@ -115,15 +54,6 @@ namespace Facepunch.RTS
 			var client = player.GetClientOwner();
 			Ratings[client.SteamId] = player.Elo.Rating;
 		} 
-
-		public void ChangeRound(BaseRound round)
-		{
-			Assert.NotNull( round );
-
-			Round?.Finish();
-			Round = round;
-			Round?.Start();
-		}
 
 		public async Task StartSecondTimer()
 		{
@@ -181,7 +111,7 @@ namespace Facepunch.RTS
 
 		public override void ClientDisconnect( Client client, NetworkDisconnectionReason reason )
 		{
-			Round?.OnPlayerLeave( client.Pawn as Player );
+			Rounds.Current?.OnPlayerLeave( client.Pawn as Player );
 
 			base.ClientDisconnect( client, reason );
 		}
@@ -195,7 +125,7 @@ namespace Facepunch.RTS
 
 			client.Pawn = player;
 
-			Round?.OnPlayerJoin( player );
+			Rounds.Current?.OnPlayerJoin( player );
 
 			base.ClientJoined( client );
 		}
@@ -203,66 +133,16 @@ namespace Facepunch.RTS
 		private void OnSecond()
 		{
 			CheckMinimumPlayers();
-			Round?.OnSecond();
-		}
-
-		private void OnRoundChanged()
-		{
-			if ( LastRound != Round )
-			{
-				LastRound?.Finish();
-				LastRound = Round;
-				LastRound.Start();
-			}
 		}
 
 		[Event.Tick]
 		private void Tick()
 		{
-			Round?.OnTick();
-
 			if ( IsServer )
 			{
 				PathManager.Update();
 				ServerTime = Time.Now;
-				LoadConfig();
 			}
-		}
-
-		private void LoadConfig()
-		{
-			// TODO: Decals don't render in orthographic for some reason.
-
-			/*
-			Config = new GameConfig
-			{
-				Camera = new CameraConfig
-				{
-					Ortho = true,
-					PanSpeed = 5000f,
-					ZoomScale = 2f,
-					Backward = 3000f,
-					Left = 3000f,
-					Up = 4000f
-				}
-			};
-			*/
-
-			Config = new GameConfig
-			{
-				Camera = new CameraConfig
-				{
-					Ortho = false,
-					PanSpeed = 5000f,
-					ZoomScale = 0.6f,
-					FOV = 30f,
-					//ZNear = 1000f,
-					//ZFar = 7500f,
-					Backward = 2500f,
-					Left = 2500f,
-					Up = 5000f
-				}
-			};
 		}
 
 		private void LoadRatings()
@@ -274,14 +154,14 @@ namespace Facepunch.RTS
 		{
 			if ( Client.All.Count >= 2 )
 			{
-				if ( Round is LobbyRound || Round == null )
+				if ( Rounds.Current is LobbyRound || Rounds.Current == null )
 				{
-					ChangeRound( new PlayRound() );
+					Rounds.Change( new PlayRound() );
 				}
 			}
-			else if ( Round is not LobbyRound )
+			else if ( Rounds.Current is not LobbyRound )
 			{
-				ChangeRound( new LobbyRound() );
+				Rounds.Change( new LobbyRound() );
 			}
 		}
 	}

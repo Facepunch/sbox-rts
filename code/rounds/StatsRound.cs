@@ -24,7 +24,7 @@ namespace Facepunch.RTS
 
 		protected override void OnTimeUp()
 		{
-			RTS.Game.ChangeRound( new PlayRound() );
+			Rounds.Change( new PlayRound() );
 			base.OnTimeUp();
 		}
 	}

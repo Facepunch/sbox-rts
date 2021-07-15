@@ -6,8 +6,6 @@ using System.Linq;
 using Facepunch.RTS.Units;
 using System;
 using Gamelib.Extensions;
-using Facepunch.RTS;
-using Facepunch.RTS.Managers;
 
 namespace Facepunch.RTS
 {
@@ -274,7 +272,7 @@ namespace Facepunch.RTS
 			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
 			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
-			var cameraConfig = RTS.Game.Config.Camera;
+			var cameraConfig = Config.Current.Camera;
 			var velocity = Vector3.Zero;
 			var panSpeed = cameraConfig.PanSpeed - (cameraConfig.PanSpeed * ZoomLevel * 0.6f);
 
@@ -312,7 +310,7 @@ namespace Facepunch.RTS
 			{
 				// TODO: This is just for testing, delete later.
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
-				var bot = RTS.Game.Round.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
+				var bot = Rounds.Current.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
 
 				var worker = Items.Create<UnitEntity>( bot, "unit.medic" );
 				worker.Position = trace.EndPos;

@@ -2,7 +2,7 @@
 using Facepunch.RTS;
 using Sandbox;
 
-namespace Facepunch.RTS.Managers
+namespace Facepunch.RTS
 {
 	public static partial class Ranks
 	{

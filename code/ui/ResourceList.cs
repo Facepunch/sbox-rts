@@ -26,24 +26,15 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			SetClass( "hidden", true);
+			SetClass( "hidden", !Hud.IsLocalPlaying() );
 
-			var player = Local.Pawn as Player;
-			if ( player == null || player.IsSpectator ) return;
-
-			var game = RTS.Game;
-			if ( game == null ) return;
-
-			var round = game.Round;
-			if ( round == null ) return;
-
-			if ( round is PlayRound )
-				SetClass( "hidden", false );
-
-			UpdateResource( player, ResourceType.Stone );
-			UpdateResource( player, ResourceType.Beer );
-			UpdateResource( player, ResourceType.Metal );
-			UpdateResource( player, ResourceType.Plasma );
+			if ( Local.Pawn is Player player )
+			{
+				UpdateResource( player, ResourceType.Stone );
+				UpdateResource( player, ResourceType.Beer );
+				UpdateResource( player, ResourceType.Metal );
+				UpdateResource( player, ResourceType.Plasma );
+			}
 
 			base.Tick();
 		}

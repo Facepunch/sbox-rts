@@ -1,0 +1,37 @@
+﻿unitgroups {
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px;
+    background-color: rgba(0 0 0 0.6);
+    top: 96px;
+    left: 32px;
+
+    unitgroup {
+        width: 100px;
+        height: 100px;
+
+        .icons {
+            display: flex;
+            flex-direction: row;
+
+            .icon {
+                width: 20px;
+                height: 20px;
+                margin-right: 2px;
+            }
+        }
+
+        .label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}
