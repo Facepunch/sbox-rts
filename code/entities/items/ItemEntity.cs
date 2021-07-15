@@ -23,6 +23,7 @@ namespace Facepunch.RTS
 		[Net] public float MaxHealth { get; set; }
 		public EntityHudAnchor Hud { get; private set; }
 		public EntityHudIcon StatusIcon { get; private set; }
+		public Vector3 LocalCenter { get; protected set; }
 
 		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );

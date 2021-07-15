@@ -801,6 +801,7 @@ namespace Facepunch.RTS
 			else
 				SetupPhysicsFromCapsule( PhysicsMotionType.Keyframed, Capsule.FromHeightAndRadius( 72, item.NodeSize * 0.5f ) );
 
+			LocalCenter = CollisionBounds.Center;
 			AgentRadius = GetDiameterXY( 2f, true );
 
 			if ( !string.IsNullOrEmpty( item.Weapon ) )

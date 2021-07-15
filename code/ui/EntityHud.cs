@@ -27,10 +27,10 @@ namespace Facepunch.RTS
 
 	public class EntityHudAnchor : Panel
 	{
-		public Entity Entity { get; private set; }
+		public ISelectable Entity { get; private set; }
 		public bool IsActive { get; private set; }
 
-		public void SetEntity( Entity entity)
+		public void SetEntity( ISelectable entity)
 		{
 			Entity = entity;
 		}
@@ -47,30 +47,26 @@ namespace Facepunch.RTS
 
 		public void UpdatePosition()
 		{
-			var position = (Entity.Position + Vector3.Up * 40f).ToScreen();
+			var position = (Entity.Position + Entity.LocalCenter + Vector3.Up * 80f).ToScreen();
 			if ( position.z < 0 ) return;
 
 			position *= new Vector3( Screen.Width, Screen.Height ) * ScaleFromScreen;
 
 			Style.Left = Length.Pixels( position.x );
-			Style.Top = Length.Pixels( position.y - 32f );
+			Style.Top = Length.Pixels( position.y );
 			Style.Dirty();
 		}
 
 		public override void Tick()
 		{
-			if ( Entity is ISelectable selectable )
+			if ( (Entity as Entity).IsValid() )
 			{
-				if ( selectable.ShouldUpdateHud() )
+				if ( Entity.ShouldUpdateHud() )
 				{
-					selectable.UpdateHudComponents();
+					Entity.UpdateHudComponents();
 					UpdatePosition();
 				}
 			}
-			else
-            {
-				UpdatePosition();
-            }
 
 			base.Tick();
 		}
@@ -87,7 +83,7 @@ namespace Facepunch.RTS
 			Instance = this;
 		}
 
-		public EntityHudAnchor Create( Entity entity )
+		public EntityHudAnchor Create( ISelectable entity )
 		{
 			var container = AddChild<EntityHudAnchor>();
 			container.SetEntity( entity );

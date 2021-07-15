@@ -447,6 +447,7 @@ namespace Facepunch.RTS
 				NextGenerateResources = 0;
 
 			LineOfSight = item.MinLineOfSight + CollisionBounds.Size.Length;
+			LocalCenter = CollisionBounds.Center;
 			MaxHealth = item.MaxHealth;
 			Health = item.MaxHealth;
 
