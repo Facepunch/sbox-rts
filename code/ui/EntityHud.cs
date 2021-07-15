@@ -5,12 +5,35 @@ namespace Facepunch.RTS
 {
 	public class EntityHudIconList : Panel
 	{
-
+		public void SetActive( bool active )
+		{
+			SetClass( "hidden", !active );
+		}
 	}
 
 	public class EntityHudIcon : Image
 	{
+		public void SetActive( bool active )
+		{
+			SetClass( "hidden", !active );
+		}
+	}
 
+	public class EntityHudIconBar : Panel
+	{
+		public EntityHudIcon Icon { get; private set; }
+		public EntityHudBar Bar { get; private set; }
+
+		public EntityHudIconBar()
+		{
+			Icon = AddChild<EntityHudIcon>( "icon" );
+			Bar = AddChild<EntityHudBar>( "bar" );
+		}
+
+		public void SetActive( bool active )
+		{
+			SetClass( "hidden", !active );
+		}
 	}
 
 	public class EntityHudBar : Panel
@@ -20,6 +43,27 @@ namespace Facepunch.RTS
 		public EntityHudBar()
 		{
 			Foreground = Add.Panel( "foreground" );
+		}
+
+		public void SetColor( Color color )
+		{
+			Foreground.Style.BackgroundColor = color;
+		}
+
+		public void SetProgress( float value )
+		{
+			var fraction = Length.Fraction( value );
+
+			if ( Foreground.Style.Width != fraction )
+			{
+				Foreground.Style.Width = fraction;
+				Foreground.Style.Dirty();
+			}
+		}
+
+		public void SetActive( bool active )
+		{
+			SetClass( "hidden", !active );
 		}
 	}
 

@@ -58,6 +58,10 @@
 					m_vDomainMaxs = [ 0.0, 0.0 ]
 				}
 			}
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_InstantaneousEmitter"
 		},
 	]
 	m_Initializers = 
@@ -69,8 +73,6 @@
 			_class = "C_INIT_MoveBetweenPoints"
 			m_flSpeedMin = 1000.0
 			m_flSpeedMax = 1000.0
-			m_flEndSpread = 5.0
-			m_flEndOffset = 10.0
 			m_flStartOffset = 50.0
 		},
 	]

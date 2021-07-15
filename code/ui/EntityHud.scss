@@ -17,6 +17,31 @@
             display: none;
         }
 
+        entityhudiconbar {
+            margin-bottom: 4px;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0 0 0 0.6);
+            border-radius: 2px;
+            padding: 2px;
+
+            entityhudicon {
+                margin-right: 4px;
+                margin-bottom: 0px;
+                height: 20px;
+                width: 20px;
+            }
+
+            entityhudbar {
+                margin-bottom: 0px;
+            }
+
+            &.hidden {
+                display: none;
+            }
+        }
+
         entityhudiconlist {
             margin-bottom: 4px;
             flex-direction: row;
@@ -25,6 +50,7 @@
 
             entityhudicon {
                 margin-right: 4px;
+                margin-bottom: 0px;
                 height: 20px;
                 width: 20px;
 
@@ -37,56 +63,56 @@
                 display: none;
             }
         }
+    }
+}
 
-        entityhudicon {
-            margin-bottom: 4px;
-            height: 20px;
-            width: 20px;
+entityhudicon {
+    margin-bottom: 4px;
+    height: 20px;
+    width: 20px;
 
-            &.rank {
-                width: 16px;
-                height: 16px;
-            }
+    &.rank {
+        width: 16px;
+        height: 16px;
+    }
 
-            &.hidden {
-                display: none;
-            }
+    &.hidden {
+        display: none;
+    }
+}
+
+entityhudbar {
+    border: 1px black solid;
+    background-color: black;
+    margin-bottom: 4px;
+    width: 50px;
+    height: 6px;
+
+    .foreground {
+        background-color: white;
+        width: 100%;
+        height: 100%;
+    }
+
+    &.hidden {
+        display: none;
+    }
+
+    &.health {
+        .foreground {
+            background-color: greenyellow;
         }
+    }
 
-        entityhudbar {
-            border: 1px black solid;
-            background-color: black;
-            margin-bottom: 4px;
-            width: 50px;
-            height: 6px;
+    &.generator {
+        .foreground {
+            background-color: yellow;
+        }
+    }
 
-            .foreground {
-                background-color: white;
-                width: 100%;
-                height: 100%;
-            }
-
-            &.hidden {
-                display: none;
-            }
-
-            &.health {
-                .foreground {
-                    background-color: greenyellow;
-                }
-            }
-
-            &.generator {
-                .foreground {
-                    background-color: yellow;
-                }
-            }
-
-            &.gather {
-                .foreground {
-                    background-color: steelblue;
-                }
-            }
+    &.gather {
+        .foreground {
+            background-color: steelblue;
         }
     }
 }

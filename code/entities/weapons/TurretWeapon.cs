@@ -10,6 +10,7 @@ namespace Facepunch.RTS
 		public override float FireRate => 0.1f;
 		public override int BaseDamage => 5;
 		public override bool BoneMerge => false;
+		public override string MuzzleFlash => "particles/weapons/muzzle_flash/muzzle_large/muzzleflash_large.vpcf";
 
 		public Vector3 TargetDirection { get; private set; }
 		[Net] public float Recoil { get; private set; }

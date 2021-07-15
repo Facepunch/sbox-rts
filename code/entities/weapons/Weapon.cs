@@ -13,7 +13,8 @@ namespace Facepunch.RTS
 		public virtual bool IsMelee => false;
 		public virtual int BaseDamage => 10;
 		public virtual int HoldType => 1;
-		public virtual float RotationTolerance => 0.1f;
+		public virtual float RotationTolerance => 0.5f;
+		public virtual string MuzzleFlash => "particles/weapons/muzzle_flash/muzzleflash_base.vpcf";
 		public virtual float FireRate => 1f;
 		public TimeSince LastAttack { get; set; }
 
@@ -112,9 +113,13 @@ namespace Facepunch.RTS
 
 			if ( muzzle.HasValue )
 			{
-				var particles = Particles.Create( "particles/pistol_muzzleflash.vpcf" );
-				particles.SetPosition( 0, muzzle.Value.Position );
-				particles.SetForward( 0, muzzle.Value.Rotation.Forward );
+				var flash = Particles.Create( MuzzleFlash );
+				flash.SetPosition( 0, muzzle.Value.Position );
+				flash.SetForward( 0, muzzle.Value.Rotation.Forward );
+
+				var tracer = Particles.Create( "particles/weapons/muzzle_flash/bullet_trace.vpcf" );
+				tracer.SetPosition( 0, muzzle.Value.Position );
+				tracer.SetPosition( 1, Target.Position );
 			}
 		}
 

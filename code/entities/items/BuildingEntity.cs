@@ -29,6 +29,7 @@ namespace Facepunch.RTS
 
 		#region UI
 		public EntityHudIconList OccupantsHud { get; private set; }
+		public EntityHudIconBar QueueHud { get; private set; }
 		public EntityHudBar GeneratorBar { get; private set; }
 		public EntityHudBar HealthBar { get; private set; }
 		#endregion
@@ -288,13 +289,12 @@ namespace Facepunch.RTS
 		{
 			if ( Health <= MaxHealth * 0.9f || IsUnderConstruction )
 			{
-				HealthBar.Foreground.Style.Width = Length.Fraction( Health / MaxHealth );
-				HealthBar.Foreground.Style.Dirty();
-				HealthBar.SetClass( "hidden", false );
+				HealthBar.SetProgress( Health / MaxHealth );
+				HealthBar.SetActive( true );
 			}
 			else
 			{
-				HealthBar.SetClass( "hidden", true );
+				HealthBar.SetActive( false );
 			}
 
 			if ( GeneratorBar != null )
@@ -304,17 +304,29 @@ namespace Facepunch.RTS
 				if ( !generator.PerOccupant || Occupants.Count > 0 )
 				{
 					var timeLeft = NextGenerateResources.Relative;
-					GeneratorBar.Foreground.Style.Width = Length.Fraction( 1f - (timeLeft / Item.Generator.Interval) );
-					GeneratorBar.Foreground.Style.Dirty();
-					GeneratorBar.SetClass( "hidden", false );
+					GeneratorBar.SetProgress( 1f - (timeLeft / Item.Generator.Interval) );
+					GeneratorBar.SetActive( true );
 				}
 				else
 				{
-					GeneratorBar.SetClass( "hidden", true );
+					GeneratorBar.SetActive( false );
 				}
 			}
 
-			OccupantsHud.SetClass( "hidden", !IsLocalPlayers || Occupants.Count == 0 );
+			OccupantsHud?.SetActive( Occupants.Count > 0 );
+
+			if ( QueueHud != null && Queue.Count > 0 )
+			{
+				var queueItem = Queue[0];
+
+				QueueHud.Icon.Texture = queueItem.Item.Icon;
+				QueueHud.Bar.SetProgress( 1f - (queueItem.GetTimeLeft() / queueItem.Item.BuildTime) );
+				QueueHud.SetActive( true );
+			}
+			else
+			{
+				QueueHud.SetActive( false );
+			}
 
 			base.UpdateHudComponents();
 		}
@@ -339,7 +351,7 @@ namespace Facepunch.RTS
 			{
 				var firstItem = Queue[0];
 
-				if ( firstItem.FinishTime > 0f && RTS.Gamemode.Instance.ServerTime >= firstItem.FinishTime )
+				if ( firstItem.FinishTime > 0f && Gamemode.Instance.ServerTime >= firstItem.FinishTime )
 				{
 					OnQueueItemCompleted( firstItem );
 					UnqueueItem( firstItem.Id );
@@ -566,6 +578,7 @@ namespace Facepunch.RTS
 			if ( IsLocalPlayers )
 			{
 				OccupantsHud = Hud.AddChild<EntityHudIconList>();
+				QueueHud = Hud.AddChild<EntityHudIconBar>();
 			}
 
 			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
