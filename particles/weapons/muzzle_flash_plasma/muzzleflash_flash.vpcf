@@ -672,7 +672,7 @@
 			{
 				m_nType = "PVEC_TYPE_LITERAL_COLOR"
 				m_vLiteralValue = [ 0.0, 0.0, 0.0 ]
-				m_LiteralColor = [ 0, 255, 0, 255 ]
+				m_LiteralColor = [ 139, 0, 139, 255 ]
 				m_nVectorAttribute = 6
 				m_vVectorAttributeScale = [ 1.0, 1.0, 1.0 ]
 				m_nControlPoint = 0
@@ -896,7 +896,7 @@
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 2.0
+				m_flLiteralValue = 1.0
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
@@ -1289,7 +1289,7 @@
 			{
 				m_nType = "PVEC_TYPE_LITERAL_COLOR"
 				m_vLiteralValue = [ 0.0, 0.0, 0.0 ]
-				m_LiteralColor = [ 0, 255, 0, 255 ]
+				m_LiteralColor = [ 114, 0, 168, 255 ]
 				m_nVectorAttribute = 6
 				m_vVectorAttributeScale = [ 1.0, 1.0, 1.0 ]
 				m_nControlPoint = 0
@@ -1539,7 +1539,7 @@
 			{
 				m_nType = "PVEC_TYPE_LITERAL_COLOR"
 				m_vLiteralValue = [ 0.0, 0.0, 0.0 ]
-				m_LiteralColor = [ 0, 255, 0, 255 ]
+				m_LiteralColor = [ 255, 0, 255, 255 ]
 				m_nVectorAttribute = 6
 				m_vVectorAttributeScale = [ 1.0, 1.0, 1.0 ]
 				m_nControlPoint = 0

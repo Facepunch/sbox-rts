@@ -1116,15 +1116,15 @@
 					[
 						{
 							m_flPosition = 0.0
-							m_Color = [ 93, 255, 0, 255 ]
+							m_Color = [ 139, 0, 139, 255 ]
 						},
 						{
 							m_flPosition = 0.503876
-							m_Color = [ 50, 205, 50, 255 ]
+							m_Color = [ 129, 4, 128, 255 ]
 						},
 						{
 							m_flPosition = 1.0
-							m_Color = [ 0, 255, 127, 255 ]
+							m_Color = [ 0, 255, 255, 255 ]
 						},
 					]
 				}
@@ -1381,7 +1381,7 @@
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 15.0
+				m_flLiteralValue = 10.0
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
@@ -1424,7 +1424,6 @@
 			}
 			m_bSaturateColorPreAlphaBlend = false
 			m_bAdditive = true
-			m_bFogParticles = true
 			m_hTexture = resource:"materials/effects/muzzleflash_blue.vtex"
 			m_bCannotBeRefracted = false
 			m_bGammaCorrectVertexColors = false
