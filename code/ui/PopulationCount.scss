@@ -3,20 +3,22 @@
     border-radius: 8px;
     pointer-events: none;
     padding: 8px;
-    display: flex;
-    align-items: center;
 
     .population {
+        display: flex;
+        align-items: center;
+        justify-items: center;
+
         .icon {
             background-image: url( /textures/rts/icons/population.png );
             background-size: 100%;
-            margin-right: 16px;
+            margin-right: 8px;
             width: 32px;
             height: 32px;
         }
 
         .label {
-            font-size: 32px;
+            font-size: 24px;
             color: white;
 
             &.full {

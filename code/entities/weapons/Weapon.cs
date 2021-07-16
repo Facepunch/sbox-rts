@@ -119,7 +119,7 @@ namespace Facepunch.RTS
 
 				var tracer = Particles.Create( "particles/weapons/muzzle_flash/bullet_trace.vpcf" );
 				tracer.SetPosition( 0, muzzle.Value.Position );
-				tracer.SetPosition( 1, Target.Position );
+				tracer.SetPosition( 1, Target.WorldSpaceBounds.Center );
 			}
 		}
 

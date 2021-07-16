@@ -24,7 +24,7 @@ namespace Facepunch.RTS
 		[Net] public Entity Target { get; private set; }
 		public uint LastQueueId { get; set; }
 		public List<QueueItem> Queue { get; set; }
-		public float NextFindTarget { get; private set; }
+		public RealTimeUntil NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
 
 		#region UI
@@ -373,7 +373,7 @@ namespace Facepunch.RTS
 						Weapon.Attack();
 				}
 
-				if ( Time.Now >= NextFindTarget )
+				if ( NextFindTarget )
 				{
 					FindTargetUnit();
 				}
@@ -423,7 +423,9 @@ namespace Facepunch.RTS
 		protected virtual void OnTargetChanged()
 		{
 			if ( Weapon.IsValid() )
+			{
 				Weapon.Target = Target;
+			}
 		}
 
 		protected virtual void OnQueueItemCompleted( QueueItem queueItem )
@@ -520,7 +522,7 @@ namespace Facepunch.RTS
 				Attack( closestTarget );
 			}
 
-			NextFindTarget = Time.Now + 0.5f;
+			NextFindTarget = 0.5f;
 		}
 
 		[ClientRpc]

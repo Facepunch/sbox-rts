@@ -4,38 +4,38 @@
     pointer-events: none;
     padding: 8px;
 
+    itemresourcevalue {
+        margin-right: 20px;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+
+        .icon {
+            background-color: white;
+            margin-right: 8px;
+            width: 32px;
+            height: 32px;
+        }
+
+        .label {
+            color: #EEE;
+            font-size: 24px;
+        }
+
+        &.lerping {
+            .label {
+                font-size: 26px;
+                color: white;
+            }
+        }
+
+        &.hidden {
+            display: none;
+        }
+    }
+
     :last-child {
         margin-right: 0px;
-    }
-
-    &.hidden {
-        display: none;
-    }
-}
-
-itemresourcevalue {
-    margin-right: 32px;
-    display: flex;
-    align-items: center;
-
-    .icon {
-        background-color: white;
-        margin-right: 16px;
-        width: 32px;
-        height: 32px;
-    }
-
-    .label {
-        color: #EEE;
-        font-weight: bold;
-        font-size: 32px;
-    }
-
-    &.lerping {
-        .label {
-            font-size: 34px;
-            color: white;
-        }
     }
 
     &.hidden {

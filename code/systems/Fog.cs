@@ -385,7 +385,14 @@ namespace Facepunch.RTS
 
 				_texture.Update( _data );
 
-				await GameTask.Delay( 100 );
+				try
+				{
+					await GameTask.Delay( 100 );
+				}
+				catch
+				{
+					break;
+				}
 			}
 		}
 	}
