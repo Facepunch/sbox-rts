@@ -1,7 +1,9 @@
-﻿using Gamelib.FlowFields;
+﻿using Facepunch.RTS.Units;
+using Gamelib.FlowFields;
 using Gamelib.FlowFields.Entities;
 using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Facepunch.RTS
@@ -80,24 +82,17 @@ namespace Facepunch.RTS
 
 			if ( IsServer )
 			{
-				// We want to make a pathfinder for each possible unit size.
-				var possibleUnitSizes = Items.GetUnitNodeSizes();
+				var units = Items.List.OfType<BaseUnit>();
 
-				if ( FlowFieldGround.Exists )
+				foreach ( var unit in units )
 				{
-					for ( int i = 0; i < possibleUnitSizes.Count; i++ )
-					{
-						var size = possibleUnitSizes[i];
-						PathManager.Create( size / 5, FlowFieldGround.Bounds, size );
-					}
-				}
-				else
-				{
-					for ( int i = 0; i < possibleUnitSizes.Count; i++ )
-					{
-						var size = possibleUnitSizes[i];
-						PathManager.Create( size / 5, 30, size );
-					}
+					var collisionSize = unit.CollisionSize;
+					var nodeSize = unit.NodeSize;
+
+					if ( FlowFieldGround.Exists )
+						PathManager.Create( nodeSize / 5, FlowFieldGround.Bounds, nodeSize, collisionSize );
+					else
+						PathManager.Create( nodeSize / 5, 30, nodeSize, collisionSize );
 				}
 			}
 

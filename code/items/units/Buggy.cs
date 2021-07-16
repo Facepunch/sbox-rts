@@ -19,6 +19,8 @@ namespace Facepunch.RTS.Units
 		public override int NodeSize => 100;
 		public override float AttackRadius => 1000f;
 		public override float LineOfSightRadius => 1000f;
+		public override bool RagdollOnDeath => false;
+		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public override OccupiableSettings Occupiable => new()
 		{
 			AttackAttachments = new string[] { "muzzle" },

@@ -14,6 +14,8 @@ namespace Facepunch.RTS.Units
 		public virtual OccupantSettings Occupant => null;
 		public virtual HashSet<string> Clothing => new();
 		public virtual bool CanConstruct => false;
+		public virtual bool RagdollOnDeath => true;
+		public virtual string DeathParticles => null;
 		public virtual bool UseModelPhysics => false;
 		public virtual HashSet<ResourceType> Gatherables => new();
 		public virtual Dictionary<ResourceType, string[]> GatherSounds => new();
@@ -23,6 +25,7 @@ namespace Facepunch.RTS.Units
 		public virtual string[] DepositSounds => Array.Empty<string>();
 		public virtual string[] MoveSounds => Array.Empty<string>();
 		public virtual int NodeSize => 50;
+		public virtual int CollisionSize => 100;
 		public virtual float Speed => 300f;
 		public virtual float RotateToTargetSpeed => 50f;
 		public virtual float LineOfSightRadius => 700f;

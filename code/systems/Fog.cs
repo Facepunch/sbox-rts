@@ -347,8 +347,15 @@ namespace Facepunch.RTS
 			{
 				if ( !IsActive )
 				{
-					await GameTask.Delay( 60 );
-					continue;
+					try
+					{
+						await GameTask.Delay( 100 );
+						continue;
+					}
+					catch
+					{
+						break;
+					}
 				}
 
 				FogCullable cullable;

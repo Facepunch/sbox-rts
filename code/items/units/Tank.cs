@@ -12,11 +12,14 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/tank/tank.vmdl";
 		public override string Description => "Fires projectiles that go bang when they hit.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
+		public override bool RagdollOnDeath => false;
+		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;
 		public override float RotateToTargetSpeed => 10f;
 		public override string Weapon => "weapon_tank_cannon";
-		public override int NodeSize => 200;
+		public override int NodeSize => 50;
+		public override int CollisionSize => 300;
 		public override float AttackRadius => 1000f;
 		public override float LineOfSightRadius => 1000f;
 		public override string[] MoveSounds => new string[]

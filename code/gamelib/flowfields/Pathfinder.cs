@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Gamelib.FlowFields.Maths;
 using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
 using Sandbox;
-using Gamelib.Extensions;
-using System.Threading.Tasks;
 using Gamelib.FlowFields.Entities;
 
 namespace Gamelib.FlowFields
@@ -30,32 +27,34 @@ namespace Gamelib.FlowFields
         private PhysicsBody _physicsBody;
         private Vector3 _positionOffset;
         private Vector3 _centerOffset;
-        private Vector3 _halfExtents;
-		private float _collisionScale = 1.1f;
+        private Vector3 _collisionExtents;
+        private Vector3 _nodeExtents;
 		private float[] _heightMap;
         private Chunk[] _chunks;
         private int _waitForPhysicsUpdate = 3;
+        private int _collisionSize = 100;
         private int _nodeSize = 50;
 
 		public PhysicsBody PhysicsBody => _physicsBody;
 		public Vector3 PositionOffset => _positionOffset;
-		public float CollisionScale => _collisionScale;
 		public Vector3 CenterOffset => _centerOffset;
-		public Vector3 HalfExtents => _halfExtents;
+		public Vector3 CollisionExtents => _collisionExtents;
+		public Vector3 NodeExtents => _nodeExtents;
 		public Vector3 Origin { get; private set; }
 
 		public GridDefinition ChunkGridSize => _chunkGridSize;
 		public GridDefinition NumberOfChunks => _numberOfChunks;
 		public GridDefinition WorldGridSize => _worldGridSize;
 		public Chunk[] Chunks => _chunks;
+		public int CollisionSize => _collisionSize;
 		public int NodeSize => _nodeSize;
 
-		public Pathfinder( int numberOfChunks, int chunkGridSize, int nodeSize = 50 )
+		public Pathfinder( int numberOfChunks, int chunkGridSize, int nodeSize = 50, int collisionSize = 100 )
 		{
-			SetupSize( numberOfChunks, chunkGridSize, nodeSize );
+			SetupSize( numberOfChunks, chunkGridSize, nodeSize, collisionSize );
 		}
 
-		public Pathfinder( int numberOfChunks, BBox bounds, int nodeSize = 50 )
+		public Pathfinder( int numberOfChunks, BBox bounds, int nodeSize = 50, int collisionSize = 100 )
 		{
 			var delta = bounds.Maxs - bounds.Mins;
 			var width = delta.x;
@@ -65,7 +64,7 @@ namespace Gamelib.FlowFields
 
 			Origin = bounds.Center;
 
-			SetupSize( numberOfChunks, chunkSize, nodeSize );
+			SetupSize( numberOfChunks, chunkSize, nodeSize, collisionSize );
 		}
 
 		public void Update()
@@ -129,7 +128,7 @@ namespace Gamelib.FlowFields
 			var transform = _physicsBody.Transform;
 			var heightMap = _heightMap[worldIndex];
 
-			transform.Position = (position + _centerOffset).WithZ( _halfExtents.z + heightMap + 5f );
+			transform.Position = (position + _centerOffset).WithZ( _collisionExtents.z + heightMap + 5f );
 
 			var trace = Trace.Sweep( _physicsBody, transform, transform )
 				.WithoutTags( "ff_ground" )
@@ -194,11 +193,10 @@ namespace Gamelib.FlowFields
 		{
 			if ( !Debug ) return;
 
-			var collisionScale = CollisionScale;
 			var transform = _physicsBody.Transform;
-			transform.Position = (position + _centerOffset).WithZ( _halfExtents.z + _heightMap[worldIndex] );
-			DebugOverlay.Box( duration, transform.Position, -_halfExtents * collisionScale, _halfExtents * collisionScale, Color.Red, false );
-			DebugOverlay.Box( duration, transform.Position, -_halfExtents, _halfExtents, color.HasValue ? color.Value : Color.White, false );
+			transform.Position = (position + _centerOffset).WithZ( _nodeExtents.z + _heightMap[worldIndex] );
+			DebugOverlay.Box( duration, transform.Position, -_collisionExtents, _collisionExtents, Color.Red, false );
+			DebugOverlay.Box( duration, transform.Position, -_nodeExtents, _nodeExtents, color.HasValue ? color.Value : Color.White, false );
 		}
 
 		public void DrawBox( int worldIndex, Color? color = null, float duration = 1f )
@@ -367,17 +365,19 @@ namespace Gamelib.FlowFields
 			}
         }
 
-		private void SetupSize( int numberOfChunks, int chunkGridSize, int nodeSize )
+		private void SetupSize( int numberOfChunks, int chunkGridSize, int nodeSize, int collisionSIze )
 		{
 			var physicsBody = PhysicsWorld.AddBody();
-			var halfExtents = Vector3.One * nodeSize * 0.5f;
+			var collisionExtents = Vector3.One * collisionSIze * 0.5f;
+			var nodeExtents = Vector3.One * nodeSize * 0.5f;
 
 			physicsBody.CollisionEnabled = false;
-			physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, halfExtents * CollisionScale );
+			physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, collisionExtents );
 
 			_numberOfChunks = new GridDefinition( numberOfChunks, numberOfChunks );
+			_collisionExtents = collisionExtents;
+			_nodeExtents = nodeExtents;
 			_physicsBody = physicsBody;
-			_halfExtents = halfExtents;
 			_chunkGridSize = new GridDefinition( chunkGridSize, chunkGridSize );
 			_worldGridSize = new GridDefinition(
 				_chunkGridSize.Rows * _numberOfChunks.Rows,

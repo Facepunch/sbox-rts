@@ -10,6 +10,14 @@ namespace Gamelib.FlowFields.Maths
 			return value.CeilToInt();
 		}
 
+		public static int HashNumbers( short a, short b )
+		{
+			var ha = (uint)(a >= 0 ? 2 * a : -2 * a - 1);
+			var hb = (uint)(b >= 0 ? 2 * b : -2 * b - 1);
+			var hc = (int)((ha >= hb ? ha * ha + ha + hb : ha + hb * hb) / 2);
+			return a < 0 && b < 0 || a >= 0 && b >= 0 ? hc : -hc - 1;
+		}
+
 		public static int RoundToInt( float value )
 		{
 			return (int)MathF.Round( value );

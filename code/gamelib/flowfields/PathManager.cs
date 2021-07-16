@@ -1,3 +1,4 @@
+using Gamelib.FlowFields.Maths;
 using Sandbox;
 using System.Collections.Generic;
 
@@ -23,7 +24,7 @@ namespace Gamelib.FlowFields
 			{
 				var chunk = chunks[i];
 				var position = pathfinder.GetLocalChunkPosition( chunk.Index ) - pathfinder.PositionOffset;
-				var halfExtents = pathfinder.HalfExtents * chunk.Definition.Columns;
+				var halfExtents = pathfinder.NodeExtents * chunk.Definition.Columns;
 
 				position += halfExtents;
 
@@ -32,9 +33,9 @@ namespace Gamelib.FlowFields
 		}
 
 		[ServerCmd( "ff_show_portals" )]
-		private static void ShowPortals( int size )
+		private static void ShowPortals( int nodeSize, int collisionSize )
 		{
-			var pathfinder = GetPathfinder( size );
+			var pathfinder = GetPathfinder( nodeSize, collisionSize );
 			var portals = pathfinder.Portals;
 
 			for ( var i = 0; i < portals.Count; i++ )
@@ -47,9 +48,9 @@ namespace Gamelib.FlowFields
 		}
 
 		[ServerCmd( "ff_show_gateway_nodes" )]
-		private static void ShowGatewayNodes( int size )
+		private static void ShowGatewayNodes( int nodeSize, int collisionSize )
 		{
-			var pathfinder = GetPathfinder( size );
+			var pathfinder = GetPathfinder( nodeSize, collisionSize );
 			var chunks = pathfinder.Chunks;
 			var numberOfChunks = pathfinder.Chunks.Length;
 
@@ -69,9 +70,9 @@ namespace Gamelib.FlowFields
 		}
 		
 		[ServerCmd( "ff_show_collisions" )]
-		private static void ShowCollisions( int size )
+		private static void ShowCollisions( int nodeSize, int collisionSize )
 		{
-			var pathfinder = GetPathfinder( size );
+			var pathfinder = GetPathfinder( nodeSize, collisionSize );
 			var chunks = pathfinder.Chunks;
 			var numberOfChunks = pathfinder.Chunks.Length;
 
@@ -97,9 +98,11 @@ namespace Gamelib.FlowFields
 		public static List<Pathfinder> All { get; private set; } = new();
 		public static Pathfinder Default => _default;
 
-		public static Pathfinder GetPathfinder( int size )
+		public static Pathfinder GetPathfinder( int nodeSize, int collisionSize )
 		{
-			if ( _pathfinders.TryGetValue( size, out var pathfinder ) )
+			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
+
+			if ( _pathfinders.TryGetValue( hash, out var pathfinder ) )
 			{
 				return pathfinder;
 			}
@@ -107,14 +110,19 @@ namespace Gamelib.FlowFields
 			return _default;
 		}
 
-        public static void Create( int numberOfChunks, int chunkSize, int nodeSize = 100 )
+        public static void Create( int numberOfChunks, int chunkSize, int nodeSize = 50, int collisionSize = 100 )
 		{
-			Register( new Pathfinder( numberOfChunks, chunkSize, nodeSize ), nodeSize );
+			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
+
+			if ( !_pathfinders.ContainsKey( hash ) )
+			{
+				Register( new Pathfinder( numberOfChunks, chunkSize, nodeSize ), nodeSize, collisionSize );
+			}
 		}
 
-		public static void Create( int numberOfChunks, BBox bounds, int nodeSize = 100 )
+		public static void Create( int numberOfChunks, BBox bounds, int nodeSize = 50, int collisionSize = 100 )
 		{
-			Register( new Pathfinder( numberOfChunks, bounds, nodeSize ), nodeSize );
+			Register( new Pathfinder( numberOfChunks, bounds, nodeSize ), nodeSize, collisionSize );
 		}
 
 		public static void Update()
@@ -123,10 +131,12 @@ namespace Gamelib.FlowFields
 				All[i].Update();
 		}
 
-		private static void Register( Pathfinder pathfinder, int nodeSize )
+		private static void Register( Pathfinder pathfinder, int nodeSize, int collisionSize )
 		{
+			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
+
 			pathfinder.Initialize();
-			_pathfinders[nodeSize] = pathfinder;
+			_pathfinders[hash] = pathfinder;
 
 			if ( _default == null )
 				_default = pathfinder;

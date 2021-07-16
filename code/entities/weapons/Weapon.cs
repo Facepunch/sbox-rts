@@ -15,6 +15,7 @@ namespace Facepunch.RTS
 		public virtual int HoldType => 1;
 		public virtual float RotationTolerance => 0.5f;
 		public virtual string MuzzleFlash => "particles/weapons/muzzle_flash/muzzleflash_base.vpcf";
+		public virtual string BulletTracer => "particles/weapons/muzzle_flash/bullet_trace.vpcf";
 		public virtual float FireRate => 1f;
 		public TimeSince LastAttack { get; set; }
 
@@ -113,13 +114,19 @@ namespace Facepunch.RTS
 
 			if ( muzzle.HasValue )
 			{
-				var flash = Particles.Create( MuzzleFlash );
-				flash.SetPosition( 0, muzzle.Value.Position );
-				flash.SetForward( 0, muzzle.Value.Rotation.Forward );
+				if ( !string.IsNullOrEmpty( MuzzleFlash ) )
+				{
+					var flash = Particles.Create( MuzzleFlash );
+					flash.SetPosition( 0, muzzle.Value.Position );
+					flash.SetForward( 0, muzzle.Value.Rotation.Forward );
+				}
 
-				var tracer = Particles.Create( "particles/weapons/muzzle_flash/bullet_trace.vpcf" );
-				tracer.SetPosition( 0, muzzle.Value.Position );
-				tracer.SetPosition( 1, Target.WorldSpaceBounds.Center );
+				if ( !string.IsNullOrEmpty( BulletTracer ) )
+				{
+					var tracer = Particles.Create( BulletTracer );
+					tracer.SetPosition( 0, muzzle.Value.Position );
+					tracer.SetPosition( 1, Target.WorldSpaceBounds.Center );
+				}
 			}
 		}
 

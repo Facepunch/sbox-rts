@@ -14,6 +14,8 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
+		public override bool RagdollOnDeath => false;
+		public override string DeathParticles => "particles/weapons/muzzle_flash/muzzle_large/muzzleflash_large.vpcf";
 		public override int NodeSize => 100;
 		public override float LineOfSightRadius => 1500f;
 		public override string[] MoveSounds => new string[]

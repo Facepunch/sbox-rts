@@ -459,13 +459,6 @@ namespace Facepunch.RTS
 			return null;
 		}
 
-		public static List<int> GetUnitNodeSizes()
-		{
-			var distinctSizes = List.OfType<BaseUnit>().Select( i => i.NodeSize ).Distinct().ToList();
-			distinctSizes.Sort( ( a, b ) => a.CompareTo( b ) );
-			return distinctSizes;
-		}
-
 		public static void CreateGhost( UnitEntity worker, BaseBuilding building )
 		{
 			if ( Ghost.IsValid() ) Ghost.Delete();

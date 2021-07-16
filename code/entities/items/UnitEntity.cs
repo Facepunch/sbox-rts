@@ -320,18 +320,18 @@ namespace Facepunch.RTS
 			var damageInfo = LastDamageTaken;
 
 			if ( damageInfo.Attacker is UnitEntity unit )
-			{
 				unit.AddKill();
-			}
 
-			BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, GetHitboxBone( damageInfo.HitboxIndex ) );
+			if ( Item.RagdollOnDeath )
+				BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, GetHitboxBone( damageInfo.HitboxIndex ) );
 
 			if ( Occupiable.IsValid() && Occupiable is IOccupiableEntity occupiable )
-			{
 				occupiable.EvictUnit( this );
-			}
+
+			CreateDeathParticles();
 
 			LifeState = LifeState.Dead;
+
 			Delete();
 		}
 
@@ -794,7 +794,7 @@ namespace Facepunch.RTS
 			LineOfSight = item.LineOfSightRadius;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
-			Pathfinder = PathManager.GetPathfinder( item.NodeSize );
+			Pathfinder = PathManager.GetPathfinder( item.NodeSize, item.CollisionSize );
 
 			if ( item.UseModelPhysics )
 				SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
@@ -1050,6 +1050,9 @@ namespace Facepunch.RTS
 
 			if ( MoveGroup != null && MoveGroup.IsValid() )
 			{
+				var node = Pathfinder.CreateWorldPosition( Position );
+				Pathfinder.DrawBox( node, Color.Green );
+
 				if ( MoveGroup.IsDestination( this, Position ) )
 				{
 					MoveGroup.Finish( this );
@@ -1057,7 +1060,8 @@ namespace Facepunch.RTS
 				else
 				{
 					var direction = MoveGroup.GetDirection( Position );
-					pathDirection = direction.Normal.WithZ( 0f );
+					var offset = Pathfinder.CenterOffset.Normal;
+					pathDirection = (direction.Normal * offset).WithZ( 0f );
 
 					if ( MoveGroup.Agents.Count > 1 )
 					{
@@ -1239,6 +1243,16 @@ namespace Facepunch.RTS
 			if ( Circle.IsValid() )
 			{
 				Circle.Alpha = RenderAlpha;
+			}
+		}
+
+		[ClientRpc]
+		protected virtual void CreateDeathParticles()
+		{
+			if ( !string.IsNullOrEmpty( Item.DeathParticles ) )
+			{
+				var particles = Particles.Create( Item.DeathParticles );
+				particles.SetPosition( 0, Position );
 			}
 		}
 
