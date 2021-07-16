@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Facepunch.RTS.Upgrades;
 using Sandbox;
 
 namespace Facepunch.RTS
@@ -16,12 +17,18 @@ namespace Facepunch.RTS
 		public int AttackPriority { get; }
 		public float Health { get; set; }
 		public float MaxHealth { get; set; }
+		public List<QueueItem> Queue { get; }
 		public bool IsLocalPlayers { get; }
 		public Vector3 Position { get; set; }
 		public bool HasStatus( string id );
+		public bool IsInQueue( BaseItem item );
+		public void QueueItem( BaseItem item );
+		public BaseItem UnqueueItem( uint queueId );
 		public void TakeDamage( DamageInfo info );
 		public float GetDiameterXY( float scalar, bool smallestSide );
 		public BaseStatus ApplyStatus( string id );
+		public bool HasUpgrade( BaseUpgrade item );
+		public bool HasUpgrade( uint id );
 		public void RemoveStatus( string id );
 		public BaseAbility GetAbility( string id );
 		public void StartAbility( BaseAbility ability, AbilityTargetInfo info );

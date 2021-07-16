@@ -43,7 +43,7 @@ namespace Facepunch.RTS.Units
 		{
 			["resistance.fire"] = -0.2f
 		};
-		public override HashSet<string> Buildables => new()
+		public override HashSet<string> Queueables => new()
 		{
 			"building.headquarters",
 			"building.brewery",

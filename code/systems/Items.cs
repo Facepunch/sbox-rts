@@ -83,9 +83,9 @@ namespace Facepunch.RTS
 
 			if ( Entity.FindByIndex( workerId ) is UnitEntity worker && worker.CanConstruct )
 			{
-				if ( item.CanCreate( caller ) != RequirementError.Success ) return;
+				if ( item.CanCreate( caller, worker ) != RequirementError.Success ) return;
 
-				if ( worker.Player == caller && worker.Item.Buildables.Contains( item.UniqueId ) )
+				if ( worker.Player == caller && worker.Item.Queueables.Contains( item.UniqueId ) )
 				{
 					// This is a bit shit isn't it.
 					var ghost = new GhostBuilding();
@@ -123,14 +123,14 @@ namespace Facepunch.RTS
 
 			var item = Find<BaseItem>( itemId );
 
-			if ( Entity.FindByIndex( entityId ) is BuildingEntity building )
+			if ( Entity.FindByIndex( entityId ) is ISelectable selectable )
 			{
-				if ( building.Player == caller && item.CanCreate( caller ) == RequirementError.Success )
+				if ( selectable.Player == caller && item.CanCreate( caller, selectable ) == RequirementError.Success )
 				{
-					ResourceHint.Send( caller, 2f, building.Position, item.Costs, Color.Red );
+					ResourceHint.Send( caller, 2f, selectable.Position, item.Costs, Color.Red );
 					caller.TakeResources( item );
-					building.QueueItem( item );
-					item.OnQueued( caller );
+					selectable.QueueItem( item );
+					item.OnQueued( caller, selectable );
 				}
 			}
 		}
@@ -143,18 +143,17 @@ namespace Facepunch.RTS
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			if ( Entity.FindByIndex( entityId ) is BuildingEntity building )
+			if ( Entity.FindByIndex( entityId ) is ISelectable selectable )
 			{
-				if ( building.Player == caller )
+				if ( selectable.Player == caller )
 				{
-					var item = building.UnqueueItem( queueId );
+					var item = selectable.UnqueueItem( queueId );
 
 					if ( item != null )
 					{
-						ResourceHint.Send( caller, 5f, building.Position, item.Costs, Color.Green );
+						ResourceHint.Send( caller, 5f, selectable.Position, item.Costs, Color.Green );
 						caller.GiveResources( item );
-						building.UnqueueItem( queueId );
-						item.OnUnqueued( caller );
+						item.OnUnqueued( caller, selectable );
 					}
 				}
 			}

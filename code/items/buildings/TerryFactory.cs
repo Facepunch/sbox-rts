@@ -20,7 +20,7 @@ namespace Facepunch.RTS.Buildings
 		{
 			"building.headquarters"
 		};
-		public override HashSet<string> Buildables => new()
+		public override HashSet<string> Queueables => new()
 		{
 			"unit.cannonfodder",
 			"unit.assault",

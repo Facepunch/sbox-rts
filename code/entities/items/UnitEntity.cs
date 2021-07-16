@@ -782,6 +782,8 @@ namespace Facepunch.RTS
 					SetMaterialGroup( Rand.Int( 0, materialGroups ) );
 			}
 
+			RemoveClothing();
+
 			foreach ( var clothes in item.Clothing )
 			{
 				AttachClothing( clothes );
@@ -803,6 +805,8 @@ namespace Facepunch.RTS
 
 			LocalCenter = CollisionBounds.Center;
 			AgentRadius = GetDiameterXY( 2f, true );
+
+			if ( Weapon.IsValid() ) Weapon.Delete();
 
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
 			{

@@ -84,7 +84,7 @@ namespace Facepunch.RTS
 		protected override void OnClick( MousePanelEvent e )
 		{
 			var player = (Local.Pawn as Player);
-			var status = Item.CanCreate( player );
+			var status = Item.CanCreate( player, Selectable );
 
 			if ( status != RequirementError.Success )
 			{
@@ -92,8 +92,8 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			if ( Selectable is UnitEntity worker && Item is BaseBuilding building )
-				Items.CreateGhost( worker, building );
+			if ( Selectable is UnitEntity builder && Item is BaseBuilding building )
+				Items.CreateGhost( builder, building );
 			else
 				Items.Queue( Selectable.NetworkIdent, Item.NetworkId );
 		}
@@ -403,7 +403,7 @@ namespace Facepunch.RTS
 
 	public class ItemCommandList : Panel
 	{
-		public ISelectable Item { get; private set; }
+		public ISelectable Selectable { get; private set; }
 		public List<ItemCommand> Buttons { get; private set; }
 
 		public ItemCommandList()
@@ -411,32 +411,32 @@ namespace Facepunch.RTS
 			Buttons = new();
 		}
 
-		public void Update( ISelectable item )
+		public void Update( ISelectable selectable )
 		{
-			Item = item;
+			Selectable = selectable;
 
 			Buttons.ForEach( b => b.Delete( true ) );
 			Buttons.Clear();
 
-			if ( item is UnitEntity unit )
-				UpdateCommands( unit.Item.Buildables, unit.Item.Abilities );
-			else if ( item is BuildingEntity building )
-				UpdateCommands( building.Item.Buildables, building.Item.Abilities );
+			if ( selectable is UnitEntity unit )
+				UpdateCommands( unit.Item.Queueables, unit.Item.Abilities );
+			else if ( selectable is BuildingEntity building )
+				UpdateCommands( building.Item.Queueables, building.Item.Abilities );
 		}
 
-		private void UpdateCommands( HashSet<string> buildables, HashSet<string> abilities = null )
+		private void UpdateCommands( HashSet<string> queueables, HashSet<string> abilities = null )
 		{
 			var player = Local.Pawn as Player;
 
-			foreach ( var v in buildables )
+			foreach ( var v in queueables )
 			{
 				var buildable = Items.Find<BaseItem>( v );
 
-				if ( buildable.CanHave( player ) )
+				if ( buildable.CanHave( player, Selectable ) )
 				{
 					var button = AddChild<ItemCommandQueueable>( "command" );
 
-					button.Update( Item, buildable );
+					button.Update( Selectable, buildable );
 
 					Buttons.Add( button );
 				}
@@ -446,12 +446,12 @@ namespace Facepunch.RTS
 
 			foreach ( var v in abilities )
 			{
-				var ability = Item.GetAbility( v );
+				var ability = Selectable.GetAbility( v );
 
 				if ( ability != null && ability.HasDependencies() && ability.IsAvailable() )
 				{
 					var button = AddChild<ItemCommandAbility>( "command" );
-					button.Update( Item, ability );
+					button.Update( Selectable, ability );
 					Buttons.Add( button );
 				}
 			}
@@ -465,7 +465,7 @@ namespace Facepunch.RTS
 		public Label Health { get; private set; }
 		public Label Kills { get; private set; }
 		public Label Damage { get; private set; }
-		public ISelectable Item { get; private set; }
+		public ISelectable Selectable { get; private set; }
 		public ItemQueueList QueueList { get; private set; }
 		public ItemOccupantList OccupantList { get; private set; }
 
@@ -481,24 +481,24 @@ namespace Facepunch.RTS
 			OccupantList = AddChild<ItemOccupantList>();
 		}
 
-		public void Update( ISelectable item )
+		public void Update( ISelectable selectable )
 		{
-			Item = item;
+			Selectable = selectable;
 
-			if ( item is UnitEntity unit )
+			if ( selectable is UnitEntity unit )
 				UpdateUnit( unit );
-			else if ( item is BuildingEntity building )
+			else if ( selectable is BuildingEntity building )
 				UpdateBuilding( building );
 		}
 
 		public override void Tick()
 		{
-			if ( Item == null ) return;
+			if ( Selectable == null ) return;
 
 			Kills.SetClass( "hidden", true );
 			Damage.SetClass( "hidden", true );
 
-			if ( Item is UnitEntity unit )
+			if ( Selectable is UnitEntity unit )
 			{
 				Kills.Text = $"Kills: {unit.Kills}";
 				Kills.SetClass( "hidden", false );
@@ -514,7 +514,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			Health.Text = $"{Item.Health.CeilToInt()} HP";
+			Health.Text = $"{Selectable.Health.CeilToInt()} HP";
 
 			base.Tick();
 		}
@@ -628,7 +628,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( RTS.Gamemode.Instance == null ) return;
+			if ( Gamemode.Instance == null ) return;
 
 			var isHidden = true;
 

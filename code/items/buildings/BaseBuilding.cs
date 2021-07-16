@@ -5,7 +5,6 @@ namespace Facepunch.RTS.Buildings
     public abstract class BaseBuilding : BaseItem, IOccupiableItem, IResistorItem
 	{
 		public override Color Color => new Color( 0.8f, 0.8f, 0.8f );
-		public virtual HashSet<string> Buildables => new();
 		public virtual ResourceGenerator Generator => null;
 		public virtual OccupiableSettings Occupiable => new();
 		public virtual bool CanDepositResources => false;

@@ -6,33 +6,33 @@ namespace Facepunch.RTS.Tech
 	{
 		public override Color Color => Color.Yellow;
 
-		public override bool CanHave( Player player )
+		public override bool CanHave( Player player, ISelectable target )
 		{
 			return !IsResearching( player ) && !Has( player ) && HasDependencies( player );
 		}
 
-		public override void OnQueued( Player player )
+		public override void OnQueued( Player player, ISelectable target )
 		{
 			player.Researching.Add( NetworkId );
 
-			base.OnQueued( player );
+			base.OnQueued( player, target );
 		}
 
-		public override void OnUnqueued( Player player )
+		public override void OnUnqueued( Player player, ISelectable target )
 		{
 			player.Researching.Remove( NetworkId );
 
-			base.OnUnqueued( player );
+			base.OnUnqueued( player, target );
 		}
 
-		public override void OnCreated( Player player )
+		public override void OnCreated( Player player, ISelectable target )
 		{
 			Audio.Play( player, "announcer.technology_researched" );
 			Hud.Toast( player, "Technology Researched", this );
 
 			player.Researching.Remove( NetworkId );
 
-			base.OnCreated( player );
+			base.OnCreated( player, target );
 		}
 
 		public bool IsResearching( Player player )

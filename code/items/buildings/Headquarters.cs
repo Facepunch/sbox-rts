@@ -19,7 +19,7 @@ namespace Facepunch.RTS.Buildings
 			[ResourceType.Metal] = 500
 		};
 		public override string Model => "models/buildings/headquarters/headquarters.vmdl";
-		public override HashSet<string> Buildables => new()
+		public override HashSet<string> Queueables => new()
 		{
 			"unit.worker",
 			"unit.scientist",

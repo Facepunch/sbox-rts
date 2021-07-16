@@ -5,6 +5,9 @@ using System.Linq;
 using Gamelib.Extensions;
 using Gamelib.FlowFields.Grid;
 using Facepunch.RTS;
+using Facepunch.RTS.Tech;
+using Facepunch.RTS.Units;
+using Facepunch.RTS.Upgrades;
 
 namespace Facepunch.RTS
 {
@@ -18,12 +21,16 @@ namespace Facepunch.RTS
 		public Dictionary<string, BaseStatus> Statuses { get; private set; }
 		public Dictionary<string, ItemComponent> Components { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
-		[Net, OnChangedCallback] public uint ItemNetworkId { get; set; }
+		[Net, OnChangedCallback] public uint ItemNetworkId { get; private set; }
+		[Net, Local] public List<uint> Upgrades { get; private set; }
 		[Net] public Player Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }
 		public EntityHudAnchor Hud { get; private set; }
 		public EntityHudIcon StatusIcon { get; private set; }
+		public EntityHudIconBar QueueHud { get; private set; }
 		public Vector3 LocalCenter { get; protected set; }
+		public List<QueueItem> Queue { get; private set; }
+		public uint LastQueueId { get; private set; }
 
 		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );
@@ -44,8 +51,65 @@ namespace Facepunch.RTS
 		public ItemEntity()
 		{
 			Transmit = TransmitType.Always;
+			Upgrades = new List<uint>();
 			Statuses = new();
 			Components = new();
+			Queue = new List<QueueItem>();
+		}
+
+		public void QueueItem( BaseItem item )
+		{
+			Host.AssertServer();
+
+			LastQueueId++;
+
+			var queueItem = new QueueItem
+			{
+				Item = item,
+				Id = LastQueueId
+			};
+
+			Queue.Add( queueItem );
+
+			AddToQueue( To.Single( Player ), LastQueueId, item.NetworkId );
+
+			if ( Queue.Count == 1 )
+			{
+				queueItem.Start();
+				StartQueueItem( To.Single( Player ), LastQueueId, queueItem.FinishTime );
+			}
+		}
+
+		public BaseItem UnqueueItem( uint queueId )
+		{
+			Host.AssertServer();
+
+			BaseItem removedItem = default;
+
+			for ( var i = Queue.Count - 1; i >= 0; i-- )
+			{
+				if ( Queue[i].Id == queueId )
+				{
+					removedItem = Queue[i].Item;
+					Queue.RemoveAt( i );
+					break;
+				}
+			}
+
+			RemoveFromQueue( To.Single( Player ), queueId );
+
+			if ( Queue.Count > 0 )
+			{
+				var firstItem = Queue[0];
+
+				if ( firstItem.FinishTime == 0f )
+				{
+					firstItem.Start();
+					StartQueueItem( To.Single( Player ), firstItem.Id, firstItem.FinishTime );
+				}
+			}
+
+			return removedItem;
 		}
 
 		public bool IsOnScreen()
@@ -53,6 +117,27 @@ namespace Facepunch.RTS
 			var position = Position.ToScreen();
 			return position.x > 0f && position.y > 0f && position.x < 1f && position.y < 1f;
 		}
+
+		public bool IsInQueue( BaseItem item )
+		{
+			for ( var i = 0; i < Queue.Count; i++)
+			{
+				if ( Queue[i].Item == item )
+					return true;
+			}
+
+			return false;
+		}
+
+		public bool HasUpgrade( BaseUpgrade item )
+		{
+			return Upgrades.Contains( item.NetworkId );
+		}
+
+		public bool HasUpgrade( uint id )
+		{
+			return Upgrades.Contains( id );
+		} 
 
 		public C GetComponent<C>() where C : ItemComponent
 		{
@@ -239,14 +324,26 @@ namespace Facepunch.RTS
 			Player = player;
 			ItemNetworkId = item.NetworkId;
 
+			ClearItemCache();
 			OnItemChanged( item );
 			OnPlayerAssigned( player );
+		}
+
+		public void ChangeTo( T item )
+		{
+			Host.AssertServer();
+
+			ItemNetworkId = item.NetworkId;
+			ClearItemCache();
+			OnItemChanged( item );
 		}
 
 		public float GetDiameterXY( float scalar = 1f, bool smallestSide = false )
 		{
 			return EntityExtension.GetDiameterXY( this, scalar, smallestSide );
 		}
+
+		public void ClearItemCache() => _itemCache = null;
 
 		public void Assign( Player player, string itemId )
 		{
@@ -298,6 +395,19 @@ namespace Facepunch.RTS
 			{
 				StatusIcon.SetClass( "hidden", true );
 			}
+
+			if ( QueueHud != null && Queue.Count > 0 )
+			{
+				var queueItem = Queue[0];
+
+				QueueHud.Icon.Texture = queueItem.Item.Icon;
+				QueueHud.Bar.SetProgress( 1f - (queueItem.GetTimeLeft() / queueItem.Item.BuildTime) );
+				QueueHud.SetActive( true );
+			}
+			else
+			{
+				QueueHud?.SetActive( false );
+			}
 		}
 
 		public override void ClientSpawn()
@@ -332,6 +442,18 @@ namespace Facepunch.RTS
 		[Event.Tick.Server]
 		protected virtual void ServerTick()
 		{
+			if ( Queue.Count > 0 )
+			{
+				var firstItem = Queue[0];
+
+				if ( firstItem.FinishTime > 0f && Gamemode.Instance.ServerTime >= firstItem.FinishTime )
+				{
+					OnQueueItemCompleted( firstItem );
+					UnqueueItem( firstItem.Id );
+					firstItem.Item.OnCreated( Player, this );
+				}
+			}
+
 			var ability = UsingAbility;
 
 			if ( ability != null && ability.LastUsedTime >= ability.Duration )
@@ -346,14 +468,37 @@ namespace Facepunch.RTS
 
 		}
 
+		protected virtual void OnQueueItemCompleted( QueueItem queueItem )
+		{
+			if ( queueItem.Item is BaseTech tech )
+			{
+				Player.AddDependency( tech );
+				return;
+			}
+
+			if ( queueItem.Item is BaseUpgrade upgrade )
+			{
+				var changeItemTo = upgrade.ChangeItemTo;
+
+				if ( !string.IsNullOrEmpty( changeItemTo ) )
+					ChangeTo( Items.Find<T>( changeItemTo ) );
+
+				Upgrades.Add( upgrade.NetworkId );
+			}
+		}
+
 		protected virtual void OnItemNetworkIdChanged()
 		{
+			ClearItemCache();
 			CreateAbilities();
 		}
 
 		protected virtual void AddHudComponents()
 		{
 			StatusIcon = Hud.AddChild<EntityHudIcon>( "status" );
+
+			if ( IsLocalPlayers )
+				QueueHud = Hud.AddChild<EntityHudIconBar>();
 		}
 
 		protected override void OnDestroy()
@@ -412,6 +557,47 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
+		private void StartQueueItem( uint queueId, float finishTime )
+		{
+			for ( var i = Queue.Count - 1; i >= 0; i-- )
+			{
+				if ( Queue[i].Id == queueId )
+				{
+					Queue[i].FinishTime = finishTime;
+					return;
+				}
+			}
+		}
+
+		[ClientRpc]
+		private void RemoveFromQueue( uint queueId )
+		{
+			for ( var i = Queue.Count - 1; i >= 0; i-- )
+			{
+				if ( Queue[i].Id == queueId )
+				{
+					Queue.RemoveAt( i );
+					RefreshSelection();
+					return;
+				}
+			}
+		}
+
+		[ClientRpc]
+		private void AddToQueue( uint queueId, uint itemId )
+		{
+			var queueItem = new QueueItem
+			{
+				Item = Items.Find<BaseItem>( itemId ),
+				Id = queueId
+			};
+
+			Queue.Add( queueItem );
+
+			RefreshSelection();
+		}
+
+		[ClientRpc]
 		private void ClientRemoveAllStatuses()
 		{
 			RemoveAllStatuses();
@@ -444,7 +630,8 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		private void ClientFinishAbility()
 		{
-			FinishAbility(); RefreshSelection();
+			FinishAbility();
+			RefreshSelection();
 		}
 
 		[ClientRpc]

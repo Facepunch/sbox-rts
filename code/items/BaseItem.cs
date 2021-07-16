@@ -12,6 +12,7 @@ namespace Facepunch.RTS
 		public virtual string Entity => "";
 		public virtual string UniqueId => "";
 		public virtual string Description => "";
+		public virtual HashSet<string> Queueables => new();
 		public virtual Color Color => Color.White;
 		public virtual Texture Icon => null;
 		public virtual int BuildTime => 0;
@@ -40,24 +41,24 @@ namespace Facepunch.RTS
 			return true;
 		}
 
-		public virtual void OnQueued( Player player )
+		public virtual void OnQueued( Player player, ISelectable target )
 		{
 
 		}
 
-		public virtual void OnUnqueued( Player player )
+		public virtual void OnUnqueued( Player player, ISelectable target )
 		{
 
 		}
 
-		public virtual void OnCreated( Player player )
+		public virtual void OnCreated( Player player, ISelectable target )
 		{
 
 		}
 
-		public virtual RequirementError CanCreate( Player player )
+		public virtual RequirementError CanCreate( Player player, ISelectable target )
 		{
-			if ( !CanHave( player ) ) return RequirementError.Unknown;
+			if ( !CanHave( player, target ) ) return RequirementError.Unknown;
 
 			if ( !player.CanAfford( this, out var resource ) )
 			{
@@ -67,7 +68,7 @@ namespace Facepunch.RTS
 			return RequirementError.Success;
 		}
 
-		public virtual bool CanHave( Player player )
+		public virtual bool CanHave( Player player, ISelectable target )
 		{
 			return HasDependencies( player );
 		}

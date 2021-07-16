@@ -23,7 +23,7 @@ namespace Facepunch.RTS.Buildings
 			"building.terryfactory",
 			"tech.machinery"
 		};
-		public override HashSet<string> Buildables => new()
+		public override HashSet<string> Queueables => new()
 		{
 			"unit.ranger",
 			"unit.apc",

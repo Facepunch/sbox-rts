@@ -22,14 +22,11 @@ namespace Facepunch.RTS
 		[Net] public float LineOfSight { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public Entity Target { get; private set; }
-		public uint LastQueueId { get; set; }
-		public List<QueueItem> Queue { get; set; }
 		public RealTimeUntil NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
 
 		#region UI
 		public EntityHudIconList OccupantsHud { get; private set; }
-		public EntityHudIconBar QueueHud { get; private set; }
 		public EntityHudBar GeneratorBar { get; private set; }
 		public EntityHudBar HealthBar { get; private set; }
 		#endregion
@@ -39,7 +36,6 @@ namespace Facepunch.RTS
 			Tags.Add( "building", "selectable" );
 
 			Occupants = new List<UnitEntity>();
-			Queue = new List<QueueItem>();
 		}
 
 		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
@@ -172,29 +168,6 @@ namespace Facepunch.RTS
 			Health = 1f;
 		}
 
-		public void QueueItem( BaseItem item )
-		{
-			Host.AssertServer();
-
-			LastQueueId++;
-
-			var queueItem = new QueueItem
-			{
-				Item = item,
-				Id = LastQueueId
-			};
-
-			Queue.Add( queueItem );
-
-			AddToQueue( To.Single( Player ), LastQueueId, item.NetworkId );
-
-			if ( Queue.Count == 1 )
-			{
-				queueItem.Start();
-				StartQueueItem( To.Single( Player ), LastQueueId, queueItem.FinishTime );
-			}
-		}
-
 		public void SpawnUnit( BaseUnit unit )
 		{
 			var entity = Items.Create( Player, unit );
@@ -203,38 +176,6 @@ namespace Facepunch.RTS
 				entity.RenderColor = Player.TeamColor;
 
 			PlaceNear( entity );
-		}
-
-		public BaseItem UnqueueItem( uint queueId )
-		{
-			Host.AssertServer();
-
-			BaseItem removedItem = default;
-
-			for ( var i = Queue.Count - 1; i >= 0; i-- )
-			{
-				if ( Queue[i].Id == queueId )
-				{
-					removedItem = Queue[i].Item;
-					Queue.RemoveAt( i );
-					break;
-				}
-			}
-
-			RemoveFromQueue( To.Single( Player ), queueId );
-
-			if ( Queue.Count > 0 )
-			{
-				var firstItem = Queue[0];
-
-				if ( firstItem.FinishTime == 0f )
-				{
-					firstItem.Start();
-					StartQueueItem( To.Single( Player ), firstItem.Id, firstItem.FinishTime );
-				}
-			}
-
-			return removedItem;
 		}
 
 		public override bool CanSelect()
@@ -315,19 +256,6 @@ namespace Facepunch.RTS
 
 			OccupantsHud?.SetActive( Occupants.Count > 0 );
 
-			if ( QueueHud != null && Queue.Count > 0 )
-			{
-				var queueItem = Queue[0];
-
-				QueueHud.Icon.Texture = queueItem.Item.Icon;
-				QueueHud.Bar.SetProgress( 1f - (queueItem.GetTimeLeft() / queueItem.Item.BuildTime) );
-				QueueHud.SetActive( true );
-			}
-			else
-			{
-				QueueHud.SetActive( false );
-			}
-
 			base.UpdateHudComponents();
 		}
 
@@ -346,18 +274,6 @@ namespace Facepunch.RTS
 			base.ServerTick();
 
 			TickGenerator();
-
-			if ( Queue.Count > 0 )
-			{
-				var firstItem = Queue[0];
-
-				if ( firstItem.FinishTime > 0f && Gamemode.Instance.ServerTime >= firstItem.FinishTime )
-				{
-					OnQueueItemCompleted( firstItem );
-					UnqueueItem( firstItem.Id );
-					firstItem.Item.OnCreated( Player );
-				}
-			}
 
 			if ( Weapon.IsValid() && !IsUnderConstruction )
 			{
@@ -428,16 +344,14 @@ namespace Facepunch.RTS
 			}
 		}
 
-		protected virtual void OnQueueItemCompleted( QueueItem queueItem )
+		protected override void OnQueueItemCompleted( QueueItem queueItem )
 		{
-			if ( queueItem.Item is BaseTech tech )
-			{
-				Player.AddDependency( tech );
-			}
-			else if ( queueItem.Item is BaseUnit unit )
+			if ( queueItem.Item is BaseUnit unit )
 			{
 				SpawnUnit( unit );
 			}
+
+			base.OnQueueItemCompleted( queueItem );
 		}
 
 		protected override void OnPlayerAssigned( Player player )
@@ -464,6 +378,8 @@ namespace Facepunch.RTS
 			LocalCenter = CollisionBounds.Center;
 			MaxHealth = item.MaxHealth;
 			Health = item.MaxHealth;
+
+			if ( Weapon.IsValid() ) Weapon.Delete();
 
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
 			{
@@ -526,62 +442,19 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		private void StartQueueItem( uint queueId, float finishTime )
-		{
-			for ( var i = Queue.Count - 1; i >= 0; i-- )
-			{
-				if ( Queue[i].Id == queueId )
-				{
-					Queue[i].FinishTime = finishTime;
-					return;
-				}
-			}
-		}
-
-		[ClientRpc]
 		private void AddAsFogViewer()
 		{
 			Fog.AddViewer( this );
-		}
-
-		[ClientRpc]
-		private void RemoveFromQueue( uint queueId )
-		{
-			for ( var i = Queue.Count - 1; i >= 0; i-- )
-			{
-				if ( Queue[i].Id == queueId )
-				{
-					Queue.RemoveAt( i );
-					return;
-				}
-			}
-		}
-
-		[ClientRpc]
-		private void AddToQueue( uint queueId, uint itemId )
-		{
-			var queueItem = new QueueItem
-			{
-				Item = Items.Find<BaseItem>( itemId ),
-				Id = queueId
-			};
-
-			Queue.Add( queueItem );
 		}
 
 		protected override void AddHudComponents()
 		{
 			// We only want a generator bar is it's our building.
 			if ( IsLocalPlayers && Item.Generator != null )
-			{
 				GeneratorBar = Hud.AddChild<EntityHudBar>( "generator" );
-			}
 
 			if ( IsLocalPlayers )
-			{
 				OccupantsHud = Hud.AddChild<EntityHudIconList>();
-				QueueHud = Hud.AddChild<EntityHudIconBar>();
-			}
 
 			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
 

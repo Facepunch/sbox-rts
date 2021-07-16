@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "Research Lab";
 		public override string UniqueId => "building.researchlab";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/researchlab.png" );
-		public override string Description => "Research extraordinary new technologies for your empire.";
+		public override string Description => "Research new technologies for your empire.";
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
@@ -23,7 +23,7 @@ namespace Facepunch.RTS.Buildings
 			"building.terryfactory",
 			"tech.machinery"
 		};
-		public override HashSet<string> Buildables => new()
+		public override HashSet<string> Queueables => new()
 		{
 			"tech.brewing",
 			"tech.extraction",
@@ -31,7 +31,7 @@ namespace Facepunch.RTS.Buildings
 			"tech.armoredplating",
 			"tech.infrastructure",
 			"tech.carbines",
-			"tech.pyrotechnics"
+			"upgrade.researchlab"
 		};
 	}
 }

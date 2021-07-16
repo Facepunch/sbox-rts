@@ -44,31 +44,30 @@ namespace Facepunch.RTS.Units
 		public virtual int Population => 1;
 		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";
-		public virtual HashSet<string> Buildables => new();
 
-		public override void OnQueued( Player player )
+		public override void OnQueued( Player player, ISelectable target )
 		{
 			player.AddPopulation( Population );
 		}
 
-		public override void OnUnqueued( Player player )
+		public override void OnUnqueued( Player player, ISelectable target )
 		{
 			player.TakePopulation( Population );
 		}
 
-		public override void OnCreated( Player player )
+		public override void OnCreated( Player player, ISelectable target )
 		{
 			Hud.Toast( player, "Unit Trained", this );
 
-			base.OnCreated( player );
+			base.OnCreated( player, target );
 		}
 
-		public override RequirementError CanCreate( Player player )
+		public override RequirementError CanCreate( Player player, ISelectable target )
 		{
 			if ( !player.HasPopulationCapacity( Population ) )
 				return RequirementError.NotEnoughPopulation;
 
-			return base.CanCreate( player );
+			return base.CanCreate( player, target );
 		}
 
 		public void PlayConstructSound( Player player )
