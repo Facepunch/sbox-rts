@@ -2,7 +2,6 @@
 {
 	_class = "CParticleSystemDefinition"
 	m_nInitialParticles = 40
-	m_ConstantColor = [ 0, 0, 0, 255 ]
 	m_flConstantRadius = 64.0
 	m_nMaxParticles = 100
 	m_nBehaviorVersion = 10
@@ -40,7 +39,7 @@
 		{
 			_class = "C_OP_BasicMovement"
 			m_Gravity = [ 0.0, 0.0, 500.0 ]
-			m_fDrag = 0.4
+			m_fDrag = 0.25
 		},
 		{
 			_class = "C_OP_Decay"
@@ -140,6 +139,7 @@
 				}
 			}
 			m_nOutputField = "7"
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_OP_SequenceFromModel"
@@ -152,6 +152,13 @@
 		{
 			_class = "C_OP_OscillateVector"
 			m_RateMax = [ 2.0, 2.0, 2.0 ]
+		},
+		{
+			_class = "C_OP_ColorInterpolate"
+			m_ColorFade = [ 25, 25, 25, 255 ]
+		},
+		{
+			_class = "C_OP_Spin"
 		},
 	]
 	m_Renderers = 
