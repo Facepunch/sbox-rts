@@ -52,5 +52,9 @@ namespace Facepunch.RTS.Units
 			"brute.yes_boss"
 		};
 		public override string Weapon => "weapon_grenade_launcher";
+		public override HashSet<string> Dependencies => new()
+		{
+			"tech.pyrotechnics"
+		};
 	}
 }
