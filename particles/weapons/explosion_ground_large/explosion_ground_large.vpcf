@@ -1317,7 +1317,6 @@
 		},
 		{
 			m_ChildRef = resource:"particles/weapons/explosion_ground_large/explosion_smoke_ring.vpcf"
-			m_flDelay = 0.05
 		},
 		{
 			m_ChildRef = resource:"particles/weapons/explosion_ground_large/explosion_gib.vpcf"
