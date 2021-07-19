@@ -367,9 +367,11 @@ namespace Facepunch.RTS
 					cullable.Object.MakeVisible( false );
 				}
 
-				//_particleContainers = SceneObject.All.OfType<SceneParticleObject>();
-
+				/*
+				_particleContainers = SceneWorld.Current.GetAllSceneObjects().OfType<SceneParticleObject>();
+				
 				CullParticles();
+				*/
 
 				// Our first pass will create the seen history map.
 				for ( var i = 0; i < _viewers.Count; i++ )
