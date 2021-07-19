@@ -850,6 +850,10 @@
 		{
 			_class = "C_OP_Decay"
 		},
+		{
+			_class = "C_OP_Spin"
+			m_nSpinRateDegrees = 5
+		},
 	]
 	m_Constraints = 
 	[
@@ -1313,13 +1317,16 @@
 		},
 		{
 			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_smoke_ring.vpcf"
-			m_flDelay = 0.25
 		},
 		{
 			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_smoke2.vpcf"
+			m_bDisableChild = true
 		},
 		{
 			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_fire_ring.vpcf"
+		},
+		{
+			m_ChildRef = resource:"particles/weapons/explosion_ground_small/explosion_shock_ring.vpcf"
 		},
 	]
 }
