@@ -94,15 +94,6 @@ namespace Facepunch.RTS
 			};
 		}
 
-		public virtual void DoImpactEffect( Vector3 position, Vector3 normal, float damage )
-		{
-			// Don't go crazy with impact effects because we fire fast.
-			if ( Rand.Float( 1f ) >= 0.5f && Target is IDamageable damageable )
-			{
-				damageable.DoImpactEffects( position, normal );
-			}
-		}
-
 		[ClientRpc]
 		protected virtual void ShootEffects()
 		{
@@ -130,22 +121,40 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public virtual void ShootBullet( float force, float damage )
+		public void DamageEntity( Entity entity, DamageFlags flags, float force, float damage )
 		{
 			var aimRay = GetAimRay();
-			var endPos = Target.WorldSpaceBounds.Center;
-			var damageInfo = DamageInfo.FromBullet( endPos, aimRay.Direction * 100 * force, damage )
-				.WithAttacker( Attacker )
-				.WithWeapon( this );
-
-			Target.TakeDamage( damageInfo );
-
-			DoImpactEffect( endPos, aimRay.Direction, damage );
-
-			if ( Target is IDamageable damageable && Rand.Float( 1f ) > 0.7f  )
+			var endPos = entity.WorldSpaceBounds.Center;
+			var damageInfo = new DamageInfo()
 			{
-				damageable.CreateDamageDecals( endPos );
+				Flags = flags,
+				Weapon = this,
+				Position = endPos,
+				Attacker = Attacker,
+				Force = aimRay.Direction * 100f * force,
+				Damage = damage
+			};
+
+			entity.TakeDamage( damageInfo );
+
+			if ( entity is IDamageable damageable )
+			{
+				if ( Rand.Float( 1f ) >= 0.5f )
+					damageable.DoImpactEffects( endPos, aimRay.Direction );
+
+				if ( Rand.Float( 1f ) > 0.7f )
+					damageable.CreateDamageDecals( endPos );
 			}
+		}
+
+		public void DamageTarget( DamageFlags flags, float force, float damage )
+		{
+			DamageEntity( Target, flags, force, damage );
+		}
+
+		public void ShootBullet( float force, float damage )
+		{
+			DamageTarget( DamageFlags.Bullet, force, damage );
 		}
 	}
 }

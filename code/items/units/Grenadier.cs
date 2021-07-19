@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Cannonfodder : BaseUnit
+	public class Grenadier : BaseUnit
 	{
-		public override string Name => "Cannonfodder";
-		public override string UniqueId => "unit.cannonfodder";
-		public override string Description => "A basic dispensable Terry armed with only a pistol.";
+		public override string Name => "Grenadier";
+		public override string UniqueId => "unit.grenadier";
+		public override string Description => "Launches various grenades at your enemies.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 1;
 		public override OccupantSettings Occupant => new()
@@ -47,6 +47,6 @@ namespace Facepunch.RTS.Units
 			"brute.tell_me_what_to_do2",
 			"brute.yes_boss"
 		};
-		public override string Weapon => "weapon_pistol";
+		public override string Weapon => "weapon_grenade_launcher";
 	}
 }
