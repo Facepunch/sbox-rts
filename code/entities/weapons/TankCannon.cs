@@ -45,15 +45,6 @@ namespace Facepunch.RTS
 			base.ShootEffects();
 		}
 
-		public override void DoImpactEffect( Vector3 position, Vector3 normal, float damage )
-		{
-			// Don't go crazy with impact effects because we fire fast.
-			if ( Rand.Float( 1f ) >= 0.5f && Target is IDamageable damageable )
-			{
-				damageable.DoImpactEffects( position, normal );
-			}
-		}
-
 		public override bool CanAttack()
 		{
 			var goalDirection = (Target.Position - Attacker.Position).Normal;
