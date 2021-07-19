@@ -487,7 +487,7 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = modelEntity;
-			_target.Radius = Item.InteractRadius + (Pathfinder.NodeSize * 2);
+			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Follow = true;
 			_target.Type = TargetType.Occupy;
 
@@ -510,7 +510,7 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = building;
-			_target.Radius = Item.InteractRadius + (Pathfinder.NodeSize * 2);
+			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Follow = true;
 			_target.Type = TargetType.Deposit;
 
@@ -534,7 +534,7 @@ namespace Facepunch.RTS
 
 			_target.Entity = resource;
 			_target.Follow = true;
-			_target.Radius = Item.InteractRadius + (Pathfinder.NodeSize * 2);
+			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Type = TargetType.Gather;
 
 			LastResourceType = resource.Resource;
@@ -561,7 +561,7 @@ namespace Facepunch.RTS
 
 			_target.Entity = building;
 			_target.Follow = true;
-			_target.Radius = Item.InteractRadius + (Pathfinder.NodeSize * 2);
+			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Type = TargetType.Construct;
 
 			SetMoveGroup( moveGroup );
@@ -633,8 +633,11 @@ namespace Facepunch.RTS
 
 		public List<Vector3> GetDestinations( ModelEntity model )
 		{
+			var collisionSize = Pathfinder.CollisionSize;
+			var nodeSize = Pathfinder.NodeSize;
+
 			// Round up the radius to the nearest node size.
-			var radius = MathF.Ceiling( model.GetDiameterXY( 0.5f ) / Pathfinder.NodeSize ) * Pathfinder.NodeSize;
+			var radius = MathF.Ceiling( (model.GetDiameterXY( 0.5f ) + collisionSize / 2f) / nodeSize ) * nodeSize;
 			var potentialTiles = new List<Vector3>();
 			var possibleLocations = new List<GridWorldPosition>();
 
@@ -642,9 +645,15 @@ namespace Facepunch.RTS
 
 			var destinations = possibleLocations.ConvertAll( v =>
 			{
-				Pathfinder.DrawBox( v, Color.Blue, 10f );
+				if ( Pathfinder.IsAvailable( v) )
+					Pathfinder.DrawBox( v, Color.Green, 10f );
+				else
+					Pathfinder.DrawBox( v, Color.Blue, 10f );
+
 				return Pathfinder.GetPosition( v );
 			} );
+
+			destinations.Sort( ( a, b ) => b.Distance( model.Position ).CompareTo( a.Distance( model.Position ) ) );
 
 			return destinations;
 		}

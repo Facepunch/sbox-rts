@@ -7,7 +7,7 @@
 			"sounds/brute/brute.going_there.vsnd",
 		]
 		UI = true
-		Volume = 1.0
+		Volume = 0.5
 		VolumeRandom = 0.0
 		Pitch = 1.0
 		PitchRandom = 0.0

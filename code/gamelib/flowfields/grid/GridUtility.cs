@@ -1,4 +1,4 @@
-using Gamelib.FlowFields.Maths;
+using Gamelib.Maths;
 using System;
 using System.Collections.Generic;
 using static System.Int32;

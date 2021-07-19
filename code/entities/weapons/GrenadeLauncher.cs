@@ -1,12 +1,12 @@
 ﻿using Facepunch.RTS;
-using Gamelib.FlowFields.Maths;
+using Gamelib.Maths;
 using Sandbox;
 using System;
 
 namespace Facepunch.RTS
 {
 	[Library( "weapon_grenade_launcher" )]
-	partial class GrenadeLauncher : Weapon
+	public partial class GrenadeLauncher : Weapon
 	{
 		public override string BulletTracer => null;
 		public override float FireRate => 2f;
@@ -44,7 +44,7 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		protected override void ShootEffects()
+		public override void ShootEffects()
 		{
 			Host.AssertClient();
 

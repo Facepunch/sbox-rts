@@ -55,10 +55,15 @@ namespace Facepunch.RTS
 			return (LastAttack > FireRate);
 		}
 
+		public virtual void DummyAttack()
+		{
+			ShootEffects();
+			LastAttack = 0f;
+		}
+
 		public virtual void Attack()
 		{
 			LastAttack = 0f;
-
 			ShootEffects();
 			ShootBullet( 1.5f, GetDamage() );
 		}
@@ -95,7 +100,7 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		protected virtual void ShootEffects()
+		public virtual void ShootEffects()
 		{
 			Host.AssertClient();
 

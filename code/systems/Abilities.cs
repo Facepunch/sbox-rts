@@ -201,6 +201,7 @@ namespace Facepunch.RTS
 					{
 						StopSelectingTarget();
 						UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPos.ToCSV() );
+						return;
 					}
 				}
 				else
@@ -223,6 +224,7 @@ namespace Facepunch.RTS
 						{
 							StopSelectingTarget();
 							UseOnTarget( ability.User.NetworkIdent, ability.UniqueId, target.NetworkIdent );
+							return;
 						}
 
 						TargetCircle.TargetColor = Color.Green;

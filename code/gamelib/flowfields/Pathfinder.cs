@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Gamelib.FlowFields.Maths;
+using Gamelib.Maths;
 using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
 using Sandbox;

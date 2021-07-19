@@ -1,7 +1,7 @@
 using System;
 using Sandbox;
 
-namespace Gamelib.FlowFields.Maths
+namespace Gamelib.Maths
 {
     public static class MathUtility
 	{

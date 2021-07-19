@@ -1,4 +1,4 @@
-using Gamelib.FlowFields.Maths;
+using Gamelib.Maths;
 
 namespace Gamelib.FlowFields.Grid
 {

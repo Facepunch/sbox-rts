@@ -108,7 +108,6 @@ namespace Facepunch.RTS
 		}
 
 		public virtual void Tick() { }
-
 		public virtual void OnStarted() { }
 		public virtual void OnFinished() { }
 		public virtual void OnCancelled() { }

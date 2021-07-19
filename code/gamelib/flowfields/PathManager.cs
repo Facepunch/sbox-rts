@@ -1,4 +1,4 @@
-using Gamelib.FlowFields.Maths;
+using Gamelib.Maths;
 using Sandbox;
 using System.Collections.Generic;
 

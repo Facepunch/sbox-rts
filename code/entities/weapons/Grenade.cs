@@ -1,5 +1,5 @@
 ﻿using Facepunch.RTS;
-using Gamelib.FlowFields.Maths;
+using Gamelib.Maths;
 using Sandbox;
 using System;
 
@@ -14,16 +14,16 @@ namespace Facepunch.RTS
 		public float TravelDuration { get; private set; }
 		public RealTimeUntil TimeUntilHit { get; private set; }
 		public Entity Target { get; private set; }
-		public string TrailEffect => "particles/weapons/grenade_trail/grenade_trail.vpcf";
-		public string ExplosionEffect => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public Action<Entity> Callback { get; private set; }
+		public string ExplosionEffect { get; set; } = "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
+		public string TrailEffect { get; set; } = "particles/weapons/grenade_trail/grenade_trail.vpcf";
 
 		public Grenade()
 		{
 			Transmit = TransmitType.Always;
 		}
 
-		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Entity> callback )
+		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Entity> callback = null )
 		{
 			StartPosition = start;
 			EndPosition = end;
@@ -31,11 +31,14 @@ namespace Facepunch.RTS
 			TimeUntilHit = duration;
 			Callback = callback;
 
-			Trail = Particles.Create( TrailEffect );
-			Trail.SetEntity( 0, this );
+			if ( !string.IsNullOrEmpty( TrailEffect ) )
+			{
+				Trail = Particles.Create( TrailEffect );
+				Trail.SetEntity( 0, this );
+			}
 		}
 
-		public void Initialize( Vector3 start, Entity target, float duration, Action<Entity> callback )
+		public void Initialize( Vector3 start, Entity target, float duration, Action<Entity> callback = null )
 		{
 			Initialize( start, target.Position, duration, callback );
 			Target = target;
@@ -68,10 +71,14 @@ namespace Facepunch.RTS
 
 			if ( TimeUntilHit )
 			{
-				var explosion = Particles.Create( ExplosionEffect );
-				explosion.SetPosition( 0, endPos );
+				if ( !string.IsNullOrEmpty( ExplosionEffect ) )
+				{
+					var explosion = Particles.Create( ExplosionEffect );
+					explosion.SetPosition( 0, endPos );
+				}
+
+				Callback?.Invoke( Target );
 				RemoveEffects();
-				Callback( Target );
 				Delete();
 			}
 		}

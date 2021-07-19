@@ -37,7 +37,7 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		protected override void ShootEffects()
+		public override void ShootEffects()
 		{
 			var explosion = Particles.Create( "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf" );
 			explosion.SetPosition( 0, Target.Position );

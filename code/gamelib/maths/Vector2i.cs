@@ -1,6 +1,6 @@
 using System;
 
-namespace Gamelib.FlowFields.Maths
+namespace Gamelib.Maths
 {
     public readonly struct Vector2i : IEquatable<Vector2i>
     {

@@ -1,6 +1,6 @@
 ﻿using Facepunch.RTS;
 using Gamelib.FlowFields;
-using Gamelib.FlowFields.Maths;
+using Gamelib.Maths;
 using Sandbox;
 using System;
 using System.Collections.Generic;

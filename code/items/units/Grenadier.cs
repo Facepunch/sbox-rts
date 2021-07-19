@@ -11,6 +11,10 @@ namespace Facepunch.RTS.Units
 		public override string Description => "Launches various grenades at your enemies.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 1;
+		public override HashSet<string> Abilities => new()
+		{
+			"ability_molotov"
+		};
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true

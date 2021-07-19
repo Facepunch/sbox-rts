@@ -25,13 +25,13 @@ namespace Facepunch.RTS.Units
 		public virtual string[] DepositSounds => Array.Empty<string>();
 		public virtual string[] MoveSounds => Array.Empty<string>();
 		public virtual int NodeSize => 50;
-		public virtual int CollisionSize => 100;
+		public virtual int CollisionSize => 80;
 		public virtual float Speed => 300f;
 		public virtual float RotateToTargetSpeed => 50f;
 		public virtual float LineOfSightRadius => 700f;
 		public virtual float ConstructRadius => 1500f;
 		public virtual float AttackRadius => 700f;
-		public virtual float InteractRadius => 80f;
+		public virtual float InteractRadius => 40f;
 		public virtual Dictionary<string, float> Resistances => new();
 		public virtual List<string> DamageDecals => new()
 		{

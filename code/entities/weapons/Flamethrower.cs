@@ -38,7 +38,7 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		protected override void ShootEffects()
+		public override void ShootEffects()
 		{
 			Host.AssertClient();
 
