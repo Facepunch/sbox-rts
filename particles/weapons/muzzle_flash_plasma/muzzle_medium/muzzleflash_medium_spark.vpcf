@@ -2069,6 +2069,7 @@
 					m_Stops = [  ]
 				}
 			}
+			m_bDisableOperator = true
 		},
 	]
 	m_Constraints = 
@@ -2122,6 +2123,7 @@
 				}
 			}
 			m_bDecayBounce = false
+			m_bDisableOperator = true
 		},
 	]
 	m_Renderers = 

@@ -1958,6 +1958,7 @@
 		{
 			_class = "C_OP_WorldTraceConstraint"
 			m_bWorldOnly = true
+			m_bDisableOperator = true
 		},
 	]
 	m_Renderers = 

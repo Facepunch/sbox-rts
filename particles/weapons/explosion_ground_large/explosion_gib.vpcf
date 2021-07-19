@@ -1741,6 +1741,7 @@
 				}
 			}
 			m_bDecayBounce = false
+			m_bDisableOperator = true
 		},
 	]
 	m_Renderers = 

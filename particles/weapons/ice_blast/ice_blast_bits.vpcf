@@ -700,6 +700,7 @@
 	[
 		{
 			_class = "C_OP_WorldCollideConstraint"
+			m_bDisableOperator = true
 		},
 	]
 	m_Renderers = 
