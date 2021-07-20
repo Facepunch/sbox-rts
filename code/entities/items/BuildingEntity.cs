@@ -48,10 +48,12 @@ namespace Facepunch.RTS
 			GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
 		}
 
+		public float GetAttackRadius() => Item.AttackRadius;
+		public float GetMaxVerticalRange() => Item.MaxVerticalRange;
+
 		public bool IsTargetInRange()
 		{
 			if ( !Target.IsValid() ) return false;
-
 			return (Target.IsValid() && Target.Position.Distance( Position ) < Item.AttackRadius);
 		}
 

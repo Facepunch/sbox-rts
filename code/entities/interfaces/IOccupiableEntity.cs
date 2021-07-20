@@ -6,10 +6,14 @@ namespace Facepunch.RTS
 	public interface IOccupiableEntity
 	{
 		public IOccupiableItem OccupiableItem { get; }
+		public Vector3 Position { get; }
 		public bool CanOccupyUnits { get; }
 		public int NetworkIdent { get; }
 		public Player Player { get; }
 		public bool CanOccupantsAttack();
+		public float GetMaxVerticalRange();
+		public float GetAttackRadius();
+		public bool IsInRange( Entity entity, float radius );
 		public IList<UnitEntity> GetOccupantsList();
 		public Vector3? GetVacatePosition( UnitEntity unit );
 		public void DamageOccupants( DamageInfo info );

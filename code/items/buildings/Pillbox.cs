@@ -11,6 +11,7 @@ namespace Facepunch.RTS.Buildings
 		public override Texture Icon => Texture.Load( "textures/rts/icons/pub.png" );
 		public override string Description => "Occupy with units to have them fire at enemies from cover.";
 		public override int BuildTime => 10;
+		public override float AttackRadius => 0f;
 		public override float MinLineOfSight => 500f;
 		public override OccupiableSettings Occupiable => new()
 		{

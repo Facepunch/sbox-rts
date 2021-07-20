@@ -223,19 +223,13 @@ namespace Facepunch.RTS
 		{
 			if ( !_target.HasEntity() ) return false;
 
-			if ( _target.Entity is ModelEntity entity )
+			if ( Occupiable is IOccupiableEntity occupiable )
 			{
-				// We can try to see if our range overlaps the bounding box of the target.
-				var targetBounds = entity.CollisionBounds + entity.Position;
-
-				if ( targetBounds.Overlaps( Position.WithZ( entity.Position.z ), _target.Radius ) )
-					return true;
+				var attackRadius = occupiable.GetAttackRadius();
+				return occupiable.IsInRange( _target.Entity, attackRadius > 0f ? attackRadius : _target.Radius );
 			}
 
-			var targetPosition = _target.Entity.Position.WithZ( 0f );
-			var selfPosition = Position.WithZ( 0f );
-
-			return (_target.HasEntity() && targetPosition.Distance( selfPosition ) < _target.Radius);
+			return IsInRange( _target.Entity, _target.Radius );
 		}
 
 		public bool TakeFrom( ResourceEntity resource )
@@ -586,6 +580,9 @@ namespace Facepunch.RTS
 			OnTargetChanged();
 		}
 
+		public float GetAttackRadius() => Item.AttackRadius;
+		public float GetMaxVerticalRange() => Item.MaxVerticalRange;
+
 		public float LookAtPosition( Vector3 position, float? interpolation = null )
 		{
 			var targetDirection = (position - Position).WithZ( 0f );
@@ -662,7 +659,17 @@ namespace Facepunch.RTS
 
 		public bool InVerticalRange( ISelectable other )
 		{
-			return (other.Position.z <= Item.MaxVerticalRange);
+			var selfPosition = Position;
+			var maxVerticalRange = Item.MaxVerticalRange;
+
+			if ( Occupiable is IOccupiableEntity occupiable )
+			{
+				selfPosition = occupiable.Position;
+				maxVerticalRange = occupiable.GetMaxVerticalRange();
+			}
+
+			var distance = Math.Abs(selfPosition.z - other.Position.z);
+			return (distance <= maxVerticalRange);
 		}
 
 		public void RemoveClothing()
@@ -929,7 +936,20 @@ namespace Facepunch.RTS
 
 		private void FindTargetEnemy()
 		{
-			var entities = Physics.GetEntitiesInSphere( Position, Item.AttackRadius );
+			var searchPosition = Position;
+			var searchRadius = Item.AttackRadius;
+
+			if ( Occupiable is IOccupiableEntity occupiable )
+			{
+				var attackRadius = occupiable.GetAttackRadius();
+
+				if ( attackRadius > 0f )
+					searchRadius = attackRadius;
+
+				searchPosition = occupiable.Position;
+			}
+
+			var entities = Physics.GetEntitiesInSphere( searchPosition.WithZ( 0f ), searchRadius * 1.2f );
 
 			_targetBuffer.Clear();
 
@@ -942,7 +962,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			_targetBuffer.OrderByDescending( s => s.AttackPriority ).ThenBy( s => s.Position.Distance( Position ) );
+			_targetBuffer.OrderByDescending( s => s.AttackPriority ).ThenBy( s => s.Position.Distance( searchPosition ) );
 
 			if ( _targetBuffer.Count > 0 )
 			{
@@ -963,12 +983,9 @@ namespace Facepunch.RTS
 		{
 			if ( Occupiable is not IOccupiableEntity occupiable ) return;
 
-			if ( occupiable.CanOccupantsAttack() )
+			if ( occupiable.CanOccupantsAttack() && IsTargetValid() )
 			{
-				var isTargetInRange = IsTargetInRange();
-				var isTargetValid = IsTargetValid();
-
-				if ( isTargetValid && isTargetInRange && _target.Type == TargetType.Attack )
+				if ( IsTargetInRange() && _target.Type == TargetType.Attack )
 				{
 					if ( Weapon.IsValid() && Weapon.CanAttack() )
 					{
