@@ -55,6 +55,7 @@ namespace Facepunch.RTS.Units
 			"building.tunnel",
 			"building.researchlab",
 			"building.watchtower",
+			"building.airfield",
 			"building.pillbox"
 		};
 		public override HashSet<string> Clothing => new()
