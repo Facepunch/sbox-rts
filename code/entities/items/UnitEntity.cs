@@ -148,20 +148,6 @@ namespace Facepunch.RTS
 			return true;
 		}
 
-		public bool OccupyUnit( UnitEntity unit )
-		{
-			Host.AssertServer();
-
-			if ( CanOccupyUnits )
-			{
-				unit.OnOccupy( this );
-				Occupants.Add( unit );
-				return true;
-			}
-
-			return false;
-		}
-
 		public void EvictUnit( UnitEntity unit )
 		{
 			Host.AssertServer();
@@ -242,7 +228,7 @@ namespace Facepunch.RTS
 				// We can try to see if our range overlaps the bounding box of the target.
 				var targetBounds = entity.CollisionBounds + entity.Position;
 
-				if ( targetBounds.Overlaps( Position, _target.Radius ) )
+				if ( targetBounds.Overlaps( Position.WithZ( entity.Position.z ), _target.Radius ) )
 					return true;
 			}
 
@@ -347,6 +333,20 @@ namespace Facepunch.RTS
 			DamageOccupants( info );
 
 			base.TakeDamage( info );
+		}
+
+		public virtual bool OccupyUnit( UnitEntity unit )
+		{
+			Host.AssertServer();
+
+			if ( CanOccupyUnits )
+			{
+				unit.OnOccupy( this );
+				Occupants.Add( unit );
+				return true;
+			}
+
+			return false;
 		}
 
 		public virtual bool CanOccupantsAttack()
@@ -637,19 +637,6 @@ namespace Facepunch.RTS
 		public List<Vector3> GetDestinations( ModelEntity model )
 		{
 			var pathfinder = Pathfinder;
-
-			if ( pathfinder == null )
-			{
-				var bounds = model.GetDiameterXY( 0.5f );
-				var position = new Vector3(
-					model.Position.x + Rand.Float( -bounds, bounds ),
-					model.Position.y + Rand.Float( -bounds, bounds ),
-					Position.z
-				);
-
-				return new List<Vector3>() { position };
-			}
-
 			var collisionSize = pathfinder.CollisionSize;
 			var nodeSize = pathfinder.NodeSize;
 
@@ -1174,11 +1161,6 @@ namespace Facepunch.RTS
 			}
 		}
 
-		private void AlignToGround()
-		{
-			Position = Position.WithZ( Item.VerticalOffset + Pathfinder.GetHeight( Position ) );
-		}
-
 		private void TickOccupy( IOccupiableEntity occupiable)
 		{
 			if ( occupiable.OccupyUnit( this ) )
@@ -1293,6 +1275,11 @@ namespace Facepunch.RTS
 			{
 				Circle.Alpha = RenderAlpha;
 			}
+		}
+
+		protected virtual void AlignToGround()
+		{
+			Position = Position.WithZ( Item.VerticalOffset + Pathfinder.GetHeight( Position ) );
 		}
 
 		[ClientRpc]
