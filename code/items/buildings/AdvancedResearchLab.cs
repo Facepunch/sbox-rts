@@ -13,6 +13,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/research_lab/research_lab.vmdl";
 		public override HashSet<string> Queueables => new( base.Queueables )
 		{
+			"tech.airsuperiority",
 			"tech.pyrotechnics",
 			"tech.cryogenics",
 			"tech.overvoltage",
