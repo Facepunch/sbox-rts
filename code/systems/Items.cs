@@ -169,14 +169,14 @@ namespace Facepunch.RTS
 
 			var target = Entity.FindByIndex( id );
 
-			if ( target.IsValid() )
+			if ( target.IsValid() && target is ISelectable selectable )
 			{
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( unit.IsUsingAbility() )
+					if ( unit.IsUsingAbility() || !unit.InVerticalRange( selectable ) )
 						return false;
 
-					unit.Attack( target );
+					unit.Attack( selectable );
 					return true;
 				} );
 

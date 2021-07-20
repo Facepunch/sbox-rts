@@ -52,7 +52,12 @@ namespace Facepunch.RTS
 		{
 			if ( !Target.IsValid() ) return false;
 
-			return (Target.IsValid() && Target.Position.Distance( Position ) < Item.AttackRange);
+			return (Target.IsValid() && Target.Position.Distance( Position ) < Item.AttackRadius);
+		}
+
+		public bool InVerticalRange( ISelectable other )
+		{
+			return (other.Position.z <= Item.MaxVerticalRange);
 		}
 
 		public bool OccupyUnit( UnitEntity unit )
@@ -427,9 +432,9 @@ namespace Facepunch.RTS
 
 		private void FindTargetUnit()
 		{
-			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRange )
+			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRadius )
 				.OfType<UnitEntity>()
-				.Where( ( a ) => IsEnemy( a ) )
+				.Where( ( a ) => IsEnemy( a ) && InVerticalRange( a ) )
 				.OrderBy( ( a ) => a.Position.Distance( Position ) )
 				.FirstOrDefault();
 

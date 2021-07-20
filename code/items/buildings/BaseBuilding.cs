@@ -13,7 +13,8 @@ namespace Facepunch.RTS.Buildings
 		public virtual uint PopulationBoost => 0;
 		public virtual float MaxHealth => 100f;
 		public virtual string Model => "";
-		public virtual float AttackRange => 600f;
+		public virtual float AttackRadius => 600f;
+		public virtual float MaxVerticalRange => 100f;
 		public virtual string Weapon => "";
 	}
 }

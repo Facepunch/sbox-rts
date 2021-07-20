@@ -295,7 +295,7 @@ namespace Facepunch.RTS
 			var pathfinder = unit.Pathfinder;
 			var potentialNodes = new List<GridWorldPosition>();
 
-			unit.Pathfinder.GetGridPositions( Position, bounds, potentialNodes );
+				pathfinder.GetGridPositions( Position, bounds, potentialNodes );
 
 			var freeLocations = potentialNodes
 				.Where( v => pathfinder.IsAvailable( v ) )

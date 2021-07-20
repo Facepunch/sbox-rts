@@ -13,10 +13,13 @@ namespace Facepunch.RTS.Units
 		public virtual OccupiableSettings Occupiable => new();
 		public virtual OccupantSettings Occupant => null;
 		public virtual HashSet<string> Clothing => new();
+		public virtual float VerticalOffset => 0f;
+		public virtual bool UsePathfinder => true;
 		public virtual bool CanConstruct => false;
 		public virtual bool RagdollOnDeath => true;
 		public virtual string DeathParticles => null;
 		public virtual bool UseModelPhysics => false;
+		public virtual float MaxVerticalRange => 100f;
 		public virtual HashSet<ResourceType> Gatherables => new();
 		public virtual Dictionary<ResourceType, string[]> GatherSounds => new();
 		public virtual string[] ConstructSounds => Array.Empty<string>();

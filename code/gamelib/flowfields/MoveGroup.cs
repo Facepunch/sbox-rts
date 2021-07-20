@@ -204,7 +204,7 @@ namespace Gamelib.FlowFields
 		private Pathfinder GetPathfinder( List<IMoveAgent> agents )
 		{
 			var pathfinders = agents.Select( a => a.Pathfinder ).ToList();
-			pathfinders.Sort( ( a, b ) => a.NodeSize.CompareTo( b.NodeSize ) );
+			pathfinders.Sort( ( a, b ) => a.CollisionSize.CompareTo( b.CollisionSize ) );
 			return pathfinders[0];
 		}
 

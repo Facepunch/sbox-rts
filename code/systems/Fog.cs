@@ -317,28 +317,24 @@ namespace Facepunch.RTS
 
 		private static void CheckParticleVisibility( Vector3n position, float range )
 		{
-			/*
 			foreach ( var container in _particleContainers )
 			{
-				if ( container.ParticleRenderingEnabled )
+				if ( container.RenderParticles )
 					continue;
 
 				if ( container.Transform.Position.Distance( position ) <= range )
 				{
-					container.ParticleRenderingEnabled = true;
+					container.RenderParticles = true;
 				}
 			}
-			*/
 		}
 
 		private static void CullParticles()
 		{
-			/*
 			foreach ( var container in _particleContainers )
 			{
-				container.ParticleRenderingEnabled = false;
+				container.RenderParticles = false;
 			}
-			*/
 		}
 
 		private static async void UpdateFogMap()
@@ -367,11 +363,9 @@ namespace Facepunch.RTS
 					cullable.Object.MakeVisible( false );
 				}
 
-				/*
-				_particleContainers = SceneWorld.Current.GetAllSceneObjects().OfType<SceneParticleObject>();
+				_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();
 				
 				CullParticles();
-				*/
 
 				// Our first pass will create the seen history map.
 				for ( var i = 0; i < _viewers.Count; i++ )

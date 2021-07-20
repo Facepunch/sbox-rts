@@ -15,7 +15,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
 		public override bool RagdollOnDeath => false;
-		public override string DeathParticles => "particles/weapons/muzzle_flash/muzzle_large/muzzleflash_large.vpcf";
+		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public override int NodeSize => 50;
 		public override int CollisionSize => 350;
 		public override float LineOfSightRadius => 1500f;

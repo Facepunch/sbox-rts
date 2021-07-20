@@ -5,23 +5,23 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class APC : BaseUnit
+	public class Chinook : BaseUnit
 	{
-		public override string Name => "APC";
-		public override string UniqueId => "unit.apc";
+		public override string Name => "Chinook";
+		public override string UniqueId => "unit.chinook";
 		public override string Model => "models/vehicles/apc/apc.vmdl";
-		public override string Description => "An armored vehicle for transporting units long distance.";
+		public override string Description => "An armored aircraft for transporting many units.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
+		public override float VerticalOffset => 500f;
+		public override bool UsePathfinder => false;
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
-		public override int NodeSize => 50;
-		public override int CollisionSize => 350;
 		public override bool RagdollOnDeath => false;
 		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
-		public override float LineOfSightRadius => 1500f;
+		public override float LineOfSightRadius => 2000f;
 		public override OccupiableSettings Occupiable => new()
 		{
-			MaxOccupants = 4,
+			MaxOccupants = 8,
 			DamageScale = 0.2f,
 			Enabled = true
 		};
@@ -42,7 +42,7 @@ namespace Facepunch.RTS.Units
 			"brute.tell_me_what_to_do2",
 			"brute.yes_boss"
 		};
-		public override float Speed => 500f;
+		public override float Speed => 700f;
 		public override int BuildTime => 2;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
@@ -51,7 +51,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.armoredplating"
+			//"tech.armoredplating"
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{

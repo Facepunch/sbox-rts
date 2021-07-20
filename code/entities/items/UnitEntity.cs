@@ -246,7 +246,10 @@ namespace Facepunch.RTS
 					return true;
 			}
 
-			return (_target.HasEntity() && _target.Entity.Position.Distance( Position ) < _target.Radius);
+			var targetPosition = _target.Entity.Position.WithZ( 0f );
+			var selfPosition = Position.WithZ( 0f );
+
+			return (_target.HasEntity() && targetPosition.Distance( selfPosition ) < _target.Radius);
 		}
 
 		public bool TakeFrom( ResourceEntity resource )
@@ -407,7 +410,7 @@ namespace Facepunch.RTS
 
 		public void Attack( ISelectable target, bool autoFollow = true )
 		{
-			Attack( target as Entity, autoFollow );
+			Attack( (Entity)target, autoFollow );
 		}
 
 		public void Attack( Entity target, bool autoFollow = true )
@@ -585,7 +588,7 @@ namespace Facepunch.RTS
 
 		public float LookAtPosition( Vector3 position, float? interpolation = null )
 		{
-			var targetDirection = position - Position;
+			var targetDirection = (position - Position).WithZ( 0f );
 			var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
 
 			if ( interpolation.HasValue )
@@ -633,15 +636,29 @@ namespace Facepunch.RTS
 
 		public List<Vector3> GetDestinations( ModelEntity model )
 		{
-			var collisionSize = Pathfinder.CollisionSize;
-			var nodeSize = Pathfinder.NodeSize;
+			var pathfinder = Pathfinder;
+
+			if ( pathfinder == null )
+			{
+				var bounds = model.GetDiameterXY( 0.5f );
+				var position = new Vector3(
+					model.Position.x + Rand.Float( -bounds, bounds ),
+					model.Position.y + Rand.Float( -bounds, bounds ),
+					Position.z
+				);
+
+				return new List<Vector3>() { position };
+			}
+
+			var collisionSize = pathfinder.CollisionSize;
+			var nodeSize = pathfinder.NodeSize;
 
 			// Round up the radius to the nearest node size.
 			var radius = MathF.Ceiling( (model.GetDiameterXY( 0.5f ) + collisionSize / 2f) / nodeSize ) * nodeSize;
 			var potentialTiles = new List<Vector3>();
 			var possibleLocations = new List<GridWorldPosition>();
 
-			Pathfinder.GetGridPositions( model.Position, radius, possibleLocations );
+			pathfinder.GetGridPositions( model.Position, radius, possibleLocations );
 
 			var destinations = possibleLocations.ConvertAll( v =>
 			{
@@ -653,9 +670,12 @@ namespace Facepunch.RTS
 				return Pathfinder.GetPosition( v );
 			} );
 
-			destinations.Sort( ( a, b ) => b.Distance( model.Position ).CompareTo( a.Distance( model.Position ) ) );
-
 			return destinations;
+		}
+
+		public bool InVerticalRange( ISelectable other )
+		{
+			return (other.Position.z <= Item.MaxVerticalRange);
 		}
 
 		public void RemoveClothing()
@@ -691,6 +711,7 @@ namespace Facepunch.RTS
 				ResetInterpolation();
 			}
 
+			Rotation = Rotation.Identity;
 			Occupiable = null;
 			EnableAllCollisions = true;
 			EnableDrawing = true;
@@ -805,7 +826,11 @@ namespace Facepunch.RTS
 			LineOfSight = item.LineOfSightRadius;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
-			Pathfinder = PathManager.GetPathfinder( item.NodeSize, item.CollisionSize );
+
+			if ( item.UsePathfinder )
+				Pathfinder = PathManager.GetPathfinder( item.NodeSize, item.CollisionSize );
+			else
+				Pathfinder = PathManager.Default;
 
 			if ( item.UseModelPhysics )
 				SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
@@ -923,9 +948,10 @@ namespace Facepunch.RTS
 
 			foreach ( var entity in entities )
 			{
-				if ( entity is ISelectable selectable && IsEnemy( selectable ) )
+				if ( entity is ISelectable selectable )
 				{
-					_targetBuffer.Add( selectable );
+					if ( IsEnemy( selectable ) && InVerticalRange( selectable ) )
+						_targetBuffer.Add( selectable );
 				}
 			}
 
@@ -1072,9 +1098,19 @@ namespace Facepunch.RTS
 				}
 				else
 				{
-					var direction = MoveGroup.GetDirection( Position );
-					var offset = Pathfinder.CenterOffset.Normal;
-					pathDirection = (direction.Normal * offset).WithZ( 0f );
+					Vector3 direction;
+
+					if ( Item.UsePathfinder )
+					{
+						var offset = Pathfinder.CenterOffset.Normal;
+						direction = MoveGroup.GetDirection( Position );
+						pathDirection = (direction.Normal * offset).WithZ( 0f );
+					}
+					else
+					{
+						direction = (MoveGroup.GetDestination() - Position).Normal;
+						pathDirection = direction.WithZ( 0f );
+					}
 
 					if ( MoveGroup.Agents.Count > 1 )
 					{
@@ -1106,7 +1142,7 @@ namespace Facepunch.RTS
 					_animationValues.Speed = 0.5f;
 
 				// First we'll try our steer direction and see if we can go there.
-				if ( steerDirection.Length > 0 )
+				if ( Item.UsePathfinder && steerDirection.Length > 0 )
 				{
 					var steerVelocity = (steerDirection * Pathfinder.NodeSize);
 
@@ -1140,7 +1176,7 @@ namespace Facepunch.RTS
 
 		private void AlignToGround()
 		{
-			Position = Position.WithZ( Pathfinder.GetHeight( Position ) );
+			Position = Position.WithZ( Item.VerticalOffset + Pathfinder.GetHeight( Position ) );
 		}
 
 		private void TickOccupy( IOccupiableEntity occupiable)
