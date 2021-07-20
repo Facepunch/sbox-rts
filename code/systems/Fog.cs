@@ -212,17 +212,6 @@ namespace Facepunch.RTS
 			FillRegion( position, range, 200 );
 		}
 
-		internal static float SdCircle( Vector3n p, float r )
-		{
-			return p.Length() - r;
-		}
-
-		public static void PaintDot( Vector3n p, float r, int index, float smooth )
-		{
-			byte sdf =  Convert.ToByte( Math.Clamp( SdCircle( p, r ) * smooth * 255, 0, 255 ) );
-			_data[ index ] = Math.Min( sdf, _data[ index ] );
-		}
-
 		public static void PunchHole( Vector3n location, float range )
 		{
 			var origin = location - _origin;
@@ -230,13 +219,23 @@ namespace Facepunch.RTS
 			var centerPixelX = (origin.X * _pixelScale) + _halfResolution;
 			var centerPixelY = (origin.Y * _pixelScale) + _halfResolution;
 			var renderRadius = radius * ((float)Math.PI * 0.5f);
-			
-			for( int x = (int)Math.Max( centerPixelX - renderRadius, 0 ); x < (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 ); x++ )
+			var xMin = (int)Math.Max( centerPixelX - renderRadius, 0 );
+			var xMax = (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 );
+			var yMin = (int)Math.Max( centerPixelY - renderRadius, 0 );
+			var yMax = (int)Math.Min( centerPixelY + renderRadius, _resolution - 1 );
+			var data = _data;
+
+			for ( int x = xMin; x < xMax; x++ )
 			{
-				for( int y = (int)Math.Max( centerPixelY - renderRadius, 0 ); y < (int)Math.Min( centerPixelY + renderRadius, _resolution - 1 ); y++ )
+				for ( int y = yMin; y < yMax; y++ )
 				{
 					var index = ((y * _resolution) + x);
-					PaintDot( new Vector3n( centerPixelX - x, centerPixelY - y, 0f ), radius, index, 0.25f );
+					var p = new Vector3n( centerPixelX - x, centerPixelY - y, 0f );
+					var a = (p.Length() - radius) * 0.25f * 255;
+					var b = a < 0 ? 0 : (a > 255 ? 255 : a);
+					var sdf = (byte)b;
+					var current = data[index];
+					data[index] = sdf > current ? current : sdf;
 				}	
 			}
 		}
@@ -248,13 +247,18 @@ namespace Facepunch.RTS
 			var centerPixelX = (origin.X * _pixelScale) + _halfResolution;
 			var centerPixelY = (origin.Y * _pixelScale) + _halfResolution;
 			var renderRadius = radius * ((float)Math.PI * 0.5f);
+			var xMin = (int)Math.Max( centerPixelX - renderRadius, 0 );
+			var xMax = (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 );
+			var yMin = (int)Math.Max( centerPixelY - renderRadius, 0 );
+			var yMax = (int)Math.Min( centerPixelY + renderRadius, _resolution - 1 );
+			var data = _data;
 
-			for( int x = (int)Math.Max( centerPixelX - renderRadius, 0 ); x < (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 ); x++ )
+			for ( int x = xMin; x < xMax; x++ )
 			{
-				for( int y = (int)Math.Max( centerPixelY - renderRadius, 0 ); y < (int)Math.Min( centerPixelY + renderRadius, _resolution - 1 ); y++ )
+				for ( int y = yMin; y < yMax; y++ )
 				{
 					var index = ((y * _resolution) + x);
-					_data[ index ] = Math.Max( alpha, _data[ index ] );
+					data[ index ] = Math.Max( alpha, data[ index ] );
 				}
 			}
 		}
@@ -312,9 +316,10 @@ namespace Facepunch.RTS
 				}
 			}
 
-			CheckParticleVisibility( position, renderRange );
+			//CheckParticleVisibility( position, renderRange );
 		}
 
+		/*
 		private static void CheckParticleVisibility( Vector3n position, float range )
 		{
 			foreach ( var container in _particleContainers )
@@ -336,6 +341,7 @@ namespace Facepunch.RTS
 				container.RenderParticles = false;
 			}
 		}
+		*/
 
 		private static async void UpdateFogMap()
 		{
@@ -363,9 +369,8 @@ namespace Facepunch.RTS
 					cullable.Object.MakeVisible( false );
 				}
 
-				_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();
-				
-				CullParticles();
+				//_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();
+				//CullParticles();
 
 				// Our first pass will create the seen history map.
 				for ( var i = 0; i < _viewers.Count; i++ )
