@@ -825,7 +825,7 @@ namespace Facepunch.RTS
 				SetupPhysicsFromCapsule( PhysicsMotionType.Keyframed, Capsule.FromHeightAndRadius( 72, item.NodeSize * 0.5f ) );
 
 			LocalCenter = CollisionBounds.Center;
-			AgentRadius = GetDiameterXY( 2f, true );
+			AgentRadius = GetDiameterXY( Item.AgentRadiusScale );
 
 			if ( Weapon.IsValid() ) Weapon.Delete();
 
@@ -1129,11 +1129,9 @@ namespace Facepunch.RTS
 					_animationValues.Speed = 0.5f;
 
 				// First we'll try our steer direction and see if we can go there.
-				if ( Item.UsePathfinder && steerDirection.Length > 0 )
+				if ( steerDirection.Length > 0 )
 				{
-					var steerVelocity = (steerDirection * Pathfinder.NodeSize);
-
-					if ( Pathfinder.IsAvailable( Position + steerVelocity ) )
+					if ( !Item.UsePathfinder || Pathfinder.IsAvailable( Position + (steerDirection * Pathfinder.NodeSize) ) )
 					{
 						Velocity = (steerDirection * movementSpeed) * Time.Delta;
 					}

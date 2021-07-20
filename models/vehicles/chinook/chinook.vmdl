@@ -39,7 +39,7 @@
 						weight_list_name = ""
 						fade_in_time = 0.0
 						fade_out_time = 0.0
-						looping = false
+						looping = true
 						delta = false
 						worldSpace = false
 						hidden = false
@@ -98,6 +98,6 @@
 		]
 		model_archetype = ""
 		primary_associated_entity = ""
-		anim_graph_name = ""
+		anim_graph_name = "models/vehicles/chinook/chinook.vanmgrph"
 	}
 }
