@@ -8,6 +8,8 @@ namespace Facepunch.RTS
 	{
 		public RealTimeUntil ReturnToAirTime { get; private set; }
 
+		private Particles DustParticles { get; set; }
+
 		public override bool OccupyUnit( UnitEntity unit )
 		{
 			var groundHeight = Pathfinder.GetHeight( Position );
@@ -30,12 +32,34 @@ namespace Facepunch.RTS
 
 		protected override void AlignToGround()
 		{
-			var targetHeight = Pathfinder.GetHeight( Position );
+			var groundHeight = Pathfinder.GetHeight( Position );
+			var targetHeight = groundHeight;
+			var airHeight = groundHeight + Item.VerticalOffset;
+			var lowHeight = groundHeight + 100f;
 
 			if ( ReturnToAirTime )
-				targetHeight += Item.VerticalOffset;
+				targetHeight = airHeight;
 			else
-				targetHeight += 100f;
+				targetHeight = lowHeight;
+
+			if ( !ReturnToAirTime)
+			{
+				if ( DustParticles == null )
+				{
+					DustParticles = Particles.Create( "particles/vehicle/helicopter_dust/helicopter_dust.vpcf" );
+				}
+
+				var difference = (airHeight - lowHeight);
+				var fraction = 1f - ( (1f / difference) * Position.z );
+
+				DustParticles.SetPosition( 0, Position.WithZ( groundHeight ) );
+				DustParticles.SetPosition( 1, new Vector3( 255f * fraction, 500f * fraction, 0f ) );
+			}
+			else if ( DustParticles  != null )
+			{
+				DustParticles.Destroy();
+				DustParticles = null;
+			}
 
 			Position = Position.LerpTo( Position.WithZ( targetHeight ), Time.Delta );
 		}
