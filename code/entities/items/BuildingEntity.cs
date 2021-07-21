@@ -179,9 +179,6 @@ namespace Facepunch.RTS
 		{
 			var entity = Items.Create( Player, unit );
 
-			if ( unit.UseRenderColor )
-				entity.RenderColor = Player.TeamColor;
-
 			PlaceNear( entity );
 		}
 

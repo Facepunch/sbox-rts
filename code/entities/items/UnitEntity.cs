@@ -232,6 +232,11 @@ namespace Facepunch.RTS
 			return IsInRange( _target.Entity, _target.Radius );
 		}
 
+		public bool IsMoveGroupValid()
+		{
+			return (MoveGroup != null && MoveGroup.IsValid());
+		}
+
 		public bool TakeFrom( ResourceEntity resource )
 		{
 			if ( resource.Stock <= 0 ) return false;
@@ -621,7 +626,6 @@ namespace Facepunch.RTS
 
 		public void OnMoveGroupDisposed()
 		{
-			_target.Entity = null;
 			_target.Position = null;
 			_target.Follow = false;
 
@@ -729,6 +733,12 @@ namespace Facepunch.RTS
 			}
 		}
 
+		protected override void OnPlayerAssigned( Player player )
+		{
+			if ( Item.UseRenderColor )
+				RenderColor = Player.TeamColor;
+		}
+
 		protected override void OnDestroy()
 		{
 			if ( IsClient )
@@ -763,7 +773,7 @@ namespace Facepunch.RTS
 					var isTargetInRange = IsTargetInRange();
 					var isTargetValid = IsTargetValid();
 
-					if ( !isTargetValid || !isTargetInRange )
+					if ( !isTargetValid || !isTargetInRange || IsMoveGroupValid() )
 					{
 						TickMoveToTarget( isTargetValid );
 					}
@@ -1091,7 +1101,7 @@ namespace Facepunch.RTS
 			var pathDirection = Vector3.Zero;
 			var movementSpeed = Speed;
 
-			if ( MoveGroup != null && MoveGroup.IsValid() )
+			if ( IsMoveGroupValid() )
 			{
 				var node = Pathfinder.CreateWorldPosition( Position );
 				Pathfinder.DrawBox( node, Color.Green );

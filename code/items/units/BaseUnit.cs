@@ -29,7 +29,7 @@ namespace Facepunch.RTS.Units
 		public virtual string[] DepositSounds => Array.Empty<string>();
 		public virtual string[] MoveSounds => Array.Empty<string>();
 		public virtual int NodeSize => 50;
-		public virtual int CollisionSize => 80;
+		public virtual int CollisionSize => 60;
 		public virtual float Speed => 300f;
 		public virtual float RotateToTargetSpeed => 50f;
 		public virtual float LineOfSightRadius => 700f;

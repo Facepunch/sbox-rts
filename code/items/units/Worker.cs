@@ -50,6 +50,7 @@ namespace Facepunch.RTS.Units
 			"building.pub",
 			"building.silo",
 			"building.turret",
+			"building.teslacoil",
 			"building.terryfactory",
 			"building.vehiclefactory",
 			"building.tunnel",
