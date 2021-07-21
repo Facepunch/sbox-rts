@@ -16,7 +16,8 @@ namespace Facepunch.RTS
 			LastAttack = 0f;
 
 			//PlaySound( "rust_smg.shoot" ).SetVolume( 0.5f );
-			DamageTarget( DamageFlags.Shock, 5f, GetDamage() );
+
+			DamageInRange();
 		}
 
 		public override Transform? GetMuzzle()
@@ -24,10 +25,32 @@ namespace Facepunch.RTS
 			return Attacker.Transform;
 		}
 
-		[ClientRpc]
-		public override void ShootEffects()
+		private async void DamageInRange()
 		{
-			
+			if ( Attacker is not BuildingEntity building ) return;
+
+			var origin = Attacker.WorldSpaceBounds.Center;
+
+			var pulse = Particles.Create( "particles/tesla_coil/tesla_ring.vpcf" );
+			pulse.SetPosition( 0, origin );
+
+			var targets = Physics.GetEntitiesInSphere( Attacker.Position, building.Item.AttackRadius )
+				.OfType<ISelectable>()
+				.Where( v => building.IsEnemy( v ) )
+				.ToList();
+
+			for ( int i = 0; i < targets.Count; i++ )
+			{
+				var target = targets[i];
+
+				var bolt = Particles.Create( "particles/weapons/electric_bolt/electric_bolt.vpcf" );
+				bolt.SetPosition( 0, origin );
+				bolt.SetPosition( 1, target.WorldSpaceBounds.Center );
+
+				DamageEntity( (Entity)target, DamageFlags.Shock, 5f, GetDamage() );
+
+				await GameTask.Delay( Rand.Int( 0, 5 ) );
+			}
 		}
 	}
 }
