@@ -24,6 +24,7 @@ namespace Facepunch.RTS
 			Transmit = TransmitType.Always;
 		}
 
+
 		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Grenade, Entity> callback = null )
 		{
 			StartPosition = start;
@@ -64,16 +65,16 @@ namespace Facepunch.RTS
 			var endPos = Target.IsValid() ? Target.Position : EndPosition;
 			var distance = StartPosition.Distance( endPos );
 			var fraction = 1f - (TimeUntilHit / TravelDuration);
-			var middle = (StartPosition + (endPos - StartPosition) / 2f);
 
 			if ( BezierCurve )
 			{
-				middle.z = StartPosition.z + (distance / 2f);
+				var middle = (StartPosition + (endPos - StartPosition) / 2f).WithZ( endPos.z + (distance / 2f) );
+				Position = Bezier.Calculate( StartPosition, middle, endPos, fraction );
 			}
-
-			var bezier = Bezier.Calculate( StartPosition, middle, endPos, fraction );
-
-			Position = bezier;
+			else
+			{
+				Position = Vector3.Lerp( StartPosition, endPos, fraction );
+			}
 
 			if ( TimeUntilHit )
 			{

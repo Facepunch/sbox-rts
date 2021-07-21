@@ -8,7 +8,7 @@ namespace Facepunch.RTS
 	public partial class TeslaCoilWeapon : Weapon
 	{
 		public override float FireRate => 2f;
-		public override int BaseDamage => 20;
+		public override int BaseDamage => 60;
 		public override bool BoneMerge => false;
 
 		public override void Attack()
@@ -39,7 +39,10 @@ namespace Facepunch.RTS
 				.Where( v => building.IsEnemy( v ) )
 				.ToList();
 
-			for ( int i = 0; i < targets.Count; i++ )
+			var targetCount = targets.Count;
+			var damage = GetDamage() / targetCount;
+
+			for ( int i = 0; i < targetCount; i++ )
 			{
 				var target = targets[i];
 
@@ -47,7 +50,7 @@ namespace Facepunch.RTS
 				bolt.SetPosition( 0, origin );
 				bolt.SetPosition( 1, target.WorldSpaceBounds.Center );
 
-				DamageEntity( (Entity)target, DamageFlags.Shock, 5f, GetDamage() );
+				DamageEntity( (Entity)target, DamageFlags.Shock, 5f, damage );
 
 				await GameTask.Delay( Rand.Int( 0, 5 ) );
 			}

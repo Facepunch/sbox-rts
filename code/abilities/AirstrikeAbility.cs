@@ -11,17 +11,17 @@ namespace Facepunch.RTS
 		public override string Description => "Rain down fire upon your enemies, but be careful not to hit your own units!";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
-		public override float Cooldown => 100f;
+		public override float Cooldown => 1f;//100f;
 		public override float Duration => 5f;
 		public override float MaxDistance => 3000f;
-		public override float AreaOfEffectRadius => 300f;
+		public override float AreaOfEffectRadius => 500f;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Plasma] = 100
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.pyrotechnics"
+			//"tech.pyrotechnics"
 		};
 		public virtual float BlastRadius => 150f;
 		public virtual float MinDamage => 10f;
@@ -37,7 +37,7 @@ namespace Facepunch.RTS
 			if ( Host.IsServer )
 			{
 				var targetInfo = TargetInfo;
-				var rockets = Rand.Int( 8, 12 );
+				var rockets = Rand.Int( 10, 14 );
 				var origin = TargetInfo.Origin + Vector3.Up * 3000f;
 
 				for ( var i = 0; i < rockets; i++ )
@@ -53,10 +53,8 @@ namespace Facepunch.RTS
 					var endPosition = startPosition.WithZ( TargetInfo.Origin.z );
 
 					rocket.BezierCurve = false;
-					rocket.TrailEffect = "particles/weapons/rocket_trail/rocket_trail.vpcf";
+					rocket.TrailEffect = "particles/weapons/missile_trail/missile_trail.vpcf";
 					rocket.Initialize( startPosition, endPosition, Rand.Float( 0.5f, 1f ), OnRocketHit );
-
-					await GameTask.Delay( Rand.Int( 0, 10 ) );
 				}
 			}
 
