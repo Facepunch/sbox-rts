@@ -21,8 +21,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/tesla_coil/tesla_coil.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters",
-			"tech.machinery"
+			"tech.overvoltage"
 		};
 	}
 }

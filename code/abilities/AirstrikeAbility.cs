@@ -19,6 +19,10 @@ namespace Facepunch.RTS
 		{
 			[ResourceType.Plasma] = 100
 		};
+		public override HashSet<string> Dependencies => new()
+		{
+			"tech.pyrotechnics"
+		};
 		public virtual float BlastRadius => 150f;
 		public virtual float MinDamage => 10f;
 		public virtual float MaxDamage => 30f;
