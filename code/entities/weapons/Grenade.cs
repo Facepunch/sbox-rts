@@ -14,16 +14,17 @@ namespace Facepunch.RTS
 		public float TravelDuration { get; private set; }
 		public RealTimeUntil TimeUntilHit { get; private set; }
 		public Entity Target { get; private set; }
-		public Action<Entity> Callback { get; private set; }
+		public Action<Grenade, Entity> Callback { get; private set; }
 		public string ExplosionEffect { get; set; } = "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public string TrailEffect { get; set; } = "particles/weapons/grenade_trail/grenade_trail.vpcf";
+		public bool BezierCurve { get; set; } = true;
 
 		public Grenade()
 		{
 			Transmit = TransmitType.Always;
 		}
 
-		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Entity> callback = null )
+		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Grenade, Entity> callback = null )
 		{
 			StartPosition = start;
 			EndPosition = end;
@@ -38,7 +39,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public void Initialize( Vector3 start, Entity target, float duration, Action<Entity> callback = null )
+		public void Initialize( Vector3 start, Entity target, float duration, Action<Grenade, Entity> callback = null )
 		{
 			Initialize( start, target.Position, duration, callback );
 			Target = target;
@@ -63,11 +64,16 @@ namespace Facepunch.RTS
 			var endPos = Target.IsValid() ? Target.Position : EndPosition;
 			var distance = StartPosition.Distance( endPos );
 			var fraction = 1f - (TimeUntilHit / TravelDuration);
-			var middle = (StartPosition + (endPos - StartPosition) / 2f).WithZ( StartPosition.z + (distance / 2f) );
+			var middle = (StartPosition + (endPos - StartPosition) / 2f);
+
+			if ( BezierCurve )
+			{
+				middle.z = StartPosition.z + (distance / 2f);
+			}
+
 			var bezier = Bezier.Calculate( StartPosition, middle, endPos, fraction );
 
 			Position = bezier;
-			DebugOverlay.Sphere( bezier, 4f, Color.Red );
 
 			if ( TimeUntilHit )
 			{
@@ -77,7 +83,7 @@ namespace Facepunch.RTS
 					explosion.SetPosition( 0, endPos );
 				}
 
-				Callback?.Invoke( Target );
+				Callback?.Invoke( this, Target );
 				RemoveEffects();
 				Delete();
 			}

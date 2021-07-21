@@ -62,7 +62,7 @@ namespace Facepunch.RTS
 			base.OnDestroy();
 		}
 
-		private void OnGrenadeHit( Entity entity )
+		private void OnGrenadeHit( Grenade grenade, Entity entity )
 		{
 			if ( !entity.IsValid() ) return;
 			DamageEntity( entity, DamageFlags.Blast, 10f, GetDamage() );

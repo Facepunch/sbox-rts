@@ -13,6 +13,10 @@ namespace Facepunch.RTS.Buildings
 		public override bool CanDepositResources => true;
 		public override float MinLineOfSight => 500f;
 		public override int BuildTime => 10;
+		public override HashSet<string> Abilities => new()
+		{
+			"ability_airstrike"
+		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 1000,
