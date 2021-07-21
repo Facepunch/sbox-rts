@@ -316,10 +316,9 @@ namespace Facepunch.RTS
 				}
 			}
 
-			//CheckParticleVisibility( position, renderRange );
+			CheckParticleVisibility( position, renderRange );
 		}
 
-		/*
 		private static void CheckParticleVisibility( Vector3n position, float range )
 		{
 			foreach ( var container in _particleContainers )
@@ -341,7 +340,6 @@ namespace Facepunch.RTS
 				container.RenderParticles = false;
 			}
 		}
-		*/
 
 		private static async void UpdateFogMap()
 		{
@@ -369,8 +367,8 @@ namespace Facepunch.RTS
 					cullable.Object.MakeVisible( false );
 				}
 
-				//_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();
-				//CullParticles();
+				_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();
+				CullParticles();
 
 				// Our first pass will create the seen history map.
 				for ( var i = 0; i < _viewers.Count; i++ )
