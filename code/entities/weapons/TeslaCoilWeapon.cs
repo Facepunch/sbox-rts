@@ -8,7 +8,7 @@ namespace Facepunch.RTS
 	public partial class TeslaCoilWeapon : Weapon
 	{
 		public override float FireRate => 2f;
-		public override int BaseDamage => 60;
+		public override int BaseDamage => 40;
 		public override bool BoneMerge => false;
 
 		public override void Attack()
