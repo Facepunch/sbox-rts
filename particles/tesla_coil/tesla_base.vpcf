@@ -2006,4 +2006,10 @@
 			m_hMotionVectorsTexture = resource:"materials/particles/smoke/render/smokeloop_i_0_flwmix.vtex"
 		},
 	]
+	m_Children = 
+	[
+		{
+			m_ChildRef = resource:"particles/tesla_coil/tesla_bolt.vpcf"
+		},
+	]
 }
