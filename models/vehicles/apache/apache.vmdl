@@ -40,9 +40,9 @@
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
-						origin = [ -25.809113, 2.609417, 68.903046 ]
+						origin = [ -25.809113, 1.146721, 68.903046 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 308.026794, 134.683395, 137.990723 ]
+						dimensions = [ 308.026794, 114.169083, 137.990723 ]
 					},
 				]
 			},
@@ -56,7 +56,7 @@
 						filename = "models/vehicles/apache/dmx/mesh/apache.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 0.7
+						import_scale = 1.0
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
