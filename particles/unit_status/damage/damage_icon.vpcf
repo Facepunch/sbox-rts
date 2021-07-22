@@ -312,15 +312,15 @@
 					[
 						{
 							m_flPosition = 0.0
-							m_Color = [ 173, 255, 47, 255 ]
+							m_Color = [ 255, 165, 0, 255 ]
 						},
 						{
 							m_flPosition = 0.516796
-							m_Color = [ 0, 255, 0, 255 ]
+							m_Color = [ 255, 69, 0, 255 ]
 						},
 						{
 							m_flPosition = 1.0
-							m_Color = [ 50, 205, 50, 255 ]
+							m_Color = [ 255, 140, 0, 255 ]
 						},
 					]
 				}
@@ -560,12 +560,12 @@
 			}
 			m_bAdditive = true
 			m_bLightenMode = true
-			m_hTexture = resource:"materials/particles/powerups/healsign.vtex"
+			m_hTexture = resource:"textures/particles/buffs/damagesign.vtex"
 			m_flRadiusScale = 
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 1.5
+				m_flLiteralValue = 2.0
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
