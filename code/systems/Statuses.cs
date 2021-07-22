@@ -4,12 +4,12 @@ namespace Facepunch.RTS
 {
 	public static partial class Statuses
 	{
-		public static BaseStatus Create( string id )
+		public static IStatus Create( string id )
 		{
-			return Library.Create<BaseStatus>( id );
+			return Library.Create<IStatus>( id );
 		}
 
-		public static void Apply( string id, Vector3 position, float radius )
+		public static void Apply<S>( Vector3 position, float radius, BaseStatusData data ) where S : IStatus
 		{
 			Host.AssertServer();
 
@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 			{
 				if ( entity is ISelectable target )
 				{
-					target.ApplyStatus( id );
+					target.ApplyStatus<S>( data );
 				}
 			}
 		}

@@ -3,13 +3,12 @@ using System;
 
 namespace Facepunch.RTS
 {
-	[Library( "status_burning" )]
-	public class Burning : BaseStatus
+	[Library]
+	public class BurningStatus : BaseStatus<BurningData>
 	{
 		public override string Name => "Burning";
 		public override string Description => "Help, I'm on fire!";
 		public override Texture Icon => Texture.Load( "textures/rts/resistances/fire.png" );
-		public override float Duration => 3f;
 
 		private RealTimeUntil NextTakeDamage { get; set; }
 		private Particles Particles { get; set; }
@@ -28,7 +27,7 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsClient )
 			{
-				Particles.Destroy();
+				Particles?.Destroy();
 				Particles = null;
 			}
 		}
@@ -40,11 +39,11 @@ namespace Facepunch.RTS
 				var info = new DamageInfo
 				{
 					Flags = DamageFlags.Burn,
-					Damage = 1f
+					Damage = Data.Damage
 				};
 
 				Target.TakeDamage( info );
-				NextTakeDamage = 0.3f;
+				NextTakeDamage = Data.Interval;
 			}
 			else if ( Host.IsClient )
 			{

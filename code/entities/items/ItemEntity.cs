@@ -8,6 +8,8 @@ using Facepunch.RTS;
 using Facepunch.RTS.Tech;
 using Facepunch.RTS.Units;
 using Facepunch.RTS.Upgrades;
+using Gamelib.Network;
+using System.IO;
 
 namespace Facepunch.RTS
 {
@@ -18,7 +20,7 @@ namespace Facepunch.RTS
 		public virtual int AttackPriority => 0;
 
 		public Dictionary<string, BaseAbility> Abilities { get; private set; }
-		public Dictionary<string, BaseStatus> Statuses { get; private set; }
+		public Dictionary<string, IStatus> Statuses { get; private set; }
 		public Dictionary<string, ItemComponent> Components { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, OnChangedCallback] public uint ItemNetworkId { get; private set; }
@@ -184,24 +186,36 @@ namespace Facepunch.RTS
 			return Statuses.ContainsKey( id );
 		}
 
-		public BaseStatus ApplyStatus( string id )
+		public S ApplyStatus<S>( BaseStatusData data ) where S : IStatus
 		{
-			if ( IsServer ) ClientApplyStatus( To.Everyone, id );
+			Host.AssertServer();
+
+			using var stream = new MemoryStream();
+			using var writer = new BinaryWriter( stream );
+
+			data.Serialize( writer );
+
+			var id = Library.GetAttribute( typeof( S ) ).Name;
+
+			ClientApplyStatus( To.Everyone, id, stream.GetBuffer() );
 
 			if ( Statuses.TryGetValue( id, out var status ) )
 			{
+				status.SetData( data );
 				status.Restart();
-				return status;
+
+				return (S)status;
 			}
 
 			status = RTS.Statuses.Create( id );
 
 			Statuses.Add( id, status );
 
+			status.SetData( data );
 			status.Initialize( id, this );
 			status.OnApplied();
 
-			return status;
+			return (S)status;
 		}
 
 		public void RemoveAllStatuses()
@@ -621,9 +635,25 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		private void ClientApplyStatus( string id )
+		private void ClientApplyStatus( string id, byte[] data )
 		{
-			ApplyStatus( id );
+			using var stream = new MemoryStream( data );
+			using var reader = new BinaryReader( stream );
+
+			if ( Statuses.TryGetValue( id, out var status ) )
+			{
+				status.Deserialize( reader );
+				status.Restart();
+				return;
+			}
+
+			status = RTS.Statuses.Create( id );
+
+			Statuses.Add( id, status );
+
+			status.Deserialize( reader );
+			status.Initialize( id, this );
+			status.OnApplied();
 		}
 
 		[ClientRpc]
