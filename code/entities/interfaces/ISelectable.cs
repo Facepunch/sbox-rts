@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Facepunch.RTS.Upgrades;
 using Sandbox;
 
@@ -6,7 +7,7 @@ namespace Facepunch.RTS
 {
 	public interface ISelectable
 	{
-		public Dictionary<string, BaseStatus> Statuses { get; }
+		public Dictionary<string, IStatus> Statuses { get; }
 		public BBox WorldSpaceBounds { get; }
 		public Vector3 LocalCenter { get; }
 		public int NetworkIdent { get; }
@@ -26,7 +27,7 @@ namespace Facepunch.RTS
 		public BaseItem UnqueueItem( uint queueId );
 		public void TakeDamage( DamageInfo info );
 		public float GetDiameterXY( float scalar, bool smallestSide );
-		public BaseStatus ApplyStatus( string id );
+		public S ApplyStatus<S>( StatusData data ) where S : IStatus;
 		public bool HasUpgrade( BaseUpgrade item );
 		public bool HasUpgrade( uint id );
 		public void RemoveStatus( string id );

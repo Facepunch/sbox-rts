@@ -7,7 +7,6 @@ namespace Facepunch.RTS
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override AbilityTargetTeam TargetTeam => AbilityTargetTeam.Enemy;
 		public virtual string ExplosionEffect => "particles/weapons/explosion_ground_small/explosion_ground_small.vpcf";
-		public virtual string StatusEffect => null;
 		public virtual string AreaEffect => null;
 
 		private Grenade Grenade { get; set; }
@@ -46,9 +45,6 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsServer )
 			{
-				if ( !string.IsNullOrEmpty( StatusEffect ) )
-					Statuses.Apply( StatusEffect, TargetInfo.Origin, AreaOfEffectRadius );
-
 				if ( !string.IsNullOrEmpty( AreaEffect ) )
 					CreateAreaEffect( TargetInfo.Origin, 1f );
 			}

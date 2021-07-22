@@ -32,7 +32,13 @@ namespace Facepunch.RTS
 
 			if ( NextBurnTime )
 			{
-				Statuses.Apply( "status_burning", Target.Position, 128f );
+				Statuses.Apply<BurningStatus>( Target.Position, 128f, new BurningData()
+				{
+					Interval = 0.3f,
+					Duration = 3f,
+					Damage = 1f
+				} );
+
 				NextBurnTime = 3f;
 			}
 		}

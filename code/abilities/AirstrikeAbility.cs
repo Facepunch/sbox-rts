@@ -30,7 +30,7 @@ namespace Facepunch.RTS
 		private List<Grenade> Rockets { get; set; } = new();
 		private Particles Dust { get; set; }
 
-		public override async void OnStarted()
+		public override void OnStarted()
 		{
 			Cleanup();
 
