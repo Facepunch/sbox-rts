@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 
 namespace Facepunch.RTS
@@ -10,25 +11,20 @@ namespace Facepunch.RTS
 		public override string Description => "Heal friendly units in range.";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
-		public override float Cooldown => 10f;
+		public override float Cooldown => 30f;
 		public override float MaxDistance => 750f;
 		public override float AreaOfEffectRadius => 300f;
-		public virtual float HealAmount => 10f;
 
 		public override void OnFinished()
 		{
 			if ( Host.IsServer )
 			{
-				var targetInfo = TargetInfo;
-				var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffectRadius );
-
-				foreach ( var entity in entities )
+				Statuses.Apply<HealingStatus>( TargetInfo.Origin, AreaOfEffectRadius, new HealingData()
 				{
-					if ( entity is UnitEntity unit && unit.Player == User.Player )
-					{
-						unit.GiveHealth( HealAmount );
-					}
-				}
+					Interval = 0.1f,
+					Duration = 5f,
+					Amount = 0.5f
+				} );
 			}
 
 			base.OnFinished();

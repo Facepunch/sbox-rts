@@ -8,7 +8,7 @@ namespace Facepunch.RTS
 	{
 		public override string Name => "Burning";
 		public override string Description => "Help, I'm on fire!";
-		public override Texture Icon => Texture.Load( "textures/rts/resistances/fire.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/statuses/burning.png" );
 
 		private RealTimeUntil NextTakeDamage { get; set; }
 		private Particles Particles { get; set; }
