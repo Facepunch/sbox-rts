@@ -11,8 +11,8 @@ namespace Facepunch.RTS
 		public ISelectable Target { get; }
 		public RealTimeUntil EndTime { get; }
 		public string UniqueId { get;}
-		public BaseStatusData GetData();
-		public void SetData( BaseStatusData data );
+		public StatusData GetData();
+		public void SetData( StatusData data );
 		public void Initialize( string uniqueId, ISelectable target );
 		public void Serialize( BinaryWriter writer );
 		public void Deserialize( BinaryReader reader );

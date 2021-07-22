@@ -186,7 +186,7 @@ namespace Facepunch.RTS
 			return Statuses.ContainsKey( id );
 		}
 
-		public S ApplyStatus<S>( BaseStatusData data ) where S : IStatus
+		public S ApplyStatus<S>( StatusData data ) where S : IStatus
 		{
 			Host.AssertServer();
 

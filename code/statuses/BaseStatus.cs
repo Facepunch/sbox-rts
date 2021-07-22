@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Facepunch.RTS
 {
-	public abstract class BaseStatus<T> : IStatus where T : BaseStatusData, new()
+	public abstract class BaseStatus<T> : IStatus where T : StatusData, new()
 	{
 		public virtual string Name => "";
 		public virtual string Description => "";
@@ -33,9 +33,9 @@ namespace Facepunch.RTS
 			Data.Deserialize( reader );
 		}
 
-		public BaseStatusData GetData() => Data;
+		public StatusData GetData() => Data;
 
-		public void SetData( BaseStatusData data )
+		public void SetData( StatusData data )
 		{
 			Data = (data as T);
 		}

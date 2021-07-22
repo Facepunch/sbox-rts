@@ -27,7 +27,7 @@ namespace Facepunch.RTS
 		public BaseItem UnqueueItem( uint queueId );
 		public void TakeDamage( DamageInfo info );
 		public float GetDiameterXY( float scalar, bool smallestSide );
-		public S ApplyStatus<S>( BaseStatusData data ) where S : IStatus;
+		public S ApplyStatus<S>( StatusData data ) where S : IStatus;
 		public bool HasUpgrade( BaseUpgrade item );
 		public bool HasUpgrade( uint id );
 		public void RemoveStatus( string id );

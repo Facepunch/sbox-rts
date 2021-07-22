@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS
 {
-	public class BaseStatusData
+	public class StatusData
 	{
 		public float Duration { get; set; } = 1f;
 

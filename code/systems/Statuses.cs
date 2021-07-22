@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 			return Library.Create<IStatus>( id );
 		}
 
-		public static void Apply<S>( Vector3 position, float radius, BaseStatusData data ) where S : IStatus
+		public static void Apply<S>( Vector3 position, float radius, StatusData data ) where S : IStatus
 		{
 			Host.AssertServer();
 
