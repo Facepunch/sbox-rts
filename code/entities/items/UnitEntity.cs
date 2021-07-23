@@ -70,6 +70,7 @@ namespace Facepunch.RTS
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSight { get; private set; }
 		[Net, OnChangedCallback] public int Kills { get; set; }
+		[Net] public UnitModifiers Modifiers { get; protected set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
@@ -77,7 +78,6 @@ namespace Facepunch.RTS
 		public bool HasBeenSeen { get; set; }
 		public float TargetAlpha { get; private set; }
 		public float AgentRadius { get; private set; }
-		public float Speed { get; private set; }
 		public bool IsStatic { get; private set; }
 		public TimeSince LastGatherTime { get; private set; }
 		public ResourceEntity LastResourceEntity { get; private set; }
@@ -112,6 +112,9 @@ namespace Facepunch.RTS
 			// Don't collide with anything but static shit.
 			CollisionGroup = CollisionGroup.Debris;
 			Occupants = new List<UnitEntity>();
+			
+			// Create the attribute modifiers object.
+			CreateModifiers();
 
 			// We start out as a static obstacle.
 			IsStatic = true;
@@ -676,6 +679,11 @@ namespace Facepunch.RTS
 			return (distance <= maxVerticalRange);
 		}
 
+		public float GetSpeed()
+		{
+			return Item.Speed * Modifiers.Speed;
+		}
+
 		public void RemoveClothing()
 		{
 			Clothing.ForEach( ( entity ) => entity.Delete() );
@@ -823,7 +831,6 @@ namespace Facepunch.RTS
 				AttachClothing( clothes );
 			}
 
-			Speed = item.Speed;
 			Health = item.MaxHealth;
 			MaxHealth = item.MaxHealth;
 			EyePos = Position + Vector3.Up * 64;
@@ -866,6 +873,113 @@ namespace Facepunch.RTS
 			}
 
 			base.OnItemChanged( item );
+		}
+
+		protected virtual void CreateModifiers()
+		{
+			Modifiers = new UnitModifiers();
+		}
+
+		// TODO: I don't want to do half of this shit each tick.
+		protected override void ClientTick()
+		{
+			base.ClientTick();
+
+			if ( Hud.Style.Opacity != RenderAlpha )
+			{
+				Hud.Style.Opacity = RenderAlpha;
+				Hud.Style.Dirty();
+			}
+
+			Hud.SetActive( RenderAlpha > 0f );
+
+			if ( Occupiable.IsValid() )
+			{
+				Circle.Alpha = 0f;
+				RenderAlpha = 0f;
+
+				return;
+			}
+
+			if ( Circle.IsValid() && Player.IsValid() )
+			{
+				if ( Player.IsLocalPawn && IsSelected )
+					Circle.Color = Color.White;
+				else
+					Circle.Color = Player.TeamColor;
+
+				Circle.Alpha = 1f;
+			}
+
+			if ( IsLocalPlayers )
+			{
+				var isOnScreen = IsOnScreen();
+
+				Circle.Alpha = isOnScreen ? 1f : 0f;
+				RenderAlpha = isOnScreen ? 1f : 0f;
+				
+				return;
+			}
+
+			RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, Time.Delta * 2f );
+
+			for ( var i = 0; i < Children.Count; i++ )
+			{
+				if ( Children[i] is ModelEntity child )
+				{
+					child.RenderAlpha = RenderAlpha;
+				}
+			}
+
+			if ( Circle.IsValid() )
+			{
+				Circle.Alpha = RenderAlpha;
+			}
+		}
+
+		protected virtual void AlignToGround()
+		{
+			Position = Position.WithZ( Item.VerticalOffset + Pathfinder.GetHeight( Position ) );
+		}
+
+		[ClientRpc]
+		protected virtual void CreateDeathParticles()
+		{
+			if ( !string.IsNullOrEmpty( Item.DeathParticles ) )
+			{
+				var particles = Particles.Create( Item.DeathParticles );
+				particles.SetPosition( 0, Position );
+			}
+		}
+
+		protected virtual void OnTargetChanged()
+		{
+			if ( Weapon.IsValid() )
+			{
+				Weapon.Target = _target.Entity;
+				Weapon.Occupiable = Occupiable;
+			}
+
+			SpinSpeed = null;
+		}
+
+		protected override void AddHudComponents()
+		{
+			RankIcon = Hud.AddChild<EntityHudIcon>( "rank" );
+			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
+
+			if ( IsLocalPlayers )
+			{
+				GatherBar = Hud.AddChild<EntityHudBar>( "gather" );
+			}
+
+			base.AddHudComponents();
+		}
+
+		[ClientRpc]
+		private void BecomeRagdoll( Vector3 velocity, DamageFlags damageFlags, Vector3 forcePos, Vector3 force, int bone )
+		{
+			Ragdoll.From( this, velocity, damageFlags, forcePos, force, bone ).FadeOut( 10f );
 		}
 
 		private void OnKillsChanged()
@@ -1099,7 +1213,7 @@ namespace Facepunch.RTS
 
 			var steerDirection = Vector3.Zero;
 			var pathDirection = Vector3.Zero;
-			var movementSpeed = Speed;
+			var movementSpeed = GetSpeed();
 
 			if ( IsMoveGroupValid() )
 			{
@@ -1150,7 +1264,7 @@ namespace Facepunch.RTS
 
 			if ( pathDirection.Length > 0 )
 			{
-				if ( Speed >= 300f )
+				if ( movementSpeed >= 300f )
 					_animationValues.Speed = 1f;
 				else
 					_animationValues.Speed = 0.5f;
@@ -1186,7 +1300,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		private void TickOccupy( IOccupiableEntity occupiable)
+		private void TickOccupy( IOccupiableEntity occupiable )
 		{
 			if ( occupiable.OccupyUnit( this ) )
 				ClearTarget();
@@ -1212,7 +1326,7 @@ namespace Facepunch.RTS
 			building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
 
 			SpinSpeed = (building.MaxHealth / building.Health) * 200f;
-				
+
 			if ( building.Health == building.Item.MaxHealth )
 			{
 				LookAtEntity( building );
@@ -1243,108 +1357,6 @@ namespace Facepunch.RTS
 
 			// We're full, let's deposit that shit.
 			FindResourceDepo();
-		}
-
-		// TODO: I don't want to do half of this shit each tick.
-		protected override void ClientTick()
-		{
-			base.ClientTick();
-
-			if ( Hud.Style.Opacity != RenderAlpha )
-			{
-				Hud.Style.Opacity = RenderAlpha;
-				Hud.Style.Dirty();
-			}
-
-			Hud.SetActive( RenderAlpha > 0f );
-
-			if ( Occupiable.IsValid() )
-			{
-				Circle.Alpha = 0f;
-				RenderAlpha = 0f;
-
-				return;
-			}
-
-			if ( Circle.IsValid() && Player.IsValid() )
-			{
-				if ( Player.IsLocalPawn && IsSelected )
-					Circle.Color = Color.White;
-				else
-					Circle.Color = Player.TeamColor;
-
-				Circle.Alpha = 1f;
-			}
-
-			if ( IsLocalPlayers )
-			{
-				var isOnScreen = IsOnScreen();
-
-				Circle.Alpha = isOnScreen ? 1f : 0f;
-				RenderAlpha = isOnScreen ? 1f : 0f;
-				
-				return;
-			}
-
-			RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, Time.Delta * 2f );
-
-			for ( var i = 0; i < Children.Count; i++ )
-			{
-				if ( Children[i] is ModelEntity child )
-				{
-					child.RenderAlpha = RenderAlpha;
-				}
-			}
-
-			if ( Circle.IsValid() )
-			{
-				Circle.Alpha = RenderAlpha;
-			}
-		}
-
-		protected virtual void AlignToGround()
-		{
-			Position = Position.WithZ( Item.VerticalOffset + Pathfinder.GetHeight( Position ) );
-		}
-
-		[ClientRpc]
-		protected virtual void CreateDeathParticles()
-		{
-			if ( !string.IsNullOrEmpty( Item.DeathParticles ) )
-			{
-				var particles = Particles.Create( Item.DeathParticles );
-				particles.SetPosition( 0, Position );
-			}
-		}
-
-		protected virtual void OnTargetChanged()
-		{
-			if ( Weapon.IsValid() )
-			{
-				Weapon.Target = _target.Entity;
-				Weapon.Occupiable = Occupiable;
-			}
-
-			SpinSpeed = null;
-		}
-
-		protected override void AddHudComponents()
-		{
-			RankIcon = Hud.AddChild<EntityHudIcon>( "rank" );
-			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
-
-			if ( IsLocalPlayers )
-			{
-				GatherBar = Hud.AddChild<EntityHudBar>( "gather" );
-			}
-
-			base.AddHudComponents();
-		}
-
-		[ClientRpc]
-		private void BecomeRagdoll( Vector3 velocity, DamageFlags damageFlags, Vector3 forcePos, Vector3 force, int bone )
-		{
-			Ragdoll.From( this, velocity, damageFlags, forcePos, force, bone ).FadeOut( 10f );
 		}
 	}
 }

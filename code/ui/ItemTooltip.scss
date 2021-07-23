@@ -33,6 +33,9 @@
 
     .population {
         margin-top: 4px;
+        display: flex;
+        align-items: center;
+        justify-items: center;
 
         .icon {
             background-image: url( /textures/rts/icons/population.png );
