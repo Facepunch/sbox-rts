@@ -179,7 +179,7 @@ namespace Gamelib.FlowFields.Grid
 
         public static int GetMirrorIndex( GridDefinition definition, int index, GridDirection direction )
         {
-            switch (direction)
+            switch ( direction )
             {
                 case GridDirection.Right:
                     return Math.Abs( index - (definition.Columns - 1) );

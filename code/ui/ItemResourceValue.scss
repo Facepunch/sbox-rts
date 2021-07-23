@@ -13,12 +13,7 @@
     .label {
         color: red;
         font-size: 17px;
-    }
-
-    &.lerping {
-        .label {
-            font-size: 20px;
-        }
+        font-weight: bold;
     }
 
     &.affordable {
