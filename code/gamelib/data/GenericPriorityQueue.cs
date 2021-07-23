@@ -46,7 +46,7 @@ namespace Gamelib.Data
 			_comparer = comparer;
 		}
 
-		public int Count => _numNodes
+		public int Count => _numNodes;
 		public int MaxSize => _nodes.Length - 1;
 
 		public void Clear()

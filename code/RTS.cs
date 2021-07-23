@@ -84,15 +84,17 @@ namespace Facepunch.RTS
 			{
 				var units = Items.List.OfType<BaseUnit>();
 
+				if ( FlowFieldGround.Exists )
+					PathManager.SetBounds( FlowFieldGround.Bounds );
+				else
+					PathManager.SetBounds( new BBox( Vector3.One * -5000f, Vector3.One * 5000f ) );
+
 				foreach ( var unit in units )
 				{
 					var collisionSize = unit.CollisionSize;
 					var nodeSize = unit.NodeSize;
 
-					if ( FlowFieldGround.Exists )
-						PathManager.Create( nodeSize / 5, FlowFieldGround.Bounds, nodeSize, collisionSize );
-					else
-						PathManager.Create( nodeSize / 5, 30, nodeSize, collisionSize );
+					PathManager.Create( nodeSize, collisionSize );
 				}
 			}
 

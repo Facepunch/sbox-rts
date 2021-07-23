@@ -94,9 +94,11 @@ namespace Gamelib.FlowFields
 
 		private static Dictionary<int, Pathfinder> _pathfinders = new();
 		private static Pathfinder _default;
+		private static BBox? _bounds;
 
 		public static List<Pathfinder> All { get; private set; } = new();
 		public static Pathfinder Default => _default;
+		public static BBox? Bounds => _bounds;
 
 		public static Pathfinder GetPathfinder( int nodeSize, int collisionSize )
 		{
@@ -110,19 +112,22 @@ namespace Gamelib.FlowFields
 			return _default;
 		}
 
-        public static void Create( int numberOfChunks, int chunkSize, int nodeSize = 50, int collisionSize = 100 )
+		public static void SetBounds( BBox bounds )
 		{
+			_bounds = bounds;
+		}
+
+		public static void Create( int nodeSize = 50, int collisionSize = 100 )
+		{
+			if ( !_bounds.HasValue )
+				throw new System.Exception( "[PathManager::Create] Unable to create a Pathfinder without a world bounds value set!" );
+
 			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
 
 			if ( !_pathfinders.ContainsKey( hash ) )
 			{
-				Register( new Pathfinder( numberOfChunks, chunkSize, nodeSize ), nodeSize, collisionSize );
+				Register( new Pathfinder( _bounds.Value, nodeSize ), nodeSize, collisionSize );
 			}
-		}
-
-		public static void Create( int numberOfChunks, BBox bounds, int nodeSize = 50, int collisionSize = 100 )
-		{
-			Register( new Pathfinder( numberOfChunks, bounds, nodeSize ), nodeSize, collisionSize );
 		}
 
 		public static void Update()

@@ -54,17 +54,18 @@ namespace Gamelib.FlowFields
 			SetupSize( numberOfChunks, chunkGridSize, nodeSize, collisionSize );
 		}
 
-		public Pathfinder( int numberOfChunks, BBox bounds, int nodeSize = 50, int collisionSize = 100 )
+		public Pathfinder( BBox bounds, int nodeSize = 50, int collisionSize = 100 )
 		{
 			var delta = bounds.Maxs - bounds.Mins;
 			var width = delta.x;
 			var height = delta.y;
 			var squareSize = (MathF.Ceiling( Math.Max( width, height ) / 1000f ) * 1000f) + 1000f;
-			var chunkSize = MathUtility.CeilToInt( ((squareSize / 10f) / nodeSize) );
+			var numberOfChunks = squareSize / nodeSize / 10;
+			var chunkSize = squareSize / nodeSize / numberOfChunks;
 
 			Origin = bounds.Center;
 
-			SetupSize( numberOfChunks, chunkSize, nodeSize, collisionSize );
+			SetupSize( numberOfChunks.CeilToInt(), chunkSize.CeilToInt(), nodeSize, collisionSize );
 		}
 
 		public void Update()
@@ -470,6 +471,8 @@ namespace Gamelib.FlowFields
         private void ResetChunk( int i )
         {
 			var chunk = GetChunk( i );
+
+			Log.Info( i );
 
 			CreatePortalsBetweenChunks( i, GridDirection.Up );
             CreatePortalsBetweenChunks( i, GridDirection.Right );
