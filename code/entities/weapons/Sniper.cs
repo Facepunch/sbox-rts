@@ -3,14 +3,14 @@ using System;
 
 namespace Facepunch.RTS
 {
-	[Library("weapon_smg")]
-	partial class SMG : Weapon
+	[Library( "weapon_sniper" )]
+	partial class Sniper : Weapon
 	{
-		public override float FireRate => 0.3f;
-		public override int BaseDamage => 5;
+		public override float FireRate => 3f;
+		public override int BaseDamage => 30;
 		public override int HoldType => 2;
 		public override string SoundName => "rust_smg.shoot";
-		public override float Force => 2f;
+		public override float Force => 5f;
 
 		public override void Spawn()
 		{

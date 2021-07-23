@@ -286,6 +286,18 @@ metadata
 ]
 
 // 
+// Facepunch.RTS.Sniper : Facepunch.RTS.Weapon 
+// 
+@PointClass = weapon_sniper : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : ""
+]
+
+// 
 // Facepunch.RTS.TankCannon : Facepunch.RTS.Weapon 
 // 
 @PointClass = weapon_tank_cannon : ""

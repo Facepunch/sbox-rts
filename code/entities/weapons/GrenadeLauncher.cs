@@ -12,6 +12,8 @@ namespace Facepunch.RTS
 		public override float FireRate => 2f;
 		public override int BaseDamage => 15;
 		public override int HoldType => 2;
+		public override string SoundName => "rust_pistol.shoot";
+		public override float Force => 10f;
 
 		private Grenade Grenade { get; set; }
 
@@ -25,11 +27,9 @@ namespace Facepunch.RTS
 		public override void Attack()
 		{
 			LastAttack = 0f;
-
-			ShootEffects();
+			ShootEffects( Target.WorldSpaceBounds.Center );
 			LaunchProjectile();
-
-			//PlaySound( "rust_pistol.shoot" );
+			PlaySound( SoundName );
 		}
 
 		protected void LaunchProjectile()
@@ -41,14 +41,6 @@ namespace Facepunch.RTS
 				Grenade = new Grenade();
 				Grenade.Initialize( muzzle.Value.Position, Target, 1f, OnGrenadeHit );
 			}
-		}
-
-		[ClientRpc]
-		public override void ShootEffects()
-		{
-			Host.AssertClient();
-
-			base.ShootEffects();
 		}
 
 		protected override void OnDestroy()
@@ -65,7 +57,7 @@ namespace Facepunch.RTS
 		private void OnGrenadeHit( Grenade grenade, Entity entity )
 		{
 			if ( !entity.IsValid() ) return;
-			DamageEntity( entity, DamageFlags.Blast, 10f, GetDamage() );
+			DamageEntity( entity, DamageFlags.Blast, Force, GetDamage() );
 		}
 	}
 }

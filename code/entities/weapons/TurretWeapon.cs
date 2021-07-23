@@ -11,6 +11,8 @@ namespace Facepunch.RTS
 		public override int BaseDamage => 8;
 		public override bool BoneMerge => false;
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash/muzzle_large/muzzleflash_large.vpcf";
+		public override string SoundName => "rust_smg.shoot";
+		public override float Force => 5f;
 		public virtual float RotateSpeed => 20f;
 
 		public Vector3 TargetDirection { get; private set; }
@@ -18,13 +20,9 @@ namespace Facepunch.RTS
 
 		public override void Attack()
 		{
-			LastAttack = 0f;
-
-			ShootEffects();
-			PlaySound( "rust_smg.shoot" ).SetVolume( 0.5f );
-			ShootBullet( 5f, GetDamage() );
-
 			Recoil = 1f;
+
+			base.Attack();
 		}
 
 		public override Transform? GetMuzzle()
@@ -38,11 +36,11 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		public override void ShootEffects()
+		public override void ShootEffects( Vector3 position )
 		{
 			if ( !IsFacingTarget() ) return;
 			
-			base.ShootEffects();
+			base.ShootEffects( position );
 		}
 
 		private bool IsFacingTarget()

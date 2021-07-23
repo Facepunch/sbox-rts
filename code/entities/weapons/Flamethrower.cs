@@ -10,6 +10,8 @@ namespace Facepunch.RTS
 		public override float FireRate => 0.1f;
 		public override int BaseDamage => 4;
 		public override int HoldType => 2;
+		public override string SoundName => null;
+		public override float Force => 2f;
 
 		private Particles Fire { get; set; }
 		private RealTimeUntil KillFireTime { get; set; }
@@ -24,12 +26,6 @@ namespace Facepunch.RTS
 
 		public override void Attack()
 		{
-			LastAttack = 0f;
-
-			ShootEffects();
-			//PlaySound( "rust_pistol.shoot" );
-			ShootBullet( 1f, GetDamage() );
-
 			if ( NextBurnTime )
 			{
 				Statuses.Apply<BurningStatus>( Target.Position, 128f, new BurningData()
@@ -41,10 +37,12 @@ namespace Facepunch.RTS
 
 				NextBurnTime = 3f;
 			}
+
+			base.Attack();
 		}
 
 		[ClientRpc]
-		public override void ShootEffects()
+		public override void ShootEffects( Vector3 position )
 		{
 			Host.AssertClient();
 
@@ -58,7 +56,7 @@ namespace Facepunch.RTS
 					Fire.SetPosition( 0, muzzle.Value.Position );
 				}
 
-				Fire.SetPosition( 1, Target.Position );
+				Fire.SetPosition( 1, position );
 
 				KillFireTime = FireRate * 2f;
 			}

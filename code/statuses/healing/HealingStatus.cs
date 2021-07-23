@@ -8,7 +8,6 @@ namespace Facepunch.RTS
 	{
 		public override string Name => "Healing";
 		public override string Description => "Damn, that feels good!";
-		public override Texture Icon => Texture.Load( "textures/rts/statuses/healing.png" );
 
 		private RealTimeUntil NextHealTime { get; set; }
 		private Particles Particles { get; set; }

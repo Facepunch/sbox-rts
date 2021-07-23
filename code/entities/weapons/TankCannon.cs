@@ -13,18 +13,11 @@ namespace Facepunch.RTS
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash/muzzle_large/muzzleflash_large.vpcf";
 		public override string BulletTracer => null;
 		public override float RotationTolerance => 360f;
+		public override string SoundName => "rust_smg.shoot";
+		public override float Force => 5f;
 		public virtual float RotateSpeed => 10f;
 
 		public Vector3 TargetDirection { get; private set; }
-
-		public override void Attack()
-		{
-			LastAttack = 0f;
-
-			ShootEffects();
-			PlaySound( "rust_smg.shoot" ).SetVolume( 0.5f );
-			ShootBullet( 5f, GetDamage() );
-		}
 
 		public override Transform? GetMuzzle()
 		{
@@ -37,12 +30,11 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		public override void ShootEffects()
+		public override void ShootEffects( Vector3 position )
 		{
 			var explosion = Particles.Create( "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf" );
-			explosion.SetPosition( 0, Target.Position );
-
-			base.ShootEffects();
+			explosion.SetPosition( 0, position );
+			base.ShootEffects( position );
 		}
 
 		public override bool CanAttack()

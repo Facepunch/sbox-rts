@@ -8,9 +8,7 @@ namespace Facepunch.RTS
 	{
 		public override string Name => "Boost";
 		public override string Description => "Gotta go fast!";
-		public override Texture Icon => Texture.Load( "textures/rts/statuses/boost.png" );
 
-		private RealTimeUntil NextHealTime { get; set; }
 		private Particles Particles { get; set; }
 
 		public override void OnApplied()

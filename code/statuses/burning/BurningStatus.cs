@@ -8,7 +8,6 @@ namespace Facepunch.RTS
 	{
 		public override string Name => "Burning";
 		public override string Description => "Help, I'm on fire!";
-		public override Texture Icon => Texture.Load( "textures/rts/statuses/burning.png" );
 
 		private RealTimeUntil NextTakeDamage { get; set; }
 		private Particles Particles { get; set; }
@@ -18,7 +17,7 @@ namespace Facepunch.RTS
 			if ( Host.IsClient )
 			{
 				Particles = Particles.Create( "particles/weapons/flamethrower/flamethrower_fire.vpcf" );
-				Particles.SetPosition( 0, Target.WorldSpaceBounds.Center );
+				Particles.SetPosition( 0, Target.Position );
 				Particles.SetPosition( 1, new Vector3( 1f, 0f, 0f ) );
 			}
 		}
@@ -47,7 +46,7 @@ namespace Facepunch.RTS
 			}
 			else if ( Host.IsClient )
 			{
-				Particles.SetPosition( 0, Target.WorldSpaceBounds.Center );
+				Particles.SetPosition( 0, Target.Position );
 			}
 		}
 	}

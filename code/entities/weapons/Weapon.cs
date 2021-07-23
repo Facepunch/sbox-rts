@@ -16,7 +16,9 @@ namespace Facepunch.RTS
 		public virtual float RotationTolerance => 0.5f;
 		public virtual string MuzzleFlash => "particles/weapons/muzzle_flash/muzzleflash_base.vpcf";
 		public virtual string BulletTracer => "particles/weapons/muzzle_flash/bullet_trace.vpcf";
+		public virtual string SoundName => "rust_pistol.shoot";
 		public virtual float FireRate => 1f;
+		public virtual float Force => 2f;
 		public TimeSince LastAttack { get; set; }
 
 		public Weapon()
@@ -55,17 +57,23 @@ namespace Facepunch.RTS
 			return (LastAttack > FireRate);
 		}
 
-		public virtual void DummyAttack()
+		public virtual void Dummy( Vector3 position )
 		{
-			ShootEffects();
+			if ( !string.IsNullOrEmpty( SoundName ) )
+				PlaySound( SoundName );
+
+			ShootEffects( position );
 			LastAttack = 0f;
 		}
 
 		public virtual void Attack()
 		{
+			if ( !string.IsNullOrEmpty( SoundName ) )
+				PlaySound( SoundName );
+
+			ShootEffects( Target.WorldSpaceBounds.Center );
+			ShootBullet( Force, GetDamage() );
 			LastAttack = 0f;
-			ShootEffects();
-			ShootBullet( 1.5f, GetDamage() );
 		}
 
 		public virtual Transform? GetMuzzle()
@@ -100,7 +108,7 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		public virtual void ShootEffects()
+		public virtual void ShootEffects( Vector3 position )
 		{
 			Host.AssertClient();
 
@@ -121,7 +129,7 @@ namespace Facepunch.RTS
 				{
 					var tracer = Particles.Create( BulletTracer );
 					tracer.SetPosition( 0, muzzle.Value.Position );
-					tracer.SetPosition( 1, Target.WorldSpaceBounds.Center );
+					tracer.SetPosition( 1, position );
 				}
 			}
 		}

@@ -15,7 +15,11 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsServer && User is UnitEntity unit )
 			{
-				unit.Weapon.DummyAttack();
+				var target = TargetInfo.Target;
+				var position = target.WorldSpaceBounds.Center;
+
+				unit.LookAtPosition( position );
+				unit.Weapon.Dummy( position );
 
 				Grenade = new Grenade
 				{

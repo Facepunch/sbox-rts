@@ -14,9 +14,6 @@ namespace Facepunch.RTS
 		public override void Attack()
 		{
 			LastAttack = 0f;
-
-			//PlaySound( "rust_smg.shoot" ).SetVolume( 0.5f );
-
 			DamageInRange();
 		}
 
