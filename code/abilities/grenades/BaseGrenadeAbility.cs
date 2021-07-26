@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		public virtual string ExplosionEffect => "particles/weapons/explosion_ground_small/explosion_ground_small.vpcf";
 		public virtual string AreaEffect => null;
 
-		private Grenade Grenade { get; set; }
+		private Projectile Grenade { get; set; }
 
 		public override void OnStarted()
 		{
@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 				unit.LookAtPosition( position );
 				unit.Weapon.Dummy( position );
 
-				Grenade = new Grenade
+				Grenade = new Projectile
 				{
 					ExplosionEffect = ExplosionEffect
 				};

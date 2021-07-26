@@ -6,7 +6,7 @@ using System;
 namespace Facepunch.RTS
 {
 	[Library]
-	partial class Grenade : Entity
+	partial class Projectile : Entity
 	{
 		private Particles Trail { get; set; }
 		public Vector3 EndPosition { get; private set; }
@@ -14,18 +14,20 @@ namespace Facepunch.RTS
 		public float TravelDuration { get; private set; }
 		public RealTimeUntil TimeUntilHit { get; private set; }
 		public Entity Target { get; private set; }
-		public Action<Grenade, Entity> Callback { get; private set; }
+		public Action<Projectile, Entity> Callback { get; private set; }
 		public string ExplosionEffect { get; set; } = "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public string TrailEffect { get; set; } = "particles/weapons/grenade_trail/grenade_trail.vpcf";
+		public float BezierHeight { get; set; } = 0f;
 		public bool BezierCurve { get; set; } = true;
+		public bool Debug { get; set; } = false;
 
-		public Grenade()
+		public Projectile()
 		{
 			Transmit = TransmitType.Always;
 		}
 
 
-		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Grenade, Entity> callback = null )
+		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Projectile, Entity> callback = null )
 		{
 			StartPosition = start;
 			EndPosition = end;
@@ -40,7 +42,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public void Initialize( Vector3 start, Entity target, float duration, Action<Grenade, Entity> callback = null )
+		public void Initialize( Vector3 start, Entity target, float duration, Action<Projectile, Entity> callback = null )
 		{
 			Initialize( start, target.Position, duration, callback );
 			Target = target;
@@ -68,13 +70,17 @@ namespace Facepunch.RTS
 
 			if ( BezierCurve )
 			{
-				var middle = (StartPosition + (endPos - StartPosition) / 2f).WithZ( endPos.z + (distance / 2f) );
+				var height = BezierHeight > 0f ? BezierHeight : endPos.z + (distance / 2f);
+				var middle = (StartPosition + (endPos - StartPosition) / 2f).WithZ( height );
 				Position = Bezier.Calculate( StartPosition, middle, endPos, fraction );
 			}
 			else
 			{
 				Position = Vector3.Lerp( StartPosition, endPos, fraction );
 			}
+
+			if ( Debug )
+				DebugOverlay.Sphere( Position, 32f, Color.Red );
 
 			if ( TimeUntilHit )
 			{

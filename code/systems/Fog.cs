@@ -23,6 +23,12 @@ namespace Facepunch.RTS
 			public bool IsVisible;
 		}
 
+		internal class TimedViewer : IFogViewer
+		{
+			public Vector3 Position { get; set; }
+			public float LineOfSightRadius { get; set; }
+		}
+
 		public class FogBounds
 		{
 			public Vector3 TopLeft;
@@ -100,9 +106,23 @@ namespace Facepunch.RTS
 			UpdateFogMap();
 		}
 
-		public static void MakeVisible( Player player, Vector3 position, float range )
+		public static void MakeVisible( Player player, Vector3 position, float radius )
 		{
-			MakeVisible( To.Single( player ), position, range );
+			MakeVisible( To.Single( player ), position, radius );
+		}
+
+		[ClientRpc]
+		public static void AddTimedViewer( Vector3 position, float radius, float duration )
+		{
+			var viewer = new TimedViewer()
+			{
+				Position = position,
+				LineOfSightRadius = radius
+			};
+
+			Fog.AddViewer( viewer );
+
+			_ = RemoveViewerAfter( viewer, duration );
 		}
 
 		public static void Clear( Player player )
@@ -172,7 +192,7 @@ namespace Facepunch.RTS
 
 				if ( data.Object == viewer )
 				{
-					FillRegion( data.LastPosition, data.Object.LineOfSight, 200 );
+					FillRegion( data.LastPosition, data.Object.LineOfSightRadius, 200 );
 					_viewers.RemoveAt( i );
 					break;
 				}
@@ -341,6 +361,12 @@ namespace Facepunch.RTS
 			}
 		}
 
+		private static async Task RemoveViewerAfter( IFogViewer viewer, float duration )
+		{
+			await GameTask.DelaySeconds( duration );
+			Fog.RemoveViewer( viewer );
+		}
+
 		private static async void UpdateFogMap()
 		{
 			while ( true )
@@ -374,7 +400,7 @@ namespace Facepunch.RTS
 				for ( var i = 0; i < _viewers.Count; i++ )
 				{
 					var viewer = _viewers[i];
-					FillRegion( viewer.LastPosition, viewer.Object.LineOfSight, 200 );
+					FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, 200 );
 				}
 
 				// Our second pass will show what is currently visible.
@@ -382,7 +408,7 @@ namespace Facepunch.RTS
 				{
 					var viewer = _viewers[i];
 					var position = viewer.Object.Position;
-					var range = viewer.Object.LineOfSight;
+					var range = viewer.Object.LineOfSightRadius;
 
 					AddRange( position, range );
 

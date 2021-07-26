@@ -57,7 +57,6 @@ namespace Facepunch.RTS
 		}
 
 		public override bool HasSelectionGlow => false;
-		public override int AttackPriority => 1;
 
 		[Net] public List<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
@@ -68,7 +67,7 @@ namespace Facepunch.RTS
 		[Net, Local] public float GatherProgress { get; private set; }
 		[Net, Local] public bool IsGathering { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
-		[Net] public float LineOfSight { get; private set; }
+		[Net] public float LineOfSightRadius { get; private set; }
 		[Net, OnChangedCallback] public int Kills { get; set; }
 		[Net] public UnitModifiers Modifiers { get; protected set; }
 		public override bool CanMultiSelect => true;
@@ -262,6 +261,11 @@ namespace Facepunch.RTS
 				resource.Delete();
 
 			return true;
+		}
+
+		public override int GetAttackPriority()
+		{
+			return Item.AttackPriority;
 		}
 
 		public override bool CanSelect()
@@ -834,7 +838,7 @@ namespace Facepunch.RTS
 			Health = item.MaxHealth;
 			MaxHealth = item.MaxHealth;
 			EyePos = Position + Vector3.Up * 64;
-			LineOfSight = item.LineOfSightRadius;
+			LineOfSightRadius = item.LineOfSightRadius;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
 
@@ -1086,7 +1090,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			_targetBuffer.OrderByDescending( s => s.AttackPriority ).ThenBy( s => s.Position.Distance( searchPosition ) );
+			_targetBuffer.OrderByDescending( s => s.GetAttackPriority() ).ThenBy( s => s.Position.Distance( searchPosition ) );
 
 			if ( _targetBuffer.Count > 0 )
 			{

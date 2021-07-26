@@ -472,8 +472,6 @@ namespace Gamelib.FlowFields
         {
 			var chunk = GetChunk( i );
 
-			Log.Info( i );
-
 			CreatePortalsBetweenChunks( i, GridDirection.Up );
             CreatePortalsBetweenChunks( i, GridDirection.Right );
             CreatePortalsBetweenChunks( i, GridDirection.Left );

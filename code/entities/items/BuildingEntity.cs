@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
 		[Net] public bool IsUnderConstruction { get; private set; }
-		[Net] public float LineOfSight { get; private set; }
+		[Net] public float LineOfSightRadius { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public Entity Target { get; private set; }
 		public RealTimeUntil NextFindTarget { get; private set; }
@@ -176,6 +176,11 @@ namespace Facepunch.RTS
 			var entity = Items.Create( Player, unit );
 
 			PlaceNear( entity );
+		}
+
+		public override int GetAttackPriority()
+		{
+			return Item.AttackPriority;
 		}
 
 		public override bool CanSelect()
@@ -374,7 +379,7 @@ namespace Facepunch.RTS
 			else
 				NextGenerateResources = 0;
 
-			LineOfSight = item.MinLineOfSight + CollisionBounds.Size.Length;
+			LineOfSightRadius = item.MinLineOfSight + CollisionBounds.Size.Length;
 			LocalCenter = CollisionBounds.Center;
 			MaxHealth = item.MaxHealth;
 			Health = item.MaxHealth;
@@ -419,6 +424,10 @@ namespace Facepunch.RTS
 			}
 			else
 			{
+				var particles = Particles.Create( "particles/destruction_temp/destruction_temp.vpcf" );
+				particles.SetPosition( 0, Position );
+				particles.SetPosition( 1, new Vector3( GetDiameterXY( 1f, false ) * 0.5f, 0f, 0f ) );
+
 				Fog.RemoveViewer( this );
 			}
 
@@ -430,7 +439,8 @@ namespace Facepunch.RTS
 			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRadius )
 				.OfType<UnitEntity>()
 				.Where( ( a ) => IsEnemy( a ) && InVerticalRange( a ) )
-				.OrderBy( ( a ) => a.Position.Distance( Position ) )
+				.OrderByDescending( a => a.GetAttackPriority() )
+				.ThenBy( a => a.Position.Distance( Position ) )
 				.FirstOrDefault();
 
 			if ( closestTarget.IsValid() )

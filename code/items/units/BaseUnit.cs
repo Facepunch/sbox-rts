@@ -21,6 +21,7 @@ namespace Facepunch.RTS.Units
 		public virtual string DeathParticles => null;
 		public virtual bool UseModelPhysics => false;
 		public virtual float MaxVerticalRange => 100f;
+		public virtual int AttackPriority => 1;
 		public virtual HashSet<ResourceType> Gatherables => new();
 		public virtual Dictionary<ResourceType, string[]> GatherSounds => new();
 		public virtual string[] ConstructSounds => Array.Empty<string>();

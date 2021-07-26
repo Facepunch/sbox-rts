@@ -90,7 +90,7 @@ namespace Facepunch.RTS
 
 				if ( ability.CanUse() == RequirementError.Success )
 				{
-					ResourceHint.Send( caller, 2f, position, ability.Costs, Color.Green );
+					ResourceHint.Send( caller, 2f, position, ability.Costs, Color.Red );
 
 					caller.TakeResources( ability );
 
