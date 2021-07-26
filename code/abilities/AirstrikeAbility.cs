@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			//"tech.pyrotechnics"
+			"tech.pyrotechnics"
 		};
 		public virtual float BlastRadius => 150f;
 		public virtual float MinDamage => 10f;
@@ -70,13 +70,6 @@ namespace Facepunch.RTS
 			}
 
 			base.Tick();
-		}
-
-		public override void OnCancelled()
-		{
-			Cleanup();
-
-			base.OnCancelled();
 		}
 
 		private void OnRocketHit( Grenade rocket, Entity target )

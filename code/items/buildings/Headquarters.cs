@@ -15,7 +15,8 @@ namespace Facepunch.RTS.Buildings
 		public override int BuildTime => 10;
 		public override HashSet<string> Abilities => new()
 		{
-			"ability_airstrike"
+			"ability_airstrike",
+			"ability_nuke"
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
