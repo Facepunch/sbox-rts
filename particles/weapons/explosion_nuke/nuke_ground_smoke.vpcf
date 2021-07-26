@@ -65,10 +65,10 @@
 			_class = "C_INIT_RingWave"
 			m_flInitialRadius = 
 			{
-				m_nType = "PF_TYPE_LITERAL"
-				m_nMapType = "PF_MAP_TYPE_DIRECT"
+				m_nType = "PF_TYPE_CONTROL_POINT_COMPONENT"
+				m_nMapType = "PF_MAP_TYPE_MULT"
 				m_flLiteralValue = 32.0
-				m_nControlPoint = 0
+				m_nControlPoint = 1
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
 				m_nVectorComponent = 0
@@ -93,7 +93,7 @@
 				m_flNoiseImgPreviewScale = 1.0
 				m_bNoiseImgPreviewLive = true
 				m_nInputMode = "PF_INPUT_MODE_CLAMPED"
-				m_flMultFactor = 1.0
+				m_flMultFactor = 0.3
 				m_flInput0 = 0.0
 				m_flInput1 = 1.0
 				m_flOutput0 = 0.0
