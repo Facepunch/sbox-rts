@@ -61,15 +61,16 @@ namespace Facepunch.RTS
 		private void OnNukeHit( Projectile projectile, Entity target )
 		{
 			var targetInfo = TargetInfo;
+			var origin = targetInfo.Origin;
 
 			Sound.FromWorld( "nuke.explode", projectile.Position );
 
 			Effect = Particles.Create( "particles/weapons/explosion_nuke/nuke_base.vpcf" );
-			Effect.SetPosition( 0, targetInfo.Origin );
-			Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius / 2f, 0f, 0f ) );
-			Effect.SetPosition( 2, new Vector3( 0f, 0f, AreaOfEffectRadius ) );
+			Effect.SetPosition( 0, origin );
+			Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius * 0.6f, 0f, 0f ) );
+			Effect.SetPosition( 2, origin + new Vector3( 0f, 0f, AreaOfEffectRadius ) );
 
-			var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffectRadius );
+			var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffectRadius * 0.8f );
 
 			foreach ( var entity in entities )
 			{
