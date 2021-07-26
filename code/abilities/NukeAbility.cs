@@ -66,8 +66,8 @@ namespace Facepunch.RTS
 
 			Effect = Particles.Create( "particles/weapons/explosion_nuke/nuke_base.vpcf" );
 			Effect.SetPosition( 0, targetInfo.Origin );
-			Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius, 0f, 0f ) );
-			Effect.SetPosition( 2, new Vector3( 0f, 0f, AreaOfEffectRadius * 2f ) );
+			Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius / 2f, 0f, 0f ) );
+			Effect.SetPosition( 2, new Vector3( 0f, 0f, AreaOfEffectRadius ) );
 
 			var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffectRadius );
 
