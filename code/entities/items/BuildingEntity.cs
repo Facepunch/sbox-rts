@@ -178,6 +178,11 @@ namespace Facepunch.RTS
 			PlaceNear( entity );
 		}
 
+		public override int GetAttackPriority()
+		{
+			return Item.AttackPriority;
+		}
+
 		public override bool CanSelect()
 		{
 			return !IsUnderConstruction;
@@ -434,7 +439,8 @@ namespace Facepunch.RTS
 			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRadius )
 				.OfType<UnitEntity>()
 				.Where( ( a ) => IsEnemy( a ) && InVerticalRange( a ) )
-				.OrderBy( ( a ) => a.Position.Distance( Position ) )
+				.OrderByDescending( a => a.GetAttackPriority() )
+				.ThenBy( a => a.Position.Distance( Position ) )
 				.FirstOrDefault();
 
 			if ( closestTarget.IsValid() )

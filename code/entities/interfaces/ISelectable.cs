@@ -15,12 +15,12 @@ namespace Facepunch.RTS
 		public Player Player { get; }
 		public bool IsSelected { get; }
 		public bool CanMultiSelect { get; }
-		public int AttackPriority { get; }
 		public float Health { get; set; }
 		public float MaxHealth { get; set; }
 		public List<QueueItem> Queue { get; }
 		public bool IsLocalPlayers { get; }
 		public Vector3 Position { get; set; }
+		public int GetAttackPriority();
 		public bool HasStatus( string id );
 		public bool IsInQueue( BaseItem item );
 		public void QueueItem( BaseItem item );

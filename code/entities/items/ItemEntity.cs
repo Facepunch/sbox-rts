@@ -17,7 +17,6 @@ namespace Facepunch.RTS
 	{
 		public virtual bool CanMultiSelect => false;
 		public virtual bool HasSelectionGlow => true;
-		public virtual int AttackPriority => 0;
 
 		public Dictionary<string, BaseAbility> Abilities { get; private set; }
 		public Dictionary<string, IStatus> Statuses { get; private set; }
@@ -245,6 +244,11 @@ namespace Facepunch.RTS
 		public bool IsUsingAbility()
 		{
 			return (UsingAbility != null);
+		}
+
+		public virtual int GetAttackPriority()
+		{
+			return 0;
 		}
 
 		public virtual void StartAbility( BaseAbility ability, AbilityTargetInfo info )
