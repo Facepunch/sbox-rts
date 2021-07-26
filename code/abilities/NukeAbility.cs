@@ -1,7 +1,5 @@
 ﻿using Sandbox;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Facepunch.RTS
 {
@@ -13,7 +11,7 @@ namespace Facepunch.RTS
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
 		public override float Cooldown => 1f;
-		public override float Duration => 2f;
+		public override float Duration => 5f;
 		public override float MaxDistance => 3000f;
 		public override float AreaOfEffectRadius => 800f;
 		public override Dictionary<ResourceType, int> Costs => new()
@@ -28,62 +26,87 @@ namespace Facepunch.RTS
 		public virtual float MinDamage => 30f;
 		public virtual float MaxDamage => 100f;
 
+		private PointLightEntity Light { get; set; }
 		private Particles Effect { get; set; }
+		private Sound Siren { get; set; }
+		private Nuke Missile { get; set; }
 
 		public override void OnStarted()
 		{
 			Cleanup();
 
+			if ( Host.IsServer )
+			{
+				Missile = new Nuke
+				{
+					BezierHeight = 1500f,
+					Debug = true
+				};
+
+				Missile.Initialize( User.Position, TargetInfo.Origin, Duration, OnNukeHit );
+
+				Siren = Missile.PlaySound( "nuke.siren" );
+
+				Light = new PointLightEntity();
+				Light.SetParent( Missile, false );
+				Light.SetLightColor( Color.Red );
+				Light.Flicker = true;
+				Light.Range = 1500f;
+				Light.BrightnessMultiplier = 2f;
+			}
+
 			base.OnStarted();
 		}
 
-		public override void OnFinished()
+		private void OnNukeHit( Projectile projectile, Entity target )
 		{
-			Cleanup();
+			var targetInfo = TargetInfo;
 
-			if ( Host.IsServer )
+			Sound.FromWorld( "nuke.explode", projectile.Position );
+
+			Effect = Particles.Create( "particles/weapons/explosion_nuke/nuke_base.vpcf" );
+			Effect.SetPosition( 0, targetInfo.Origin );
+			Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius, 0f, 0f ) );
+
+			var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffectRadius );
+
+			foreach ( var entity in entities )
 			{
-				var targetInfo = TargetInfo;
-
-				Effect = Particles.Create( "particles/weapons/explosion_nuke/nuke_base.vpcf" );
-				Effect.SetPosition( 0, targetInfo.Origin );
-				Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius, 0f, 0f ) );
-
-				var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffectRadius );
-				
-				foreach ( var entity in entities )
+				if ( entity is ISelectable selectable )
 				{
-					if ( entity is ISelectable selectable )
+					var distance = (selectable.Position.Distance( targetInfo.Origin ));
+					var fraction = 1f - (distance / AreaOfEffectRadius);
+					var damage = MinDamage + ((MaxDamage - MinDamage) * fraction);
+
+					var damageInfo = new DamageInfo
 					{
-						var distance = (selectable.Position.Distance( targetInfo.Origin ));
-						var fraction = 1f - (distance / AreaOfEffectRadius);
-						var damage = MinDamage + ((MaxDamage - MinDamage) * fraction);
+						Damage = damage,
+						Weapon = (Entity)User,
+						Attacker = (Entity)User,
+						Position = selectable.Position
+					};
 
-						var damageInfo = new DamageInfo
-						{
-							Damage = damage,
-							Weapon = (Entity)User,
-							Attacker = (Entity)User,
-							Position = selectable.Position
-						};
-
-						selectable.TakeDamage( damageInfo );
-					}
+					selectable.TakeDamage( damageInfo );
 				}
-
-				Fog.AddTimedViewer( To.Everyone, targetInfo.Origin, AreaOfEffectRadius, 10f );
 			}
 
-			base.OnFinished();
+			Fog.AddTimedViewer( To.Everyone, targetInfo.Origin, AreaOfEffectRadius, 10f );
+
+			Cleanup();
 		}
 
 		private void Cleanup()
 		{
-			if ( Effect != null )
+			if ( Missile.IsValid() )
 			{
-				Effect.Destroy();
-				Effect = null;
+				Missile.Delete();
+				Missile = null;
 			}
+
+			Light?.Delete();
+			Light = null;
+
+			Siren.Stop();
 		}
 	}
 }

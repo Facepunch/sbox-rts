@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 		public override string SoundName => "rust_pistol.shoot";
 		public override float Force => 10f;
 
-		private Grenade Grenade { get; set; }
+		private Projectile Grenade { get; set; }
 
 		public override void Spawn()
 		{
@@ -38,7 +38,7 @@ namespace Facepunch.RTS
 
 			if ( muzzle.HasValue )
 			{
-				Grenade = new Grenade();
+				Grenade = new Projectile();
 				Grenade.Initialize( muzzle.Value.Position, Target, 1f, OnGrenadeHit );
 			}
 		}
@@ -54,7 +54,7 @@ namespace Facepunch.RTS
 			base.OnDestroy();
 		}
 
-		private void OnGrenadeHit( Grenade grenade, Entity entity )
+		private void OnGrenadeHit( Projectile grenade, Entity entity )
 		{
 			if ( !entity.IsValid() ) return;
 			DamageEntity( entity, DamageFlags.Blast, Force, GetDamage() );

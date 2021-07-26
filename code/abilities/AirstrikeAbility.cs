@@ -27,7 +27,7 @@ namespace Facepunch.RTS
 		public virtual float MinDamage => 10f;
 		public virtual float MaxDamage => 30f;
 
-		private List<Grenade> Rockets { get; set; } = new();
+		private List<Projectile> Rockets { get; set; } = new();
 		private Particles Dust { get; set; }
 
 		public override void OnStarted()
@@ -42,7 +42,7 @@ namespace Facepunch.RTS
 
 				for ( var i = 0; i < rockets; i++ )
 				{
-					var rocket = new Grenade();
+					var rocket = new Projectile();
 					var radius = AreaOfEffectRadius * MathF.Sqrt( Rand.Float( 1f ) );
 					var theta = Rand.Float( 1f ) * 2f * MathF.PI;
 
@@ -72,7 +72,7 @@ namespace Facepunch.RTS
 			base.Tick();
 		}
 
-		private void OnRocketHit( Grenade rocket, Entity target )
+		private void OnRocketHit( Projectile rocket, Entity target )
 		{
 			var entities = Physics.GetEntitiesInSphere( rocket.Position, BlastRadius );
 
