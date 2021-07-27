@@ -1134,22 +1134,10 @@ namespace Facepunch.RTS
 
 		private void TickInteractWithTarget()
 		{
+			if ( _target.Type == TargetType.Attack && !ValidateMinAttackDistance() )
+				return;
+
 			var lookAtDistance = 0f;
-
-			if ( _target.Type == TargetType.Attack )
-			{
-				if ( !ValidateMinAttackDistance() )
-					return;
-
-				if ( Weapon.IsValid() && Weapon.CanAttack() )
-				{
-					if ( lookAtDistance.AlmostEqual( 0f, Weapon.RotationTolerance ) )
-					{
-						Weapon.Attack();
-						return;
-					}
-				}
-			}
 
 			if ( !SpinSpeed.HasValue )
 				lookAtDistance = LookAtEntity( _target.Entity, Time.Delta * Item.RotateToTargetSpeed );
@@ -1201,6 +1189,18 @@ namespace Facepunch.RTS
 						if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
 						{
 							TickGather( resource );
+							return;
+						}
+					}
+				}
+
+				if ( _target.Type == TargetType.Attack )
+				{
+					if ( Weapon.IsValid() && Weapon.CanAttack() )
+					{
+						if ( lookAtDistance.AlmostEqual( 0f, Weapon.RotationTolerance ) )
+						{
+							Weapon.Attack();
 							return;
 						}
 					}
