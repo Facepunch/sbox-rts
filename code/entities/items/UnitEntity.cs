@@ -1217,11 +1217,13 @@ namespace Facepunch.RTS
 				return true;
 
 			var tolerance = (Pathfinder.NodeSize * 2f);
+			var targetPosition = target.Position.WithZ( 0f );
+			var selfPosition = Position.WithZ( 0f );
 
-			if ( target.Position.Distance( Position ) >= minAttackDistance - tolerance )
+			if ( targetPosition.Distance( selfPosition ) >= minAttackDistance - tolerance )
 				return true;
 
-			var position = GetPerimeterPosition( target.Position, minAttackDistance );
+			var position = GetPerimeterPosition( targetPosition, minAttackDistance );
 
 			if ( !position.HasValue )
 				return true;
