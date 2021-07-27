@@ -1577,6 +1577,12 @@
 			_class = "C_OP_FadeOutSimple"
 			m_flFadeOutTime = 2.0
 		},
+		{
+			_class = "C_OP_PinParticleToCP"
+		},
+		{
+			_class = "C_OP_LockToSavedSequentialPathV2"
+		},
 	]
 	m_ForceGenerators = 
 	[
