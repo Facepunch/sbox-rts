@@ -413,6 +413,25 @@ namespace Facepunch.RTS
 			return (other.MoveGroup == MoveGroup);
 		}
 
+		public Vector3? GetPerimeterPosition( Vector3 target, float radius )
+		{
+			var pathfinder = Pathfinder;
+			var potentialNodes = new List<Vector3>();
+			var searchMultiplier = 1.5f;
+
+			pathfinder.GetGridPositions( Position, radius * searchMultiplier, potentialNodes, true );
+
+			var freeLocations = potentialNodes
+				.Where( v => v.Distance( target ) >= radius )
+				.OrderBy( v => v.Distance( Position ) )
+				.ToList();
+
+			if ( freeLocations.Count > 0 )
+				return freeLocations[0];
+			else
+				return null;
+		}
+
 		public void Attack( ISelectable target, bool autoFollow = true )
 		{
 			Attack( (Entity)target, autoFollow );
@@ -649,22 +668,11 @@ namespace Facepunch.RTS
 
 			// Round up the radius to the nearest node size.
 			var radius = MathF.Ceiling( (model.GetDiameterXY( 0.5f ) + collisionSize / 2f) / nodeSize ) * nodeSize;
-			var potentialTiles = new List<Vector3>();
-			var possibleLocations = new List<GridWorldPosition>();
+			var possibleLocations = new List<Vector3>();
 
-			pathfinder.GetGridPositions( model.Position, radius, possibleLocations );
+			pathfinder.GetGridPositions( model.Position, radius, possibleLocations, true );
 
-			var destinations = possibleLocations.ConvertAll( v =>
-			{
-				if ( Pathfinder.IsAvailable( v) )
-					Pathfinder.DrawBox( v, Color.Green, 10f );
-				else
-					Pathfinder.DrawBox( v, Color.Blue, 10f );
-
-				return Pathfinder.GetPosition( v );
-			} );
-
-			return destinations;
+			return possibleLocations;
 		}
 
 		public bool InVerticalRange( ISelectable other )
@@ -1128,6 +1136,21 @@ namespace Facepunch.RTS
 		{
 			var lookAtDistance = 0f;
 
+			if ( _target.Type == TargetType.Attack )
+			{
+				if ( !ValidateMinAttackDistance() )
+					return;
+
+				if ( Weapon.IsValid() && Weapon.CanAttack() )
+				{
+					if ( lookAtDistance.AlmostEqual( 0f, Weapon.RotationTolerance ) )
+					{
+						Weapon.Attack();
+						return;
+					}
+				}
+			}
+
 			if ( !SpinSpeed.HasValue )
 				lookAtDistance = LookAtEntity( _target.Entity, Time.Delta * Item.RotateToTargetSpeed );
 			else
@@ -1183,18 +1206,28 @@ namespace Facepunch.RTS
 					}
 				}
 			}
+		}
 
-			if ( _target.Type == TargetType.Attack )
-			{
-				if ( Weapon.IsValid() && Weapon.CanAttack() )
-				{
-					if ( lookAtDistance.AlmostEqual( 0f, Weapon.RotationTolerance ) )
-					{
-						Weapon.Attack();
-						return;
-					}
-				}
-			}
+		private bool ValidateMinAttackDistance()
+		{
+			var minAttackDistance = Item.MinAttackDistance;
+			var target = _target.Entity;
+
+			if ( minAttackDistance == 0f )
+				return true;
+
+			var tolerance = (Pathfinder.NodeSize * 2f);
+
+			if ( target.Position.Distance( Position ) >= minAttackDistance - tolerance )
+				return true;
+
+			var position = GetPerimeterPosition( target.Position, minAttackDistance );
+
+			if ( !position.HasValue )
+				return true;
+
+			SetMoveGroup( CreateMoveGroup( position.Value ) );
+			return false;
 		}
 
 		private void TickAbility()

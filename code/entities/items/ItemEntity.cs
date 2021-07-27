@@ -318,12 +318,10 @@ namespace Facepunch.RTS
 			var bounds = GetDiameterXY( diameterScale );
 			var pathfinder = unit.Pathfinder;
 			var potentialNodes = new List<GridWorldPosition>();
+			
+			pathfinder.GetGridPositions( Position, bounds, potentialNodes, true );
 
-				pathfinder.GetGridPositions( Position, bounds, potentialNodes );
-
-			var freeLocations = potentialNodes
-				.Where( v => pathfinder.IsAvailable( v ) )
-				.ToList();
+			var freeLocations = potentialNodes.ToList();
 
 			if ( freeLocations.Count == 0 )
 			{

@@ -317,7 +317,7 @@ namespace Gamelib.FlowFields
 			UpdateCollisions( position, Convert.ToInt32( radius / NodeSize ) );
 		}
 
-		public void GetGridPositions( Vector3 position, int gridSize, List<Vector3> output )
+		public void GetGridPositions( Vector3 position, int gridSize, List<Vector3> output, bool onlyAvailable = false )
 		{
 			var grid = new GridDefinition( gridSize * 2 + 1, gridSize * 2 + 1 );
 			var worldPivotPosition = CreateWorldPosition( position );
@@ -325,16 +325,19 @@ namespace Gamelib.FlowFields
 
 			for ( var i = 0; i < grid.Size; i++ )
 			{
-				output.Add( GetPosition( translation.Global( i ) ) );
+				var gridPosition = GetPosition( translation.Global( i ) );
+
+				if ( !onlyAvailable || IsAvailable( gridPosition ) )
+					output.Add( gridPosition );
 			}
 		}
 
-		public void GetGridPositions( Vector3 position, float radius, List<Vector3> output )
+		public void GetGridPositions( Vector3 position, float radius, List<Vector3> output, bool onlyAvailable = false )
 		{
-			GetGridPositions( position, Convert.ToInt32( radius / NodeSize ), output );
+			GetGridPositions( position, Convert.ToInt32( radius / NodeSize ), output, onlyAvailable );
 		}
 
-		public void GetGridPositions( Vector3 position, int gridSize, List<GridWorldPosition> output )
+		public void GetGridPositions( Vector3 position, int gridSize, List<GridWorldPosition> output, bool onlyAvailable = false )
 		{
 			var grid = new GridDefinition( gridSize * 2 + 1, gridSize * 2 + 1 );
 			var worldPivotPosition = CreateWorldPosition( position );
@@ -342,13 +345,16 @@ namespace Gamelib.FlowFields
 
 			for ( var i = 0; i < grid.Size; i++ )
 			{
-				output.Add( CreateWorldPosition( translation.Global( i ) ) );
+				var gridPosition = CreateWorldPosition( translation.Global( i ) );
+
+				if ( !onlyAvailable || IsAvailable( gridPosition ) )
+					output.Add( gridPosition );
 			}
 		}
 
-		public void GetGridPositions( Vector3 position, float radius, List<GridWorldPosition> output )
+		public void GetGridPositions( Vector3 position, float radius, List<GridWorldPosition> output, bool onlyAvailable = false )
 		{
-			GetGridPositions( position, Convert.ToInt32( radius / NodeSize ), output ); 
+			GetGridPositions( position, Convert.ToInt32( radius / NodeSize ), output, onlyAvailable ); 
 		}
 
         public void UpdateCollisions( Vector3 position, int gridSize )
