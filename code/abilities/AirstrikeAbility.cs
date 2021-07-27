@@ -32,7 +32,7 @@ namespace Facepunch.RTS
 
 		public override void OnStarted()
 		{
-			Cleanup();
+			Reset();
 
 			if ( Host.IsServer )
 			{
@@ -98,7 +98,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		private void Cleanup()
+		private void Reset()
 		{
 			for ( var i = 0; i < Rockets.Count; i++ )
 			{

@@ -335,7 +335,6 @@ namespace Facepunch.RTS
 			info = Resistances.Apply( info, Item.Resistances );
 
 			LastDamageTaken = info;
-
 			DamageOccupants( info );
 
 			base.TakeDamage( info );

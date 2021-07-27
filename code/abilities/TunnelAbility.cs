@@ -43,8 +43,6 @@ namespace Facepunch.RTS
 			{
 				var targetInfo = TargetInfo;
 
-				Log.Info( targetInfo.Target );
-
 				if ( User is TunnelEntity a && targetInfo.Target is TunnelEntity b )
 				{
 					a.ConnectTo( b );

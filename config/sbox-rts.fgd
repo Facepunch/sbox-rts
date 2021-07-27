@@ -12,7 +12,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -34,7 +34,7 @@ metadata
 	input Enable(void) : "Enable this func_brush, making it visible"
 	input Disable(void) : "Disable this func_brush, making it invisible and non solid"
 	input Toggle(void) : "Toggle this func_brush"
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -60,7 +60,7 @@ metadata
 	nightskycolor(color255) : "Night Sky Color" :  : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 
 	output OnBecomeNight(void) : ""
 	output OnBecomeDusk(void) : ""
@@ -73,16 +73,16 @@ metadata
 // 
 @PointClass model() = prop_daynight : ""
 [
-	model(studio) [report]: "World Model" : ""
+	model(studio) [report]: "World Model" : "" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
-	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
+	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	skinday(integer) : "Skin For Day" : 0 : ""
 	skinnight(integer) : "Skin For Night" : 1 : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -112,7 +112,7 @@ metadata
 	input Enable(void) : "Enable this func_brush, making it visible"
 	input Disable(void) : "Disable this func_brush, making it invisible and non solid"
 	input Toggle(void) : "Toggle this func_brush"
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -134,7 +134,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -146,7 +146,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -158,7 +158,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -170,7 +170,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -178,15 +178,15 @@ metadata
 // 
 @PointClass model() = resource_beer : ""
 [
-	model(studio) [report]: "World Model" : "models/barrels/square_wooden_box_gold.vmdl"
+	model(studio) [report]: "World Model" : "models/barrels/square_wooden_box_gold.vmdl" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
-	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
+	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -194,15 +194,15 @@ metadata
 // 
 @PointClass model() = resource_metal : ""
 [
-	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
+	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Metal" : "Some models have multiple versions of their textures, called skins." 
-	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
+	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -210,15 +210,15 @@ metadata
 // 
 @PointClass model() = resource_plasma : ""
 [
-	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
+	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Plasma" : "Some models have multiple versions of their textures, called skins." 
-	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
+	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -226,15 +226,15 @@ metadata
 // 
 @PointClass model() = resource_stone : ""
 [
-	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl"
+	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "Rock" : "Some models have multiple versions of their textures, called skins." 
-	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" 
+	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	stock(integer) : "Stock" : 0 : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -246,7 +246,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -258,7 +258,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -270,7 +270,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -282,7 +282,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -294,7 +294,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -306,7 +306,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -318,7 +318,7 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -330,6 +330,6 @@ metadata
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
-	input SetColor(string) : ""
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 

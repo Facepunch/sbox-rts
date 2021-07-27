@@ -19,7 +19,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Abilities => new()
 		{
-			"ability_adrenaline"
+			"ability_adrenaline",
+			"ability_dome_shield"
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

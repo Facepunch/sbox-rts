@@ -138,7 +138,13 @@ namespace Facepunch.RTS
 		public bool HasUpgrade( uint id )
 		{
 			return Upgrades.Contains( id );
-		} 
+		}
+
+		public bool HasComponent<C>() where C : ItemComponent
+		{
+			var componentName = Library.GetAttribute( typeof( C ) ).Name;
+			return Components.ContainsKey( componentName );
+		}
 
 		public C GetComponent<C>() where C : ItemComponent
 		{
@@ -443,6 +449,14 @@ namespace Facepunch.RTS
 			{
 				QueueHud?.SetActive( false );
 			}
+		}
+
+		public override void TakeDamage( DamageInfo info )
+		{
+			foreach ( var component in Components.Values )
+				info = component.TakeDamage( info );
+
+			base.TakeDamage( info );
 		}
 
 		public override void ClientSpawn()

@@ -25,6 +25,10 @@ namespace Facepunch.RTS
 		public bool IsInQueue( BaseItem item );
 		public void QueueItem( BaseItem item );
 		public BaseItem UnqueueItem( uint queueId );
+		public bool HasComponent<C>() where C : ItemComponent;
+		public C GetComponent<C>() where C : ItemComponent;
+		public void RemoveComponent<C>() where C : ItemComponent;
+		public C AddComponent<C>() where C : ItemComponent;
 		public void TakeDamage( DamageInfo info );
 		public float GetDiameterXY( float scalar, bool smallestSide );
 		public S ApplyStatus<S>( StatusData data ) where S : IStatus;

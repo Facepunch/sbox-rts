@@ -33,7 +33,7 @@ namespace Facepunch.RTS
 
 		public override void OnStarted()
 		{
-			Cleanup();
+			Reset();
 
 			if ( Host.IsServer )
 			{
@@ -94,10 +94,10 @@ namespace Facepunch.RTS
 
 			Fog.AddTimedViewer( To.Everyone, targetInfo.Origin, AreaOfEffectRadius, 10f );
 
-			Cleanup();
+			Reset();
 		}
 
-		private void Cleanup()
+		private void Reset()
 		{
 			if ( Missile.IsValid() )
 			{
