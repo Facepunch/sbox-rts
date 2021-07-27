@@ -23,6 +23,11 @@ namespace Facepunch.RTS
 			MaxHealth = health;
 			KillTime = duration;
 			Radius = radius;
+
+			Effect = Particles.Create( "particles/weapons/bubble_guard/bubble_guard.vpcf" );
+			Effect.SetPosition( 0, Position );
+			Effect.SetPosition( 1, new Vector3( radius, 0f, 0f ) );
+
 			CollisionGroup = CollisionGroup.Trigger;
 			EnableSolidCollisions = false;
 			EnableTouch = true;
@@ -40,6 +45,9 @@ namespace Facepunch.RTS
 					if ( !unit.IsValid() ) continue;
 					unit.RemoveComponent<ShieldAbsorber>();
 				}
+
+				Effect?.Destroy();
+				Effect = null;
 			}
 
 			base.OnDestroy();
@@ -95,8 +103,7 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			var color = Color.Lerp( Color.Red, Color.Green, Health / MaxHealth );
-			DebugOverlay.Sphere( Unit.Position, Radius, color );
+			Effect?.SetPosition( 0, Position );
 		}
 	}
 }
