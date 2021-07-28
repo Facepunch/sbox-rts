@@ -116,9 +116,54 @@
 				[
 					{
 						_class = "Attachment"
-						name = "muzzle"
+						name = "muzzle1"
 						parent_bone = "gun"
-						relative_origin = [ 0.0, 69.225235, 36.047714 ]
+						relative_origin = [ 62.524429, -31.248398, 52.055099 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle2"
+						parent_bone = "gun"
+						relative_origin = [ 62.524429, -0.50835, 52.055099 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle3"
+						parent_bone = "gun"
+						relative_origin = [ 62.524429, 32.606499, 52.055099 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle4"
+						parent_bone = "gun"
+						relative_origin = [ 62.524429, 31.768078, 20.701599 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle5"
+						parent_bone = "gun"
+						relative_origin = [ 62.524429, -0.114635, 20.701599 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle6"
+						parent_bone = "gun"
+						relative_origin = [ 62.524429, -33.69997, 20.701599 ]
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
