@@ -7,8 +7,8 @@ namespace Facepunch.RTS
 	[Library("weapon_sam")]
 	public partial class SAMWeapon : Weapon
 	{
-		public override float FireRate => 1f;
-		public override int BaseDamage => 20;
+		public override float FireRate => 2f;
+		public override int BaseDamage => 25;
 		public override bool BoneMerge => false;
 		public override string MuzzleFlash => null;
 		public override string BulletTracer => null;
@@ -37,9 +37,9 @@ namespace Facepunch.RTS
 					Debug = true
 				};
 
-				rocket.Initialize( transform.Value.Position, Target.Position, Rand.Float( FireRate * 0.3f, FireRate * 0.6f ), OnMissileHit );
+				rocket.Initialize( transform.Value.Position, Target, Rand.Float( FireRate * 0.3f, FireRate * 0.6f ), OnMissileHit );
 
-				await GameTask.Delay( Rand.Int( 10, 30 ) );
+				await GameTask.Delay( Rand.Int( 15, 40 ) );
 
 				if ( !Target.IsValid() ) return;
 			}
