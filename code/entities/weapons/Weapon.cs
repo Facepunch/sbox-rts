@@ -26,6 +26,11 @@ namespace Facepunch.RTS
 			EnableAllCollisions = false;
 		}
 
+		public int GetDamagePerSecond()
+		{
+			return (GetDamage() / FireRate).CeilToInt();
+		}
+
 		public virtual bool CanSeeTarget()
 		{
 			var aimRay = GetAimRay();

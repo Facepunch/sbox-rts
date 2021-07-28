@@ -508,11 +508,12 @@ namespace Facepunch.RTS
 					var baseDamage = unit.Weapon.BaseDamage;
 					var fullDamage = unit.Weapon.GetDamage();
 					var difference = fullDamage - baseDamage;
+					var perSecond = unit.Weapon.GetDamagePerSecond();
 
 					if ( difference > 0 )
-						Damage.Text = $"Damage: {baseDamage} (+{difference})";
+						Damage.Text = $"Damage: {baseDamage}+{difference} ({perSecond} DPS)";
 					else
-						Damage.Text = $"Damage: {baseDamage}";
+						Damage.Text = $"Damage: {baseDamage} ({perSecond} DPS)";
 
 					Damage.SetClass( "hidden", false );
 				}
