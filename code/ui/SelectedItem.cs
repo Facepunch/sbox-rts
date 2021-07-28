@@ -505,10 +505,14 @@ namespace Facepunch.RTS
 
 				if ( unit.Weapon.IsValid() )
 				{
-					if ( unit.Rank != null )
-						Damage.Text = $"Damage: {unit.Weapon.BaseDamage} (+{unit.Rank.DamageModifier})";
+					var baseDamage = unit.Weapon.BaseDamage;
+					var fullDamage = unit.Weapon.GetDamage();
+					var difference = fullDamage - baseDamage;
+
+					if ( difference > 0 )
+						Damage.Text = $"Damage: {baseDamage} (+{difference})";
 					else
-						Damage.Text = $"Damage: {unit.Weapon.BaseDamage}";
+						Damage.Text = $"Damage: {baseDamage}";
 
 					Damage.SetClass( "hidden", false );
 				}

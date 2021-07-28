@@ -5,7 +5,7 @@ using System.Linq;
 namespace Facepunch.RTS
 {
 	[Library("weapon_tank_cannon")]
-	public partial class TankCannon : Weapon
+	public partial class TankCannon : Weapon, IBallisticsWeapon
 	{
 		public override float FireRate => 3f;
 		public override int BaseDamage => 30;

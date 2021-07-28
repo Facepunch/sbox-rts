@@ -151,6 +151,8 @@ namespace Facepunch.RTS
 			AddAsFogViewer( To.Single( Player ) );
 
 			Audio.Play( Player, "announcer.construction_complete" );
+
+			Events.InvokeBuildingConstructed( Player, this );
 		}
 
 		public void StartConstruction()
@@ -171,11 +173,11 @@ namespace Facepunch.RTS
 			Health = 1f;
 		}
 
-		public void SpawnUnit( BaseUnit unit )
+		public UnitEntity SpawnUnit( BaseUnit unit )
 		{
 			var entity = Items.Create( Player, unit );
-
 			PlaceNear( entity );
+			return entity;
 		}
 
 		public override int GetAttackPriority()
@@ -353,7 +355,8 @@ namespace Facepunch.RTS
 		{
 			if ( queueItem.Item is BaseUnit unit )
 			{
-				SpawnUnit( unit );
+				var entity = SpawnUnit( unit );
+				Events.InvokeUnitTrained( Player, entity );
 			}
 
 			base.OnQueueItemCompleted( queueItem );
@@ -414,7 +417,7 @@ namespace Facepunch.RTS
 			{
 				var others = Player.GetBuildings( Item );
 
-				if ( others.Count == 0 )
+				if ( !others.Any() )
 					Player.RemoveDependency( Item );
 
 				if ( Player.IsValid() )

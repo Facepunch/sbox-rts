@@ -35,19 +35,24 @@ namespace Facepunch.RTS
 			MaxPopulation = 100;
 		}
 
-		public List<UnitEntity> GetUnits( BaseUnit unit)
+		public IEnumerable<UnitEntity> GetUnits( BaseUnit unit)
 		{
-			return All.OfType<UnitEntity>().Where( i => i.Player == this && i.Item == unit ).ToList();
+			return All.OfType<UnitEntity>().Where( i => i.Player == this && i.Item == unit );
 		}
 
-		public List<BuildingEntity> GetBuildings( BaseBuilding building )
+		public IEnumerable<UnitEntity> GetUnits()
 		{
-			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item == building ).ToList();
+			return All.OfType<UnitEntity>().Where( i => i.Player == this );
 		}
 
-		public List<BuildingEntity> GetBuildings()
+		public IEnumerable<BuildingEntity> GetBuildings( BaseBuilding building )
 		{
-			return All.OfType<BuildingEntity>().Where( i => i.Player == this ).ToList();
+			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item == building );
+		}
+
+		public IEnumerable<BuildingEntity> GetBuildings()
+		{
+			return All.OfType<BuildingEntity>().Where( i => i.Player == this );
 		}
 
 		public void AddPopulation( int population )

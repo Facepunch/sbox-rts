@@ -6,7 +6,7 @@ using System;
 namespace Facepunch.RTS
 {
 	[Library( "weapon_grenade_launcher" )]
-	public partial class GrenadeLauncher : Weapon
+	public partial class GrenadeLauncher : Weapon, IBallisticsWeapon
 	{
 		public override string BulletTracer => null;
 		public override float FireRate => 2f;

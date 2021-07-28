@@ -43,12 +43,12 @@ namespace Facepunch.RTS
 
 		public virtual int GetDamage()
 		{
-			if ( Attacker is UnitEntity unit && unit.Rank != null )
-			{
-				return BaseDamage + unit.Rank.DamageModifier;
-			}
+			var damage = BaseDamage;
 
-			return BaseDamage;
+			if ( Attacker is UnitEntity unit )
+				damage += unit.Modifiers.Damage;
+
+			return damage;
 		}
 
 		public virtual bool CanAttack()

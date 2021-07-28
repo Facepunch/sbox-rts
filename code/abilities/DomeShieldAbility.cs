@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 		public override AbilityTargetType TargetType => AbilityTargetType.Self;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
 		public override float Cooldown => 120f;
-		public override float AreaOfEffectRadius => 400f;
+		public override float AreaOfEffectRadius => 300f;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Plasma] = 50

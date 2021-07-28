@@ -30,6 +30,7 @@ namespace Facepunch.RTS.Buildings
 			"tech.syringes",
 			"tech.armoredplating",
 			"tech.infrastructure",
+			"tech.basicballistics",
 			"tech.carbines",
 			"upgrade.researchlab"
 		};

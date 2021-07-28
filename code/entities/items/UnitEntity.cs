@@ -123,15 +123,25 @@ namespace Facepunch.RTS
 
 		public void AddKill()
 		{
-			Host.AssertServer();
-
-			Kills += 1;
-			Rank = Ranks.Find( Kills );
+			if ( Host.IsServer )
+			{
+				Kills += 1;
+				UpdateRank( Ranks.Find( Kills ) );
+			}
 		}
 
 		public Entity GetTargetEntity() => _target.Entity;
 
 		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
+
+		public void UpdateRank( BaseRank rank )
+		{
+			if ( Rank == rank ) return;
+
+			Rank?.OnTaken( this );
+			Rank = rank;
+			Rank.OnGiven( this );
+		}
 
 		public bool CanGather( ResourceType type )
 		{
@@ -995,7 +1005,7 @@ namespace Facepunch.RTS
 
 		private void OnKillsChanged()
 		{
-			Rank = Ranks.Find( Kills );
+			UpdateRank( Ranks.Find( Kills ) );
 		}
 
 		private void SetMoveGroup( MoveGroup group )

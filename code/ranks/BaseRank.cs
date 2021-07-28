@@ -21,5 +21,15 @@ namespace Facepunch.RTS
 		{
 			return Kills.CompareTo( other.Kills );
 		}
+
+		public virtual void OnGiven( UnitEntity unit )
+		{
+			unit.Modifiers.Damage += DamageModifier;
+		}
+
+		public virtual void OnTaken( UnitEntity unit )
+		{
+			unit.Modifiers.Damage -= DamageModifier;
+		}
 	}
 }
