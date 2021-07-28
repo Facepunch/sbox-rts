@@ -28,6 +28,8 @@ namespace Facepunch.RTS.Buildings
 			"tech.brewing",
 			"tech.extraction",
 			"tech.syringes",
+			"tech.thermalarmor",
+			"tech.pyrotechnics",
 			"tech.armoredplating",
 			"tech.infrastructure",
 			"tech.basicballistics",

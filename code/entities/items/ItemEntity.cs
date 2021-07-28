@@ -359,12 +359,14 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
+			var oldItem = Item;
+
 			Owner = player;
 			Player = player;
 			ItemNetworkId = item.NetworkId;
 
 			ClearItemCache();
-			OnItemChanged( item );
+			OnItemChanged( item, oldItem );
 			OnPlayerAssigned( player );
 		}
 
@@ -372,9 +374,11 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
+			var oldItem = Item;
+
 			ItemNetworkId = item.NetworkId;
 			ClearItemCache();
-			OnItemChanged( item );
+			OnItemChanged( item, oldItem );
 		}
 
 		public float GetDiameterXY( float scalar = 1f, bool smallestSide = false )
@@ -586,7 +590,7 @@ namespace Facepunch.RTS
 
 		protected virtual void OnPlayerAssigned( Player player) { }
 
-		protected virtual void OnItemChanged( T item )
+		protected virtual void OnItemChanged( T item, T oldItem )
 		{
 			CreateAbilities();
 		}

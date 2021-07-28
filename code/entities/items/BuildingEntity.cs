@@ -369,7 +369,7 @@ namespace Facepunch.RTS
 			base.OnPlayerAssigned( player );
 		}
 
-		protected override void OnItemChanged( BaseBuilding item )
+		protected override void OnItemChanged( BaseBuilding item, BaseBuilding oldItem )
 		{
 			if ( !string.IsNullOrEmpty( item.Model ) )
 			{
@@ -408,7 +408,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			base.OnItemChanged( item );
+			base.OnItemChanged( item, oldItem );
 		}
 
 		protected override void OnDestroy()

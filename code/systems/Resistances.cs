@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 			BuildTable();
 		}
 
-		public static DamageInfo Apply( DamageInfo info, Dictionary<string, float> resistances )
+		public static DamageInfo Apply( DamageInfo info, IReadOnlyDictionary<string, float> resistances )
 		{
 			foreach ( var kv in resistances )
 			{
@@ -31,6 +31,14 @@ namespace Facepunch.RTS
 		{
 			if ( Table.TryGetValue( id, out var resistance ) )
 				return resistance;
+
+			return null;
+		}
+
+		public static T Find<T>( uint id ) where T : BaseResistance
+		{
+			if ( id < List.Count )
+				return (List[(int)id] as T);
 
 			return null;
 		}
@@ -53,12 +61,17 @@ namespace Facepunch.RTS
 				list.Add( resistance );
 			}
 
+			// Sort alphabetically, this should result in the same index for client and server.
+			list.Sort( ( a, b ) => a.UniqueId.CompareTo( b.UniqueId ) );
+
 			for ( var i = 0; i < list.Count; i++ )
 			{
 				var resistance = list[i];
 
 				Table.Add( resistance.UniqueId, resistance );
 				List.Add( resistance );
+
+				resistance.NetworkId = (uint)i;
 
 				Log.Info( $"Adding {resistance.UniqueId} to the available resistances (id = {i})" );
 			}

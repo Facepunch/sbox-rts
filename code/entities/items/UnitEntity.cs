@@ -342,7 +342,7 @@ namespace Facepunch.RTS
 
 		public override void TakeDamage( DamageInfo info )
 		{
-			info = Resistances.Apply( info, Item.Resistances );
+			info = Resistances.Apply( info, Modifiers.Resistances );
 
 			LastDamageTaken = info;
 			DamageOccupants( info );
@@ -833,7 +833,7 @@ namespace Facepunch.RTS
 			_animationValues.Finish( this );
 		}
 
-		protected override void OnItemChanged( BaseUnit item )
+		protected override void OnItemChanged( BaseUnit item, BaseUnit oldItem )
 		{
 			if ( !string.IsNullOrEmpty( item.Model ) )
 			{
@@ -858,6 +858,17 @@ namespace Facepunch.RTS
 			LineOfSightRadius = item.LineOfSightRadius;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
+
+			if ( oldItem  != null )
+			{
+				// Remove the old base resistances.
+				foreach ( var kv in item.Resistances )
+					Modifiers.AddResistance( kv.Key, -kv.Value );
+			}
+
+			// Add the new base resistances.
+			foreach ( var kv in item.Resistances )
+				Modifiers.AddResistance( kv.Key, kv.Value );
 
 			if ( item.UsePathfinder )
 				Pathfinder = PathManager.GetPathfinder( item.NodeSize, item.CollisionSize );
@@ -893,7 +904,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			base.OnItemChanged( item );
+			base.OnItemChanged( item, oldItem );
 		}
 
 		protected virtual void CreateModifiers()

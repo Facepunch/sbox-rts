@@ -18,7 +18,8 @@ namespace Facepunch.RTS.Tech
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.carbines"
+			"tech.carbines",
+			"tech.extraction"
 		};
 	}
 }

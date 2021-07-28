@@ -430,13 +430,19 @@ namespace Facepunch.RTS
 
 			foreach ( var v in queueables )
 			{
-				var buildable = Items.Find<BaseItem>( v );
+				var queueable = Items.Find<BaseItem>( v );
 
-				if ( buildable.CanHave( player, Selectable ) )
+				if ( queueable == null )
+				{
+					Log.Error( "[SelectedItem::UpdateCommands] Unable to find queueable by name: " + v );
+					return;
+				}
+
+				if ( queueable.CanHave( player, Selectable ) )
 				{
 					var button = AddChild<ItemCommandQueueable>( "command" );
 
-					button.Update( Selectable, buildable );
+					button.Update( Selectable, queueable );
 
 					Buttons.Add( button );
 				}
@@ -467,6 +473,7 @@ namespace Facepunch.RTS
 		public Label Damage { get; private set; }
 		public ISelectable Selectable { get; private set; }
 		public ItemQueueList QueueList { get; private set; }
+		public ResistanceValues Resistances { get; private set; }
 		public ItemOccupantList OccupantList { get; private set; }
 
 
@@ -477,8 +484,14 @@ namespace Facepunch.RTS
 			Health = Add.Label( "", "health" );
 			Damage = Add.Label( "", "damage" );
 			Kills = Add.Label( "", "kills" );
+			Resistances = AddChild<ResistanceValues>( "resistances" );
 			QueueList = AddChild<ItemQueueList>();
 			OccupantList = AddChild<ItemOccupantList>();
+
+			foreach ( var kv in RTS.Resistances.Table )
+			{
+				Resistances.AddResistance( kv.Value );
+			}
 		}
 
 		public void Update( ISelectable selectable )
@@ -536,6 +549,23 @@ namespace Facepunch.RTS
 
 			QueueList.Update( entity );
 			OccupantList.Update( entity );
+
+			var resistances = entity.Item.Resistances;
+
+			Resistances.SetVisible( resistances.Count > 0 );
+
+			foreach ( var kv in Resistances.Values )
+			{
+				if ( resistances.TryGetValue( kv.Key, out var resistance ) )
+				{
+					kv.Value.Update( resistance );
+					kv.Value.SetVisible( true );
+				}
+				else
+				{
+					kv.Value.SetVisible( false );
+				}
+			}
 		}
 
 		private void UpdateUnit( UnitEntity entity ) 
@@ -550,6 +580,21 @@ namespace Facepunch.RTS
 
 			QueueList.Update( null );
 			OccupantList.Update( entity );
+
+			var resistances = entity.Modifiers.Resistances;
+
+			foreach ( var kv in Resistances.Values )
+			{
+				if ( resistances.TryGetValue( kv.Key, out var resistance ) )
+				{
+					kv.Value.Update( resistance );
+					kv.Value.SetVisible( true );
+				}
+				else
+				{
+					kv.Value.SetVisible( false );
+				}
+			}
 		}
 	}
 
