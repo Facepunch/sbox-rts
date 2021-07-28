@@ -25,8 +25,8 @@ namespace Facepunch.RTS
 			Radius = radius;
 
 			Effect = Particles.Create( "particles/weapons/bubble_guard/bubble_guard.vpcf" );
-			Effect.SetPosition( 0, Position );
-			Effect.SetPosition( 1, new Vector3( radius, 0f, 0f ) );
+			Effect.SetEntity( 0, this );
+			Effect.SetPosition( 1, new Vector3( radius, radius, radius ) );
 
 			CollisionGroup = CollisionGroup.Trigger;
 			EnableSolidCollisions = false;
@@ -105,8 +105,6 @@ namespace Facepunch.RTS
 
 			if ( Effect != null )
 			{
-				Effect.SetPosition( 0, Position );
-				Effect.SetPosition( 1, new Vector3( Radius, Radius, Radius ) );
 				Effect.SetPosition( 2, new Vector3( 100f - ((Health / MaxHealth) * 100f), 0, 0f ) );
 			}
 		}
