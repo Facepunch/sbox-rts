@@ -178,6 +178,7 @@
             background-color: rgba(15 0 0 1);
             border-top-right-radius: 8px;
             border-bottom-right-radius: 8px;
+            flex-wrap: wrap;
             padding: 16px;
             width: 100%;
 
@@ -187,6 +188,7 @@
                 background-color: aqua;
                 border-radius: 4px;
                 margin-right: 4px;
+                margin-bottom: 4px;
 
                 .countdown {
                     background-color: rgba(255 0 0 0.5);

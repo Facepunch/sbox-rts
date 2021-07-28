@@ -513,11 +513,11 @@ namespace Facepunch.RTS
 
 			if ( Selectable is UnitEntity unit )
 			{
-				Kills.Text = $"Kills: {unit.Kills}";
-				Kills.SetClass( "hidden", false );
-
 				if ( unit.Weapon.IsValid() )
 				{
+					Kills.Text = $"Kills: {unit.Kills}";
+					Kills.SetClass( "hidden", false );
+
 					var baseDamage = unit.Weapon.BaseDamage;
 					var fullDamage = unit.Weapon.GetDamage();
 					var difference = fullDamage - baseDamage;
@@ -582,6 +582,8 @@ namespace Facepunch.RTS
 			OccupantList.Update( entity );
 
 			var resistances = entity.Modifiers.Resistances;
+
+			Resistances.SetVisible( resistances.Count > 0 );
 
 			foreach ( var kv in Resistances.Values )
 			{

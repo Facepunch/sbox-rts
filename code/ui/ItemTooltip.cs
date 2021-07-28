@@ -156,6 +156,7 @@ namespace Facepunch.RTS
 				}
 			}
 
+			/*
 			if ( item is IResistorItem resistor && resistor.Resistances.Count > 0 )
 			{
 				foreach ( var kv in Resistances.Values )
@@ -177,6 +178,9 @@ namespace Facepunch.RTS
 			{
 				Resistances.SetVisible( false );
 			}
+			*/
+
+			Resistances.SetVisible( false );
 
 			if ( item is BaseUnit unit )
 			{

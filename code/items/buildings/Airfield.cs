@@ -26,7 +26,8 @@ namespace Facepunch.RTS.Buildings
 		};
 		public override HashSet<string> Queueables => new()
 		{
-			"unit.chinook"
+			"unit.chinook",
+			"unit.apache"
 		};
 	}
 }

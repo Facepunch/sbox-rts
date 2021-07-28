@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 using Sandbox.UI.Construct;
 
 namespace Facepunch.RTS
@@ -35,8 +36,7 @@ namespace Facepunch.RTS
 
 		public void Update( float value )
 		{
-			var percentage = value * 100f;
-
+			var percentage = (value * 100f).FloorToInt();
 			SetClass( "weakness", percentage < 0 );
 			Label.Text = $"{percentage}%";
 		}
