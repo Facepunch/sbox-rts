@@ -45,6 +45,7 @@ namespace Facepunch.RTS
 		}
 
 		public float GetAttackRadius() => Item.AttackRadius;
+		public float GetMinVerticalRange() => Item.MinVerticalRange;
 		public float GetMaxVerticalRange() => Item.MaxVerticalRange;
 
 		public bool IsTargetInRange()

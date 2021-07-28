@@ -16,6 +16,7 @@ namespace Facepunch.RTS.Buildings
 		public virtual string Model => "";
 		public virtual float AttackRadius => 600f;
 		public virtual float MaxVerticalRange => 100f;
+		public virtual float MinVerticalRange => 0f;
 		public virtual string Weapon => "";
 	}
 }

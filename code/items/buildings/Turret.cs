@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Turret";
 		public override string UniqueId => "building.turret";
-		public override string Description => "Base defense structure that automatically fires upon invaders.";
+		public override string Description => "Base defense structure that automatically fires upon enemy ground units.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/silo.png" );
 		public override int BuildTime => 10;
 		public override float AttackRadius => 1200f;

@@ -621,6 +621,7 @@ namespace Facepunch.RTS
 		}
 
 		public float GetAttackRadius() => Item.AttackRadius;
+		public float GetMinVerticalRange() => Item.MinVerticalRange;
 		public float GetMaxVerticalRange() => Item.MaxVerticalRange;
 
 		public float LookAtPosition( Vector3 position, float? interpolation = null )
@@ -688,16 +689,18 @@ namespace Facepunch.RTS
 		public bool InVerticalRange( ISelectable other )
 		{
 			var selfPosition = Position;
+			var minVerticalRange = Item.MinVerticalRange;
 			var maxVerticalRange = Item.MaxVerticalRange;
 
 			if ( Occupiable is IOccupiableEntity occupiable )
 			{
 				selfPosition = occupiable.Position;
+				minVerticalRange = occupiable.GetMinVerticalRange();
 				maxVerticalRange = occupiable.GetMaxVerticalRange();
 			}
 
 			var distance = Math.Abs(selfPosition.z - other.Position.z);
-			return (distance <= maxVerticalRange);
+			return (distance >= minVerticalRange && distance <= maxVerticalRange);
 		}
 
 		public float GetSpeed()

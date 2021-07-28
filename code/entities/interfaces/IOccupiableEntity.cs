@@ -12,6 +12,7 @@ namespace Facepunch.RTS
 		public Player Player { get; }
 		public bool CanOccupantsAttack();
 		public float GetMaxVerticalRange();
+		public float GetMinVerticalRange();
 		public float GetAttackRadius();
 		public bool IsInRange( Entity entity, float radius );
 		public IList<UnitEntity> GetOccupantsList();

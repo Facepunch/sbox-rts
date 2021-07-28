@@ -55,6 +55,8 @@ namespace Facepunch.RTS.Units
 			"building.vehiclefactory",
 			"building.tunnel",
 			"building.researchlab",
+			"building.samsite",
+			"building.launchpad",
 			"building.watchtower",
 			"building.airfield",
 			"building.pillbox"
