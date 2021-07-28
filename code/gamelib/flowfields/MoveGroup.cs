@@ -122,13 +122,15 @@ namespace Gamelib.FlowFields
 			if ( PathRequest.IsDestination( position ) )
 				return true;
 
+			var groundPosition = agent.Position.WithZ( 0f );
+
 			for ( int i = 0; i < Agents.Count; i++ )
 			{
 				var other = Agents[i];
 
 				if ( other.MoveGroup == this && ReachedGoal.Contains( other ) )
 				{
-					var distance = agent.Position.Distance( other.Position );
+					var distance = groundPosition.Distance( other.Position.WithZ( 0f ) );
 
 					if ( distance <= agent.AgentRadius )
 					{

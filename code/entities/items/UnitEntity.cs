@@ -1266,6 +1266,23 @@ namespace Facepunch.RTS
 			LookAtPosition( ability.TargetInfo.Origin, Time.Delta * Item.RotateToTargetSpeed );
 		}
 
+		private bool IsAtDestination()
+		{
+			if ( !IsMoveGroupValid() )
+				return true;
+
+			if ( !Item.UsePathfinder )
+			{
+				var groundPosition = Position.WithZ( 0f );
+				var destination = MoveGroup.GetDestination();
+
+				if ( groundPosition.Distance( destination ) <= AgentRadius * 0.5f )
+					return true;
+			}
+
+			return MoveGroup.IsDestination( this, Position );
+		}
+
 		private void TickMoveToTarget( bool isTargetValid )
 		{
 			if ( isTargetValid && _target.Follow )
@@ -1282,7 +1299,7 @@ namespace Facepunch.RTS
 				var node = Pathfinder.CreateWorldPosition( Position );
 				Pathfinder.DrawBox( node, Color.Green );
 
-				if ( MoveGroup.IsDestination( this, Position ) )
+				if ( IsAtDestination() )
 				{
 					MoveGroup.Finish( this );
 				}
@@ -1305,11 +1322,8 @@ namespace Facepunch.RTS
 					if ( MoveGroup.Agents.Count > 1 )
 					{
 						var flocker = new Flocker();
-
-						// TODO: We should really use the real destination when flocking...
 						flocker.Setup( this, MoveGroup.Agents, Position );
 						flocker.Flock( Position + direction * Pathfinder.NodeSize );
-
 						steerDirection = flocker.Force.Normal.WithZ( 0f );
 					}
 				}
