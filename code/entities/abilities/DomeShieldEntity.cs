@@ -106,7 +106,7 @@ namespace Facepunch.RTS
 			if ( Effect != null )
 			{
 				Effect.SetPosition( 0, Position );
-				Effect.SetPosition( 1, new Vector3( 100f - ((Health / MaxHealth) * 100f), 0, 0f ) );
+				Effect.SetPosition( 2, new Vector3( 100f - ((Health / MaxHealth) * 100f), 0, 0f ) );
 			}
 		}
 	}
