@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.armageddon"
+			//"tech.armageddon"
 		};
 		public virtual float MinDamage => 30f;
 		public virtual float MaxDamage => 100f;
@@ -53,9 +53,17 @@ namespace Facepunch.RTS
 				Light.Flicker = true;
 				Light.Range = 1500f;
 				Light.BrightnessMultiplier = 2f;
+
+				OpenHatch( true );
 			}
 
 			base.OnStarted();
+		}
+
+		private void OpenHatch( bool shouldOpen )
+		{
+			if ( User is BuildingEntity building )
+				building.SetAnimBool( "open", shouldOpen );
 		}
 
 		private void OnNukeHit( Projectile projectile, Entity target )
@@ -99,6 +107,11 @@ namespace Facepunch.RTS
 
 		private void Reset()
 		{
+			if ( Host.IsServer )
+			{
+				OpenHatch( false );
+			}
+
 			if ( Missile.IsValid() )
 			{
 				Missile.Delete();
