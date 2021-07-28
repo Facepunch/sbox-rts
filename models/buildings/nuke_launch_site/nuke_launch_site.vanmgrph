@@ -8,13 +8,13 @@
 		[
 			{
 				_class = "CBoolAnimParameter"
-				m_name = "Open"
+				m_name = "open"
 				m_id = 
 				{
 					m_id = 728111710
 				}
 				m_previewButton = "ANIMPARAM_BUTTON_NONE"
-				m_bNetwork = false
+				m_bNetwork = true
 				m_bUseMostRecentValue = false
 				m_bAutoReset = false
 				m_bPredicted = false
@@ -84,7 +84,7 @@
 				{
 					m_id = 1483057742
 				}
-				m_networkMode = "ServerAuthoritative"
+				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_children = 
 				[
@@ -138,7 +138,7 @@
 				{
 					m_id = 1489906011
 				}
-				m_networkMode = "ServerAuthoritative"
+				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_childID = 
 				{
@@ -160,7 +160,7 @@
 				{
 					m_id = 1529255083
 				}
-				m_networkMode = "ServerAuthoritative"
+				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_tagSpans = [  ]
 				m_sequenceName = "opening"
@@ -182,7 +182,7 @@
 				{
 					m_id = 1941347921
 				}
-				m_networkMode = "ServerAuthoritative"
+				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_tagSpans = [  ]
 				m_sequenceName = "closing"
