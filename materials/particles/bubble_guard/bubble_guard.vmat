@@ -14,12 +14,12 @@ Layer0
 	//---- Color ----
 	g_flModelTintAmount "1.000"
 	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
-	TextureColor "[0.000000 0.000000 0.000000 0.000000]"
+	TextureColor "materials/particles/bubble_guard/bubble_guard_color.png"
 
 	//---- Emissive ----
 	g_flEmissiveEdgeColorFalloff "5.000"
-	g_flEmissiveEdgeColorThickness "0.101"
-	g_flEmissiveStrength "0.382"
+	g_flEmissiveEdgeColorThickness "0.565"
+	g_flEmissiveStrength "0.235"
 	g_vEmissiveColor "[0.380392 0.380392 0.380392 1.000000]"
 	g_vEmissiveEdgeColor "[0.000000 1.000000 1.000000 1.000000]"
 
@@ -33,9 +33,9 @@ Layer0
 	//---- Glass Color ----
 	g_flEdgeColorFalloff "10.000"
 	g_flEdgeColorMaxOpacity "1.000"
-	g_flEdgeColorThickness "0.336"
+	g_flEdgeColorThickness "0.335"
 	g_vEdgeColor "[0.000000 1.000000 1.000000 1.000000]"
-	GlassTintColor "materials/default/default_color.tga"
+	GlassTintColor "materials/particles/bubble_guard/bubble_guard1_color.png"
 
 	//---- Lighting ----
 	g_flDirectionalLightmapMinZ "0.010"
@@ -54,10 +54,10 @@ Layer0
 	g_nScaleTexCoordUByModelScaleAxis "0"
 	g_nScaleTexCoordVByModelScaleAxis "0"
 	g_vTexCoordOffset "[0.000 0.000]"
-	g_vTexCoordScale "[0.500 0.300]"
+	g_vTexCoordScale "[0.250 0.150]"
 	g_vTexCoordScrollSpeed "[0.000 0.000]"
 
 	//---- Translucent ----
-	g_flOpacityScale "0.194"
+	g_flOpacityScale "0.722"
 	TextureTranslucency "materials/particles/bubble_guard/bubble_guard1_color.png"
 }
