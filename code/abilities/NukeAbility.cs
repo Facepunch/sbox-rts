@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			//"tech.pyrotechnics"
+			"tech.armageddon"
 		};
 		public virtual float MinDamage => 30f;
 		public virtual float MaxDamage => 100f;

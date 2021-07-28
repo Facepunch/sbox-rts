@@ -21,6 +21,7 @@ namespace Facepunch.RTS
 		};
 		public override HashSet<string> Dependencies => new()
 		{
+			"tech.airsuperiority",
 			"tech.pyrotechnics"
 		};
 		public virtual float BlastRadius => 150f;
