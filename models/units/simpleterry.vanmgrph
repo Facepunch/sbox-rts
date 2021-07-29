@@ -127,7 +127,7 @@
 				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_tagSpans = [  ]
-				m_sequenceName = "SMG_2H_Pose_Standing_01"
+				m_sequenceName = "RTS_RPG_Pose_Standing_01"
 				m_playbackSpeed = 1.0
 				m_bLoop = false
 			}
@@ -279,7 +279,7 @@
 				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_tagSpans = [  ]
-				m_sequenceName = "SMG_2H_Attack_01"
+				m_sequenceName = "Shotgun_2H_Attack_01"
 				m_playbackSpeed = 1.0
 				m_bLoop = true
 			}
@@ -600,7 +600,7 @@
 				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_tagSpans = [  ]
-				m_sequenceName = "SMG_2H_Pose_Standing_01"
+				m_sequenceName = "RTS_Sniper_Pose_Standing_01"
 				m_playbackSpeed = 1.0
 				m_bLoop = false
 			}
