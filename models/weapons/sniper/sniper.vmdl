@@ -6,19 +6,6 @@
 		children = 
 		[
 			{
-				_class = "Skeleton"
-				children = 
-				[
-					{
-						_class = "Bone"
-						name = "hold_r"
-						origin = [ 9.055973, -0.261329, -3.168726 ]
-						angles = [ 0.0, 180.0, 0.0 ]
-						do_not_discard = true
-					},
-				]
-			},
-			{
 				_class = "MaterialGroupList"
 				children = 
 				[
@@ -84,26 +71,10 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "models/weapons/sniper/m107.fbx"
+						filename = "models/weapons/sniper/sniper.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 0.45
-						align_origin_x_type = "None"
-						align_origin_y_type = "None"
-						align_origin_z_type = "None"
-						parent_bone = ""
-						import_filter = 
-						{
-							exclude_by_default = false
-							exception_list = [  ]
-						}
-					},
-					{
-						_class = "RenderMeshFile"
-						filename = "models/weapons/sniper/TAN_LR_Scope_01.fbx"
-						import_translation = [ 0.0, 0.0, 180.0 ]
-						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 0.03
+						import_scale = 1.0
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"

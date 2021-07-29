@@ -31,8 +31,8 @@
 								to = "materials/weapons/weapon_temp.vmat"
 							},
 						]
-						use_global_default = false
-						global_default_material = ""
+						use_global_default = true
+						global_default_material = "materials/weapons/weapon_temp.vmat"
 					},
 				]
 			},
@@ -43,10 +43,10 @@
 					{
 						_class = "PhysicsHullFromRender"
 						parent_bone = "hold_r"
-						surface_prop = "default"
+						surface_prop = "metal.weapon"
 						collision_prop = "default"
-						faceMergeAngle = 20.0
-						maxHullVertices = 32
+						faceMergeAngle = 12.0
+						maxHullVertices = 16
 					},
 				]
 			},
@@ -83,7 +83,7 @@
 						filename = "models/weapons/rpg/rpg7.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 0.06
+						import_scale = 0.3937
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
