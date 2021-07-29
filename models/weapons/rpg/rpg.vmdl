@@ -6,19 +6,6 @@
 		children = 
 		[
 			{
-				_class = "Skeleton"
-				children = 
-				[
-					{
-						_class = "Bone"
-						name = "hold_r"
-						origin = [ -5.379097, -0.261328, -2.705167 ]
-						angles = [ 0.0, 180.0, 0.0 ]
-						do_not_discard = true
-					},
-				]
-			},
-			{
 				_class = "MaterialGroupList"
 				children = 
 				[
