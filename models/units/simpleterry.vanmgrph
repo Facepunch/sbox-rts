@@ -42,6 +42,8 @@
 					"pistol",
 					"smg",
 					"shotgun",
+					"sniper",
+					"rpg",
 				]
 			},
 			{
@@ -111,6 +113,28 @@
 		{
 			key = 
 			{
+				m_id = 19307099
+			}
+			value = 
+			{
+				_class = "CSequenceAnimNode"
+				m_sName = "pistol"
+				m_vecPosition = [ -1148.0, 574.0 ]
+				m_nNodeID = 
+				{
+					m_id = 19307099
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_tagSpans = [  ]
+				m_sequenceName = "SMG_2H_Pose_Standing_01"
+				m_playbackSpeed = 1.0
+				m_bLoop = false
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 80652731
 			}
 			value = 
@@ -165,6 +189,60 @@
 		{
 			key = 
 			{
+				m_id = 210284040
+			}
+			value = 
+			{
+				_class = "CSelectorAnimNode"
+				m_sName = "Unnamed"
+				m_vecPosition = [ -905.0, 607.0 ]
+				m_nNodeID = 
+				{
+					m_id = 210284040
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_children = 
+				[
+					{
+						m_id = 19307099
+					},
+					{
+						m_id = 1991551085
+					},
+				]
+				m_tags = 
+				[
+					{
+						m_id = 4294967295
+					},
+					{
+						m_id = 4294967295
+					},
+				]
+				m_selectionSource = "SelectionSource_Bool"
+				m_boolParamID = 
+				{
+					m_id = 575624988
+				}
+				m_enumParamID = 
+				{
+					m_id = 4294967295
+				}
+				m_blendDuration = 0.2
+				m_tagBehavior = "SelectorTagBehavior_OffWhenFinished"
+				m_bResetOnChange = true
+				m_bSyncCyclesOnChange = false
+				m_blendCurve = 
+				{
+					m_vControlPoint1 = [ 0.5, 0.0 ]
+					m_vControlPoint2 = [ 0.5, 1.0 ]
+				}
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 217431433
 			}
 			value = 
@@ -180,6 +258,28 @@
 				m_sNote = ""
 				m_tagSpans = [  ]
 				m_sequenceName = "Walk_N"
+				m_playbackSpeed = 1.0
+				m_bLoop = true
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 442056550
+			}
+			value = 
+			{
+				_class = "CSequenceAnimNode"
+				m_sName = "pistol"
+				m_vecPosition = [ -1117.0, 470.0 ]
+				m_nNodeID = 
+				{
+					m_id = 442056550
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_tagSpans = [  ]
+				m_sequenceName = "SMG_2H_Attack_01"
 				m_playbackSpeed = 1.0
 				m_bLoop = true
 			}
@@ -294,6 +394,60 @@
 		{
 			key = 
 			{
+				m_id = 864775455
+			}
+			value = 
+			{
+				_class = "CSelectorAnimNode"
+				m_sName = "Unnamed"
+				m_vecPosition = [ -906.0, 436.0 ]
+				m_nNodeID = 
+				{
+					m_id = 864775455
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_children = 
+				[
+					{
+						m_id = 1106941051
+					},
+					{
+						m_id = 442056550
+					},
+				]
+				m_tags = 
+				[
+					{
+						m_id = 4294967295
+					},
+					{
+						m_id = 4294967295
+					},
+				]
+				m_selectionSource = "SelectionSource_Bool"
+				m_boolParamID = 
+				{
+					m_id = 575624988
+				}
+				m_enumParamID = 
+				{
+					m_id = 4294967295
+				}
+				m_blendDuration = 0.2
+				m_tagBehavior = "SelectorTagBehavior_OffWhenFinished"
+				m_bResetOnChange = true
+				m_bSyncCyclesOnChange = false
+				m_blendCurve = 
+				{
+					m_vControlPoint1 = [ 0.5, 0.0 ]
+					m_vControlPoint2 = [ 0.5, 1.0 ]
+				}
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 868009840
 			}
 			value = 
@@ -361,9 +515,21 @@
 					{
 						m_id = 80652731
 					},
+					{
+						m_id = 864775455
+					},
+					{
+						m_id = 210284040
+					},
 				]
 				m_tags = 
 				[
+					{
+						m_id = 4294967295
+					},
+					{
+						m_id = 4294967295
+					},
 					{
 						m_id = 4294967295
 					},
@@ -415,6 +581,28 @@
 				m_sNote = ""
 				m_sequenceName = "IdlePoseDefault"
 				m_nFrameIndex = 0
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 1106941051
+			}
+			value = 
+			{
+				_class = "CSequenceAnimNode"
+				m_sName = "pistol"
+				m_vecPosition = [ -1149.0, 403.0 ]
+				m_nNodeID = 
+				{
+					m_id = 1106941051
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_tagSpans = [  ]
+				m_sequenceName = "SMG_2H_Pose_Standing_01"
+				m_playbackSpeed = 1.0
+				m_bLoop = false
 			}
 		},
 		{
@@ -621,7 +809,7 @@
 			{
 				_class = "CCommentAnimNode"
 				m_sName = "Hold Type"
-				m_vecPosition = [ -1241.0, -133.0 ]
+				m_vecPosition = [ -1256.0, -135.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1726948938
@@ -629,7 +817,7 @@
 				m_networkMode = "ClientSimulate"
 				m_sNote = ""
 				m_commentText = ""
-				m_size = [ 830.0, 523.0 ]
+				m_size = [ 864.0, 876.0 ]
 				m_color = [ 49, 139, 146, 255 ]
 			}
 		},
@@ -675,6 +863,28 @@
 				{
 					m_id = 868009840
 				}
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 1991551085
+			}
+			value = 
+			{
+				_class = "CSequenceAnimNode"
+				m_sName = "pistol"
+				m_vecPosition = [ -1116.0, 641.0 ]
+				m_nNodeID = 
+				{
+					m_id = 1991551085
+				}
+				m_networkMode = "ClientSimulate"
+				m_sNote = ""
+				m_tagSpans = [  ]
+				m_sequenceName = "SMG_2H_Attack_01"
+				m_playbackSpeed = 1.0
+				m_bLoop = true
 			}
 		},
 		{
