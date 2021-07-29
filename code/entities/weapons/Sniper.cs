@@ -16,7 +16,7 @@ namespace Facepunch.RTS
 		{
 			base.Spawn();
 
-			SetModel( "weapons/sniper/sniper.vmdl" );
+			SetModel( "models/weapons/sniper/sniper.vmdl" );
 		}
 	}
 }
