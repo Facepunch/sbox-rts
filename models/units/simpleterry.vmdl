@@ -799,51 +799,44 @@
 								]
 							},
 							{
-								_class = "Folder"
-								name = "RTS"
-								children = 
-								[
-									{
-										_class = "AnimFile"
-										name = "RTS_Sniper_Pose_Standing_01"
-										activity_name = ""
-										activity_weight = 1
-										weight_list_name = ""
-										fade_in_time = 0.2
-										fade_out_time = 0.2
-										looping = false
-										delta = false
-										worldSpace = false
-										hidden = false
-										anim_markup_ordered = false
-										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/rts/Citizen@RTS_Sniper_Pose_Standing_01.fbx"
-										start_frame = -1
-										end_frame = -1
-										framerate = -1.0
-										reverse = false
-									},
-									{
-										_class = "AnimFile"
-										name = "RTS_RPG_Pose_Standing_01"
-										activity_name = ""
-										activity_weight = 1
-										weight_list_name = ""
-										fade_in_time = 0.2
-										fade_out_time = 0.2
-										looping = false
-										delta = false
-										worldSpace = false
-										hidden = false
-										anim_markup_ordered = false
-										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/rts/Citizen@RTS_RPG_Pose_Standing_01.fbx"
-										start_frame = -1
-										end_frame = -1
-										framerate = -1.0
-										reverse = false
-									},
-								]
+								_class = "AnimFile"
+								name = "Sniper_2H_Pose_Standing_01"
+								activity_name = ""
+								activity_weight = 1
+								weight_list_name = ""
+								fade_in_time = 0.2
+								fade_out_time = 0.2
+								looping = false
+								delta = false
+								worldSpace = false
+								hidden = false
+								anim_markup_ordered = false
+								disable_compression = false
+								source_filename = "models/citizen/animations/weapons/citizen@sniper_2h_pose_standing_01.fbx"
+								start_frame = -1
+								end_frame = -1
+								framerate = -1.0
+								reverse = false
+							},
+							{
+								_class = "AnimFile"
+								name = "RPG_2H_Pose_Standing_01"
+								activity_name = ""
+								activity_weight = 1
+								weight_list_name = ""
+								fade_in_time = 0.2
+								fade_out_time = 0.2
+								looping = false
+								delta = false
+								worldSpace = false
+								hidden = false
+								anim_markup_ordered = false
+								disable_compression = false
+								source_filename = "models/citizen/animations/weapons/citizen@rpg_2h_pose_standing_01.fbx"
+								start_frame = -1
+								end_frame = -1
+								framerate = -1.0
+								reverse = false
 							},
 						]
 					},
