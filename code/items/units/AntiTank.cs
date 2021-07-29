@@ -5,22 +5,17 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Assault : BaseUnit
+	public class AntiTank : BaseUnit
 	{
-		public override string Name => "Assault";
-		public override string UniqueId => "unit.assault";
-		public override string Description => "A more agile Terry equipped with an assault rifle.";
+		public override string Name => "Anti-Tank";
+		public override string UniqueId => "unit.antitank";
+		public override string Description => "A slow Terry armed with a rocket launcher.";
 		public override float Speed => 350f;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 1;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true
-		};
-		public override HashSet<string> Abilities => new()
-		{
-			"ability_adrenaline",
-			"ability_dome_shield"
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
@@ -54,10 +49,10 @@ namespace Facepunch.RTS.Units
 			"brute.tell_me_what_to_do2",
 			"brute.yes_boss"
 		};
-		public override string Weapon => "weapon_smg";
+		public override string Weapon => "weapon_rocket_launcher";
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.carbines"
+			"tech.pyrotechnics"
 		};
 		public override HashSet<string> Clothing => new()
 		{

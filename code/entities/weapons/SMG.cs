@@ -16,7 +16,7 @@ namespace Facepunch.RTS
 		{
 			base.Spawn();
 
-			SetModel( "weapons/rust_smg/rust_smg.vmdl" );
+			SetModel( "models/weapons/m4/m4.vmdl" );
 		}
 	}
 }

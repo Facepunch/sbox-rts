@@ -26,6 +26,7 @@ namespace Facepunch.RTS.Buildings
 			"unit.assault",
 			"unit.medic",
 			"unit.grenadier",
+			"unit.antitank",
 			"unit.pyromaniac"
 		};
 	}

@@ -8,7 +8,7 @@ namespace Facepunch.RTS
 	{
 		public override float FireRate => 3f;
 		public override int BaseDamage => 30;
-		public override int HoldType => 2;
+		public override int HoldType => 4;
 		public override string SoundName => "rust_smg.shoot";
 		public override float Force => 5f;
 
@@ -16,7 +16,7 @@ namespace Facepunch.RTS
 		{
 			base.Spawn();
 
-			SetModel( "weapons/rust_smg/rust_smg.vmdl" );
+			SetModel( "weapons/sniper/sniper.vmdl" );
 		}
 	}
 }
