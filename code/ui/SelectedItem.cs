@@ -11,6 +11,7 @@ namespace Facepunch.RTS
 	{
 		public BaseAbility Ability { get; private set; }
 		public Panel Countdown { get; private set; }
+
 		public ItemCommandAbility() : base()
 		{
 			Countdown = Add.Panel( "countdown" );
@@ -21,6 +22,7 @@ namespace Facepunch.RTS
 			if ( Selectable.IsUsingAbility() )
 			{
 				// We can't use another while once is being used.
+				Audio.Play( "rts.beepvibrato" );
 				return;
 			}
 			
@@ -36,6 +38,8 @@ namespace Facepunch.RTS
 				Abilities.UseOnSelf( Selectable.NetworkIdent, Ability.UniqueId );
 			else
 				Abilities.SelectTarget( Ability );
+
+			Audio.Play( "rts.pophappy" );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -96,6 +100,8 @@ namespace Facepunch.RTS
 				Items.CreateGhost( builder, building );
 			else
 				Items.Queue( Selectable.NetworkIdent, Item.NetworkId );
+
+			Audio.Play( "rts.pophappy" );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -163,9 +169,15 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			if ( !Unit.IsValid() ) return;
+			if ( !Unit.IsValid() )
+			{
+				Audio.Play( "rts.beepvibrato" );
+				return;
+			}
 
 			Items.Evict( Occupiable.NetworkIdent, Unit.NetworkIdent );
+
+			Audio.Play( "rts.pophappy" );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )
@@ -301,6 +313,7 @@ namespace Facepunch.RTS
 		protected override void OnClick( MousePanelEvent e )
 		{
 			Items.Unqueue( Building.NetworkIdent, QueueItem.Id );
+			Audio.Play( "rts.pophappy" );
 		}
 
 		protected override void OnMouseOver( MousePanelEvent e )

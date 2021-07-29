@@ -105,6 +105,7 @@ namespace Facepunch.RTS
 
 						building.Position = trace.EndPos;
 						building.StartConstruction();
+						building.Item.PlayPlaceSound( caller );
 
 						worker.Construct( building );
 						worker.Item.PlayConstructSound( caller );
@@ -436,9 +437,9 @@ namespace Facepunch.RTS
 				var randomItem = eligible[Rand.Int( eligible.Count - 1 )];
 
 				if ( randomItem is UnitEntity unit )
-				{
 					unit.Item.PlaySelectSound( caller );
-				}
+				else if ( randomItem is BuildingEntity building )
+					building.Item.PlaySelectSound( caller );
 			}
 		}
 

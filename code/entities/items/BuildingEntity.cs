@@ -21,6 +21,9 @@ namespace Facepunch.RTS
 		public RealTimeUntil NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
 
+		private RealTimeUntil NextConstructionSound { get; set; }
+		private Sound ConstructionSound { get; set; }
+
 		#region UI
 		public EntityHudIconList OccupantsHud { get; private set; }
 		public EntityHudBar GeneratorBar { get; private set; }
@@ -42,6 +45,16 @@ namespace Facepunch.RTS
 
 			RenderAlpha = 0.25f + (0.75f / Item.MaxHealth) * Health;
 			GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
+
+			if ( Item.ConstructionSounds.Length > 0 && NextConstructionSound )
+			{
+				var sound = Rand.FromArray( Item.ConstructionSounds );
+
+				ConstructionSound.Stop();
+				ConstructionSound = PlaySound( sound );
+
+				NextConstructionSound = 3f;
+			}
 		}
 
 		public float GetAttackRadius() => Item.AttackRadius;
@@ -152,6 +165,8 @@ namespace Facepunch.RTS
 			AddAsFogViewer( To.Single( Player ) );
 
 			Audio.Play( Player, "announcer.construction_complete" );
+
+			Item.PlayBuiltSound( this );
 
 			Events.InvokeBuildingConstructed( Player, this );
 		}

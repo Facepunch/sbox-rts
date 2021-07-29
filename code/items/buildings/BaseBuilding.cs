@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Sandbox;
+using System;
+using System.Collections.Generic;
 
 namespace Facepunch.RTS.Buildings
 {
@@ -9,6 +11,23 @@ namespace Facepunch.RTS.Buildings
 		public virtual OccupiableSettings Occupiable => new();
 		public virtual bool CanDepositResources => false;
 		public virtual Dictionary<string, float> Resistances => new();
+		public virtual string[] PlaceSounds => new string[]
+		{
+			"rts.placemetal"
+		};
+		public virtual string[] SelectSounds => new string[]
+		{
+			"rts.clickbeep"
+		};
+		public virtual string[] ConstructionSounds => new string[]
+		{
+			"rts.construct1",
+			"rts.construct2"
+		};
+		public virtual string[] BuiltSounds => new string[]
+		{
+			"rts.constructioncomplete1"
+		};
 		public virtual float MinLineOfSight => 200f;
 		public virtual uint PopulationBoost => 0;
 		public virtual int AttackPriority => 0;
@@ -18,5 +37,23 @@ namespace Facepunch.RTS.Buildings
 		public virtual float MaxVerticalRange => 100f;
 		public virtual float MinVerticalRange => 0f;
 		public virtual string Weapon => "";
+
+		public void PlayPlaceSound( Player player )
+		{
+			if ( PlaceSounds.Length > 0 )
+				Audio.Play( player, Rand.FromArray( PlaceSounds ) );
+		}
+
+		public void PlaySelectSound( Player player )
+		{
+			if ( SelectSounds.Length > 0 )
+				Audio.Play( player, Rand.FromArray( SelectSounds ) );
+		}
+
+		public void PlayBuiltSound( BuildingEntity building )
+		{
+			if ( BuiltSounds.Length > 0 )
+				Audio.Play( Rand.FromArray( BuiltSounds ), building.Position );
+		}
 	}
 }
