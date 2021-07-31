@@ -2,6 +2,13 @@
 {
 	_class = "CParticleSystemDefinition"
 	m_nBehaviorVersion = 10
+	m_flConstantRadius = 500.0
+	m_controlPointConfigurations = 
+	[
+		{
+			m_name = "preview"
+		},
+	]
 	m_Emitters = 
 	[
 		{
@@ -822,7 +829,7 @@
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 10.0
+				m_flLiteralValue = 5.0
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
@@ -964,7 +971,7 @@
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 1.0
+				m_flLiteralValue = 0.8
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
@@ -1011,14 +1018,13 @@
 	m_Children = 
 	[
 		{
-			m_ChildRef = resource:"particles/weapons/plasma_ground/plasma_ground_base.vpcf"
+			m_ChildRef = resource:"particles/weapons/plasma_ground/plasma_ground_fire.vpcf"
 		},
-	]
-	m_flConstantRadius = 500.0
-	m_controlPointConfigurations = 
-	[
 		{
-			m_name = "preview"
+			m_ChildRef = resource:"particles/weapons/plasma_ground/plasma_ground_sparks.vpcf"
+		},
+		{
+			m_ChildRef = resource:"particles/weapons/plasma_ground/plasma_ground_effect.vpcf"
 		},
 	]
 }
