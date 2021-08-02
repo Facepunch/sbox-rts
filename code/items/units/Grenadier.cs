@@ -13,7 +13,8 @@ namespace Facepunch.RTS.Units
 		public override int BuildTime => 1;
 		public override HashSet<string> Abilities => new()
 		{
-			"ability_molotov"
+			"ability_molotov",
+			"ability_plasma_bomb"
 		};
 		public override OccupantSettings Occupant => new()
 		{
