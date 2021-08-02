@@ -60,4 +60,9 @@ Layer0
 	//---- Translucent ----
 	g_flOpacityScale "0.722"
 	TextureTranslucency "materials/particles/bubble_guard/bubble_guard1_color.png"
+
+	DynamicParams
+	{
+		g_vEmissiveEdgeColor "$COLOR2"
+	}
 }
