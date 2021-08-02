@@ -820,6 +820,26 @@
 							},
 							{
 								_class = "AnimFile"
+								name = "Sniper_2H_Attack_01"
+								activity_name = ""
+								activity_weight = 1
+								weight_list_name = ""
+								fade_in_time = 0.2
+								fade_out_time = 0.2
+								looping = false
+								delta = false
+								worldSpace = false
+								hidden = false
+								anim_markup_ordered = false
+								disable_compression = false
+								source_filename = "models/citizen/animations/weapons/Citizen@Sniper_2H_Attack_01.fbx"
+								start_frame = -1
+								end_frame = -1
+								framerate = -1.0
+								reverse = false
+							},
+							{
+								_class = "AnimFile"
 								name = "RPG_2H_Pose_Standing_01"
 								activity_name = ""
 								activity_weight = 1
@@ -833,6 +853,26 @@
 								anim_markup_ordered = false
 								disable_compression = false
 								source_filename = "models/citizen/animations/weapons/citizen@rpg_2h_pose_standing_01.fbx"
+								start_frame = -1
+								end_frame = -1
+								framerate = -1.0
+								reverse = false
+							},
+							{
+								_class = "AnimFile"
+								name = "RPG_2H_Attack_01"
+								activity_name = ""
+								activity_weight = 1
+								weight_list_name = ""
+								fade_in_time = 0.2
+								fade_out_time = 0.2
+								looping = false
+								delta = false
+								worldSpace = false
+								hidden = false
+								anim_markup_ordered = false
+								disable_compression = false
+								source_filename = "models/citizen/animations/weapons/Citizen@RPG_2H_Attack_01.fbx"
 								start_frame = -1
 								end_frame = -1
 								framerate = -1.0
@@ -867,6 +907,166 @@
 				_class = "BoneMarkupList"
 				children = 
 				[
+					{
+						_class = "Folder"
+						name = "Original_markup"
+						children = 
+						[
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "arm_upper_R_twist"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "arm_lower_R_twist"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "arm_upper_L_twist"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "arm_lower_L_twist"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "leg_upper_R_twist"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "leg_lower_R_twist"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "leg_upper_L_twist"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "leg_lower_L_twist"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "arm_elbow_helper_L"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "arm_elbow_helper_R"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "leg_knee_helper_L"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "leg_knee_helper_R"
+								ignore_Translation = true
+								ignore_rotation = true
+								do_not_discard = false
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "foot_R_IK_target"
+								ignore_Translation = false
+								ignore_rotation = false
+								do_not_discard = true
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "foot_L_IK_target"
+								ignore_Translation = false
+								ignore_rotation = false
+								do_not_discard = true
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "hand_R_IK_target"
+								ignore_Translation = false
+								ignore_rotation = false
+								do_not_discard = true
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "hand_L_IK_target"
+								ignore_Translation = false
+								ignore_rotation = false
+								do_not_discard = true
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "hand_R_to_L_ikrule"
+								ignore_Translation = false
+								ignore_rotation = false
+								do_not_discard = true
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "hand_L_to_R_ikrule"
+								ignore_Translation = false
+								ignore_rotation = false
+								do_not_discard = true
+							},
+							{
+								_class = "BoneMarkup"
+								disabled = true
+								target_bone = "root_IK"
+								ignore_Translation = false
+								ignore_rotation = false
+								do_not_discard = false
+							},
+						]
+						disabled = true
+					},
 					{
 						_class = "BoneMarkup"
 						target_bone = "arm_upper_R_twist"
@@ -953,55 +1153,62 @@
 					},
 					{
 						_class = "BoneMarkup"
+						disabled = true
 						target_bone = "foot_R_IK_target"
-						ignore_Translation = false
-						ignore_rotation = false
-						do_not_discard = true
-					},
-					{
-						_class = "BoneMarkup"
-						target_bone = "foot_L_IK_target"
-						ignore_Translation = false
-						ignore_rotation = false
-						do_not_discard = true
-					},
-					{
-						_class = "BoneMarkup"
-						target_bone = "hand_R_IK_target"
-						ignore_Translation = false
-						ignore_rotation = false
-						do_not_discard = true
-					},
-					{
-						_class = "BoneMarkup"
-						target_bone = "hand_L_IK_target"
-						ignore_Translation = false
-						ignore_rotation = false
-						do_not_discard = true
-					},
-					{
-						_class = "BoneMarkup"
-						target_bone = "hand_R_to_L_ikrule"
-						ignore_Translation = false
-						ignore_rotation = false
-						do_not_discard = true
-					},
-					{
-						_class = "BoneMarkup"
-						target_bone = "hand_L_to_R_ikrule"
-						ignore_Translation = false
-						ignore_rotation = false
-						do_not_discard = true
-					},
-					{
-						_class = "BoneMarkup"
-						target_bone = "root_IK"
 						ignore_Translation = false
 						ignore_rotation = false
 						do_not_discard = false
 					},
+					{
+						_class = "BoneMarkup"
+						disabled = true
+						target_bone = "foot_L_IK_target"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						disabled = true
+						target_bone = "hand_R_IK_target"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						disabled = true
+						target_bone = "hand_L_IK_target"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						disabled = true
+						target_bone = "hand_R_to_L_ikrule"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						disabled = true
+						target_bone = "hand_L_to_R_ikrule"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = false
+					},
+					{
+						_class = "BoneMarkup"
+						disabled = true
+						target_bone = "root_IK"
+						ignore_Translation = true
+						ignore_rotation = true
+						do_not_discard = false
+					},
 				]
-				bone_cull_type = "None"
+				bone_cull_type = "Leaf Only"
 			},
 			{
 				_class = "AttachmentList"
@@ -1996,6 +2203,7 @@
 												}
 											},
 										]
+										disabled = true
 									},
 									{
 										_class = "GenericGameData"
