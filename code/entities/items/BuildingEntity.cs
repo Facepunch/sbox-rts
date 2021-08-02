@@ -208,6 +208,7 @@ namespace Facepunch.RTS
 
 		public override void OnKilled()
 		{
+			Item.PlayDestroySound( this );
 			LifeState = LifeState.Dead;
 			Delete();
 		}

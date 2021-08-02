@@ -17,6 +17,7 @@ namespace Facepunch.RTS
 		public Action<Projectile, Entity> Callback { get; private set; }
 		public string ExplosionEffect { get; set; } = "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public string TrailEffect { get; set; } = "particles/weapons/grenade_trail/grenade_trail.vpcf";
+		public string HitSound { get; set; } = "grenade.explode1";
 		public float BezierHeight { get; set; } = 0f;
 		public bool BezierCurve { get; set; } = true;
 		public bool Debug { get; set; } = false;
@@ -89,6 +90,9 @@ namespace Facepunch.RTS
 					var explosion = Particles.Create( ExplosionEffect );
 					explosion.SetPosition( 0, endPos );
 				}
+
+				if ( !string.IsNullOrEmpty( HitSound ) )
+					Audio.Play( HitSound, endPos );
 
 				Callback?.Invoke( this, Target );
 				RemoveEffects();

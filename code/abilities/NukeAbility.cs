@@ -37,27 +37,36 @@ namespace Facepunch.RTS
 
 			if ( Host.IsServer )
 			{
-				Missile = new Nuke
-				{
-					BezierHeight = 1500f,
-					Debug = true
-				};
-
-				Missile.Initialize( User.Position, TargetInfo.Origin, Duration, OnNukeHit );
-
-				Siren = Missile.PlaySound( "nuke.siren" );
-
-				Light = new PointLightEntity();
-				Light.SetParent( Missile, false );
-				Light.SetLightColor( Color.Red );
-				Light.Flicker = true;
-				Light.Range = 1500f;
-				Light.BrightnessMultiplier = 2f;
-
-				OpenHatch( true );
+				Launch();
 			}
 
 			base.OnStarted();
+		}
+
+		private async void Launch()
+		{
+			Missile = new Nuke
+			{
+				BezierHeight = 1500f,
+				Debug = true
+			};
+
+			Missile.Initialize( User.Position, TargetInfo.Origin, Duration, OnNukeHit );
+
+			Light = new PointLightEntity();
+			Light.SetParent( Missile, false );
+			Light.SetLightColor( Color.Red );
+			Light.Flicker = true;
+			Light.Range = 1500f;
+			Light.BrightnessMultiplier = 2f;
+
+			Audio.Play( $"nuke.launch{Rand.Int( 1, 2 )}", User.Position );
+
+			OpenHatch( true );
+
+			await GameTask.DelaySeconds( Duration * 0.2f );
+
+			Siren = Missile.PlaySound( "nuke.siren" );
 		}
 
 		private void OpenHatch( bool shouldOpen )

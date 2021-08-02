@@ -265,6 +265,7 @@ namespace Facepunch.RTS
 				Carrying[resource.Resource] = 1;
 			}
 
+			resource.PlayGatherSound();
 			resource.Stock -= 1;
 
 			if ( resource.Stock <= 0 )

@@ -12,7 +12,7 @@ namespace Facepunch.RTS
 		public override float FireRate => 2f;
 		public override int BaseDamage => 15;
 		public override int HoldType => 2;
-		public override string SoundName => "rust_pistol.shoot";
+		public override string SoundName => "grenadelauncher.fire";
 		public override float Force => 10f;
 
 		private Projectile Grenade { get; set; }
@@ -38,7 +38,11 @@ namespace Facepunch.RTS
 
 			if ( muzzle.HasValue )
 			{
-				Grenade = new Projectile();
+				Grenade = new Projectile()
+				{
+					HitSound = $"grenade.explode{Rand.Int( 1, 3 )}"
+				};
+					
 				Grenade.Initialize( muzzle.Value.Position, Target, 1f, OnGrenadeHit );
 			}
 		}

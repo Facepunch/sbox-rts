@@ -12,7 +12,7 @@ namespace Facepunch.RTS
 		public override float FireRate => 4f;
 		public override int BaseDamage => 25;
 		public override int HoldType => 5;
-		public override string SoundName => "rust_pistol.shoot";
+		public override string SoundName => "rocketlauncher.fire";
 		public override float Force => 20f;
 
 		private Projectile Rocket { get; set; }
@@ -41,6 +41,7 @@ namespace Facepunch.RTS
 				Rocket = new Projectile
 				{
 					BezierCurve = false,
+					HitSound = "rocket.explode1",
 					Debug = true
 				};
 

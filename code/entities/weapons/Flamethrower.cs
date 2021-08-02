@@ -16,6 +16,7 @@ namespace Facepunch.RTS
 		private Particles Fire { get; set; }
 		private RealTimeUntil KillFireTime { get; set; }
 		private RealTimeUntil NextBurnTime { get; set; }
+		private Sound SoundLoop { get; set; }
 
 		public override void Spawn()
 		{
@@ -54,6 +55,7 @@ namespace Facepunch.RTS
 				{
 					Fire = Particles.Create( "particles/weapons/flamethrower/flamethrower.vpcf" );
 					Fire.SetPosition( 0, muzzle.Value.Position );
+					SoundLoop = PlaySound( "flamethrower.loop" );
 				}
 
 				Fire.SetPosition( 1, position );
@@ -64,15 +66,15 @@ namespace Facepunch.RTS
 
 		protected override void OnDestroy()
 		{
-			Fire?.Destroy();
-			Fire = null;
+			RemoveParticles();
 
 			base.OnDestroy();
 		}
 
 		private void RemoveParticles()
 		{
-			Fire.Destroy();
+			SoundLoop.Stop();
+			Fire?.Destroy();
 			Fire = null;
 		}
 
@@ -94,7 +96,7 @@ namespace Facepunch.RTS
 				Fire.SetPosition( 0, muzzle.Value.Position );
 			}
 
-			if ( KillFireTime  )
+			if ( KillFireTime )
 			{
 				RemoveParticles();
 			}

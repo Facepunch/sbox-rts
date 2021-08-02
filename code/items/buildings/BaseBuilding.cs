@@ -24,6 +24,10 @@ namespace Facepunch.RTS.Buildings
 			"rts.construct1",
 			"rts.construct2"
 		};
+		public virtual string[] DestroySounds => new string[]
+		{
+			"rts.buildingexplode1"
+		};
 		public virtual string[] BuiltSounds => new string[]
 		{
 			"rts.constructioncomplete1"
@@ -48,6 +52,12 @@ namespace Facepunch.RTS.Buildings
 		{
 			if ( SelectSounds.Length > 0 )
 				Audio.Play( player, Rand.FromArray( SelectSounds ) );
+		}
+
+		public void PlayDestroySound( BuildingEntity building )
+		{
+			if ( DestroySounds.Length > 0 )
+				Audio.Play( Rand.FromArray( DestroySounds ), building.Position );
 		}
 
 		public void PlayBuiltSound( BuildingEntity building )
