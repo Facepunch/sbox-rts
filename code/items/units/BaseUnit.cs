@@ -31,6 +31,7 @@ namespace Facepunch.RTS.Units
 		public virtual string[] SelectSounds => Array.Empty<string>();
 		public virtual string[] DepositSounds => Array.Empty<string>();
 		public virtual string[] MoveSounds => Array.Empty<string>();
+		public virtual string IdleLoopSound => null;
 		public virtual int NodeSize => 50;
 		public virtual int CollisionSize => 60;
 		public virtual float Speed => 300f;

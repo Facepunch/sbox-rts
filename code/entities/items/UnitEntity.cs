@@ -97,6 +97,7 @@ namespace Facepunch.RTS
 		private List<ISelectable> _targetBuffer = new();
 		private AnimationValues _animationValues;
 		private RealTimeUntil _nextFindTarget;
+		private Sound _idleLoopSound;
 		private TargetInfo _target = new();
 
 		public UnitEntity() : base()
@@ -785,6 +786,8 @@ namespace Facepunch.RTS
 				if ( Player.IsValid() )
 					Player.TakePopulation( Item.Population );
 
+				_idleLoopSound.Stop();
+
 				ClearMoveGroup();
 			}
 
@@ -886,6 +889,11 @@ namespace Facepunch.RTS
 
 			LocalCenter = CollisionBounds.Center;
 			AgentRadius = GetDiameterXY( Item.AgentRadiusScale );
+
+			_idleLoopSound.Stop();
+
+			if ( !string.IsNullOrEmpty( item.IdleLoopSound ) )
+				_idleLoopSound = PlaySound( item.IdleLoopSound );
 
 			if ( Weapon.IsValid() ) Weapon.Delete();
 
