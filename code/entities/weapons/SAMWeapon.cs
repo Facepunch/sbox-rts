@@ -25,6 +25,8 @@ namespace Facepunch.RTS
 
 			Recoil = 1f;
 
+			PlaySound( "rocketlauncher.fire" );
+
 			for ( var i = 1; i <= 6; i++ )
 			{
 				var attachment = $"muzzle{i}";
@@ -33,8 +35,9 @@ namespace Facepunch.RTS
 				{
 					ExplosionEffect = "particles/weapons/explosion_ground_small/explosion_ground_small.vpcf",
 					TrailEffect = "particles/weapons/rocket_trail/rocket_trail.vpcf",
+					HitSound = "rocket.explode1",
 					BezierCurve = false,
-					Debug = true
+					Debug = false
 				};
 
 				rocket.Initialize( transform.Value.Position, Target, Rand.Float( FireRate * 0.3f, FireRate * 0.6f ), OnMissileHit );
