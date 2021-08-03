@@ -6,32 +6,38 @@ using System;
 namespace Facepunch.RTS
 {
 	[Library]
-	partial class Projectile : Entity
+	partial class Projectile : ModelEntity
 	{
 		private Particles Trail { get; set; }
 		public Vector3 EndPosition { get; private set; }
 		public Vector3 StartPosition { get; private set; }
+		public Vector3 LastPosition { get; private set; }
 		public float TravelDuration { get; private set; }
 		public RealTimeUntil TimeUntilHit { get; private set; }
 		public Entity Target { get; private set; }
 		public Action<Projectile, Entity> Callback { get; private set; }
 		public string ExplosionEffect { get; set; } = "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public string TrailEffect { get; set; } = "particles/weapons/grenade_trail/grenade_trail.vpcf";
+		public string LaunchSound { get; set; } = null;
+		public string Attachment { get; set; } = null;
 		public string HitSound { get; set; } = "grenade.explode1";
 		public float BezierHeight { get; set; } = 0f;
+		public bool FaceDirection { get; set; } = false;
 		public bool BezierCurve { get; set; } = true;
 		public bool Debug { get; set; } = false;
+
+		private Sound _launchSound;
 
 		public Projectile()
 		{
 			Transmit = TransmitType.Always;
 		}
 
-
 		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Projectile, Entity> callback = null )
 		{
 			StartPosition = start;
 			EndPosition = end;
+			LastPosition = start;
 			TravelDuration = duration;
 			TimeUntilHit = duration;
 			Callback = callback;
@@ -39,8 +45,15 @@ namespace Facepunch.RTS
 			if ( !string.IsNullOrEmpty( TrailEffect ) )
 			{
 				Trail = Particles.Create( TrailEffect );
-				Trail.SetEntity( 0, this );
+
+				if ( !string.IsNullOrEmpty( Attachment ) )
+					Trail.SetEntityAttachment( 0, this, Attachment );
+				else
+					Trail.SetEntity( 0, this );
 			}
+
+			if ( !string.IsNullOrEmpty( LaunchSound ) )
+				_launchSound = PlaySound( LaunchSound );
 		}
 
 		public void Initialize( Vector3 start, Entity target, float duration, Action<Projectile, Entity> callback = null )
@@ -58,6 +71,7 @@ namespace Facepunch.RTS
 
 		private void RemoveEffects()
 		{
+			_launchSound.Stop();
 			Trail?.Destroy();
 			Trail = null;
 		}
@@ -80,6 +94,9 @@ namespace Facepunch.RTS
 				Position = Vector3.Lerp( StartPosition, endPos, fraction );
 			}
 
+			if ( FaceDirection )
+				Rotation = Rotation.LookAt( (Position - LastPosition).Normal );
+
 			if ( Debug )
 				DebugOverlay.Sphere( Position, 32f, Color.Red );
 
@@ -98,6 +115,8 @@ namespace Facepunch.RTS
 				RemoveEffects();
 				Delete();
 			}
+
+			LastPosition = Position;
 		}
 	}
 }

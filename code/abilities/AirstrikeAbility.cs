@@ -12,7 +12,7 @@ namespace Facepunch.RTS
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
 		public override float Cooldown => 1f;//100f;
-		public override float Duration => 5f;
+		public override float Duration => 10f;
 		public override float MaxDistance => 3000f;
 		public override float AreaOfEffectRadius => 500f;
 		public override Dictionary<ResourceType, int> Costs => new()
@@ -37,26 +37,7 @@ namespace Facepunch.RTS
 
 			if ( Host.IsServer )
 			{
-				var targetInfo = TargetInfo;
-				var rockets = Rand.Int( 10, 14 );
-				var origin = TargetInfo.Origin + Vector3.Up * 3000f;
-
-				for ( var i = 0; i < rockets; i++ )
-				{
-					var rocket = new Projectile();
-					var radius = AreaOfEffectRadius * MathF.Sqrt( Rand.Float( 1f ) );
-					var theta = Rand.Float( 1f ) * 2f * MathF.PI;
-
-					var startPosition = origin + new Vector3(
-						radius * MathF.Cos( theta ),
-						radius * MathF.Sin( theta )
-					);
-					var endPosition = startPosition.WithZ( TargetInfo.Origin.z );
-
-					rocket.BezierCurve = false;
-					rocket.TrailEffect = "particles/weapons/missile_trail/missile_trail.vpcf";
-					rocket.Initialize( startPosition, endPosition, Rand.Float( 0.5f, 1f ), OnRocketHit );
-				}
+				FireMissiles();
 			}
 
 			base.OnStarted();
@@ -66,11 +47,47 @@ namespace Facepunch.RTS
 		{
 			if ( Dust != null )
 			{
-				var fraction = Math.Clamp( LastUsedTime / ( Duration / 2f ), 0f, 1f );
+				var fraction = Math.Clamp( LastUsedTime / Duration, 0f, 1f );
 				Dust.SetPosition( 1, new Vector3( 255f * (1f - fraction), fraction * AreaOfEffectRadius ) );
 			}
 
 			base.Tick();
+		}
+
+		private async void FireMissiles()
+		{
+			var targetInfo = TargetInfo;
+			var rockets = Rand.Int( 10, 14 );
+			var origin = TargetInfo.Origin + Vector3.Up * 3000f;
+
+			Audio.Play( "missile.jetflyby", targetInfo.Origin );
+
+			await GameTask.DelaySeconds( 4f );
+
+			for ( var i = 0; i < rockets; i++ )
+			{
+				var rocket = new Projectile();
+				var radius = AreaOfEffectRadius * MathF.Sqrt( Rand.Float( 1f ) );
+				var theta = Rand.Float( 1f ) * 2f * MathF.PI;
+
+				var startPosition = origin + new Vector3(
+					radius * MathF.Cos( theta ),
+					radius * MathF.Sin( theta )
+				);
+				var endPosition = startPosition.WithZ( TargetInfo.Origin.z );
+
+				rocket.FaceDirection = true;
+				rocket.BezierCurve = false;
+				rocket.TrailEffect = "particles/weapons/missile_trail/missile_trail.vpcf";
+				rocket.LaunchSound = "missile.falling";
+				rocket.Attachment = "muzzle";
+				rocket.HitSound = "missile.explode1";
+
+				rocket.SetModel( "models/weapons/missile/missile.vmdl" );
+				rocket.Initialize( startPosition, endPosition, Rand.Float( Duration * 0.1f ), OnRocketHit );
+
+				await GameTask.DelaySeconds( Rand.Float( 0f, (Duration * 0.1f) / rockets ) );
+			}
 		}
 
 		private void OnRocketHit( Projectile rocket, Entity target )

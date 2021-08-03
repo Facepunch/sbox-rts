@@ -13,7 +13,7 @@
 						_class = "RenderMeshFile"
 						filename = "models\\weapons\\nuke\\dmx\\mesh\\nuke.dmx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
-						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 90.0, 0.0, 0.0 ]
 						import_scale = 1.0
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
@@ -49,7 +49,7 @@
 						_class = "Attachment"
 						name = "muzzle"
 						parent_bone = ""
-						relative_origin = [ 0.0, 0.0, -71.991348 ]
+						relative_origin = [ -53.689545, -0.371156, -1.787369 ]
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false

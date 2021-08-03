@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
 		public override float Cooldown => 1f;
-		public override float Duration => 5f;
+		public override float Duration => 20f;
 		public override float MaxDistance => 3000f;
 		public override float AreaOfEffectRadius => 800f;
 		public override Dictionary<ResourceType, int> Costs => new()
@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			//"tech.armageddon"
+			"tech.armageddon"
 		};
 		public virtual float MinDamage => 30f;
 		public virtual float MaxDamage => 100f;
@@ -45,13 +45,20 @@ namespace Facepunch.RTS
 
 		private async void Launch()
 		{
+			OpenHatch( true );
+
+			await GameTask.DelaySeconds( Duration * 0.1f );
+
 			Missile = new Nuke
 			{
-				BezierHeight = 1500f,
+				BezierHeight = 3000f,
+				FaceDirection = true,
+				Attachment = "muzzle",
 				Debug = true
 			};
 
-			Missile.Initialize( User.Position, TargetInfo.Origin, Duration, OnNukeHit );
+			Missile.SetModel( "models/weapons/nuke/nuke.vmdl" );
+			Missile.Initialize( User.Position, TargetInfo.Origin, Duration * 0.8f, OnNukeHit );
 
 			Light = new PointLightEntity();
 			Light.SetParent( Missile, false );
@@ -62,9 +69,7 @@ namespace Facepunch.RTS
 
 			Audio.Play( $"nuke.launch{Rand.Int( 1, 2 )}", User.Position );
 
-			OpenHatch( true );
-
-			await GameTask.DelaySeconds( Duration * 0.2f );
+			await GameTask.DelaySeconds( Duration * 0.1f );
 
 			Siren = Missile.PlaySound( "nuke.siren" );
 		}
