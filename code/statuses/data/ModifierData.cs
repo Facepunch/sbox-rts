@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS
 {
-	public class BoostData : StatusData
+	public class ModifierData : StatusData
 	{
 		public float Modifier { get; set; } = 0.3f;
 

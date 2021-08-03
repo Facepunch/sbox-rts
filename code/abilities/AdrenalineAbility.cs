@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsServer && TargetInfo.Target is UnitEntity unit )
 			{
-				unit.ApplyStatus<BoostStatus>( new BoostData()
+				unit.ApplyStatus<BoostStatus>( new ModifierData()
 				{
 					Duration = 15f,
 					Modifier = 0.4f

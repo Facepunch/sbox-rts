@@ -4,10 +4,10 @@ using System;
 namespace Facepunch.RTS
 {
 	[Library]
-	public class DissolvingStatus : BaseStatus<BurningData>
+	public class DissolvingStatus : BaseStatus<DamageData>
 	{
 		public override string Name => "Dissolving";
-		public override string Description => "Help, I'm dissolving!";
+		public override string Description => "My skin is burning!";
 
 		private RealTimeUntil NextTakeDamage { get; set; }
 		private Particles Particles { get; set; }

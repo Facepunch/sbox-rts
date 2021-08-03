@@ -13,6 +13,7 @@ namespace Facepunch.RTS
 		public override float MaxDistance => 750f;
 		public override float Duration => 1f;
 		public override float AreaOfEffectRadius => 300f;
+		public override string ExplosionEffect => null;
 		public override string AreaEffect => "particles/weapons/plasma_ground/plasma_ground.vpcf";
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
@@ -27,7 +28,7 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsServer )
 			{
-				Statuses.Apply<DissolvingStatus>( TargetInfo.Origin, AreaOfEffectRadius, new BurningData()
+				Statuses.Apply<DissolvingStatus>( TargetInfo.Origin, AreaOfEffectRadius, new DamageData()
 				{
 					Interval = 0.2f,
 					Duration = 5f,

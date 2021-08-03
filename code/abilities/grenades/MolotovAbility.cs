@@ -13,13 +13,14 @@ namespace Facepunch.RTS
 		public override float MaxDistance => 750f;
 		public override float Duration => 1f;
 		public override float AreaOfEffectRadius => 300f;
+		public override string ExplosionEffect => null;
 		public override string AreaEffect => "particles/weapons/molotov/molotov_base.vpcf";
 
 		public override void OnFinished()
 		{
 			if ( Host.IsServer )
 			{
-				Statuses.Apply<BurningStatus>( TargetInfo.Origin, AreaOfEffectRadius, new BurningData()
+				Statuses.Apply<BurningStatus>( TargetInfo.Origin, AreaOfEffectRadius, new DamageData()
 				{
 					Interval = 0.3f,
 					Duration = 5f,

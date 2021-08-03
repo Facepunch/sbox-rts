@@ -16,7 +16,7 @@ namespace Facepunch.RTS
 			if ( Host.IsServer && User is UnitEntity unit )
 			{
 				var target = TargetInfo.Target;
-				var position = target.WorldSpaceBounds.Center;
+				var position = target?.WorldSpaceBounds.Center ?? TargetInfo.Origin;
 
 				unit.LookAtPosition( position );
 				unit.Weapon.Dummy( position );

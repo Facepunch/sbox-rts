@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS
 {
-	public class DissolvingData : StatusData
+	public class DamageData : StatusData
 	{
 		public float Damage { get; set; } = 1f;
 		public float Interval { get; set; } = 0.3f;

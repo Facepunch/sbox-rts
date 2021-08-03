@@ -4,10 +4,10 @@ using System;
 namespace Facepunch.RTS
 {
 	[Library]
-	public class BoostStatus : BaseStatus<BoostData>
+	public class BoostStatus : BaseStatus<ModifierData>
 	{
 		public override string Name => "Boost";
-		public override string Description => "Gotta go fast!";
+		public override string Description => "I've gotta go fast!";
 
 		private Particles Particles { get; set; }
 

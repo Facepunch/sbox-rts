@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	public class HealingStatus : BaseStatus<HealingData>
 	{
 		public override string Name => "Healing";
-		public override string Description => "Damn, that feels good!";
+		public override string Description => "That feels good!";
 
 		private RealTimeUntil NextHealTime { get; set; }
 		private Particles Particles { get; set; }

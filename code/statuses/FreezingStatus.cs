@@ -4,10 +4,10 @@ using System;
 namespace Facepunch.RTS
 {
 	[Library]
-	public class BurningStatus : BaseStatus<BurningData>
+	public class FreezingStatus : BaseStatus<FreezingData>
 	{
-		public override string Name => "Burning";
-		public override string Description => "Help, I'm on fire!";
+		public override string Name => "Freezing";
+		public override string Description => "I can barely move!";
 
 		private RealTimeUntil NextTakeDamage { get; set; }
 		private Particles Particles { get; set; }
@@ -20,6 +20,11 @@ namespace Facepunch.RTS
 				Particles.SetPosition( 0, Target.Position );
 				Particles.SetPosition( 1, new Vector3( 1f, 0f, 0f ) );
 			}
+
+			if ( Host.IsServer && Target is UnitEntity unit )
+			{
+				unit.Modifiers.Speed -= Data.SpeedReduction;
+			}
 		}
 
 		public override void OnRemoved()
@@ -29,6 +34,11 @@ namespace Facepunch.RTS
 				Particles?.Destroy();
 				Particles = null;
 			}
+
+			if ( Host.IsServer && Target is UnitEntity unit )
+			{
+				unit.Modifiers.Speed += Data.SpeedReduction;
+			}
 		}
 
 		public override void Tick()
@@ -37,7 +47,7 @@ namespace Facepunch.RTS
 			{
 				var info = new DamageInfo
 				{
-					Flags = DamageFlags.Burn,
+					Flags = DamageFlags.BlastWaterSurface,
 					Damage = Data.Damage
 				};
 
