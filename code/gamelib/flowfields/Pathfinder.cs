@@ -248,7 +248,6 @@ namespace Gamelib.FlowFields
 
 			for ( var index = 0; index < worldSizeLength; index++ )
 			{
-				/*
 				var position = GetPosition( index );
 				var trace = Trace.Ray( position.WithZ( 1000f ), position )
 					.EntitiesOnly()
@@ -259,10 +258,9 @@ namespace Gamelib.FlowFields
 					_heightMap[index] = trace.EndPos.z;
 				else
 					_heightMap[index] = position.z;
-				*/
 
 				// TODO: The ground must be flat for now.
-				_heightMap[index] = groundHeight;
+				//_heightMap[index] = groundHeight;
 			}
 		}
 
