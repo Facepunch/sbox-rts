@@ -352,6 +352,11 @@ namespace Facepunch.RTS
 			base.TakeDamage( info );
 		}
 
+		public virtual float GetVerticalOffset()
+		{
+			return Item.VerticalOffset + Pathfinder.GetHeight( Position );
+		}
+
 		public virtual bool OccupyUnit( UnitEntity unit )
 		{
 			Host.AssertServer();
@@ -916,6 +921,8 @@ namespace Facepunch.RTS
 				}
 			}
 
+			Position = Position.WithZ( GetVerticalOffset() );
+
 			base.OnItemChanged( item, oldItem );
 		}
 
@@ -979,11 +986,6 @@ namespace Facepunch.RTS
 			{
 				Circle.Alpha = RenderAlpha;
 			}
-		}
-
-		protected virtual void AlignToGround()
-		{
-			Position = Position.WithZ( Item.VerticalOffset + Pathfinder.GetHeight( Position ) );
 		}
 
 		[ClientRpc]
@@ -1374,8 +1376,7 @@ namespace Facepunch.RTS
 			}
 
 			Position += Velocity;
-
-			AlignToGround();
+			Position = Position.LerpTo( Position.WithZ( GetVerticalOffset() ), Time.Delta * 20f );
 
 			var walkVelocity = Velocity.WithZ( 0 );
 

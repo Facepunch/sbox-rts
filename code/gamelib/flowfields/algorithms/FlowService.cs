@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Gamelib.FlowFields.Grid;
 
@@ -64,14 +65,15 @@ namespace Gamelib.FlowFields.Algorithms
                     if ( !IsIntegrationValid( integrations[neighborChunk], neighborIndex ) )
                         continue;
 
-                    var value = integrations[neighborChunk].GetValue( neighborIndex );
+					var direction = neighbor.Direction;
+					var value = integrations[neighborChunk].GetValue( neighborIndex );
 
                     if ( impassable )
                     {
                         if ( lowestValue <= 0 || value < 0 || value >= lowestValue ) 
                             continue;
                         
-                        flowArray[i] = (int)neighbor.Direction;
+                        flowArray[i] = (int)direction;
                         lowestValue = value;
                     }
                     else
@@ -81,7 +83,7 @@ namespace Gamelib.FlowFields.Algorithms
 
                         if ( value < lowestValue )
                         {
-                            flowArray[i] = (int)neighbor.Direction;
+                            flowArray[i] = (int)direction;
                             lowestValue = value;
                             continue;
                         }
@@ -90,7 +92,7 @@ namespace Gamelib.FlowFields.Algorithms
                             continue;
 
                         lowestValue = value;
-                        flowArray[i] = (int)neighbor.Direction;
+                        flowArray[i] = (int)direction;
                     }
                 }
             }

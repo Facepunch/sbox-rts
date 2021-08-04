@@ -113,7 +113,7 @@ namespace Gamelib.FlowFields.Grid
             return Results;
         }
 
-        private static List<GridDirection> GetGridDirections( bool diagonal )
+        public static List<GridDirection> GetGridDirections( bool diagonal )
         {
             return diagonal ? AllNeighbors : DirectNeighbors;
         }

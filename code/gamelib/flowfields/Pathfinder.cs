@@ -40,6 +40,7 @@ namespace Gamelib.FlowFields
 		public Vector3 CenterOffset => _centerOffset;
 		public Vector3 CollisionExtents => _collisionExtents;
 		public Vector3 NodeExtents => _nodeExtents;
+		public float HeightThreshold { get; set; } = 20f;
 		public Vector3 Origin { get; private set; }
 
 		public GridDefinition ChunkGridSize => _chunkGridSize;
@@ -244,24 +245,66 @@ namespace Gamelib.FlowFields
 
 			_heightMap = new float[worldSizeLength];
 
-			var groundHeight = FlowFieldGround.Bounds.Maxs.z;
+			var heightFlags = new bool[worldSizeLength];
+			var collisionFlags = new bool[worldSizeLength];
+			var gridDirections = GridUtility.GetGridDirections( true );
 
 			for ( var index = 0; index < worldSizeLength; index++ )
 			{
-				var position = GetPosition( index );
-				var trace = Trace.Ray( position.WithZ( 1000f ), position )
-					.EntitiesOnly()
-					.WithTag( "ff_ground" )
-					.Run();
+				DoHeightMapTrace( index, heightFlags );
 
-				if ( trace.Hit )
-					_heightMap[index] = trace.EndPos.z;
-				else
-					_heightMap[index] = position.z;
+				var worldPosition = CreateWorldPosition( index );
+				var thisHeight = _heightMap[index];
+				var chunk = GetChunk( worldPosition.ChunkIndex );
 
-				// TODO: The ground must be flat for now.
-				//_heightMap[index] = groundHeight;
+				for ( var j = 0; j < gridDirections.Count; j++ )
+				{
+					if ( !CheckHeightDifference( index, thisHeight, gridDirections[j], heightFlags, collisionFlags ) )
+					{
+						chunk.SetCollision( worldPosition.NodeIndex, NodeCollision.Static );
+						collisionFlags[index] = true;
+						break;
+					}
+				}
 			}
+		}
+
+		private bool CheckHeightDifference( int index, float height, GridDirection direction, bool[] heightFlags, bool[] collisionFlags )
+		{
+			var neighbor = GridUtility.GetNeighborIndex( index, direction, _worldGridSize );
+
+			if ( neighbor != int.MinValue ) //&& !collisionFlags[neighbor] )
+			{
+				DoHeightMapTrace( neighbor, heightFlags );
+				var neighborHeight = _heightMap[neighbor];
+
+				// Check if there's a large enough height distance.
+				if ( Math.Abs( neighborHeight - height ) > HeightThreshold )
+				{
+					//DrawBox( index, Color.Magenta, 120f );
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private void DoHeightMapTrace( int index, bool[] heightFlags )
+		{
+			if ( heightFlags[index] ) return;
+
+			var position = GetPosition( index );
+			var trace = Trace.Ray( position.WithZ( 1000f ), position )
+				.EntitiesOnly()
+				.WithTag( "ff_ground" )
+				.Run();
+
+			if ( trace.Hit )
+				_heightMap[index] = trace.EndPos.z;
+			else
+				_heightMap[index] = position.z;
+
+			heightFlags[index] = true;
 		}
 
 		public void ConnectPortals()
@@ -307,7 +350,7 @@ namespace Gamelib.FlowFields
             if ( chunk == int.MinValue )
                 return 255;
 
-            return GetChunk(chunk).GetCost( node );
+            return GetChunk( chunk ).GetCost( node );
         }
 
 		public void UpdateCollisions( Vector3 position, float radius )

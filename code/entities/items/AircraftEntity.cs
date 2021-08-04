@@ -30,19 +30,28 @@ namespace Facepunch.RTS
 			return false;
 		}
 
-		protected override void AlignToGround()
+		public override float GetVerticalOffset()
 		{
 			var groundHeight = Pathfinder.GetHeight( Position );
-			var targetHeight = groundHeight;
 			var airHeight = groundHeight + Item.VerticalOffset;
 			var lowHeight = groundHeight + 100f;
 
+			float targetHeight;
 			if ( ReturnToAirTime )
 				targetHeight = airHeight;
 			else
 				targetHeight = lowHeight;
 
-			if ( !ReturnToAirTime)
+			return targetHeight;
+		}
+
+		protected override void ServerTick()
+		{
+			var groundHeight = Pathfinder.GetHeight( Position );
+			var airHeight = groundHeight + Item.VerticalOffset;
+			var lowHeight = groundHeight + 100f;
+
+			if ( !ReturnToAirTime )
 			{
 				if ( DustParticles == null )
 				{
@@ -50,18 +59,18 @@ namespace Facepunch.RTS
 				}
 
 				var difference = (airHeight - lowHeight);
-				var fraction = 1f - ( (1f / difference) * Position.z );
+				var fraction = 1f - ((1f / difference) * Position.z);
 
 				DustParticles.SetPosition( 0, Position.WithZ( groundHeight ) );
 				DustParticles.SetPosition( 1, new Vector3( 255f * fraction, 500f * fraction, 0f ) );
 			}
-			else if ( DustParticles  != null )
+			else if ( DustParticles != null )
 			{
 				DustParticles.Destroy();
 				DustParticles = null;
 			}
 
-			Position = Position.LerpTo( Position.WithZ( targetHeight ), Time.Delta );
+			base.ServerTick();
 		}
 
 		protected override void OnTargetChanged()

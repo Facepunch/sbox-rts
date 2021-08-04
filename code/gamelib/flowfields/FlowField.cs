@@ -4,6 +4,7 @@ using Gamelib.FlowFields.Algorithms;
 using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
 using Sandbox;
+using System;
 
 namespace Gamelib.FlowFields
 {
@@ -326,7 +327,7 @@ namespace Gamelib.FlowFields
 					if ( !Pathfinder.IsAvailable( nw ) )
 						continue;
 
-                    var otherCost = IntegrationService.H( thisCost, Pathfinder.GetCost( nw ) );
+					var otherCost = IntegrationService.H( thisCost, Pathfinder.GetCost( nw ) );
 
                     if ( neighbor.Key == GridDirection.RightDown || neighbor.Key == GridDirection.UpRight
 						|| neighbor.Key == GridDirection.LeftUp || neighbor.Key == GridDirection.DownLeft )

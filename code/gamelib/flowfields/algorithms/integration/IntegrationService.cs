@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Gamelib.FlowFields.Grid;
 using Sandbox;
@@ -45,25 +46,24 @@ namespace Gamelib.FlowFields.Algorithms
 					if ( !flowField.IsAvailable( integrationIndex, neighborIndex ) )
                     {
 						integration.SetValue( neighborIndex, -currentIntegrationValue );
+						continue;
                     }
-                    else
-                    {
-						if ( currentIntegrationValue < 0 )
-                            continue;
 
-                        var value = H( currentIntegrationValue, chunk.GetCost( index ) );
+					if ( currentIntegrationValue < 0 )
+                        continue;
 
-                        if ( neighbor.Direction == GridDirection.RightDown ||
-                            neighbor.Direction == GridDirection.LeftUp ||
-                            neighbor.Direction == GridDirection.DownLeft ||
-                            neighbor.Direction == GridDirection.UpRight )
-						{
-                            value += 1;
-						}
+                    var value = H( currentIntegrationValue, chunk.GetCost( index ) );
 
-                        integration.SetValue( neighborIndex, value );
-                        integration.Enqueue( neighborIndex );
-                    }
+                    if ( neighbor.Direction == GridDirection.RightDown ||
+                        neighbor.Direction == GridDirection.LeftUp ||
+                        neighbor.Direction == GridDirection.DownLeft ||
+                        neighbor.Direction == GridDirection.UpRight )
+					{
+                        value += 1;
+					}
+
+                    integration.SetValue( neighborIndex, value );
+                    integration.Enqueue( neighborIndex );
                 }
             }
         }
