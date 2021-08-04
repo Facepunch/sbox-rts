@@ -70,14 +70,9 @@ namespace Facepunch.RTS
 
 		public TraceResult GetPlacementTrace( Client client, Vector3 cursorOrigin, Vector3 cursorAim )
 		{
-			var trace = TraceExtension.RayDirection( cursorOrigin, cursorAim );
-
-			if ( FlowFieldGround.Exists )
-				trace.WithTag( "ff_ground" );
-			else
-				trace.WorldOnly();
-
-			return trace.Run();
+			return TraceExtension.RayDirection( cursorOrigin, cursorAim )
+				.WorldOnly()
+				.Run();
 		}
 
 		public bool IsPlacementValid( TraceResult trace )

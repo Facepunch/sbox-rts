@@ -40,7 +40,7 @@ namespace Gamelib.FlowFields
 		public Vector3 CenterOffset => _centerOffset;
 		public Vector3 CollisionExtents => _collisionExtents;
 		public Vector3 NodeExtents => _nodeExtents;
-		public float HeightThreshold { get; set; } = 20f;
+		public float HeightThreshold { get; set; } = 50f;
 		public Vector3 Origin { get; private set; }
 
 		public GridDefinition ChunkGridSize => _chunkGridSize;
@@ -133,7 +133,7 @@ namespace Gamelib.FlowFields
 			transform.Position = (position + _centerOffset).WithZ( _collisionExtents.z + heightMap + 5f );
 
 			var trace = Trace.Sweep( _physicsBody, transform, transform )
-				.WithoutTags( "ff_ground" )
+				.EntitiesOnly()
 				.WithoutTags( "ff_ignore" )
 				.HitLayer( CollisionLayer.PLAYER_CLIP, true )
 				.Run();
@@ -294,16 +294,11 @@ namespace Gamelib.FlowFields
 			if ( heightFlags[index] ) return;
 
 			var position = GetPosition( index );
-			var trace = Trace.Ray( position.WithZ( 1000f ), position )
-				.EntitiesOnly()
-				.WithTag( "ff_ground" )
+			var trace = Trace.Ray( position.WithZ( 1000f ), position.WithZ( -1000f ) )
+				.WorldOnly()
 				.Run();
 
-			if ( trace.Hit )
-				_heightMap[index] = trace.EndPos.z;
-			else
-				_heightMap[index] = position.z;
-
+			_heightMap[index] = trace.EndPos.z;
 			heightFlags[index] = true;
 		}
 

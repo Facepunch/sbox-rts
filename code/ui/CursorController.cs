@@ -58,7 +58,7 @@ namespace Facepunch.RTS
 			if ( SpotLight.Enabled )
 			{
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction )
-					.WithTag( "ff_ground" )
+					.WorldOnly()
 					.Run();
 
 				SpotLight.Position = trace.EndPos + Vector3.Up * 1000f;

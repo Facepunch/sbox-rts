@@ -5,7 +5,7 @@ namespace Gamelib.FlowFields.Entities
 {
 	[Library( "flowfield_ground" )]
 	[Hammer.Solid]
-	public class FlowFieldGround : FuncBrush
+	public class FlowFieldGround : BaseTrigger
 	{
 		public static event Action OnUpdated;
 		public static BBox Bounds { get; private set; }
@@ -15,9 +15,10 @@ namespace Gamelib.FlowFields.Entities
 		{
 			base.Spawn();
 
-			Tags.Add( "ff_ground" );
-
 			CheckMinsMaxs();
+
+			EnableAllCollisions = false;
+			EnableDrawing = false;
 			Transmit = TransmitType.Always;
 			Exists = true;
 

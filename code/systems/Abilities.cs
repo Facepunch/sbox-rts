@@ -188,7 +188,7 @@ namespace Facepunch.RTS
 			if ( ability.TargetType == AbilityTargetType.None )
 			{
 				var trace = TraceExtension.RayDirection( cursorOrigin, cursorAim )
-					.WithTag( "ff_ground" )
+					.WorldOnly()
 					.Run();
 
 				TargetCircle.Position = trace.EndPos;

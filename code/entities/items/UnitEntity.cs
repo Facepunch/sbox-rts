@@ -354,7 +354,11 @@ namespace Facepunch.RTS
 
 		public virtual float GetVerticalOffset()
 		{
-			return Item.VerticalOffset + Pathfinder.GetHeight( Position );
+			var trace = Trace.Ray( Position.WithZ( 1000f ), Position.WithZ( -1000f ) )
+				.WorldOnly()
+				.Run();
+
+			return trace.EndPos.z + Item.VerticalOffset;
 		}
 
 		public virtual bool OccupyUnit( UnitEntity unit )
@@ -1376,7 +1380,7 @@ namespace Facepunch.RTS
 			}
 
 			Position += Velocity;
-			Position = Position.LerpTo( Position.WithZ( GetVerticalOffset() ), Time.Delta * 20f );
+			Position = Position.WithZ( GetVerticalOffset() );
 
 			var walkVelocity = Velocity.WithZ( 0 );
 
