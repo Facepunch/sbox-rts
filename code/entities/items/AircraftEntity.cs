@@ -30,7 +30,7 @@ namespace Facepunch.RTS
 			return false;
 		}
 
-		public override float GetVerticalOffset()
+		public override VerticalOffset GetVerticalOffset()
 		{
 			var groundHeight = Pathfinder.GetHeight( Position );
 			var airHeight = groundHeight + Item.VerticalOffset;
@@ -42,7 +42,11 @@ namespace Facepunch.RTS
 			else
 				targetHeight = lowHeight;
 
-			return targetHeight;
+			return new VerticalOffset
+			{
+				Offset = targetHeight,
+				Normal = Vector3.Up
+			};
 		}
 
 		protected override void ServerTick()

@@ -11,6 +11,12 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
+	public struct VerticalOffset
+	{
+		public Vector3 Normal;
+		public float Offset;
+	}
+
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IMoveAgent, IOccupiableEntity
 	{
 		private enum TargetType
@@ -352,13 +358,17 @@ namespace Facepunch.RTS
 			base.TakeDamage( info );
 		}
 
-		public virtual float GetVerticalOffset()
+		public virtual VerticalOffset GetVerticalOffset()
 		{
 			var trace = Trace.Ray( Position.WithZ( 1000f ), Position.WithZ( -1000f ) )
 				.WorldOnly()
 				.Run();
 
-			return trace.EndPos.z + Item.VerticalOffset;
+			return new VerticalOffset
+			{
+				Offset = trace.EndPos.z + Item.VerticalOffset,
+				Normal = trace.Normal
+			};
 		}
 
 		public virtual bool OccupyUnit( UnitEntity unit )
@@ -925,7 +935,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			Position = Position.WithZ( GetVerticalOffset() );
+			Position = Position.WithZ( GetVerticalOffset().Offset );
 
 			base.OnItemChanged( item, oldItem );
 		}
@@ -1379,8 +1389,19 @@ namespace Facepunch.RTS
 				Velocity = 0;
 			}
 
+			var verticalOffset = GetVerticalOffset();
+
 			Position += Velocity;
-			Position = Position.WithZ( GetVerticalOffset() );
+			Position = Position.WithZ( verticalOffset.Offset );
+
+			if ( Item.AlignToSurface )
+			{
+				var normal = verticalOffset.Normal;
+				var rotation = Rotation.LookAt( normal, Vector3.Forward );
+				rotation = rotation.RotateAroundAxis( Vector3.Left, 90f );
+				rotation = Rotation.From( Rotation.Angles().WithPitch( rotation.Pitch() ) );
+				Rotation = Rotation.Lerp( Rotation, rotation, Time.Delta * 15f );
+			}
 
 			var walkVelocity = Velocity.WithZ( 0 );
 

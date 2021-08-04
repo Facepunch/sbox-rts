@@ -18,6 +18,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
 		public override bool RagdollOnDeath => false;
+		public override bool AlignToSurface => false;
 		public override string IdleLoopSound => "rts.helicopterloop";
 		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public override float LineOfSightRadius => 2000f;
