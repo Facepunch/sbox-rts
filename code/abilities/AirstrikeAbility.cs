@@ -111,8 +111,10 @@ namespace Facepunch.RTS
 
 			if ( Dust == null )
 			{
-				Dust = Particles.Create( "particles/vehicle/helicopter_dust/helicopter_dust.vpcf" );
+				Dust = Particles.Create("particles/dust_cloud/dust_cloud.vpcf");
 				Dust.SetPosition( 0, TargetInfo.Origin );
+				Dust.SetPosition( 1, new Vector3(AreaOfEffectRadius * 0.75f, 0.75f, 0.75f) );
+				Dust.SetPosition( 2, new Vector3 (75f, 75f, 75f) );
 			}
 		}
 
