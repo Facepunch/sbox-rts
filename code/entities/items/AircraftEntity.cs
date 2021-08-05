@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 using System.Linq;
 
 namespace Facepunch.RTS
@@ -36,7 +37,7 @@ namespace Facepunch.RTS
 		public override float GetVerticalOffset()
 		{
 			var groundHeight = Pathfinder.GetHeight( Position );
-			var airHeight = groundHeight + Item.VerticalOffset;
+			var airHeight = Math.Max( groundHeight + 100f, Item.VerticalOffset );
 			var lowHeight = groundHeight + 100f;
 
 			float targetHeight;
