@@ -11,12 +11,6 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public struct VerticalOffset
-	{
-		public Vector3 Normal;
-		public float Offset;
-	}
-
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IMoveAgent, IOccupiableEntity
 	{
 		private enum TargetType
@@ -358,17 +352,67 @@ namespace Facepunch.RTS
 			base.TakeDamage( info );
 		}
 
-		public virtual VerticalOffset GetVerticalOffset()
+		public virtual float GetVerticalOffset()
 		{
 			var trace = Trace.Ray( Position.WithZ( 1000f ), Position.WithZ( -1000f ) )
 				.WorldOnly()
 				.Run();
 
-			return new VerticalOffset
+			return trace.EndPos.z + Item.VerticalOffset;
+		}
+		
+		private Vector3 GetGroundNormal()
+		{
+			var trace = Trace.Ray( Position.WithZ( 1000f ), Position.WithZ( -1000f ) )
+				.WorldOnly()
+				.Run();
+
+			DebugOverlay.Line( trace.StartPos, trace.EndPos, Color.Magenta, 0f );
+
+			var normal = trace.Normal;
+
+			if ( Item.UseBoundsToAlign )
 			{
-				Offset = trace.EndPos.z + Item.VerticalOffset,
-				Normal = trace.Normal
-			};
+				var normals = new Vector3[5];
+				var radius = GetDiameterXY( 0.5f );
+
+				normals[0] = normal;
+
+				var bottomLeft = Position + new Vector3( -radius, -radius );
+				var bottomRight = Position + new Vector3( -radius, radius );
+				var topRight = Position + new Vector3( radius, -radius );
+				var topLeft = Position + new Vector3( radius, radius );
+
+				AddGroundNormal( 1, normals, bottomLeft );
+				AddGroundNormal( 2, normals, bottomRight );
+				AddGroundNormal( 3, normals, topLeft );
+				AddGroundNormal( 4, normals, topRight );
+
+				var averaged = Vector3.Zero;
+				var count = normals.Length;
+
+				for ( var i = 0; i < count; i++ )
+				{
+					averaged += normals[i];
+				}
+
+				normal = (averaged / count).Normal;
+			}
+
+			DebugOverlay.Line( Position, Position + normal * 200f, Color.Orange, 0f );
+
+			return normal;
+		}
+
+		private void AddGroundNormal( int index, Vector3[] normals, Vector3 position )
+		{
+			var trace = Trace.Ray( position.WithZ( 1000f ), position.WithZ( -1000f ) )
+			.WorldOnly()
+			.Run();
+
+			DebugOverlay.Line( trace.StartPos, trace.EndPos, Color.Green, 0f );
+
+			normals[index] = trace.Normal;
 		}
 
 		public virtual bool OccupyUnit( UnitEntity unit )
@@ -935,7 +979,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			Position = Position.WithZ( GetVerticalOffset().Offset );
+			Position = Position.WithZ( GetVerticalOffset() );
 
 			base.OnItemChanged( item, oldItem );
 		}
@@ -1392,15 +1436,15 @@ namespace Facepunch.RTS
 			var verticalOffset = GetVerticalOffset();
 
 			Position += Velocity;
-			Position = Position.WithZ( verticalOffset.Offset );
+			Position = Position.WithZ( verticalOffset );
 
 			if ( Item.AlignToSurface )
 			{
-				var normal = verticalOffset.Normal;
-				var rotation = Rotation.LookAt( normal, Vector3.Forward );
-				rotation = rotation.RotateAroundAxis( Vector3.Left, 90f );
-				rotation = Rotation.From( Rotation.Angles().WithPitch( rotation.Pitch() ) );
-				Rotation = Rotation.Lerp( Rotation, rotation, Time.Delta * 15f );
+				var normal = GetGroundNormal();
+				var targetRotation = Rotation.LookAt( normal, Rotation.Forward );
+				targetRotation = targetRotation.RotateAroundAxis( Vector3.Left, 90f );
+				targetRotation = targetRotation.RotateAroundAxis( Vector3.Up, 180f );
+				Rotation = Rotation.Lerp( Rotation, targetRotation, Time.Delta * movementSpeed / 20f );
 			}
 
 			var walkVelocity = Velocity.WithZ( 0 );

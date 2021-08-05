@@ -16,6 +16,7 @@ namespace Facepunch.RTS.Units
 		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;
+		public override bool UseBoundsToAlign => true;
 		public override float RotateToTargetSpeed => 10f;
 		public override string Weapon => "weapon_tank_cannon";
 		public override int NodeSize => 50;

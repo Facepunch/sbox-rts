@@ -17,6 +17,7 @@ namespace Facepunch.RTS.Units
 		public override int NodeSize => 50;
 		public override int CollisionSize => 350;
 		public override bool RagdollOnDeath => false;
+		public override bool UseBoundsToAlign => true;
 		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public override float LineOfSightRadius => 1500f;
 		public override OccupiableSettings Occupiable => new()

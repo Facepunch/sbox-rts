@@ -21,6 +21,7 @@ namespace Facepunch.RTS.Units
 		public virtual string DeathParticles => null;
 		public virtual bool UseModelPhysics => false;
 		public virtual bool AlignToSurface => true;
+		public virtual bool UseBoundsToAlign => false;
 		public virtual float MaxVerticalRange => 100f;
 		public virtual float MinVerticalRange => 0f;
 		public virtual float MinAttackDistance => 0f;
