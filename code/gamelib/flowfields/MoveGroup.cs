@@ -114,12 +114,12 @@ namespace Gamelib.FlowFields
 			return Vector3.Zero;
 		}
 
-		public bool IsDestination( IMoveAgent agent, Vector3 position )
+		public bool IsDestination( IMoveAgent agent, Vector3 position, bool checkPathRequest = true )
 		{
 			if ( !IsValid() || ReachedGoal.Contains( agent ) )
 				return true;
 
-			if ( PathRequest.IsDestination( position ) )
+			if ( checkPathRequest && PathRequest.IsDestination( position ) )
 				return true;
 
 			var groundPosition = agent.Position.WithZ( 0f );
@@ -133,9 +133,7 @@ namespace Gamelib.FlowFields
 					var distance = groundPosition.Distance( other.Position.WithZ( 0f ) );
 
 					if ( distance <= agent.AgentRadius )
-					{
 						return true;
-					}
 				}
 			}
 

@@ -7,6 +7,7 @@ namespace Facepunch.RTS
 	public partial class AircraftEntity : UnitEntity
 	{
 		public RealTimeUntil ReturnToAirTime { get; private set; }
+		public TimeSince LastPickupTime { get; private set; }
 
 		private Particles DustParticles { get; set; }
 
@@ -19,12 +20,14 @@ namespace Facepunch.RTS
 				if ( base.OccupyUnit( unit ) )
 				{
 					ReturnToAirTime = 0f;
+					LastPickupTime = 0f;
 					return true;
 				}
 			}
 			else
 			{
 				ReturnToAirTime = 1f;
+				LastPickupTime = 0f;
 			}
 
 			return false;
@@ -43,6 +46,15 @@ namespace Facepunch.RTS
 				targetHeight = lowHeight;
 
 			return targetHeight;
+		}
+
+		public override float GetVerticalSpeed()
+		{
+			if ( IsMoveGroupValid() || LastPickupTime > 2f )
+				return 20f;
+			else 
+				return 1f;
+
 		}
 
 		protected override void ServerTick()

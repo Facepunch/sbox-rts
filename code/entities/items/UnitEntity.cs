@@ -352,6 +352,11 @@ namespace Facepunch.RTS
 			base.TakeDamage( info );
 		}
 
+		public virtual float GetVerticalSpeed()
+		{
+			return 20f;
+		}
+
 		public virtual float GetVerticalOffset()
 		{
 			var trace = Trace.Ray( Position.WithZ( 1000f ), Position.WithZ( -1000f ) )
@@ -1340,16 +1345,16 @@ namespace Facepunch.RTS
 			if ( !IsMoveGroupValid() )
 				return true;
 
-			if ( !Item.UsePathfinder )
-			{
-				var groundPosition = Position.WithZ( 0f );
-				var destination = MoveGroup.GetDestination();
+			if ( Item.UsePathfinder )
+				return MoveGroup.IsDestination( this, Position );
 
-				if ( groundPosition.Distance( destination ) <= AgentRadius * 0.5f )
-					return true;
-			}
+			var groundPosition = Position.WithZ( 0f );
+			var destination = MoveGroup.GetDestination();
 
-			return MoveGroup.IsDestination( this, Position );
+			if ( groundPosition.Distance( destination ) <= AgentRadius * 0.5f )
+				return true;
+
+			return MoveGroup.IsDestination( this, Position, false );
 		}
 
 		private void TickMoveToTarget( bool isTargetValid )
@@ -1436,7 +1441,7 @@ namespace Facepunch.RTS
 			var verticalOffset = GetVerticalOffset();
 
 			Position += Velocity;
-			Position = Position.WithZ( verticalOffset );
+			Position = Position.LerpTo( Position.WithZ( verticalOffset ), Time.Delta * GetVerticalSpeed() );
 
 			if ( Item.AlignToSurface )
 			{
