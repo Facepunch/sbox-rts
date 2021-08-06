@@ -47,8 +47,8 @@ Layer0
 	g_vTexCoordScrollSpeed "[0.000 0.000]"
 
 	//---- Translucent ----
-	g_flOpacityScale "0.500"
-	TextureTranslucency "materials/default/default_trans.tga"
+	g_flOpacityScale "0.250"
+	TextureTranslucency "materials/rts/hammer/building_blocker_color.tga"
 
 	SystemAttributes
 	{
