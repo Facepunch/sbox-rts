@@ -11,14 +11,8 @@ namespace Facepunch.RTS
 		{
 			base.Spawn();
 
+			EnableDrawing = false;
 			Transmit = TransmitType.Always;
-		}
-
-		public override void StartTouch( Entity other )
-		{
-			Log.Info( other + " / 1" );
-
-			base.StartTouch( other );
 		}
 	}
 }
