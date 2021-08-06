@@ -35,7 +35,7 @@ namespace Facepunch.RTS.Buildings
 		public virtual float MinLineOfSight => 200f;
 		public virtual uint PopulationBoost => 0;
 		public virtual int AttackPriority => 0;
-		public virtual float MaxHealth => 100f;
+		public virtual float MaxHealth => 1000f;
 		public virtual string Model => "";
 		public virtual float AttackRadius => 600f;
 		public virtual float MaxVerticalRange => 100f;

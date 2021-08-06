@@ -11,6 +11,7 @@ namespace Facepunch.RTS.Buildings
 		public override Texture Icon => Texture.Load( "textures/rts/icons/headquarters.png" );
 		public override string Description => "This is the heart of your empire. Protect it at all costs.";
 		public override bool CanDepositResources => true;
+		public override float MaxHealth => 2000f;
 		public override float MinLineOfSight => 500f;
 		public override int BuildTime => 10;
 		public override HashSet<string> Abilities => new()

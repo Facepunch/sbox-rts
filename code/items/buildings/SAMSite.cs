@@ -11,6 +11,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Description => "Base defense structure that automatically fires upon enemy aircraft.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/silo.png" );
 		public override int BuildTime => 10;
+		public override float MaxHealth => 250f;
 		public override float AttackRadius => 1000f;
 		public override float MaxVerticalRange => 1000f;
 		public override float MinVerticalRange => 300f;

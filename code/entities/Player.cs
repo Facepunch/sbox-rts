@@ -32,7 +32,7 @@ namespace Facepunch.RTS
 			Selection = new List<Entity>();
 			Researching = new List<uint>();
 			Dependencies = new List<uint>();
-			MaxPopulation = 100;
+			MaxPopulation = 8;
 		}
 
 		public IEnumerable<UnitEntity> GetUnits( BaseUnit unit)

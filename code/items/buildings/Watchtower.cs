@@ -11,6 +11,7 @@ namespace Facepunch.RTS.Buildings
 		public override Texture Icon => Texture.Load( "textures/rts/icons/pub.png" );
 		public override string Description => "Useful for seeing across large distances and can hold one unit.";
 		public override int BuildTime => 10;
+		public override float MaxHealth => 250f;
 		public override float MinLineOfSight => 1000f;
 		public override OccupiableSettings Occupiable => new()
 		{
