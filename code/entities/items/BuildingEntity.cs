@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity
 	{
 		[Net, OnChangedCallback] public List<UnitEntity> Occupants { get; private set; }
-		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
+
 		public IOccupiableItem OccupiableItem => Item;
 
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
@@ -20,6 +20,14 @@ namespace Facepunch.RTS
 		[Net] public Entity Target { get; private set; }
 		public RealTimeUntil NextFindTarget { get; private set; }
 		public bool CanDepositResources => Item.CanDepositResources;
+		public bool CanOccupyUnits
+		{
+			get
+			{
+				if ( IsUnderConstruction ) return false;
+				return Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
+			}
+		}
 
 		private RealTimeUntil NextConstructionSound { get; set; }
 		private Sound ConstructionSound { get; set; }
@@ -57,6 +65,21 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public void UpdateRepair()
+		{
+			Host.AssertServer();
+
+			if ( Item.ConstructionSounds.Length > 0 && NextConstructionSound )
+			{
+				var sound = Rand.FromArray( Item.ConstructionSounds );
+
+				ConstructionSound.Stop();
+				ConstructionSound = PlaySound( sound );
+
+				NextConstructionSound = 3f;
+			}
+		}
+
 		public float GetAttackRadius() => Item.AttackRadius;
 		public float GetMinVerticalRange() => Item.MinVerticalRange;
 		public float GetMaxVerticalRange() => Item.MaxVerticalRange;
@@ -65,6 +88,11 @@ namespace Facepunch.RTS
 		{
 			if ( !Target.IsValid() ) return false;
 			return (Target.IsValid() && Target.Position.Distance( Position ) < Item.AttackRadius);
+		}
+
+		public bool IsDamaged()
+		{
+			return Health < MaxHealth;
 		}
 
 		public bool InVerticalRange( ISelectable other )
@@ -169,6 +197,13 @@ namespace Facepunch.RTS
 			Item.PlayBuiltSound( this );
 
 			Events.InvokeBuildingConstructed( Player, this );
+		}
+
+		public void FinishRepair()
+		{
+			Host.AssertServer();
+
+			Item.PlayBuiltSound( this );
 		}
 
 		public void StartConstruction()

@@ -11,24 +11,25 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
+	public enum UnitTargetType
+	{
+		None,
+		Move,
+		Occupy,
+		Repair,
+		Construct,
+		Gather,
+		Deposit,
+		Attack
+	}
+
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IMoveAgent, IOccupiableEntity
 	{
-		private enum TargetType
-		{
-			None,
-			Move,
-			Occupy,
-			Construct,
-			Gather,
-			Deposit,
-			Attack
-		}
-
 		private class TargetInfo
 		{
 			public Entity Entity;
 			public Vector3? Position;
-			public TargetType Type;
+			public UnitTargetType Type;
 			public float Radius;
 			public bool Follow;
 
@@ -60,6 +61,7 @@ namespace Facepunch.RTS
 
 		[Net] public List<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
+		public UnitTargetType TargetType => _target.Type;
 		public IOccupiableItem OccupiableItem => Item;
 
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
@@ -95,6 +97,7 @@ namespace Facepunch.RTS
 		#endregion
 
 		private List<ISelectable> _targetBuffer = new();
+		private RealTimeUntil _nextRepairTime;
 		private AnimationValues _animationValues;
 		private RealTimeUntil _nextFindTarget;
 		private Sound _idleLoopSound;
@@ -506,20 +509,21 @@ namespace Facepunch.RTS
 				return null;
 		}
 
-		public void Attack( ISelectable target, bool autoFollow = true )
+		public void Attack( ISelectable target, bool autoFollow = true, MoveGroup moveGroup = null )
 		{
-			Attack( (Entity)target, autoFollow );
+			Attack( (ModelEntity)target, autoFollow, moveGroup );
 		}
 
-		public void Attack( Entity target, bool autoFollow = true )
+		public void Attack( ModelEntity target, bool autoFollow = true, MoveGroup moveGroup = null )
 		{
 			ResetTarget();
 
 			_target.Entity = target;
 			_target.Follow = autoFollow;
 			_target.Radius = Item.AttackRadius;
-			_target.Type = TargetType.Attack;
+			_target.Type = UnitTargetType.Attack;
 
+			SetMoveGroup( moveGroup );
 			OnTargetChanged();
 		}
 
@@ -527,7 +531,7 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Type = TargetType.Move;
+			_target.Type = UnitTargetType.Move;
 
 			SetMoveGroup( group );
 			OnTargetChanged();
@@ -537,7 +541,7 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Type = TargetType.Move;
+			_target.Type = UnitTargetType.Move;
 
 			SetMoveGroup( CreateMoveGroup( position ) );
 			OnTargetChanged();
@@ -590,7 +594,7 @@ namespace Facepunch.RTS
 			_target.Entity = modelEntity;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Follow = true;
-			_target.Type = TargetType.Occupy;
+			_target.Type = UnitTargetType.Occupy;
 
 			SetMoveGroup( moveGroup );
 			OnTargetChanged();
@@ -613,7 +617,7 @@ namespace Facepunch.RTS
 			_target.Entity = building;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Follow = true;
-			_target.Type = TargetType.Deposit;
+			_target.Type = UnitTargetType.Deposit;
 
 			SetMoveGroup( moveGroup );
 			OnTargetChanged();
@@ -636,11 +640,34 @@ namespace Facepunch.RTS
 			_target.Entity = resource;
 			_target.Follow = true;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
-			_target.Type = TargetType.Gather;
+			_target.Type = UnitTargetType.Gather;
 
 			LastResourceType = resource.Resource;
 			LastResourceEntity = resource;
 			LastResourcePosition = resource.Position;
+
+			SetMoveGroup( moveGroup );
+			OnTargetChanged();
+
+			return true;
+		}
+
+		public bool Repair( BuildingEntity building, MoveGroup moveGroup = null )
+		{
+			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
+
+			if ( !moveGroup.IsValid() )
+			{
+				ClearTarget();
+				return false;
+			}
+
+			ResetTarget();
+
+			_target.Entity = building;
+			_target.Follow = true;
+			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
+			_target.Type = UnitTargetType.Repair;
 
 			SetMoveGroup( moveGroup );
 			OnTargetChanged();
@@ -663,7 +690,7 @@ namespace Facepunch.RTS
 			_target.Entity = building;
 			_target.Follow = true;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
-			_target.Type = TargetType.Construct;
+			_target.Type = UnitTargetType.Construct;
 
 			SetMoveGroup( moveGroup );
 			OnTargetChanged();
@@ -676,7 +703,7 @@ namespace Facepunch.RTS
 			_target.Entity = null;
 			_target.Position = null;
 			_target.Follow = false;
-			_target.Type = TargetType.None;
+			_target.Type = UnitTargetType.None;
 
 			IsGathering = false;
 
@@ -1100,7 +1127,7 @@ namespace Facepunch.RTS
 			_target.Entity = null;
 			_target.Position = null;
 			_target.Follow = false;
-			_target.Type = TargetType.None;
+			_target.Type = UnitTargetType.None;
 
 			IsGathering = false;
 
@@ -1212,7 +1239,7 @@ namespace Facepunch.RTS
 
 			if ( occupiable.CanOccupantsAttack() && IsTargetValid() )
 			{
-				if ( IsTargetInRange() && _target.Type == TargetType.Attack )
+				if ( IsTargetInRange() && _target.Type == UnitTargetType.Attack )
 				{
 					if ( Weapon.IsValid() && Weapon.CanAttack() )
 					{
@@ -1226,8 +1253,10 @@ namespace Facepunch.RTS
 
 		private void TickInteractWithTarget()
 		{
-			if ( _target.Type == TargetType.Attack && !ValidateMinAttackDistance() )
+			if ( _target.Type == UnitTargetType.Attack && !ValidateMinAttackDistance() )
+			{
 				return;
+			}
 
 			var lookAtDistance = 0f;
 
@@ -1238,7 +1267,7 @@ namespace Facepunch.RTS
 
 			if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
 			{
-				if ( _target.Type == TargetType.Occupy )
+				if ( _target.Type == UnitTargetType.Occupy )
 				{
 					if ( _target.Entity is IOccupiableEntity occupiable && occupiable.Player == Player )
 					{
@@ -1250,7 +1279,7 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == TargetType.Construct )
+				if ( _target.Type == UnitTargetType.Construct )
 				{
 					if ( _target.Entity is BuildingEntity building && building.Player == Player )
 					{
@@ -1262,7 +1291,19 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == TargetType.Deposit )
+				if ( _target.Type == UnitTargetType.Repair )
+				{
+					if ( _target.Entity is BuildingEntity building && building.Player == Player )
+					{
+						if ( !building.IsUnderConstruction && building.IsDamaged() )
+						{
+							TickRepair( building );
+							return;
+						}
+					}
+				}
+
+				if ( _target.Type == UnitTargetType.Deposit )
 				{
 					if ( _target.Entity is BuildingEntity building && building.Player == Player )
 					{
@@ -1274,7 +1315,7 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == TargetType.Gather )
+				if ( _target.Type == UnitTargetType.Gather )
 				{
 					if ( _target.Entity is ResourceEntity resource )
 					{
@@ -1286,7 +1327,7 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == TargetType.Attack )
+				if ( _target.Type == UnitTargetType.Attack )
 				{
 					if ( Weapon.IsValid() && Weapon.CanAttack() )
 					{
@@ -1398,7 +1439,12 @@ namespace Facepunch.RTS
 			}
 			else if ( _target.Position.HasValue )
 			{
-				pathDirection = (_target.Position.Value - Position).Normal.WithZ( 0f );
+				var straightDirection = (_target.Position.Value - Position).Normal.WithZ( 0f );
+
+				if ( Pathfinder.IsAvailable( Position + (straightDirection * Pathfinder.NodeSize) ) )
+					pathDirection = straightDirection;
+				else
+					pathDirection = Vector3.Zero;
 			}
 			else if ( !IsSelected )
 			{
@@ -1472,6 +1518,49 @@ namespace Facepunch.RTS
 			Carrying.Clear();
 
 			FindTargetResource();
+		}
+
+		private void TickRepair( BuildingEntity building )
+		{
+			var repairAmount = building.MaxHealth / building.Item.BuildTime * 0.5f;
+			var fraction = repairAmount / building.MaxHealth;
+			var repairCosts = new Dictionary<ResourceType, int>();
+
+			foreach ( var kv in building.Item.Costs )
+			{
+				repairCosts[kv.Key] = (kv.Value * fraction).CeilToInt();
+			}
+
+			if ( !Player.CanAfford( repairCosts ) )
+			{
+				LookAtEntity( building );
+				SpinSpeed = 0f;
+				return;
+			}
+
+			SpinSpeed = (building.MaxHealth / building.Health) * 200f;
+
+			if ( !_nextRepairTime ) return;
+
+			Player.TakeResources( repairCosts );
+
+			ResourceHint.Send( Player, 0.5f, Position, repairCosts, Color.Red );
+
+			building.Health += repairAmount;
+			building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
+
+			if ( building.Health == building.Item.MaxHealth )
+			{
+				LookAtEntity( building );
+				building.FinishRepair();
+				ClearTarget();
+			}
+			else
+			{
+				building.UpdateRepair();
+			}
+
+			_nextRepairTime = 1f;
 		}
 
 		private void TickConstruct( BuildingEntity building )

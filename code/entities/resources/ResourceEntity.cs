@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		public virtual ResourceType Resource => ResourceType.Stone;
 		public virtual string Description => "";
 		public virtual string Name => "";
-		public virtual float GatherTime => 1f;
+		public virtual float GatherTime => 0.5f;
 		public virtual string[] GatherSounds => new string[]
 		{
 			"minerock1",
@@ -17,7 +17,7 @@ namespace Facepunch.RTS
 			"minerock3",
 			"minerock4"
 		};
-		public virtual int MaxCarry => 10;
+		public virtual int MaxCarry => 20;
 
 		[Property, Net] public int Stock { get; set; } = 250;
 

@@ -177,12 +177,22 @@ namespace Facepunch.RTS
 					if ( unit.IsUsingAbility() || !unit.InVerticalRange( selectable ) )
 						return false;
 
-					unit.Attack( selectable );
 					return true;
 				} );
+				
 
 				if ( units.Count > 0 )
 				{
+					var agents = units.Cast<IMoveAgent>().ToList();
+					var moveGroup = new MoveGroup();
+
+					moveGroup.Initialize( agents, selectable.Position );
+
+					for ( var i = 0; i < units.Count; i++ )
+					{
+						units[i].Attack( selectable, true, moveGroup );
+					}
+
 					var randomUnit = units[Rand.Int( units.Count - 1 )];
 					randomUnit.Item.PlayAttackSound( caller );
 				}
@@ -243,7 +253,7 @@ namespace Facepunch.RTS
 		}
 
 		[ServerCmd]
-		public static void Deposit( int id )
+		public static void RepairOrDeposit( int id )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -259,20 +269,34 @@ namespace Facepunch.RTS
 
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( unit.Carrying.Count == 0 )
-						return false;
-
 					if ( unit.IsUsingAbility() )
 						return false;
 
-					unit.Deposit( building );
-					return true;
+					if ( unit.Carrying.Count == 0 )
+					{
+						if ( unit.CanConstruct && !building.IsUnderConstruction && building.IsDamaged()  )
+						{
+							unit.Repair( building );
+							return true;
+						}
+
+						return false;
+					}
+					else
+					{
+						unit.Deposit( building );
+						return true;
+					}
 				} );
 
 				if ( units.Count > 0 )
 				{
 					var randomUnit = units[Rand.Int( units.Count - 1 )];
-					randomUnit.Item.PlayDepositSound( caller );
+
+					if ( randomUnit.TargetType == UnitTargetType.Deposit )
+						randomUnit.Item.PlayDepositSound( caller );
+					else if ( randomUnit.TargetType == UnitTargetType.Repair )
+						randomUnit.Item.PlayConstructSound( caller );
 				}
 			}
 		}

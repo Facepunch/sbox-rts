@@ -153,7 +153,16 @@ namespace Facepunch.RTS
 							Items.Attack( ((Entity)selectable).NetworkIdent );
 							return;
 						}
-						
+
+						if ( builder.Down( InputButton.Run ) )
+						{
+							if ( selectable is IOccupiableEntity occupiable && occupiable.CanOccupyUnits )
+							{
+								Items.Occupy( targetNetworkId );
+								return;
+							}
+						}
+
 						if ( selectable is BuildingEntity building  )
 						{
 							if ( building.IsUnderConstruction )
@@ -161,18 +170,10 @@ namespace Facepunch.RTS
 								Items.Construct( targetNetworkId );
 								return;
 							}
-							else if ( building.CanDepositResources )
+							else
 							{
-								Items.Deposit( targetNetworkId );
+								Items.RepairOrDeposit( targetNetworkId );
 								return;
-							}
-						}
-
-						if ( selectable is IOccupiableEntity occupiable )
-						{
-							if ( occupiable.CanOccupyUnits )
-							{
-								Items.Occupy( targetNetworkId );
 							}
 						}
 					}
