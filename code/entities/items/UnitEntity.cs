@@ -372,8 +372,6 @@ namespace Facepunch.RTS
 				.WorldOnly()
 				.Run();
 
-			DebugOverlay.Line( trace.StartPos, trace.EndPos, Color.Magenta, 0f );
-
 			var normal = trace.Normal;
 
 			if ( Item.UseBoundsToAlign )
@@ -404,8 +402,6 @@ namespace Facepunch.RTS
 				normal = (averaged / count).Normal;
 			}
 
-			DebugOverlay.Line( Position, Position + normal * 200f, Color.Orange, 0f );
-
 			return normal;
 		}
 
@@ -414,8 +410,6 @@ namespace Facepunch.RTS
 			var trace = Trace.Ray( position.WithZ( 1000f ), position.WithZ( -1000f ) )
 			.WorldOnly()
 			.Run();
-
-			DebugOverlay.Line( trace.StartPos, trace.EndPos, Color.Green, 0f );
 
 			normals[index] = trace.Normal;
 		}
