@@ -18,7 +18,7 @@ Layer0
 	//---- Color ----
 	g_flModelTintAmount "1.000"
 	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
-	TextureColor "materials/gamelib/flowfields/building_blocker_color.tga"
+	TextureColor "materials/rts/hammer/building_blocker_color.tga"
 
 	//---- Fade ----
 	g_flFadeExponent "1.000"

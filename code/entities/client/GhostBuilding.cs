@@ -12,10 +12,11 @@ namespace Facepunch.RTS
 		public GhostBounds BoundsEntity { get; private set; }
 		public BaseBuilding Building { get; private set; }
 		public UnitEntity Worker { get; private set; }
+		public bool IsTouchingBlocker { get; private set; }
 
 		public GhostBuilding()
 		{
-			if ( IsServer ) Transmit = TransmitType.Never;
+			Transmit = TransmitType.Never;
 		}
 
 		public void SetWorkerAndBuilding( UnitEntity worker, BaseBuilding building )
@@ -27,6 +28,12 @@ namespace Facepunch.RTS
 			GlowActive = true;
 			GlowColor = Color.Green;
 			GlowState = GlowStates.GlowStateOn;
+
+			EnableTouch = true;
+			CollisionGroup = CollisionGroup.Trigger;
+			EnableSolidCollisions = false;
+
+			SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 
 			Building = building;
 			Worker = worker;
@@ -79,6 +86,8 @@ namespace Facepunch.RTS
 		{
 			if ( !Worker.IsValid() ) return false;
 
+			if ( IsTouchingBlocker ) return false;
+
 			var position = trace.EndPos;
 			var bounds = CollisionBounds * 1.25f;
 			var entities = Physics.GetEntitiesInBox( bounds + position )
@@ -108,6 +117,26 @@ namespace Facepunch.RTS
 			var verticality = trace.Normal.Dot( Vector3.Up );
 
 			return (verticality >= 0.9f);
+		}
+
+		public override void StartTouch( Entity other )
+		{
+			if ( other is BuildingBlocker )
+			{
+				IsTouchingBlocker = true;
+			}
+
+			base.StartTouch( other );
+		}
+
+		public override void EndTouch( Entity other )
+		{
+			if ( other is BuildingBlocker )
+			{
+				IsTouchingBlocker = false;
+			}
+
+			base.EndTouch( other );
 		}
 
 		protected override void OnDestroy()
