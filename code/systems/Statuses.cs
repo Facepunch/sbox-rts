@@ -1,4 +1,6 @@
 ﻿using Sandbox;
+using System;
+using System.Linq;
 
 namespace Facepunch.RTS
 {
@@ -9,18 +11,20 @@ namespace Facepunch.RTS
 			return Library.Create<IStatus>( id );
 		}
 
-		public static void Apply<S>( Vector3 position, float radius, StatusData data ) where S : IStatus
+		public static void Apply<S>( Vector3 position, float radius, StatusData data, Func<ISelectable, bool> filter = null ) where S : IStatus
 		{
 			Host.AssertServer();
 
-			var entities = Physics.GetEntitiesInSphere( position, radius );
+			var entities = Physics.GetEntitiesInSphere( position, radius ).OfType<ISelectable>();
+
+			if ( filter != null )
+			{
+				entities = entities.Where( filter );
+			}
 
 			foreach ( var entity in entities )
 			{
-				if ( entity is ISelectable target )
-				{
-					target.ApplyStatus<S>( data );
-				}
+				entity.ApplyStatus<S>( data );
 			}
 		}
 	}

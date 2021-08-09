@@ -24,10 +24,15 @@ namespace Facepunch.RTS
 					Interval = 0.1f,
 					Duration = 5f,
 					Amount = 0.5f
-				} );
+				}, CanHealUnit );
 			}
 
 			base.OnFinished();
+		}
+
+		private bool CanHealUnit( ISelectable target )
+		{
+			return (target.Player == User.Player);
 		}
 	}
 }
