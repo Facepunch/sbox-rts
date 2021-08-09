@@ -265,7 +265,6 @@ namespace Facepunch.RTS
 			if ( target.IsValid() && target is BuildingEntity building )
 			{
 				if ( building.Player != caller ) return;
-				if ( !building.CanDepositResources ) return;
 
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
@@ -282,11 +281,13 @@ namespace Facepunch.RTS
 
 						return false;
 					}
-					else
+					else if ( building.CanDepositResources )
 					{
 						unit.Deposit( building );
 						return true;
 					}
+
+					return false;
 				} );
 
 				if ( units.Count > 0 )

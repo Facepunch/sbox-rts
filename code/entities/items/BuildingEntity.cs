@@ -19,7 +19,16 @@ namespace Facepunch.RTS
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public Entity Target { get; private set; }
 		public RealTimeUntil NextFindTarget { get; private set; }
-		public bool CanDepositResources => Item.CanDepositResources;
+
+		public bool CanDepositResources
+		{
+			get
+			{
+				if ( IsUnderConstruction ) return false;
+				return Item.CanDepositResources;
+			}
+		}
+
 		public bool CanOccupyUnits
 		{
 			get
