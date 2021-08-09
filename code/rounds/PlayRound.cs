@@ -19,6 +19,7 @@ namespace Facepunch.RTS
 
 		public override void OnPlayerJoin( Player player )
 		{
+			player.MakeSpectator( true );
 			Spectators.Add( player );
 
 			base.OnPlayerJoin( player );

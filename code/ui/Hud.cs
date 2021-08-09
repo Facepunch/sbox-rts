@@ -62,8 +62,7 @@ namespace Facepunch.RTS
 			return true;
 		}
 
-		public Panel Header { get; private set; }
-		public Panel Footer { get; private set; }
+		public Panel TopBar { get; private set; }
 
 		public Hud()
 		{
@@ -77,9 +76,9 @@ namespace Facepunch.RTS
 			RootPanel.AddChild<RoundInfo>();
 			RootPanel.AddChild<MiniMap>();
 
-			var topBar = RootPanel.Add.Panel( "topbar" );
-			topBar.AddChild<ResourceList>();
-			topBar.AddChild<PopulationCount>();
+			TopBar = RootPanel.Add.Panel( "topbar" );
+			TopBar.AddChild<ResourceList>();
+			TopBar.AddChild<PopulationCount>();
 
 			RootPanel.AddChild<UnitGroups>();
 			RootPanel.AddChild<SelectedItem>();
