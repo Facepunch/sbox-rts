@@ -15,6 +15,7 @@ namespace Facepunch.RTS.Buildings
 		{
 			"tech.advancedballistics",
 			"tech.airsuperiority",
+			"tech.armageddon",
 			"tech.cryogenics",
 			"tech.overvoltage",
 			"tech.darkenergy"
