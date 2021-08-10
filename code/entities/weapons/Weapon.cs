@@ -19,7 +19,9 @@ namespace Facepunch.RTS
 		public virtual string SoundName => "rust_pistol.shoot";
 		public virtual float FireRate => 1f;
 		public virtual float Force => 2f;
+		public RealTimeUntil NextVisibilityCheck { get;  private set; }
 		public TimeSince LastAttack { get; set; }
+		public bool IsTargetVisible { get; protected set; }
 
 		public Weapon()
 		{
@@ -33,18 +35,25 @@ namespace Facepunch.RTS
 
 		public virtual bool CanSeeTarget()
 		{
-			var aimRay = GetAimRay();
-			var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
-				.EntitiesOnly()
-				.HitLayer( CollisionLayer.Debris, false )
-				.WithoutTags( "building" )
-				.WithoutTags( "unit" )
-				.Ignore( Occupiable )
-				.Ignore( Attacker )
-				.Run();
+			if ( NextVisibilityCheck )
+			{
+				var aimRay = GetAimRay();
+				var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
+					.EntitiesOnly()
+					.HitLayer( CollisionLayer.Debris, false )
+					.WithoutTags( "building" )
+					.WithoutTags( "unit" )
+					.Ignore( Occupiable )
+					.Ignore( Attacker )
+					.Run();
 
-			// Did we make it mostly to our target position?
-			return (trace.Fraction >= 0.95f);
+				NextVisibilityCheck = 0.5f;
+
+				// Did we make it mostly to our target position?
+				IsTargetVisible = ( trace.Fraction >= 0.95f);
+			}
+
+			return IsTargetVisible;
 		}
 
 		public virtual int GetDamage()
