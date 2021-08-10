@@ -22,10 +22,10 @@ namespace Facepunch.RTS
 
 		private void DrawCircle( VertexBuffer vb, float size, Color color, float alpha )
 		{
-			var a = new Vertex( Position + new Vector3( -size, -size, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 0, 1, 0, 0 ) );
-			var b = new Vertex( Position + new Vector3( size, -size, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 1, 1, 0, 0 ) );
-			var c = new Vertex( Position + new Vector3( size, size, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
-			var d = new Vertex( Position + new Vector3( -size, size, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
+			var a = new Vertex( new Vector3( -size, -size, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 0, 1, 0, 0 ) );
+			var b = new Vertex( new Vector3( size, -size, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 1, 1, 0, 0 ) );
+			var c = new Vertex( new Vector3( size, size, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
+			var d = new Vertex( new Vector3( -size, size, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
 
 			vb.AddQuad( a, b, c, d );
 
