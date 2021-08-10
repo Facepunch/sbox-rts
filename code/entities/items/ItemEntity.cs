@@ -23,7 +23,7 @@ namespace Facepunch.RTS
 		public Dictionary<string, ItemComponent> Components { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, OnChangedCallback] public uint ItemNetworkId { get; private set; }
-		[Net, Local] public List<uint> Upgrades { get; private set; }
+		[Net] public List<uint> Upgrades { get; private set; }
 		[Net] public Player Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }
 		public EntityHudAnchor Hud { get; private set; }
@@ -361,7 +361,6 @@ namespace Facepunch.RTS
 
 			var oldItem = Item;
 
-			Owner = player;
 			Player = player;
 			ItemNetworkId = item.NetworkId;
 

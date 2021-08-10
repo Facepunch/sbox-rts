@@ -326,17 +326,17 @@ namespace Facepunch.RTS
 
 		private void OnResearchingChanged()
 		{
-			SelectedItem.Instance.Update( Selection );
+			if ( IsLocalPawn ) SelectedItem.Instance.Update( Selection );
 		}
 
 		private void OnSelectionChanged()
 		{
-			SelectedItem.Instance.Update( Selection );
+			if ( IsLocalPawn ) SelectedItem.Instance.Update( Selection );
 		}
 
 		private void OnDependenciesChanged()
 		{
-			SelectedItem.Instance.Update( Selection );
+			if ( IsLocalPawn ) SelectedItem.Instance.Update( Selection );
 		}
 	}
 }

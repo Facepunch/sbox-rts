@@ -65,9 +65,9 @@ namespace Facepunch.RTS
 		public IOccupiableItem OccupiableItem => Item;
 
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
-		[Net, Local] public Entity Occupiable { get; private set; }
-		[Net, Local] public float GatherProgress { get; private set; }
-		[Net, Local] public bool IsGathering { get; private set; }
+		[Net] public Entity Occupiable { get; private set; }
+		[Net] public float GatherProgress { get; private set; }
+		[Net] public bool IsGathering { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSightRadius { get; private set; }
 		[Net, OnChangedCallback] public int Kills { get; set; }
