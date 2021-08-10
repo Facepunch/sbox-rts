@@ -6,6 +6,7 @@ using System.Linq;
 using Facepunch.RTS.Units;
 using System;
 using Gamelib.Extensions;
+using Gamelib.FlowFields.Entities;
 
 namespace Facepunch.RTS
 {
@@ -293,20 +294,30 @@ namespace Facepunch.RTS
 			if ( Input.Down( InputButton.Right ) )
 				velocity += EyeRot.Right * panSpeed * Time.Delta;
 
-			Position = (Position + velocity);
+			var lookAtPosition = (Position + velocity);
+			var worldSize = Gamemode.Instance.GetWorldSize();
+
+			lookAtPosition.x = lookAtPosition.x.Clamp( -worldSize, worldSize );
+			lookAtPosition.y = lookAtPosition.y.Clamp( -worldSize, worldSize );
+
+			Position = lookAtPosition;
+
+			Vector3 eyePos;
 
 			if ( cameraConfig.Ortho )
 			{
-				EyePos = Position + Vector3.Backward * cameraConfig.Backward;
-				EyePos += Vector3.Left * cameraConfig.Left;
-				EyePos += Vector3.Up * cameraConfig.Up;
+				eyePos = Position + Vector3.Backward * cameraConfig.Backward;
+				eyePos += Vector3.Left * cameraConfig.Left;
+				eyePos += Vector3.Up * cameraConfig.Up;
 			}
 			else
 			{
-				EyePos = Position + Vector3.Backward * (cameraConfig.Backward - (cameraConfig.Backward * ZoomLevel * cameraConfig.ZoomScale));
-				EyePos += Vector3.Left * (cameraConfig.Left - (cameraConfig.Left * ZoomLevel * cameraConfig.ZoomScale));
-				EyePos += Vector3.Up * (cameraConfig.Up - (cameraConfig.Up * ZoomLevel * cameraConfig.ZoomScale));
+				eyePos = Position + Vector3.Backward * (cameraConfig.Backward - (cameraConfig.Backward * ZoomLevel * cameraConfig.ZoomScale));
+				eyePos += Vector3.Left * (cameraConfig.Left - (cameraConfig.Left * ZoomLevel * cameraConfig.ZoomScale));
+				eyePos += Vector3.Up * (cameraConfig.Up - (cameraConfig.Up * ZoomLevel * cameraConfig.ZoomScale));
 			}
+
+			EyePos = eyePos;
 
 			var difference = Position - EyePos;
 			EyeRot = Rotation.LookAt( difference, Vector3.Up );
@@ -317,7 +328,7 @@ namespace Facepunch.RTS
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
 				var bot = Rounds.Current.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
 
-				var worker = Items.Create<UnitEntity>( bot, "unit.tank" );
+				var worker = Items.Create<UnitEntity>( bot, "unit.worker" );
 				worker.Position = trace.EndPos;
 			}
 

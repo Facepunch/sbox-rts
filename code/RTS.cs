@@ -14,6 +14,7 @@ namespace Facepunch.RTS
 		public static Gamemode Instance { get; private set; }
 
 		[Net] public float ServerTime { get; private set; }
+		public float DefaultWorldSize { get; private set; } = 10000f;
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
 
@@ -55,7 +56,15 @@ namespace Facepunch.RTS
 		{
 			var client = player.GetClientOwner();
 			Ratings[client.SteamId] = player.Elo.Rating;
-		} 
+		}
+
+		public float GetWorldSize()
+		{
+			if ( FlowFieldGround.Exists )
+				return FlowFieldGround.Bounds.Size.x;
+			else
+				return 0f;
+		}
 
 		public async Task StartSecondTimer()
 		{
@@ -87,7 +96,7 @@ namespace Facepunch.RTS
 				if ( FlowFieldGround.Exists )
 					PathManager.SetBounds( FlowFieldGround.Bounds );
 				else
-					PathManager.SetBounds( new BBox( Vector3.One * -5000f, Vector3.One * 5000f ) );
+					PathManager.SetBounds( new BBox( Vector3.One * -DefaultWorldSize, Vector3.One * DefaultWorldSize ) );
 
 				foreach ( var unit in units )
 				{

@@ -10,7 +10,6 @@ namespace Facepunch.RTS
 		public static bool Enabled { get; set; } = true;
 
 		public Material FogMaterial = Material.Load( "materials/rts/fog.vmat" );
-		public Texture Texture { get; set; }
 
 		public override void DoRender( SceneObject sceneObject )
 		{

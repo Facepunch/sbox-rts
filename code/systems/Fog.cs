@@ -29,6 +29,107 @@ namespace Facepunch.RTS
 			public float LineOfSightRadius { get; set; }
 		}
 
+		public class FogTexture
+		{
+			public Texture Texture;
+			public float PixelScale;
+			public int HalfResolution;
+			public int Resolution;
+			public Vector3n Origin;
+			public byte[] Data;
+
+			public void Clear()
+			{
+				for ( int x = 0; x < Resolution; x++ )
+				{
+					for ( int y = 0; y < Resolution; y++ )
+					{
+						var index = ((x * Resolution) + y);
+						Data[index + 0] = 255;
+					}
+				}
+			}
+
+			public bool IsAreaSeen( Vector3n location )
+			{
+				var origin = location - Origin;
+				var x = (int)(origin.X * PixelScale) + HalfResolution;
+				var y = (int)(origin.Y * PixelScale) + HalfResolution;
+				var i = ((y * Resolution) + x);
+
+				if ( i <= 0 || i > Resolution * Resolution )
+					return false;
+
+				return (Data[i] <= 200);
+			}
+
+			public void PunchHole( Vector3n location, float range )
+			{
+				var origin = location - Origin;
+				var radius = (int)(range * PixelScale);
+				var resolution = Resolution;
+				var centerPixelX = (origin.X * PixelScale) + HalfResolution;
+				var centerPixelY = (origin.Y * PixelScale) + HalfResolution;
+				var renderRadius = radius * ((float)Math.PI * 0.5f);
+				var xMin = (int)Math.Max( centerPixelX - renderRadius, 0 );
+				var xMax = (int)Math.Min( centerPixelX + renderRadius, resolution - 1 );
+				var yMin = (int)Math.Max( centerPixelY - renderRadius, 0 );
+				var yMax = (int)Math.Min( centerPixelY + renderRadius, resolution - 1 );
+
+				for ( int x = xMin; x < xMax; x++ )
+				{
+					for ( int y = yMin; y < yMax; y++ )
+					{
+						var index = ((y * resolution) + x);
+						var p = new Vector3n( centerPixelX - x, centerPixelY - y, 0f );
+						var a = (p.Length() - radius) * 0.25f * 255;
+						var b = a < 0 ? 0 : (a > 255 ? 255 : a);
+						var sdf = (byte)b;
+						var current = Data[index];
+						Data[index] = sdf > current ? current : sdf;
+					}
+				}
+			}
+
+			public void FillRegion( Vector3n location, float range, byte alpha )
+			{
+				var origin = location - Origin;
+				var resolution = Resolution;
+				var radius = (int)(range * PixelScale);
+				var centerPixelX = (origin.X * PixelScale) + HalfResolution;
+				var centerPixelY = (origin.Y * PixelScale) + HalfResolution;
+				var renderRadius = radius * ((float)Math.PI * 0.5f);
+				var xMin = (int)Math.Max( centerPixelX - renderRadius, 0 );
+				var xMax = (int)Math.Min( centerPixelX + renderRadius, resolution - 1 );
+				var yMin = (int)Math.Max( centerPixelY - renderRadius, 0 );
+				var yMax = (int)Math.Min( centerPixelY + renderRadius, resolution - 1 );
+
+				for ( int x = xMin; x < xMax; x++ )
+				{
+					for ( int y = yMin; y < yMax; y++ )
+					{
+						var index = ((y * resolution) + x);
+						Data[index] = Math.Max( alpha, Data[index] );
+					}
+				}
+			}
+
+			public void Update()
+			{
+				Texture.Update( Data );
+			}
+
+			public void Destroy()
+			{
+				Texture.Dispose();
+			}
+
+			public void Apply( FogRenderer renderer )
+			{
+				renderer.FogMaterial.OverrideTexture( "Color", Texture );
+			}
+		}
+
 		public class FogBounds
 		{
 			public Vector3 TopLeft;
@@ -73,12 +174,7 @@ namespace Facepunch.RTS
 		private static readonly List<FogViewer> _viewers = new();
 
 		private static IEnumerable<SceneParticleObject> _particleContainers;
-		private static Texture _texture;
-		private static float _pixelScale;
-		private static int _halfResolution;
-		private static int _resolution;
-		private static Vector3n _origin;
-		private static byte[] _data;
+		private static FogTexture _texture;
 
 		public static void Initialize()
 		{
@@ -86,14 +182,13 @@ namespace Facepunch.RTS
 
 			Renderer = new FogRenderer
 			{
-				Texture = _texture,
 				Position = Vector3.Zero
 			};
 
 			if ( FlowFieldGround.Exists )
 				Bounds.SetFrom( FlowFieldGround.Bounds );
 			else
-				Bounds.SetSize( 30000f );
+				Bounds.SetSize( Gamemode.Instance.DefaultWorldSize );
 
 			Renderer.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
 
@@ -192,7 +287,7 @@ namespace Facepunch.RTS
 
 				if ( data.Object == viewer )
 				{
-					FillRegion( data.LastPosition, data.Object.LineOfSightRadius, 200 );
+					_texture.FillRegion( data.LastPosition, data.Object.LineOfSightRadius, 200 );
 					_viewers.RemoveAt( i );
 					break;
 				}
@@ -201,86 +296,20 @@ namespace Facepunch.RTS
 
 		public static bool IsAreaSeen( Vector3n location )
 		{
-			var origin = location - _origin;
-			var x = (int)(origin.X * _pixelScale) + _halfResolution;
-			var y = (int)(origin.Y * _pixelScale) + _halfResolution;
-			var i = ((y * _resolution) + x);
-
-			if ( i <= 0 || i > _resolution * _resolution )
-				return false;
-
-			return (_data[i] <= 200);
+			return _texture.IsAreaSeen( location );
 		}
 
 		[ClientRpc]
 		public static void Clear()
 		{
-			for ( int x = 0; x < _resolution; x++ )
-			{
-				for ( int y = 0; y < _resolution; y++ )
-				{
-					var index = ((x * _resolution) + y);
-					_data[index + 0] = 255;
-				}
-			}
+			_texture.Clear();
 		}
 
 		[ClientRpc]
 		public static void MakeVisible( Vector3n position, float range )
 		{
-			PunchHole( position, range );
-			FillRegion( position, range, 200 );
-		}
-
-		public static void PunchHole( Vector3n location, float range )
-		{
-			var origin = location - _origin;
-			var radius = (int)(range * _pixelScale);
-			var centerPixelX = (origin.X * _pixelScale) + _halfResolution;
-			var centerPixelY = (origin.Y * _pixelScale) + _halfResolution;
-			var renderRadius = radius * ((float)Math.PI * 0.5f);
-			var xMin = (int)Math.Max( centerPixelX - renderRadius, 0 );
-			var xMax = (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 );
-			var yMin = (int)Math.Max( centerPixelY - renderRadius, 0 );
-			var yMax = (int)Math.Min( centerPixelY + renderRadius, _resolution - 1 );
-			var data = _data;
-
-			for ( int x = xMin; x < xMax; x++ )
-			{
-				for ( int y = yMin; y < yMax; y++ )
-				{
-					var index = ((y * _resolution) + x);
-					var p = new Vector3n( centerPixelX - x, centerPixelY - y, 0f );
-					var a = (p.Length() - radius) * 0.25f * 255;
-					var b = a < 0 ? 0 : (a > 255 ? 255 : a);
-					var sdf = (byte)b;
-					var current = data[index];
-					data[index] = sdf > current ? current : sdf;
-				}	
-			}
-		}
-
-		public static void FillRegion( Vector3n location, float range, byte alpha )
-		{
-			var origin = location - _origin;
-			var radius = (int)(range * _pixelScale);
-			var centerPixelX = (origin.X * _pixelScale) + _halfResolution;
-			var centerPixelY = (origin.Y * _pixelScale) + _halfResolution;
-			var renderRadius = radius * ((float)Math.PI * 0.5f);
-			var xMin = (int)Math.Max( centerPixelX - renderRadius, 0 );
-			var xMax = (int)Math.Min( centerPixelX + renderRadius, _resolution - 1 );
-			var yMin = (int)Math.Max( centerPixelY - renderRadius, 0 );
-			var yMax = (int)Math.Min( centerPixelY + renderRadius, _resolution - 1 );
-			var data = _data;
-
-			for ( int x = xMin; x < xMax; x++ )
-			{
-				for ( int y = yMin; y < yMax; y++ )
-				{
-					var index = ((y * _resolution) + x);
-					data[ index ] = Math.Max( alpha, data[ index ] );
-				}
-			}
+			_texture.PunchHole( position, range );
+			_texture.FillRegion( position, range, 200 );
 		}
 
 		private static void OnGroundUpdated()
@@ -293,16 +322,20 @@ namespace Facepunch.RTS
 		{
 			if ( _texture != null )
 			{
-				_texture.Dispose();
+				_texture.Destroy();
 				_texture = null;
 			}
 
-			_resolution = Math.Max( ((float)(Bounds.Size / 30f)).CeilToInt(), 128 );
-			_halfResolution = _resolution / 2;
-			_pixelScale = (_resolution / Bounds.Size);
-			_texture = Texture.Create( _resolution, _resolution, ImageFormat.A8 ).Finish();
-			_origin = Bounds.Origin;
-			_data = new byte[_resolution * _resolution];
+			_texture = new FogTexture
+			{
+				Resolution = Math.Max( ((float)(Bounds.Size / 30f)).CeilToInt(), 128 )
+			};
+
+			_texture.HalfResolution = _texture.Resolution / 2;
+			_texture.PixelScale = (_texture.Resolution / Bounds.Size);
+			_texture.Texture = Texture.Create( _texture.Resolution, _texture.Resolution, ImageFormat.A8 ).Finish();
+			_texture.Origin = Bounds.Origin;
+			_texture.Data = new byte[_texture.Resolution * _texture.Resolution];
 
 			if ( Renderer == null )
 			{
@@ -310,14 +343,14 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			Renderer.FogMaterial.OverrideTexture( "Color", _texture );
+			_texture.Apply( Renderer );
 		}
 
 		private static void AddRange( Vector3n position, float range )
 		{
 			FogCullable cullable;
 
-			PunchHole( position, range );
+			_texture.PunchHole( position, range );
 
 			// We multiply by 12.5% to cater for the render range.
 			var renderRange = range * 1.125f;
@@ -400,7 +433,7 @@ namespace Facepunch.RTS
 				for ( var i = 0; i < _viewers.Count; i++ )
 				{
 					var viewer = _viewers[i];
-					FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, 200 );
+					_texture.FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, 200 );
 				}
 
 				// Our second pass will show what is currently visible.
@@ -415,7 +448,7 @@ namespace Facepunch.RTS
 					viewer.LastPosition = position;
 				}
 
-				_texture.Update( _data );
+				_texture.Update();
 
 				try
 				{
