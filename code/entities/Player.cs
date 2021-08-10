@@ -275,6 +275,8 @@ namespace Facepunch.RTS
 
 		public override void Simulate( Client client )
 		{
+			if ( !Gamemode.Instance.IsValid() ) return;
+
 			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
 			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
