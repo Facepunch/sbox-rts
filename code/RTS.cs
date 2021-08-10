@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 		public static Gamemode Instance { get; private set; }
 
 		[Net] public float ServerTime { get; private set; }
-		public float DefaultWorldSize { get; private set; } = 10000f;
+		public BBox WorldSize { get; private set; } = new BBox( Vector3.One * -5000f, Vector3.One * 5000f );
 
 		public Dictionary<ulong, int> Ratings { get; private set; }
 
@@ -44,10 +44,15 @@ namespace Facepunch.RTS
 			Items.Initialize();
 			Resistances.Initialize();
 
+			if ( FlowFieldGround.Exists )
+				WorldSize = FlowFieldGround.Bounds;
+
 			if ( IsClient )
 			{
-				Fog.Initialize();
+				Fog.Initialize( WorldSize );
 			}
+
+			FlowFieldGround.OnUpdated += OnGroundUpdated;
 
 			Instance = this;
 		}
@@ -56,14 +61,6 @@ namespace Facepunch.RTS
 		{
 			var client = player.GetClientOwner();
 			Ratings[client.SteamId] = player.Elo.Rating;
-		}
-
-		public float GetWorldSize()
-		{
-			if ( FlowFieldGround.Exists )
-				return FlowFieldGround.Bounds.Size.x;
-			else
-				return 0f;
 		}
 
 		public async Task StartSecondTimer()
@@ -93,10 +90,7 @@ namespace Facepunch.RTS
 			{
 				var units = Items.List.OfType<BaseUnit>();
 
-				if ( FlowFieldGround.Exists )
-					PathManager.SetBounds( FlowFieldGround.Bounds );
-				else
-					PathManager.SetBounds( new BBox( Vector3.One * -DefaultWorldSize, Vector3.One * DefaultWorldSize ) );
+				PathManager.SetBounds( WorldSize );
 
 				foreach ( var unit in units )
 				{
@@ -134,6 +128,14 @@ namespace Facepunch.RTS
 			Rounds.Current?.OnPlayerJoin( player );
 
 			base.ClientJoined( client );
+		}
+
+		private void OnGroundUpdated()
+		{
+			WorldSize = FlowFieldGround.Bounds;
+
+			if ( IsClient )
+				Fog.UpdateSize( WorldSize );
 		}
 
 		private void OnSecond()

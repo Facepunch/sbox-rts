@@ -297,7 +297,7 @@ namespace Facepunch.RTS
 				velocity += EyeRot.Right * panSpeed * Time.Delta;
 
 			var lookAtPosition = (Position + velocity);
-			var worldSize = Gamemode.Instance.GetWorldSize();
+			var worldSize = Gamemode.Instance.WorldSize.Size.x;
 
 			lookAtPosition.x = lookAtPosition.x.Clamp( -worldSize, worldSize );
 			lookAtPosition.y = lookAtPosition.y.Clamp( -worldSize, worldSize );

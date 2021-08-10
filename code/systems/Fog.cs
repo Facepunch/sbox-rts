@@ -176,7 +176,7 @@ namespace Facepunch.RTS
 		private static IEnumerable<SceneParticleObject> _particleContainers;
 		private static FogTexture _texture;
 
-		public static void Initialize()
+		public static void Initialize( BBox size )
 		{
 			Host.AssertClient();
 
@@ -185,20 +185,21 @@ namespace Facepunch.RTS
 				Position = Vector3.Zero
 			};
 
-			if ( FlowFieldGround.Exists )
-				Bounds.SetFrom( FlowFieldGround.Bounds );
-			else
-				Bounds.SetSize( Gamemode.Instance.DefaultWorldSize );
+			Bounds.SetFrom( size );
 
 			Renderer.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
 
 			UpdateTextureSize();
 
-			FlowFieldGround.OnUpdated += OnGroundUpdated;
-
 			Clear();
 
 			UpdateFogMap();
+		}
+
+		public static void UpdateSize( BBox size )
+		{
+			Bounds.SetFrom( size );
+			UpdateTextureSize();
 		}
 
 		public static void MakeVisible( Player player, Vector3 position, float radius )
@@ -310,12 +311,6 @@ namespace Facepunch.RTS
 		{
 			_texture.PunchHole( position, range );
 			_texture.FillRegion( position, range, 200 );
-		}
-
-		private static void OnGroundUpdated()
-		{
-			Bounds.SetFrom( FlowFieldGround.Bounds );
-			UpdateTextureSize();
 		}
 
 		private static void UpdateTextureSize()
