@@ -38,6 +38,7 @@ namespace Facepunch.RTS
 
 		private struct AnimationValues
 		{
+			public string Sequence;
 			public float Speed;
 			public bool Attacking;
 			public int HoldType;
@@ -49,11 +50,36 @@ namespace Facepunch.RTS
 				Attacking = false;
 			}
 
+			public void Play( AnimEntity entity, string sequence )
+			{
+				if ( Sequence != sequence )
+				{
+					entity.PlaybackRate = 1f;
+					entity.Sequence = sequence;
+					Sequence = sequence;
+				}
+			}
+
 			public void Finish( AnimEntity entity )
 			{
+				if ( Speed >= 0.5f )
+				{
+					Play( entity, "Run_N" );
+				}
+				else if ( Speed >= 0.5f )
+				{
+					Play( entity, "Walk_N" );
+				}
+				else
+				{
+					Play( entity, "IdlePoseDefault" );
+				}
+
+				/*
 				entity.SetAnimInt( "holdtype", HoldType );
 				entity.SetAnimBool( "attacking", Attacking );
 				entity.SetAnimFloat( "speed", entity.GetAnimFloat( "speed" ).LerpTo( Speed, Time.Delta * 10f ) );
+				*/
 			}
 		}
 
@@ -245,11 +271,9 @@ namespace Facepunch.RTS
 			if ( Occupiable is IOccupiableEntity occupiable )
 			{
 				var attackRadius = occupiable.GetAttackRadius();
-				return occupiable.IsInRange( _target.Entity, attackRadius > 0f ? attackRadius : _target.Radius );
 				return occupiable.IsInRange( target, attackRadius > 0f ? attackRadius : radius );
 			}
 
-			return IsInRange( _target.Entity, _target.Radius );
 			var minAttackDistance = Item.MinAttackDistance;
 
 			if ( minAttackDistance > 0f )
@@ -913,23 +937,17 @@ namespace Facepunch.RTS
 					var isTargetInRange = IsTargetInRange();
 					var isTargetValid = IsTargetValid();
 
-					if ( !isTargetValid || !isTargetInRange || IsMoveGroupValid() )
-					if ( _target.Type == UnitTargetType.Attack && !IsMoveGroupValid() )
 					if ( _target.Type == UnitTargetType.Attack )
 					{
-						TickMoveToTarget( isTargetValid );
-						ValidateAttackDistance();
 						if ( !isTargetValid )
 							ClearTarget();
 						else if ( !IsMoveGroupValid() )
 							ValidateAttackDistance();
 					}
-					else
 
 					if ( isTargetValid && isTargetInRange )
 					{
 						TickInteractWithTarget();
-						_target.Position = null;
 						ClearMoveGroup();
 					}
 					else
@@ -1067,7 +1085,6 @@ namespace Facepunch.RTS
 
 			if ( Circle.IsValid() && Player.IsValid() )
 			{
-				if ( Player.IsLocalPawn && IsSelected )
 				if ( IsLocalPlayers && IsSelected )
 					Circle.Color = Color.White;
 				else
@@ -1256,7 +1273,6 @@ namespace Facepunch.RTS
 
 		private void TickFindTarget()
 		{
-			if ( !IsSelected && !_target.Follow && Weapon.IsValid() && _nextFindTarget )
 			if ( IsSelected || IsMoveGroupValid() || !Weapon.IsValid() )
 				return;
 
@@ -1272,7 +1288,6 @@ namespace Facepunch.RTS
 
 		private void TickOccupantAttack()
 		{
-			if ( Occupiable is not IOccupiableEntity occupiable ) return;
 			if ( Occupiable is not IOccupiableEntity occupiable )
 				return;
 
@@ -1292,11 +1307,6 @@ namespace Facepunch.RTS
 
 		private void TickInteractWithTarget()
 		{
-			if ( _target.Type == UnitTargetType.Attack && !ValidateMinAttackDistance() )
-			{
-				return;
-			}
-
 			var lookAtDistance = 0f;
 
 			if ( !SpinSpeed.HasValue )
@@ -1380,7 +1390,6 @@ namespace Facepunch.RTS
 			}
 		}
 
-		private bool ValidateMinAttackDistance()
 		private bool ValidateAttackDistance()
 		{
 			if ( !_target.HasEntity() ) return false;
@@ -1388,8 +1397,6 @@ namespace Facepunch.RTS
 			var minAttackDistance = Item.MinAttackDistance;
 			var target = _target.Entity;
 
-			if ( minAttackDistance == 0f )
-				return true;
 			if ( minAttackDistance == 0f ) return true;
 
 			var tolerance = (Pathfinder.NodeSize * 2f);

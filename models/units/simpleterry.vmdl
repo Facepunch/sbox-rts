@@ -546,7 +546,7 @@
 										hidden = false
 										anim_markup_ordered = false
 										disable_compression = false
-										source_filename = "models/citizen/animations/Citizen@WalkN.fbx"
+										source_filename = "models/citizen/animations/citizen@walk_n.fbx"
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
@@ -602,7 +602,7 @@
 										hidden = false
 										anim_markup_ordered = false
 										disable_compression = false
-										source_filename = "models/citizen/animations/Citizen@RunN.fbx"
+										source_filename = "models/citizen/animations/citizen@run_n.fbx"
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
@@ -3068,6 +3068,6 @@
 		]
 		model_archetype = ""
 		primary_associated_entity = ""
-		anim_graph_name = "models/units/simpleterry.vanmgrph"
+		anim_graph_name = ""
 	}
 }
