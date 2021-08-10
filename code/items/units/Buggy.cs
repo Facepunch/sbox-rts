@@ -18,7 +18,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseBoundsToAlign => true;
 		public override string Entity => "unit_buggy";
 		public override int NodeSize => 50;
-		public override int CollisionSize => 350;
+		public override int CollisionSize => 100;
 		public override float AttackRadius => 1000f;
 		public override float LineOfSightRadius => 1000f;
 		public override bool RagdollOnDeath => false;

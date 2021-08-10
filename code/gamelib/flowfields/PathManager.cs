@@ -126,7 +126,7 @@ namespace Gamelib.FlowFields
 
 			if ( !_pathfinders.ContainsKey( hash ) )
 			{
-				Register( new Pathfinder( _bounds.Value, nodeSize ), nodeSize, collisionSize );
+				Register( new Pathfinder( _bounds.Value, nodeSize, collisionSize ), nodeSize, collisionSize );
 			}
 		}
 

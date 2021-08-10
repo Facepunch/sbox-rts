@@ -40,7 +40,7 @@ namespace Gamelib.FlowFields
 		public Vector3 CenterOffset => _centerOffset;
 		public Vector3 CollisionExtents => _collisionExtents;
 		public Vector3 NodeExtents => _nodeExtents;
-		public float HeightThreshold { get; set; } = 50f;
+		public float HeightThreshold { get; set; } = 40f;
 		public Vector3 Origin { get; private set; }
 
 		public GridDefinition ChunkGridSize => _chunkGridSize;
@@ -408,10 +408,10 @@ namespace Gamelib.FlowFields
 			}
         }
 
-		private void SetupSize( int numberOfChunks, int chunkGridSize, int nodeSize, int collisionSIze )
+		private void SetupSize( int numberOfChunks, int chunkGridSize, int nodeSize, int collisionSize )
 		{
 			var physicsBody = PhysicsWorld.AddBody();
-			var collisionExtents = Vector3.One * collisionSIze * 0.5f;
+			var collisionExtents = Vector3.One * collisionSize * 0.5f;
 			var nodeExtents = Vector3.One * nodeSize * 0.5f;
 
 			physicsBody.CollisionEnabled = false;
@@ -419,6 +419,7 @@ namespace Gamelib.FlowFields
 
 			_numberOfChunks = new GridDefinition( numberOfChunks, numberOfChunks );
 			_collisionExtents = collisionExtents;
+			_collisionSize = collisionSize;
 			_nodeExtents = nodeExtents;
 			_physicsBody = physicsBody;
 			_chunkGridSize = new GridDefinition( chunkGridSize, chunkGridSize );
