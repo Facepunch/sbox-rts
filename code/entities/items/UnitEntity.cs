@@ -239,13 +239,28 @@ namespace Facepunch.RTS
 		{
 			if ( !_target.HasEntity() ) return false;
 
+			var target = _target.Entity;
+			var radius = _target.Radius;
+
 			if ( Occupiable is IOccupiableEntity occupiable )
 			{
 				var attackRadius = occupiable.GetAttackRadius();
 				return occupiable.IsInRange( _target.Entity, attackRadius > 0f ? attackRadius : _target.Radius );
+				return occupiable.IsInRange( target, attackRadius > 0f ? attackRadius : radius );
 			}
 
 			return IsInRange( _target.Entity, _target.Radius );
+			var minAttackDistance = Item.MinAttackDistance;
+
+			if ( minAttackDistance > 0f )
+			{
+				var tolerance = (Pathfinder.NodeSize * 2f);
+
+				if ( target.Position.WithZ( 0f ).Distance( Position.WithZ( 0f ) ) < minAttackDistance - tolerance )
+					return false;
+			}
+
+			return IsInRange( target, radius );
 		}
 
 		public bool IsMoveGroupValid()
@@ -899,13 +914,22 @@ namespace Facepunch.RTS
 					var isTargetValid = IsTargetValid();
 
 					if ( !isTargetValid || !isTargetInRange || IsMoveGroupValid() )
+					if ( _target.Type == UnitTargetType.Attack && !IsMoveGroupValid() )
 					{
 						TickMoveToTarget( isTargetValid );
+						ValidateAttackDistance();
 					}
 					else
+
+					if ( isTargetValid && isTargetInRange )
 					{
 						TickInteractWithTarget();
 						_target.Position = null;
+						ClearMoveGroup();
+					}
+					else
+					{
+						TickMoveToTarget( isTargetValid );
 					}
 
 					TickFindTarget();
@@ -1342,12 +1366,16 @@ namespace Facepunch.RTS
 		}
 
 		private bool ValidateMinAttackDistance()
+		private bool ValidateAttackDistance()
 		{
+			if ( !_target.HasEntity() ) return false;
+
 			var minAttackDistance = Item.MinAttackDistance;
 			var target = _target.Entity;
 
 			if ( minAttackDistance == 0f )
 				return true;
+			if ( minAttackDistance == 0f ) return true;
 
 			var tolerance = (Pathfinder.NodeSize * 2f);
 			var targetPosition = target.Position.WithZ( 0f );
@@ -1362,6 +1390,7 @@ namespace Facepunch.RTS
 				return true;
 
 			SetMoveGroup( CreateMoveGroup( position.Value ) );
+
 			return false;
 		}
 
