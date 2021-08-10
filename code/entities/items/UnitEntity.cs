@@ -915,9 +915,14 @@ namespace Facepunch.RTS
 
 					if ( !isTargetValid || !isTargetInRange || IsMoveGroupValid() )
 					if ( _target.Type == UnitTargetType.Attack && !IsMoveGroupValid() )
+					if ( _target.Type == UnitTargetType.Attack )
 					{
 						TickMoveToTarget( isTargetValid );
 						ValidateAttackDistance();
+						if ( !isTargetValid )
+							ClearTarget();
+						else if ( !IsMoveGroupValid() )
+							ValidateAttackDistance();
 					}
 					else
 
@@ -1063,6 +1068,7 @@ namespace Facepunch.RTS
 			if ( Circle.IsValid() && Player.IsValid() )
 			{
 				if ( Player.IsLocalPawn && IsSelected )
+				if ( IsLocalPlayers && IsSelected )
 					Circle.Color = Color.White;
 				else
 					Circle.Color = Player.TeamColor;
@@ -1251,6 +1257,13 @@ namespace Facepunch.RTS
 		private void TickFindTarget()
 		{
 			if ( !IsSelected && !_target.Follow && Weapon.IsValid() && _nextFindTarget )
+			if ( IsSelected || IsMoveGroupValid() || !Weapon.IsValid() )
+				return;
+
+			if ( _target.Follow )
+				return;
+
+			if ( _nextFindTarget )
 			{
 				FindTargetEnemy();
 				_nextFindTarget = 1;
@@ -1260,6 +1273,8 @@ namespace Facepunch.RTS
 		private void TickOccupantAttack()
 		{
 			if ( Occupiable is not IOccupiableEntity occupiable ) return;
+			if ( Occupiable is not IOccupiableEntity occupiable )
+				return;
 
 			if ( occupiable.CanOccupantsAttack() && IsTargetValid() )
 			{
