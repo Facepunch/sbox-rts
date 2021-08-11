@@ -8,8 +8,8 @@ namespace Gamelib.DayNight
 		public static event SectionChanged OnSectionChanged;
 
 		public static TimeSection Section { get; private set; }
-		public static float TimeOfDay { get; set; } = 0f;
-		public static float Speed { get; set; } = 1f;
+		public static float TimeOfDay { get; set; } = 9f;
+		public static float Speed { get; set; } = 0.05f;
 
 		public static TimeSection ToSection( float time )
 		{

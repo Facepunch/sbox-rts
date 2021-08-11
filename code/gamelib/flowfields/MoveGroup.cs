@@ -14,6 +14,7 @@ namespace Gamelib.FlowFields
 		public List<IMoveAgent> Agents { get; private set; }
 		public PathRequest PathRequest { get; private set; }
 		public Pathfinder Pathfinder { get; private set; }
+		private Queue<Vector3> Queue { get; set; }
 
 		public MoveGroup( bool autoSortAgents = false )
 		{
@@ -73,6 +74,12 @@ namespace Gamelib.FlowFields
 			}
 		}
 
+		public void Enqueue( Vector3 destination )
+		{
+			Queue ??= new();
+			Queue.Enqueue( destination );
+		}
+
 		public void Finish( IMoveAgent agent )
 		{
 			if ( !IsValid() || ReachedGoal.Contains( agent) )
@@ -82,7 +89,16 @@ namespace Gamelib.FlowFields
 
 			if ( ReachedGoal.Count == Agents.Count )
 			{
-				Dispose();
+				if ( Queue == null || Queue.Count == 0 )
+				{
+					Dispose();
+					return;
+				}
+
+				var next = Queue.Dequeue();
+
+				PathRequest = Pathfinder.Request( next );
+				ReachedGoal.Clear();
 			}
 		}
 

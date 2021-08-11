@@ -183,7 +183,7 @@ namespace Facepunch.RTS
 					}
 					else
 					{
-						Items.MoveToLocation( trace.EndPos.ToCSV() );
+						Items.MoveToLocation( trace.EndPos.ToCSV(), Input.Down( InputButton.Run ) );
 					}
 				}
 			}
@@ -230,14 +230,14 @@ namespace Facepunch.RTS
 
 					var list = string.Join( ",", entities );
 
-					Items.Select( list );
+					Items.Select( list, Input.Down( InputButton.Run ) );
 				}
 				else
 				{
 					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
 
 					if ( trace.Entity is ISelectable selectable && selectable.CanSelect() )
-						Items.Select( trace.Entity.NetworkIdent.ToString() );
+						Items.Select( trace.Entity.NetworkIdent.ToString(), Input.Down( InputButton.Run ) );
 					else
 						Items.Select();
 				}

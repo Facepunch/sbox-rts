@@ -375,7 +375,7 @@ namespace Facepunch.RTS
 		}
 		
 		[ServerCmd]
-		public static void MoveToLocation( string csv )
+		public static void MoveToLocation( string csv, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -399,15 +399,37 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
-					var agents = units.Cast<IMoveAgent>().ToList();
-					var moveGroup = new MoveGroup();
-
-					moveGroup.Initialize( agents, position );
+					var moveGroups = new HashSet<MoveGroup>();
+					var agents = new List<IMoveAgent>();
 
 					for ( int i = 0; i < units.Count; i++ )
 					{
 						var unit = units[i];
-						unit.MoveTo( moveGroup );
+
+						if ( shouldQueue && unit.IsMoveGroupValid() )
+							moveGroups.Add( unit.MoveGroup );
+						else
+							agents.Add( unit );
+					}
+
+					if ( agents.Count > 0 )
+					{
+						var moveGroup = new MoveGroup();
+						moveGroup.Initialize( agents, position );
+
+						for ( int i = 0; i < units.Count; i++ )
+						{
+							var unit = units[i];
+							unit.MoveTo( moveGroup );
+						}
+					}
+
+					if ( shouldQueue )
+					{
+						foreach ( var group in moveGroups )
+						{
+							group.Enqueue( position );
+						}
 					}
 
 					var randomUnit = units[Rand.Int( units.Count - 1 )];
@@ -417,17 +439,21 @@ namespace Facepunch.RTS
 		}
 
 		[ServerCmd]
-		public static void Select( string csv = null )
+		public static void Select( string csv = null, bool isAdditive = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
 
-			caller.ClearSelection();
-
 			if ( string.IsNullOrEmpty( csv ) )
+			{
+				caller.ClearSelection();
 				return;
+			}
+
+			// If this isn't an additive selection, clear our existing one.
+			if ( !isAdditive ) caller.ClearSelection();
 
 			var eligible = new List<ISelectable>();
 			var entities = csv.Split( ',', StringSplitOptions.TrimEntries )
