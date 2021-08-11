@@ -36,6 +36,14 @@ namespace Facepunch.RTS
 			public bool HasEntity() => Entity.IsValid();
 		}
 
+		private class GatherInfo
+		{
+			public ResourceEntity Entity;
+			public Vector3 Position;
+			public ResourceType Type;
+			public TimeSince LastGather;
+		}
+
 		private struct AnimationValues
 		{
 			public string Sequence;
@@ -106,11 +114,7 @@ namespace Facepunch.RTS
 		public float TargetAlpha { get; private set; }
 		public float AgentRadius { get; private set; }
 		public bool IsStatic { get; private set; }
-		public TimeSince LastGatherTime { get; private set; }
-		public ResourceEntity LastResourceEntity { get; private set; }
 		public DamageInfo LastDamageTaken { get; private set; }
-		public ResourceType LastResourceType { get; private set; }
-		public Vector3 LastResourcePosition { get; private set; }
 		public MoveGroup MoveGroup { get; private set; }
 		public Vector3 InputVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
@@ -122,12 +126,14 @@ namespace Facepunch.RTS
 		public EntityHudIcon RankIcon { get; private set; }
 		#endregion
 
+		private readonly GatherInfo _gather = new();
+		private readonly TargetInfo _target = new();
+		private HashSet<IMoveAgent> _flockAgents { get; set; } = new();
 		private List<ISelectable> _targetBuffer = new();
 		private RealTimeUntil _nextRepairTime;
 		private AnimationValues _animationValues;
 		private RealTimeUntil _nextFindTarget;
 		private Sound _idleLoopSound;
-		private TargetInfo _target = new();
 
 		public UnitEntity() : base()
 		{
@@ -632,7 +638,6 @@ namespace Facepunch.RTS
 
 			_target.Entity = modelEntity;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
-			_target.Follow = true;
 			_target.Type = UnitTargetType.Occupy;
 
 			SetMoveGroup( moveGroup );
@@ -655,10 +660,10 @@ namespace Facepunch.RTS
 
 			_target.Entity = building;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
-			_target.Follow = true;
 			_target.Type = UnitTargetType.Deposit;
 
 			SetMoveGroup( moveGroup );
+
 			OnTargetChanged();
 
 			return true;
@@ -677,13 +682,16 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = resource;
-			_target.Follow = true;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Type = UnitTargetType.Gather;
 
-			LastResourceType = resource.Resource;
-			LastResourceEntity = resource;
-			LastResourcePosition = resource.Position;
+			if ( _gather.Entity.IsValid() )
+				_gather.Entity.RemoveGatherer( this );
+
+			_gather.Type = resource.Resource;
+			_gather.Entity = resource;
+			_gather.Entity.AddGatherer( this );
+			_gather.Position = resource.Position;
 
 			SetMoveGroup( moveGroup );
 			OnTargetChanged();
@@ -704,7 +712,6 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = building;
-			_target.Follow = true;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Type = UnitTargetType.Repair;
 
@@ -727,7 +734,6 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = building;
-			_target.Follow = true;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Type = UnitTargetType.Construct;
 
@@ -947,8 +953,8 @@ namespace Facepunch.RTS
 
 					if ( isTargetValid && isTargetInRange )
 					{
-						TickInteractWithTarget();
 						ClearMoveGroup();
+						TickInteractWithTarget();
 					}
 					else
 					{
@@ -1194,17 +1200,17 @@ namespace Facepunch.RTS
 		private void FindTargetResource()
 		{
 			// If our last resource entity is valid just use that.
-			if ( LastResourceEntity.IsValid() )
+			if ( _gather.Entity.IsValid() )
 			{
-				Gather( LastResourceEntity );
+				Gather( _gather.Entity );
 				return;
 			}
 
-			var entities = Physics.GetEntitiesInSphere( LastResourcePosition, 1000f );
+			var entities = Physics.GetEntitiesInSphere( _gather.Position, 1000f );
 
 			foreach ( var entity in entities )
 			{
-				if ( entity is ResourceEntity resource && resource.Resource == LastResourceType )
+				if ( entity is ResourceEntity resource && resource.Resource == _gather.Type )
 				{
 					Gather( resource );
 					return;
@@ -1479,10 +1485,18 @@ namespace Facepunch.RTS
 						pathDirection = direction.WithZ( 0f );
 					}
 
-					if ( MoveGroup.Agents.Count > 1 )
+					_flockAgents.Clear();
+					_flockAgents.UnionWith( MoveGroup.Agents );
+
+					if ( _gather.Entity.IsValid() )
+					{
+						_flockAgents.UnionWith( _gather.Entity.Gatherers );
+					}
+
+					if ( _flockAgents.Count > 1 )
 					{
 						var flocker = new Flocker();
-						flocker.Setup( this, MoveGroup.Agents, Position );
+						flocker.Setup( this, _flockAgents, Position );
 						flocker.Flock( Position + direction * Pathfinder.NodeSize );
 						steerDirection = flocker.Force.Normal.WithZ( 0f );
 					}
@@ -1635,11 +1649,12 @@ namespace Facepunch.RTS
 
 		private void TickGather( ResourceEntity resource )
 		{
-			if ( LastGatherTime < resource.GatherTime ) return;
+			if ( _gather.LastGather < resource.GatherTime )
+				return;
 
 			TakeFrom( resource );
 
-			LastGatherTime = 0;
+			_gather.LastGather = 0;
 			IsGathering = true;
 
 			if ( !Carrying.TryGetValue( resource.Resource, out var carrying ) )
