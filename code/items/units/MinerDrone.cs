@@ -14,6 +14,7 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/drones/worker/drone_worker.vmdl";
 		public override float VerticalOffset => 150f;
 		public override bool UseModelPhysics => true;
+		public override bool UseRenderColor => true;
 		public override bool RagdollOnDeath => false;
 		public override int MaxCarryMultiplier => 3;
 		public override float Speed => 550f;
