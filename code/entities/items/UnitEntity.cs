@@ -858,28 +858,34 @@ namespace Facepunch.RTS
 		protected override void OnPlayerAssigned( Player player )
 		{
 			if ( Item.UseRenderColor )
+			{
 				RenderColor = Player.TeamColor;
+			}
 		}
 
 		protected override void OnDestroy()
 		{
+			base.OnDestroy();
+
 			if ( IsClient )
 			{
 				Circle?.Delete();
+
 				Fog.RemoveViewer( this );
 				Fog.RemoveCullable( this );
-			}
-			else
-			{
-				if ( Player.IsValid() )
-					Player.TakePopulation( Item.Population );
 
-				_idleLoopSound.Stop();
-
-				ClearMoveGroup();
+				return;
 			}
 
-			base.OnDestroy();
+			if ( Player.IsValid() )
+				Player.TakePopulation( Item.Population );
+
+			if ( _gather.Entity.IsValid() )
+				_gather.Entity.RemoveGatherer( this );
+
+			_idleLoopSound.Stop();
+
+			ClearMoveGroup();
 		}
 
 		protected override void ServerTick()
