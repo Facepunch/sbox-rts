@@ -30,8 +30,11 @@ namespace Facepunch.RTS
 			if ( Host.IsClient ) return;
 			if ( User is not UnitEntity unit ) return;
 
-			var shield = new DomeShieldEntity();
-			shield.Position = unit.Position;
+			var shield = new DomeShieldEntity
+			{
+				Position = unit.Position
+			};
+
 			shield.SetParent( unit );
 			shield.Setup( unit, 150f, AreaOfEffectRadius, 30f );
 		}

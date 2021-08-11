@@ -44,53 +44,6 @@ namespace Facepunch.RTS
 			public TimeSince LastGather;
 		}
 
-		private struct AnimationValues
-		{
-			public string Sequence;
-			public float Speed;
-			public bool Attacking;
-			public int HoldType;
-
-			public void Start()
-			{
-				Speed = 0f;
-				HoldType = 0;
-				Attacking = false;
-			}
-
-			public void Play( AnimEntity entity, string sequence )
-			{
-				if ( Sequence != sequence )
-				{
-					entity.PlaybackRate = 1f;
-					entity.Sequence = sequence;
-					Sequence = sequence;
-				}
-			}
-
-			public void Finish( AnimEntity entity )
-			{
-				if ( Speed >= 0.5f )
-				{
-					Play( entity, "Run_N" );
-				}
-				else if ( Speed >= 0.5f )
-				{
-					Play( entity, "Walk_N" );
-				}
-				else
-				{
-					Play( entity, "IdlePoseDefault" );
-				}
-
-				/*
-				entity.SetAnimInt( "holdtype", HoldType );
-				entity.SetAnimBool( "attacking", Attacking );
-				entity.SetAnimFloat( "speed", entity.GetAnimFloat( "speed" ).LerpTo( Speed, Time.Delta * 10f ) );
-				*/
-			}
-		}
-
 		public override bool HasSelectionGlow => false;
 
 		[Net] public List<UnitEntity> Occupants { get; private set; }
@@ -131,7 +84,6 @@ namespace Facepunch.RTS
 		private HashSet<IMoveAgent> _flockAgents { get; set; } = new();
 		private List<ISelectable> _targetBuffer = new();
 		private RealTimeUntil _nextRepairTime;
-		private AnimationValues _animationValues;
 		private RealTimeUntil _nextFindTarget;
 		private Sound _idleLoopSound;
 
@@ -934,7 +886,9 @@ namespace Facepunch.RTS
 
 			Velocity = 0;
 
-			_animationValues.Start();
+			var animator = Item.Animator;
+
+			animator?.Reset();
 
 			if ( !Occupiable.IsValid() )
 			{
@@ -958,7 +912,7 @@ namespace Facepunch.RTS
 					}
 					else
 					{
-						TickMoveToTarget( isTargetValid );
+						TickMoveToTarget( isTargetValid, animator );
 					}
 
 					TickFindTarget();
@@ -975,11 +929,14 @@ namespace Facepunch.RTS
 
 			if ( Weapon.IsValid() )
 			{
-				_animationValues.Attacking = Weapon.LastAttack < 0.1f;
-				_animationValues.HoldType = Weapon.HoldType;
+				if ( animator != null )
+				{
+					animator.Attacking = Weapon.LastAttack < 0.1f;
+					animator.HoldType = Weapon.HoldType;
+				}
 			}
 
-			_animationValues.Finish( this );
+			animator?.Apply( this );
 		}
 
 		protected override void OnItemChanged( BaseUnit item, BaseUnit oldItem )
@@ -1449,7 +1406,7 @@ namespace Facepunch.RTS
 			return MoveGroup.IsDestination( this, Position, false );
 		}
 
-		private void TickMoveToTarget( bool isTargetValid )
+		private void TickMoveToTarget( bool isTargetValid, UnitAnimator animator )
 		{
 			if ( isTargetValid && _target.Follow )
 			{
@@ -1519,10 +1476,13 @@ namespace Facepunch.RTS
 
 			if ( pathDirection.Length > 0 )
 			{
-				if ( movementSpeed >= 300f )
-					_animationValues.Speed = 1f;
-				else
-					_animationValues.Speed = 0.5f;
+				if ( animator != null )
+				{
+					if ( movementSpeed >= 300f )
+						animator.Speed = 1f;
+					else
+						animator.Speed = 0.5f;
+				}
 
 				// First we'll try our steer direction and see if we can go there.
 				if ( steerDirection.Length > 0 )
