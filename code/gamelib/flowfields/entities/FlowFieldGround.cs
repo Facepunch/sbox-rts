@@ -4,6 +4,7 @@ using System;
 namespace Gamelib.FlowFields.Entities
 {
 	[Library( "flowfield_ground" )]
+	[Hammer.AutoApplyMaterial("materials/rts/hammer/flowfield_ground.vmat")]
 	[Hammer.Solid]
 	public class FlowFieldGround : BaseTrigger
 	{

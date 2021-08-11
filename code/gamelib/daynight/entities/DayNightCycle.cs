@@ -59,7 +59,8 @@ namespace Gamelib.DayNight
 
 	[Library( "daynight_controller" )]
 	[Hammer.EntityTool( "Day Night Controller", "Day Night System" )]
-    public partial class DayNightController : ModelEntity
+	[Hammer.EditorSprite("editor/daynight_controller.vmat")]
+	public partial class DayNightController : ModelEntity
 	{
 		[Property( "DawnColor", Title = "Dawn Color" )]
 		public Color DawnColor { get; set; }
