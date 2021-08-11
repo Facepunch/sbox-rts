@@ -1,4 +1,6 @@
 ﻿using Facepunch.RTS;
+using Gamelib.Extensions;
+using Gamelib.FlowFields;
 using Sandbox;
 using System;
 
@@ -68,6 +70,14 @@ namespace Facepunch.RTS
 			if ( IsClient )
 			{
 				Fog.RemoveCullable( this );
+				return;
+			}
+
+			var radius = this.GetDiameterXY( 0.75f );
+
+			foreach ( var pathfinder in PathManager.All )
+			{
+				pathfinder.UpdateCollisions( Position, radius );
 			}
 
 			base.OnDestroy();
