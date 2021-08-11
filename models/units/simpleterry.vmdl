@@ -494,18 +494,372 @@
 				children = 
 				[
 					{
+						_class = "AnimFile"
+						name = "Walk"
+						children = 
+						[
+							{
+								_class = "ExtractMotion"
+								extract_tx = true
+								extract_ty = true
+								extract_tz = false
+								extract_rz = false
+								linear = false
+								quadratic = false
+								root_bone_name = "pelvis"
+								motion_type = "Single"
+							},
+							{
+								_class = "AnimAlign"
+								align_tx = true
+								align_ty = true
+								align_tz = false
+								align_rx = false
+								align_ry = false
+								align_rz = false
+								align_frame_type = "Number"
+								frame = 0
+								align_to_anim = "Idle"
+								align_to_frame_type = "Number"
+								align_to_frame = 0
+								bone = "pelvis"
+							},
+						]
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = true
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/citizen/animations/citizen@walk_n.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "Run"
+						children = 
+						[
+							{
+								_class = "ExtractMotion"
+								extract_tx = true
+								extract_ty = true
+								extract_tz = false
+								extract_rz = false
+								linear = false
+								quadratic = false
+								root_bone_name = "pelvis"
+								motion_type = "Single"
+							},
+							{
+								_class = "AnimAlign"
+								align_tx = true
+								align_ty = true
+								align_tz = false
+								align_rx = false
+								align_ry = false
+								align_rz = false
+								align_frame_type = "Number"
+								frame = 0
+								align_to_anim = "Idle"
+								align_to_frame_type = "Number"
+								align_to_frame = 0
+								bone = "pelvis"
+							},
+						]
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = true
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/citizen/animations/citizen@run_n.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "Walk_layer"
+						children = 
+						[
+							{
+								_class = "AnimSubtract"
+								anim_name = "Walk_layer"
+								frame = 0
+							},
+							{
+								_class = "ExtractMotion"
+								extract_tx = true
+								extract_ty = true
+								extract_tz = false
+								extract_rz = false
+								linear = false
+								quadratic = false
+								root_bone_name = "pelvis"
+								motion_type = "Single"
+							},
+							{
+								_class = "AnimAlign"
+								align_tx = true
+								align_ty = true
+								align_tz = false
+								align_rx = false
+								align_ry = false
+								align_rz = false
+								align_frame_type = "Number"
+								frame = 0
+								align_to_anim = "Idle"
+								align_to_frame_type = "Number"
+								align_to_frame = 0
+								bone = "pelvis"
+							},
+						]
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = "Blend_Run_layer"
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = true
+						delta = true
+						worldSpace = false
+						hidden = true
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/citizen/animations/citizen@walk_n.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "Run_layer"
+						children = 
+						[
+							{
+								_class = "AnimSubtract"
+								anim_name = "Run_layer"
+								frame = 0
+							},
+							{
+								_class = "ExtractMotion"
+								extract_tx = true
+								extract_ty = true
+								extract_tz = false
+								extract_rz = false
+								linear = false
+								quadratic = false
+								root_bone_name = "pelvis"
+								motion_type = "Single"
+							},
+							{
+								_class = "AnimAlign"
+								align_tx = true
+								align_ty = true
+								align_tz = false
+								align_rx = false
+								align_ry = false
+								align_rz = false
+								align_frame_type = "Number"
+								frame = 0
+								align_to_anim = "Idle"
+								align_to_frame_type = "Number"
+								align_to_frame = 0
+								bone = "pelvis"
+							},
+						]
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = "Blend_Run_layer"
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = true
+						delta = true
+						worldSpace = false
+						hidden = true
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/citizen/animations/citizen@run_n.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "Idle"
+						activity_name = "ACT_IDLE"
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = true
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/citizen/animations/Citizen@IdlePoseDefault.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "Idle_layer"
+						children = 
+						[
+							{
+								_class = "AnimSubtract"
+								anim_name = "Idle_layer"
+								frame = 0
+							},
+						]
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = "Blend_Run_layer"
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = true
+						delta = true
+						worldSpace = false
+						hidden = true
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/citizen/animations/Citizen@IdleLayer_Breathe.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						reverse = false
+					},
+					{
 						_class = "Folder"
-						name = "Movement"
+						name = "Weapons"
 						children = 
 						[
 							{
 								_class = "Folder"
-								name = "Walk"
+								name = "Pistol"
 								children = 
 								[
 									{
 										_class = "AnimFile"
-										name = "Walk_N"
+										name = "Idle_Pistol"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Idle_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Pose_Standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Attack_Pistol"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.01
+										fade_out_time = 0.1
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Attack_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = 40.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Pose_Pistol"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = "Blend_Weapon_Pose"
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = true
+										hidden = true
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Pose_Moving_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Walk_Pistol"
 										children = 
 										[
 											{
@@ -529,10 +883,517 @@
 												align_rz = false
 												align_frame_type = "Number"
 												frame = 0
-												align_to_anim = "IdlePoseDefault"
+												align_to_anim = "Idle"
 												align_to_frame_type = "Number"
 												align_to_frame = 0
 												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_Pistol"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Walk_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/citizen@walk_n.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Run_Pistol"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_Pistol"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Run_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/citizen@run_n.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+								]
+							},
+							{
+								_class = "Folder"
+								name = "SMG"
+								children = 
+								[
+									{
+										_class = "AnimFile"
+										name = "Idle_SMG"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Idle_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@SMG_2H_Pose_Standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Attack_SMG"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.02
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@SMG_2H_Attack_01.fbx"
+										start_frame = -1
+										end_frame = 4
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Pose_SMG"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = "Blend_Weapon_Pose"
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = true
+										hidden = true
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@SMG_2H_Pose_Standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Walk_SMG"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_SMG"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Walk_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/citizen@walk_n.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Run_SMG"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_SMG"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Run_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/citizen@run_n.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+								]
+							},
+							{
+								_class = "Folder"
+								name = "RPG"
+								children = 
+								[
+									{
+										_class = "AnimFile"
+										name = "Idle_RPG"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Idle_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/citizen@rpg_2h_pose_standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Attack_RPG"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@RPG_2H_Attack_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Pose_RPG"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = "Blend_Weapon_Pose"
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = true
+										hidden = true
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/citizen@rpg_2h_pose_standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Walk_RPG"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_RPG"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Walk_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/citizen@walk_n.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Run_RPG"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_RPG"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Run_layer"
 											},
 										]
 										activity_name = ""
@@ -556,12 +1417,112 @@
 							},
 							{
 								_class = "Folder"
-								name = "Run"
+								name = "Shotgun"
 								children = 
 								[
 									{
 										_class = "AnimFile"
-										name = "Run_N"
+										name = "Idle_Shotgun"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Idle_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Pose_Standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Attack_Shotgun"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.03
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Attack_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Pose_Shotgun"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = "Blend_Weapon_Pose"
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = true
+										hidden = true
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Pose_Standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Walk_Shotgun"
 										children = 
 										[
 											{
@@ -585,10 +1546,75 @@
 												align_rz = false
 												align_frame_type = "Number"
 												frame = 0
-												align_to_anim = "IdlePoseDefault"
+												align_to_anim = "Idle"
 												align_to_frame_type = "Number"
 												align_to_frame = 0
 												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_Shotgun"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Walk_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/citizen@walk_n.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Run_Shotgun"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_Shotgun"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Run_layer"
 											},
 										]
 										activity_name = ""
@@ -610,41 +1636,36 @@
 									},
 								]
 							},
-						]
-					},
-					{
-						_class = "Folder"
-						name = "Weapons"
-						children = 
-						[
 							{
 								_class = "Folder"
-								name = "Pistol"
+								name = "Sniper"
 								children = 
 								[
 									{
 										_class = "AnimFile"
-										name = "Pistol_2H_Attack_01"
-										activity_name = ""
-										activity_weight = 1
-										weight_list_name = ""
-										fade_in_time = 0.01
-										fade_out_time = 0.1
-										looping = false
-										delta = false
-										worldSpace = false
-										hidden = false
-										anim_markup_ordered = false
-										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Attack_01.fbx"
-										start_frame = -1
-										end_frame = -1
-										framerate = 40.0
-										reverse = false
-									},
-									{
-										_class = "AnimFile"
-										name = "Pistol_2H_Pose_Standing_01"
+										name = "Idle_Sniper"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Idle_layer"
+											},
+										]
 										activity_name = ""
 										activity_weight = 1
 										weight_list_name = ""
@@ -656,7 +1677,7 @@
 										hidden = false
 										anim_markup_ordered = false
 										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Pose_Standing_01.fbx"
+										source_filename = "models/citizen/animations/weapons/citizen@sniper_2h_pose_standing_01.fbx"
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
@@ -664,11 +1685,29 @@
 									},
 									{
 										_class = "AnimFile"
-										name = "Pistol_2H_Pose_Moving_01"
+										name = "Attack_Sniper"
+										children = 
+										[
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+										]
 										activity_name = ""
 										activity_weight = 1
 										weight_list_name = ""
-										fade_in_time = 0.2
+										fade_in_time = 0.03
 										fade_out_time = 0.2
 										looping = false
 										delta = false
@@ -676,229 +1715,149 @@
 										hidden = false
 										anim_markup_ordered = false
 										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/Citizen@Pistol_2H_Pose_Moving_01.fbx"
+										source_filename = "models/citizen/animations/weapons/Citizen@Sniper_2H_Attack_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Pose_Sniper"
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = "Blend_Weapon_Pose"
+										fade_in_time = 0.2
+										fade_out_time = 0.2
+										looping = false
+										delta = false
+										worldSpace = true
+										hidden = true
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/weapons/citizen@sniper_2h_pose_standing_01.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Walk_Sniper"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_Sniper"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Walk_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.03
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/citizen@walk_n.fbx"
+										start_frame = -1
+										end_frame = -1
+										framerate = -1.0
+										reverse = false
+									},
+									{
+										_class = "AnimFile"
+										name = "Run_Sniper"
+										children = 
+										[
+											{
+												_class = "ExtractMotion"
+												extract_tx = true
+												extract_ty = true
+												extract_tz = false
+												extract_rz = false
+												linear = false
+												quadratic = false
+												root_bone_name = "pelvis"
+												motion_type = "Single"
+											},
+											{
+												_class = "AnimAlign"
+												align_tx = true
+												align_ty = true
+												align_tz = false
+												align_rx = false
+												align_ry = false
+												align_rz = false
+												align_frame_type = "Number"
+												frame = 0
+												align_to_anim = "Idle"
+												align_to_frame_type = "Number"
+												align_to_frame = 0
+												bone = "pelvis"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Pose_Sniper"
+											},
+											{
+												_class = "AnimAddLayer"
+												anim_name = "Run_layer"
+											},
+										]
+										activity_name = ""
+										activity_weight = 1
+										weight_list_name = ""
+										fade_in_time = 0.03
+										fade_out_time = 0.2
+										looping = true
+										delta = false
+										worldSpace = false
+										hidden = false
+										anim_markup_ordered = false
+										disable_compression = false
+										source_filename = "models/citizen/animations/citizen@run_n.fbx"
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
 										reverse = false
 									},
 								]
-							},
-							{
-								_class = "Folder"
-								name = "SMG"
-								children = 
-								[
-									{
-										_class = "AnimFile"
-										name = "SMG_2H_Attack_01"
-										activity_name = ""
-										activity_weight = 1
-										weight_list_name = ""
-										fade_in_time = 0.2
-										fade_out_time = 0.2
-										looping = false
-										delta = false
-										worldSpace = false
-										hidden = false
-										anim_markup_ordered = false
-										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/Citizen@SMG_2H_Attack_01.fbx"
-										start_frame = -1
-										end_frame = 4
-										framerate = -1.0
-										reverse = false
-									},
-									{
-										_class = "AnimFile"
-										name = "SMG_2H_Pose_Standing_01"
-										activity_name = ""
-										activity_weight = 1
-										weight_list_name = ""
-										fade_in_time = 0.2
-										fade_out_time = 0.2
-										looping = false
-										delta = false
-										worldSpace = false
-										hidden = false
-										anim_markup_ordered = false
-										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/Citizen@SMG_2H_Pose_Standing_01.fbx"
-										start_frame = -1
-										end_frame = -1
-										framerate = -1.0
-										reverse = false
-									},
-								]
-							},
-							{
-								_class = "Folder"
-								name = "Shotgun"
-								children = 
-								[
-									{
-										_class = "AnimFile"
-										name = "Shotgun_2H_Attack_01"
-										activity_name = ""
-										activity_weight = 1
-										weight_list_name = ""
-										fade_in_time = 0.2
-										fade_out_time = 0.2
-										looping = false
-										delta = false
-										worldSpace = false
-										hidden = false
-										anim_markup_ordered = false
-										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Attack_01.fbx"
-										start_frame = -1
-										end_frame = -1
-										framerate = -1.0
-										reverse = false
-									},
-									{
-										_class = "AnimFile"
-										name = "Shotgun_2H_Pose_Standing_01"
-										activity_name = ""
-										activity_weight = 1
-										weight_list_name = ""
-										fade_in_time = 0.2
-										fade_out_time = 0.2
-										looping = false
-										delta = false
-										worldSpace = false
-										hidden = false
-										anim_markup_ordered = false
-										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Pose_Standing_01.fbx"
-										start_frame = -1
-										end_frame = -1
-										framerate = -1.0
-										reverse = false
-									},
-									{
-										_class = "AnimFile"
-										name = "Shotgun_2H_Pose_Moving_01"
-										activity_name = ""
-										activity_weight = 1
-										weight_list_name = ""
-										fade_in_time = 0.2
-										fade_out_time = 0.2
-										looping = false
-										delta = false
-										worldSpace = false
-										hidden = false
-										anim_markup_ordered = false
-										disable_compression = false
-										source_filename = "models/citizen/animations/weapons/Citizen@Shotgun_2H_Pose_Moving_01.fbx"
-										start_frame = -1
-										end_frame = -1
-										framerate = -1.0
-										reverse = false
-									},
-								]
-							},
-							{
-								_class = "AnimFile"
-								name = "Sniper_2H_Pose_Standing_01"
-								activity_name = ""
-								activity_weight = 1
-								weight_list_name = ""
-								fade_in_time = 0.2
-								fade_out_time = 0.2
-								looping = false
-								delta = false
-								worldSpace = false
-								hidden = false
-								anim_markup_ordered = false
-								disable_compression = false
-								source_filename = "models/citizen/animations/weapons/citizen@sniper_2h_pose_standing_01.fbx"
-								start_frame = -1
-								end_frame = -1
-								framerate = -1.0
-								reverse = false
-							},
-							{
-								_class = "AnimFile"
-								name = "Sniper_2H_Attack_01"
-								activity_name = ""
-								activity_weight = 1
-								weight_list_name = ""
-								fade_in_time = 0.2
-								fade_out_time = 0.2
-								looping = false
-								delta = false
-								worldSpace = false
-								hidden = false
-								anim_markup_ordered = false
-								disable_compression = false
-								source_filename = "models/citizen/animations/weapons/Citizen@Sniper_2H_Attack_01.fbx"
-								start_frame = -1
-								end_frame = -1
-								framerate = -1.0
-								reverse = false
-							},
-							{
-								_class = "AnimFile"
-								name = "RPG_2H_Pose_Standing_01"
-								activity_name = ""
-								activity_weight = 1
-								weight_list_name = ""
-								fade_in_time = 0.2
-								fade_out_time = 0.2
-								looping = false
-								delta = false
-								worldSpace = false
-								hidden = false
-								anim_markup_ordered = false
-								disable_compression = false
-								source_filename = "models/citizen/animations/weapons/citizen@rpg_2h_pose_standing_01.fbx"
-								start_frame = -1
-								end_frame = -1
-								framerate = -1.0
-								reverse = false
-							},
-							{
-								_class = "AnimFile"
-								name = "RPG_2H_Attack_01"
-								activity_name = ""
-								activity_weight = 1
-								weight_list_name = ""
-								fade_in_time = 0.2
-								fade_out_time = 0.2
-								looping = false
-								delta = false
-								worldSpace = false
-								hidden = false
-								anim_markup_ordered = false
-								disable_compression = false
-								source_filename = "models/citizen/animations/weapons/Citizen@RPG_2H_Attack_01.fbx"
-								start_frame = -1
-								end_frame = -1
-								framerate = -1.0
-								reverse = false
 							},
 						]
-					},
-					{
-						_class = "AnimFile"
-						name = "IdlePoseDefault"
-						activity_name = "ACT_IDLE"
-						activity_weight = 1
-						weight_list_name = ""
-						fade_in_time = 0.2
-						fade_out_time = 0.2
-						looping = true
-						delta = false
-						worldSpace = false
-						hidden = false
-						anim_markup_ordered = false
-						disable_compression = false
-						source_filename = "models/citizen/animations/Citizen@IdlePoseDefault.fbx"
-						start_frame = -1
-						end_frame = -1
-						framerate = -1.0
-						reverse = false
 					},
 				]
 				default_root_bone_name = ""
@@ -1154,6 +2113,22 @@
 					{
 						_class = "BoneMarkup"
 						disabled = true
+						target_bone = "hand_R_to_L_ikrule"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
+					{
+						_class = "BoneMarkup"
+						disabled = true
+						target_bone = "hand_L_to_R_ikrule"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
+					{
+						_class = "BoneMarkup"
+						disabled = true
 						target_bone = "foot_R_IK_target"
 						ignore_Translation = false
 						ignore_rotation = false
@@ -1179,22 +2154,6 @@
 						_class = "BoneMarkup"
 						disabled = true
 						target_bone = "hand_L_IK_target"
-						ignore_Translation = false
-						ignore_rotation = false
-						do_not_discard = false
-					},
-					{
-						_class = "BoneMarkup"
-						disabled = true
-						target_bone = "hand_R_to_L_ikrule"
-						ignore_Translation = false
-						ignore_rotation = false
-						do_not_discard = false
-					},
-					{
-						_class = "BoneMarkup"
-						disabled = true
-						target_bone = "hand_L_to_R_ikrule"
 						ignore_Translation = false
 						ignore_rotation = false
 						do_not_discard = false
@@ -1730,6 +2689,240 @@
 							{
 								bone = "spine_2"
 								weight = 0.743662
+							},
+						]
+						master_morph_weight = -1.0
+						morph_weights = [  ]
+					},
+					{
+						_class = "WeightList"
+						name = "Blend_Weapon_Pose"
+						default_weight = 0.0
+						weights = 
+						[
+							{
+								bone = "arm_elbow_helper_L"
+								weight = 1.0
+							},
+							{
+								bone = "arm_elbow_helper_R"
+								weight = 1.0
+							},
+							{
+								bone = "arm_lower_L_twist"
+								weight = 1.0
+							},
+							{
+								bone = "arm_lower_R_twist"
+								weight = 1.0
+							},
+							{
+								bone = "arm_upper_L_twist"
+								weight = 1.0
+							},
+							{
+								bone = "arm_upper_R_twist"
+								weight = 1.0
+							},
+							{
+								bone = "clavicle_L"
+								weight = 1.0
+							},
+							{
+								bone = "clavicle_R"
+								weight = 1.0
+							},
+							{
+								bone = "eye_L"
+								weight = 0.0
+							},
+							{
+								bone = "eye_R"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_lower_L"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_lower_R"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_upper_L"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_upper_R"
+								weight = 0.0
+							},
+							{
+								bone = "hand_L"
+								weight = 1.0
+							},
+							{
+								bone = "hand_L_to_R_ikrule"
+								weight = 1.0
+							},
+							{
+								bone = "hand_R"
+								weight = 1.0
+							},
+							{
+								bone = "hand_R_to_L_ikrule"
+								weight = 1.0
+							},
+							{
+								bone = "neck_0"
+								weight = 0.604082
+							},
+							{
+								bone = "pelvis"
+								weight = 0.0
+							},
+							{
+								bone = "spine_0"
+								weight = 0.502041
+							},
+							{
+								bone = "spine_1"
+								weight = 0.579592
+							},
+							{
+								bone = "spine_2"
+								weight = 1.0
+							},
+						]
+						master_morph_weight = -1.0
+						morph_weights = [  ]
+					},
+					{
+						_class = "WeightList"
+						name = "Blend_Idle_layer"
+						default_weight = 0.0
+						weights = 
+						[
+							{
+								bone = "clavicle_L"
+								weight = 0.0
+							},
+							{
+								bone = "clavicle_R"
+								weight = 0.0
+							},
+							{
+								bone = "eye_L"
+								weight = 0.0
+							},
+							{
+								bone = "eye_R"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_lower_L"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_lower_R"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_upper_L"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_upper_R"
+								weight = 0.0
+							},
+							{
+								bone = "head"
+								weight = 1.0
+							},
+							{
+								bone = "neck_0"
+								weight = 1.0
+							},
+							{
+								bone = "pelvis"
+								weight = 0.0
+							},
+							{
+								bone = "spine_0"
+								weight = 1.0
+							},
+							{
+								bone = "spine_1"
+								weight = 1.0
+							},
+							{
+								bone = "spine_2"
+								weight = 1.0
+							},
+						]
+						master_morph_weight = -1.0
+						morph_weights = [  ]
+					},
+					{
+						_class = "WeightList"
+						name = "Blend_Run_layer"
+						default_weight = 0.0
+						weights = 
+						[
+							{
+								bone = "clavicle_L"
+								weight = 0.0
+							},
+							{
+								bone = "clavicle_R"
+								weight = 0.0
+							},
+							{
+								bone = "eye_L"
+								weight = 0.0
+							},
+							{
+								bone = "eye_R"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_lower_L"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_lower_R"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_upper_L"
+								weight = 0.0
+							},
+							{
+								bone = "face_lid_upper_R"
+								weight = 0.0
+							},
+							{
+								bone = "head"
+								weight = 0.428571
+							},
+							{
+								bone = "neck_0"
+								weight = 0.318367
+							},
+							{
+								bone = "pelvis"
+								weight = 0.0
+							},
+							{
+								bone = "spine_0"
+								weight = 0.114286
+							},
+							{
+								bone = "spine_1"
+								weight = 0.155102
+							},
+							{
+								bone = "spine_2"
+								weight = 0.208163
 							},
 						]
 						master_morph_weight = -1.0
@@ -3064,6 +4257,332 @@
 						]
 					},
 				]
+			},
+			{
+				_class = "AnimConstraintList"
+				children = 
+				[
+					{
+						_class = "Folder"
+						name = "ConstraintArms"
+						children = 
+						[
+							{
+								_class = "AnimConstraintTiltTwist"
+								name = "ShoulderToBicep_R"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "arm_upper_R"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 1.0
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "arm_upper_R_twist"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = -0.65
+									},
+								]
+								input_axis = 0
+								slave_axis = 0
+							},
+							{
+								_class = "AnimConstraintTiltTwist"
+								name = "ShoulderToBicep_L"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "arm_upper_L"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 1.0
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "arm_upper_L_twist"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = -0.65
+									},
+								]
+								input_axis = 0
+								slave_axis = 0
+							},
+							{
+								_class = "AnimConstraintTiltTwist"
+								name = "ForearmToWrist_R"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "hand_R"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 1.0
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "arm_lower_R_twist"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 0.5
+									},
+								]
+								input_axis = 0
+								slave_axis = 0
+							},
+							{
+								_class = "AnimConstraintTiltTwist"
+								name = "ForearmToWrist_L"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "hand_L"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 1.0
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "arm_lower_L_twist"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 0.5
+									},
+								]
+								input_axis = 0
+								slave_axis = 0
+							},
+							{
+								_class = "AnimConstraintOrient"
+								name = "elbow_R"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "arm_lower_R"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, -98.0, 0.0 ]
+										weight = -0.5
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "arm_elbow_helper_R"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = -1.0
+									},
+								]
+							},
+							{
+								_class = "AnimConstraintOrient"
+								name = "elbow_L"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "arm_lower_L"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, -98.0, 0.0 ]
+										weight = -0.5
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "arm_elbow_helper_L"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = -1.0
+									},
+								]
+							},
+						]
+					},
+					{
+						_class = "Folder"
+						name = "ConstraintLegs"
+						children = 
+						[
+							{
+								_class = "AnimConstraintTiltTwist"
+								name = "PelvisToThigh_R"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "leg_upper_R"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 180.0, 180.0 ]
+										weight = 1.0
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "leg_upper_R_twist"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = -0.5
+									},
+								]
+								input_axis = 0
+								slave_axis = 0
+							},
+							{
+								_class = "AnimConstraintTiltTwist"
+								name = "PelvisToThigh_L"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "leg_upper_L"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 180.0, 180.0 ]
+										weight = 1.0
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "leg_upper_L_twist"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = -0.5
+									},
+								]
+								input_axis = 0
+								slave_axis = 0
+							},
+							{
+								_class = "AnimConstraintTiltTwist"
+								name = "CalfToFoot_R"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "ankle_R"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 1.0
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "leg_lower_R_twist"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 0.6
+									},
+								]
+								input_axis = 0
+								slave_axis = 0
+							},
+							{
+								_class = "AnimConstraintTiltTwist"
+								name = "CalfToFoot_L"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "ankle_L"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 1.0
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "leg_lower_L_twist"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = 0.6
+									},
+								]
+								input_axis = 0
+								slave_axis = 0
+							},
+							{
+								_class = "AnimConstraintOrient"
+								name = "kneecap_R"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "leg_lower_R"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 90.0, 0.0 ]
+										weight = -0.5
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "leg_knee_helper_R"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = -1.0
+									},
+								]
+							},
+							{
+								_class = "AnimConstraintOrient"
+								name = "kneecap_L"
+								children = 
+								[
+									{
+										_class = "AnimConstraintBoneInput"
+										parent_bone = "leg_lower_L"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 90.0, 0.0 ]
+										weight = -0.5
+									},
+									{
+										_class = "AnimConstraintSlave"
+										parent_bone = "leg_knee_helper_L"
+										relative_origin = [ 0.0, 0.0, 0.0 ]
+										relative_angles = [ 0.0, 0.0, 0.0 ]
+										weight = -1.0
+									},
+								]
+							},
+						]
+					},
+				]
+			},
+			{
+				_class = "IKData"
+				children = 
+				[
+					{
+						_class = "IKRigBiped"
+						children = 
+						[
+							{
+								_class = "IKChainOld"
+								name = "left_arm_IK"
+								end_effector_bone = "hand_L"
+								root_bone = ""
+								end_effector_target_bone = "hand_L_to_R_ikrule"
+								reverse_footlock_bone = ""
+								max_lock_distance_to_target = 6.0
+								footstep_footstep_sound_type = "Left"
+								footstep_sound = ""
+								footstep_attachment = ""
+								solver = "IKSOLVER_TwoBone"
+								hyperextension_release_dot_threshold = 0.937995
+								use_target_instead_of_lock_threshold = 0.01
+								break_restoration_time = 0.15
+								soften_time = 0.5
+								soften_percentage = 0.1
+							},
+						]
+						initial_master_blend_amount = 1.0
+						abs_origin_drop_height = 24.0
+						abs_origin_drop_height_spring_strength = 500.0
+						default_tilt_spring_strength = 5.0
+						tilt_bone = ""
+						animgraph_master_blend_parameter_name = ""
+						system = "IKSYSTEMTYPE_SkeletonInstance"
+					},
+				]
+				disabled = true
 			},
 		]
 		model_archetype = ""
