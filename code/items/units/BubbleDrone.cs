@@ -14,6 +14,7 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/drones/shield/drone_shield.vmdl";
 		public override float VerticalOffset => 150f;
 		public override bool UseModelPhysics => true;
+		public override bool UseRenderColor => true;
 		public override bool RagdollOnDeath => false;
 		public override float Speed => 450f;
 		public override bool AlignToSurface => false;
