@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.worker";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
 		public override bool CanConstruct => true;
-		public override string Description => "Gathers Wood, Stone and Beer for your empire and constructs buildings.";
+		public override string Description => "Gathers Stone, Metal and Beer for your empire and constructs buildings.";
 		public override string[] MoveSounds => new string[]
 		{
 			"worker.lets_go",
@@ -53,6 +53,7 @@ namespace Facepunch.RTS.Units
 			"building.teslacoil",
 			"building.terryfactory",
 			"building.vehiclefactory",
+			"building.dronehub",
 			"building.tunnel",
 			"building.researchlab",
 			"building.samsite",

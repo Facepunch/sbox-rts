@@ -1,0 +1,23 @@
+﻿dependencyvalue {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+
+    .icon {
+        background-color: white;
+        margin-right: 4px;
+        box-shadow: 0px 0px 10px 1px rgba(255,0,0,0.1);
+        width: 32px;
+        height: 32px;
+    }
+
+    .label {
+        color: red;
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

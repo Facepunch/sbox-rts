@@ -208,6 +208,14 @@
                     sound-in: rts.pop;
                     border: 2px solid aquamarine;
                 }
+
+                &.disabled {
+                    opacity: 0.1;
+
+                    &:hover {
+                        border: 2px solid red;
+                    }
+                }
             }
         }
     }

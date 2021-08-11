@@ -1,0 +1,17 @@
+﻿dependencylist {
+    flex-direction: column;
+    display: flex;
+
+    .header {
+        display: none;
+    }
+
+    dependencyvalue {
+        margin-right: 16px;
+        margin-top: 4px;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

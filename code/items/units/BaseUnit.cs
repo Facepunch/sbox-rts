@@ -26,6 +26,7 @@ namespace Facepunch.RTS.Units
 		public virtual float MaxVerticalRange => 100f;
 		public virtual float MinVerticalRange => 0f;
 		public virtual float MinAttackDistance => 0f;
+		public virtual int MaxCarryMultiplier => 1;
 		public virtual int AttackPriority => 1;
 		public virtual HashSet<ResourceType> Gatherables => new();
 		public virtual Dictionary<ResourceType, string[]> GatherSounds => new();

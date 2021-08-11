@@ -33,4 +33,13 @@
 <ProjectReference Include="H:\Facepunch\sbox\game\Addons\base\code\base.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ui\DependencyList.scss">
+      <DependentUpon>DependencyList.cs</DependentUpon>
+    </None>
+    <None Update="ui\DependencyValue.scss">
+      <DependentUpon>DependencyValue.cs</DependentUpon>
+    </None>
+  </ItemGroup>
+
 </Project>

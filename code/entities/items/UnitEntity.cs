@@ -256,7 +256,9 @@ namespace Facepunch.RTS
 
 			if ( Carrying.TryGetValue( resource.Resource, out var carrying ) )
 			{
-				if ( carrying < resource.MaxCarry )
+				var maxCarry = resource.MaxCarry * Item.MaxCarryMultiplier;
+
+				if ( carrying < maxCarry )
 					Carrying[resource.Resource] += 1;
 				else
 					return false;
@@ -1620,9 +1622,11 @@ namespace Facepunch.RTS
 			if ( !Carrying.TryGetValue( resource.Resource, out var carrying ) )
 				return;
 
-			GatherProgress = (1f / resource.MaxCarry) * carrying;
+			var maxCarry = resource.MaxCarry * Item.MaxCarryMultiplier;
 
-			if ( carrying < resource.MaxCarry ) return;
+			GatherProgress = (1f / maxCarry) * carrying;
+
+			if ( carrying < maxCarry ) return;
 
 			// We're full, let's deposit that shit.
 			FindResourceDepo();

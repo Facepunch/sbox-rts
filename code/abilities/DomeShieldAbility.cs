@@ -16,11 +16,11 @@ namespace Facepunch.RTS
 		public override float AreaOfEffectRadius => 300f;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Plasma] = 50
+			[ResourceType.Plasma] = 20
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			
+			"tech.extraction"
 		};
 
 		public override void OnFinished()

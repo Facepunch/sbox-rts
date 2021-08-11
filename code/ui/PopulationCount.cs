@@ -16,6 +16,11 @@ namespace Facepunch.RTS
 			Icon = Add.Panel( "icon" );
 			Label = Add.Label( "", "label" );
 		}
+
+		public void SetVisible( bool isVisible )
+		{
+			SetClass( "hidden", !isVisible );
+		}
 	}
 
 	public class PopulationCount : Panel

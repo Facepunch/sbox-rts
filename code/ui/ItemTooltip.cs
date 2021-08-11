@@ -20,6 +20,7 @@ namespace Facepunch.RTS
 		public object Target { get; private set; }
 		public PopulationLabel Population { get; private set; }
 		public ItemResourceValues Costs { get; private set; }
+		public DependencyList Dependencies { get; private set; }
 		public ResistanceValues Resistances { get; private set; }
 
 		public ItemTooltip()
@@ -32,6 +33,7 @@ namespace Facepunch.RTS
 			Instance = this;
 
 			Costs = AddChild<ItemResourceValues>( "costs" );
+			Dependencies = AddChild<DependencyList>( "dependencies" );
 			Resistances = AddChild<ResistanceValues>( "resistances" );
 
 			Costs.AddResource( ResourceType.Stone );
@@ -71,7 +73,7 @@ namespace Facepunch.RTS
 			UpdatePosition();
 		}
 
-		public void Update( BaseAbility ability )
+		public void Update( BaseAbility ability, bool showDependencies = false )
 		{
 			var player = Local.Pawn as Player;
 
@@ -81,18 +83,41 @@ namespace Facepunch.RTS
 			Name.Text = ability.Name;
 			Desc.Text = ability.Description;
 
-			foreach ( var kv in Costs.Values )
+			Dependencies.SetVisible( showDependencies );
+
+			if ( !showDependencies )
 			{
-				if ( ability.Costs.TryGetValue( kv.Key, out var cost ) )
+				Costs.SetVisible( true );
+
+				foreach ( var kv in Costs.Values )
 				{
-					kv.Value.Label.Text = cost.ToString();
-					kv.Value.SetClass( "affordable", player.GetResource( kv.Key ) >= cost );
-					kv.Value.SetClass( "hidden", false );
+					if ( ability.Costs.TryGetValue( kv.Key, out var cost ) )
+					{
+						kv.Value.Label.Text = cost.ToString();
+						kv.Value.SetClass( "affordable", player.GetResource( kv.Key ) >= cost );
+						kv.Value.SetClass( "hidden", false );
+					}
+					else
+					{
+						kv.Value.SetClass( "hidden", true );
+					}
 				}
-				else
+			}
+			else
+			{
+				Dependencies.Clear();
+
+				foreach ( var dependency in ability.Dependencies )
 				{
-					kv.Value.SetClass( "hidden", true );
+					var requiredItem = Items.Find<BaseItem>( dependency );
+
+					if ( !requiredItem.Has( player ) )
+					{
+						Dependencies.AddDependency( requiredItem );
+					}
 				}
+
+				Costs.SetVisible( false );
 			}
 
 			Resistances.SetVisible( false );
@@ -122,12 +147,12 @@ namespace Facepunch.RTS
 				}
 			}
 
+			Dependencies.SetVisible( false );
 			Resistances.SetVisible( false );
-
-			Population.SetClass( "hidden", true );
+			Population.SetVisible( false );
 		}
 
-		public void Update( BaseItem item, bool hideCosts = false )
+		public void Update( BaseItem item, bool hideCosts = false, bool showDependencies = false )
 		{
 			var player = Local.Pawn as Player;
 
@@ -137,60 +162,57 @@ namespace Facepunch.RTS
 			Name.Text = item.Name;
 			Desc.Text = item.Description;
 
-			Costs.SetVisible( !hideCosts );
-
-			if ( !hideCosts )
-			{
-				foreach ( var kv in Costs.Values )
-				{
-					if ( item.Costs.TryGetValue( kv.Key, out var cost ) )
-					{
-						kv.Value.Label.Text = cost.ToString();
-						kv.Value.SetAffordable( player.GetResource( kv.Key ) >= cost );
-						kv.Value.SetVisible( true );
-					}
-					else
-					{
-						kv.Value.SetVisible( false );
-					}
-				}
-			}
-
-			/*
-			if ( item is IResistorItem resistor && resistor.Resistances.Count > 0 )
-			{
-				foreach ( var kv in Resistances.Values )
-				{
-					if ( resistor.Resistances.TryGetValue( kv.Key, out var resistance ) )
-					{
-						kv.Value.Update( resistance );
-						kv.Value.SetVisible( true );
-					}
-					else
-					{
-						kv.Value.SetVisible( false );
-					}
-				}
-
-				Resistances.SetVisible( true );
-			}
-			else
-			{
-				Resistances.SetVisible( false );
-			}
-			*/
-
+			Dependencies.SetVisible( showDependencies );
 			Resistances.SetVisible( false );
 
-			if ( item is BaseUnit unit )
+			if ( !showDependencies )
 			{
-				Population.Label.SetClass( "full", !player.HasPopulationCapacity( unit.Population ) );
-				Population.Label.Text = unit.Population.ToString();
-				Population.SetClass( "hidden", false );
+				Costs.SetVisible( !hideCosts );
+
+				if ( !hideCosts )
+				{
+					foreach ( var kv in Costs.Values )
+					{
+						if ( item.Costs.TryGetValue( kv.Key, out var cost ) )
+						{
+							kv.Value.Label.Text = cost.ToString();
+							kv.Value.SetAffordable( player.GetResource( kv.Key ) >= cost );
+							kv.Value.SetVisible( true );
+						}
+						else
+						{
+							kv.Value.SetVisible( false );
+						}
+					}
+				}
+
+				if ( item is BaseUnit unit )
+				{
+					Population.Label.SetClass( "full", !player.HasPopulationCapacity( unit.Population ) );
+					Population.Label.Text = unit.Population.ToString();
+					Population.SetVisible( true );
+				}
+				else
+				{
+					Population.SetVisible( false );
+				}
 			}
 			else
 			{
-				Population.SetClass( "hidden", true );
+				Dependencies.Clear();
+
+				foreach ( var dependency in item.Dependencies )
+				{
+					var requiredItem = Items.Find<BaseItem>( dependency );
+
+					if ( !requiredItem.Has( player ) ) 
+					{
+						Dependencies.AddDependency( requiredItem );
+					}
+				}
+
+				Population.SetVisible( false );
+				Costs.SetVisible( false );
 			}
 		}
 

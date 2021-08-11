@@ -9,6 +9,7 @@ namespace Facepunch.RTS
 		public Panel Icon { get; private set; }
 		public Label Label { get; set; }
 
+
 		public ResistanceValue()
 		{
 			StyleSheet.Load( "/ui/ResistanceValue.scss" );

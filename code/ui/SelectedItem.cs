@@ -19,6 +19,8 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
+			if ( IsDisabled ) return;
+
 			if ( Selectable.IsUsingAbility() )
 			{
 				// We can't use another while once is being used.
@@ -45,7 +47,7 @@ namespace Facepunch.RTS
 		protected override void OnMouseOver( MousePanelEvent e )
 		{
 			var tooltip = Hud.Tooltip;
-			tooltip.Update( Ability );
+			tooltip.Update( Ability, IsDisabled ) ;
 			tooltip.Hover( this );
 			tooltip.Show();
 		}
@@ -87,6 +89,8 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
+			if ( IsDisabled ) return;
+
 			var player = (Local.Pawn as Player);
 			var status = Item.CanCreate( player, Selectable );
 
@@ -107,7 +111,7 @@ namespace Facepunch.RTS
 		protected override void OnMouseOver( MousePanelEvent e )
 		{
 			var tooltip = Hud.Tooltip;
-			tooltip.Update( Item );
+			tooltip.Update( Item, false, IsDisabled );
 			tooltip.Hover( this );
 			tooltip.Show();
 		}
@@ -134,10 +138,17 @@ namespace Facepunch.RTS
 	public abstract class ItemCommand : Button
 	{
 		public ISelectable Selectable { get; protected set; }
+		public bool IsDisabled { get; private set; }
 
 		public ItemCommand() : base()
 		{
 
+		}
+
+		public void Disable()
+		{
+			AddClass( "disabled" );
+			IsDisabled = true;
 		}
 
 		protected override void OnMouseOut( MousePanelEvent e )
@@ -451,14 +462,14 @@ namespace Facepunch.RTS
 					return;
 				}
 
-				if ( queueable.CanHave( player, Selectable ) )
-				{
-					var button = AddChild<ItemCommandQueueable>( "command" );
+				var button = AddChild<ItemCommandQueueable>( "command" );
 
-					button.Update( Selectable, queueable );
+				if ( !queueable.CanHave( player, Selectable ) )
+					button.Disable();
 
-					Buttons.Add( button );
-				}
+				button.Update( Selectable, queueable );
+
+				Buttons.Add( button );
 			}
 
 			if ( abilities == null ) return;
@@ -467,9 +478,13 @@ namespace Facepunch.RTS
 			{
 				var ability = Selectable.GetAbility( v );
 
-				if ( ability != null && ability.HasDependencies() && ability.IsAvailable() )
+				if ( ability != null && ability.IsAvailable() )
 				{
 					var button = AddChild<ItemCommandAbility>( "command" );
+
+					if ( !ability.HasDependencies() )
+						button.Disable();
+
 					button.Update( Selectable, ability );
 					Buttons.Add( button );
 				}
