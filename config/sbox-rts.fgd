@@ -28,6 +28,7 @@ metadata
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	startdisabled(boolean) : "Start Disabled" : 0 : "Should this entity start disabled?"
+	filtername(filterclass) : "Filtername" :  : "TODO: Filter to use to see if activator triggers me. See filter_activator_name for more explanation."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 	spawnflags(flags) = [
 		1 : "Clients" : 1
@@ -53,19 +54,23 @@ metadata
 ]
 
 // 
-// Gamelib.DayNight.DayNightAudio : Sandbox.ModelEntity 
+// Gamelib.DayNight.DayNightAmbience : Sandbox.Entity 
 // 
-@PointClass iconsprite( "editor/snd_daynight.vmat" ) = snd_daynight : ""
+@PointClass iconsprite( "editor/snd_daynight.vmat" ) 
+metadata
+{
+	entity_tool_name = "Day Night Ambience"
+	entity_tool_group = "Day Night System"
+}
+= daynight_ambience : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	dayambient(sound) : "Sound For Day" :  : ""
-	nightambient(sound) : "Sound For Night" :  : ""
-	daystart(sound) : "Sound For Day Start" :  : ""
-	nightstart(sound) : "Sound For Night Start" :  : ""
+	dawnambience(sound) : "Dawn Ambient Sound" :  : ""
+	dayambience(sound) : "Day Ambient Sound" :  : ""
+	duskambience(sound) : "Dusk Ambient Sound" :  : ""
+	nightambience(sound) : "Night Ambient Sound" :  : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
-
-	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 // 
@@ -102,18 +107,44 @@ metadata
 // 
 // Gamelib.DayNight.DayNightProp : Sandbox.ModelEntity 
 // 
-@PointClass model() = prop_daynight : ""
+@PointClass model() 
+metadata
+{
+	entity_tool_name = "Day Night Prop"
+	entity_tool_group = "Day Night System"
+}
+= daynight_prop : ""
 [
 	model(studio) [report]: "World Model" : "" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	skinday(integer) : "Skin For Day" : 0 : ""
-	skinnight(integer) : "Skin For Night" : 1 : ""
+	daymaterialgroup(integer) : "Day Material Group" : 0 : ""
+	nightmaterialgroup(integer) : "Night Material Group" : 1 : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
+// 
+// Gamelib.DayNight.DayNightSound : Sandbox.Entity 
+// 
+@PointClass iconsprite( "editor/snd_daynight.vmat" ) 
+metadata
+{
+	entity_tool_name = "Day Night Sound"
+	entity_tool_group = "Day Night System"
+}
+= daynight_sound : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	soundtoplay(sound) : "Sound To Play" :  : ""
+	timetoplay(integer) : "Time To Play" : 12 : ""
+	timetostop(integer) : "Time To Stop" : -1 : ""
+	deleteonplay(boolean) : "Delete On Play" : 0 : ""
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 
@@ -169,6 +200,7 @@ metadata
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	startdisabled(boolean) : "Start Disabled" : 0 : "Should this entity start disabled?"
+	filtername(filterclass) : "Filtername" :  : "TODO: Filter to use to see if activator triggers me. See filter_activator_name for more explanation."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 	spawnflags(flags) = [
 		1 : "Clients" : 1
@@ -221,6 +253,18 @@ metadata
 // Facepunch.RTS.BuggyEntity : Facepunch.RTS.UnitEntity 
 // 
 @PointClass = unit_buggy : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
+// 
+// Facepunch.RTS.DroneEntity : Facepunch.RTS.UnitEntity 
+// 
+@PointClass = unit_drone : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
