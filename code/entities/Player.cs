@@ -330,8 +330,17 @@ namespace Facepunch.RTS
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
 				var bot = Rounds.Current.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
 
-				var worker = Items.Create<UnitEntity>( bot, "unit.ranger" );
+				var worker = Items.Create<UnitEntity>( bot, "unit.assault" );
 				worker.Position = trace.EndPos;
+			}
+
+			if ( IsLocalPawn )
+			{
+				Sound.Listener = new Transform()
+				{
+					Position = lookAtPosition,
+					Rotation = EyeRot
+				};
 			}
 
 			base.Simulate( client );

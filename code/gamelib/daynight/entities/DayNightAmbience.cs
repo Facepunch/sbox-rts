@@ -13,7 +13,6 @@ namespace Gamelib.DayNight
 		public string DayAmbience { get; set; }
 		[Property( FGDType = "sound", Title = "Dusk Ambient Sound" )]
 		public string DuskAmbience { get; set; }
-
 		[Property(	FGDType = "sound", Title = "Night Ambient Sound" )]
 		public string NightAmbience { get; set; }
 

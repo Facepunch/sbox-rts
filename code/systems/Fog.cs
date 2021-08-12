@@ -182,12 +182,11 @@ namespace Facepunch.RTS
 
 			Renderer = new FogRenderer
 			{
-				Position = Vector3.Zero
+				Position = Vector3.Zero,
+				RenderBounds = size * 2f
 			};
 
 			Bounds.SetFrom( size );
-
-			Renderer.RenderBounds = new BBox( Bounds.TopLeft, Bounds.BottomRight );
 
 			UpdateTextureSize();
 
