@@ -6,9 +6,9 @@ namespace Facepunch.RTS.Tech
 	{
 		public override Color Color => Color.Yellow;
 
-		public override bool CanHave( Player player, ISelectable target )
+		public override bool IsAvailable( Player player, ISelectable target )
 		{
-			return !IsResearching( player ) && !Has( player ) && HasDependencies( player );
+			return !IsResearching( player ) && !Has( player );
 		}
 
 		public override void OnQueued( Player player, ISelectable target )

@@ -6,9 +6,14 @@
 
 		public virtual string ChangeItemTo => null;
 
-		public override bool CanHave( Player player, ISelectable target )
+		public override bool Has( Player player, ISelectable target )
 		{
-			return !target.IsInQueue( this ) && !target.HasUpgrade( this ) && HasDependencies( player );
+			return target.HasUpgrade( this );
+		}
+
+		public override bool IsAvailable( Player player, ISelectable target )
+		{
+			return !target.IsInQueue( this ) && !target.HasUpgrade( this );
 		}
 
 		public override void OnCreated( Player player, ISelectable target )

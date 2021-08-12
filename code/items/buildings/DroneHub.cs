@@ -26,7 +26,9 @@ namespace Facepunch.RTS.Buildings
 		public override HashSet<string> Queueables => new()
 		{
 			"unit.minerdrone",
-			"unit.bubbledrone"
+			"unit.attackdrone",
+			"unit.bubbledrone",
+			"unit.suicidedrone"
 		};
 	}
 }

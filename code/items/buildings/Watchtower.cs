@@ -28,7 +28,8 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/watchtower/watchtower.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters"
+			"building.headquarters",
+			"tech.infrastructure"
 		};
 	}
 }

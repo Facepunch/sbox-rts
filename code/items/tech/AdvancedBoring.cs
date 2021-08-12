@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Tech
 {
 	[Library]
-	public class RemoteDrones : BaseTech
+	public class AdvancedBoring : BaseTech
 	{
-		public override string Name => "Remote Drones";
-		public override string UniqueId => "tech.remotedrones";
-		public override string Description => "Unlocks the frightening capabilities of remotely controlled drones.";
+		public override string Name => "Advanced Boring";
+		public override string UniqueId => "tech.advancedboring";
+		public override string Description => "Unlocks upgrades for resource drills.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
@@ -18,7 +18,7 @@ namespace Facepunch.RTS.Tech
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.machinery"
+			"tech.boring"
 		};
 	}
 }

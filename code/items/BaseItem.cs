@@ -20,11 +20,6 @@ namespace Facepunch.RTS
 		public virtual Dictionary<ResourceType, int> Costs => new();
 		public virtual HashSet<string> Dependencies => new();
 
-		public bool Has( Player player )
-		{
-			return player.Dependencies.Contains( NetworkId );
-		}
-
 		public bool HasDependencies( Player player )
 		{
 			foreach ( var v in Dependencies )
@@ -58,7 +53,11 @@ namespace Facepunch.RTS
 
 		public virtual RequirementError CanCreate( Player player, ISelectable target )
 		{
-			if ( !CanHave( player, target ) ) return RequirementError.Unknown;
+			if ( !HasDependencies( player ) )
+				return RequirementError.Dependencies;
+
+			if ( !IsAvailable( player, target ) )
+				return RequirementError.Unknown;
 
 			if ( !player.CanAfford( this, out var resource ) )
 			{
@@ -68,9 +67,19 @@ namespace Facepunch.RTS
 			return RequirementError.Success;
 		}
 
-		public virtual bool CanHave( Player player, ISelectable target )
+		public virtual bool Has( Player player )
 		{
-			return HasDependencies( player );
+			return player.Dependencies.Contains( NetworkId );
+		}
+
+		public virtual bool Has( Player player, ISelectable target )
+		{
+			return Has( player );
+		}
+
+		public virtual bool IsAvailable( Player player, ISelectable target )
+		{
+			return !Has( player, target );
 		}
 	}
 }

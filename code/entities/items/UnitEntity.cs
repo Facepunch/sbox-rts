@@ -445,7 +445,12 @@ namespace Facepunch.RTS
 		public override void ClientSpawn()
 		{
 			Circle = new();
-			Circle.Size = GetDiameterXY( 1f, true );
+
+			if ( Item != null )
+				Circle.Size = GetDiameterXY( Item.CircleScale, true );
+			else
+				Circle.Size = GetDiameterXY( 1f, true );
+
 			Circle.SetParent( this );
 			Circle.LocalPosition = Vector3.Zero;
 
@@ -635,12 +640,12 @@ namespace Facepunch.RTS
 
 			ResetTarget();
 
+			if ( _gather.Entity.IsValid() )
+				_gather.Entity.RemoveGatherer( this );
+
 			_target.Entity = resource;
 			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
 			_target.Type = UnitTargetType.Gather;
-
-			if ( _gather.Entity.IsValid() )
-				_gather.Entity.RemoveGatherer( this );
 
 			_gather.Type = resource.Resource;
 			_gather.Entity = resource;
@@ -852,6 +857,16 @@ namespace Facepunch.RTS
 			{
 				var occupant = occupants[i];
 				occupant.TakeDamage( info );
+			}
+		}
+
+		protected override void OnItemNetworkIdChanged()
+		{
+			base.OnItemNetworkIdChanged();
+
+			if ( Circle != null )
+			{
+				Circle.Size = GetDiameterXY( Item.CircleScale, true );
 			}
 		}
 

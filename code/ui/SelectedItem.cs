@@ -451,28 +451,44 @@ namespace Facepunch.RTS
 		private void UpdateCommands( HashSet<string> queueables, HashSet<string> abilities = null )
 		{
 			var player = Local.Pawn as Player;
+			var availableQueueables = new List<BaseItem>();
+			var unavailableQueueables = new List<BaseItem>();
 
 			foreach ( var v in queueables )
 			{
 				var queueable = Items.Find<BaseItem>( v );
+				if ( queueable == null ) return;
 
-				if ( queueable == null )
+				if ( queueable.IsAvailable( player, Selectable ) )
 				{
-					Log.Error( "[SelectedItem::UpdateCommands] Unable to find queueable by name: " + v );
-					return;
+					if ( queueable.HasDependencies( player ) )
+						availableQueueables.Add( queueable );
+					else
+						unavailableQueueables.Add( queueable );
 				}
+			}
 
+			for ( int i = 0; i < availableQueueables.Count; i++ )
+			{
+				BaseItem v = availableQueueables[i];
 				var button = AddChild<ItemCommandQueueable>( "command" );
+				button.Update( Selectable, v );
+				Buttons.Add( button );
+			}
 
-				if ( !queueable.CanHave( player, Selectable ) )
-					button.Disable();
-
-				button.Update( Selectable, queueable );
-
+			for ( int i = 0; i < unavailableQueueables.Count; i++ )
+			{
+				BaseItem v = unavailableQueueables[i];
+				var button = AddChild<ItemCommandQueueable>( "command" );
+				button.Disable();
+				button.Update( Selectable, v );
 				Buttons.Add( button );
 			}
 
 			if ( abilities == null ) return;
+
+			var availableAbilities = new List<BaseAbility>();
+			var unavailableAbilities = new List<BaseAbility>();
 
 			foreach ( var v in abilities )
 			{
@@ -480,14 +496,28 @@ namespace Facepunch.RTS
 
 				if ( ability != null && ability.IsAvailable() )
 				{
-					var button = AddChild<ItemCommandAbility>( "command" );
-
-					if ( !ability.HasDependencies() )
-						button.Disable();
-
-					button.Update( Selectable, ability );
-					Buttons.Add( button );
+					if ( ability.HasDependencies() )
+						availableAbilities.Add( ability );
+					else
+						unavailableAbilities.Add( ability );
 				}
+			}
+
+			for ( int i = 0; i < availableAbilities.Count; i++ )
+			{
+				BaseAbility v = availableAbilities[i];
+				var button = AddChild<ItemCommandAbility>( "command" );
+				button.Update( Selectable, v );
+				Buttons.Add( button );
+			}
+
+			for ( int i = 0; i < unavailableAbilities.Count; i++ )
+			{
+				BaseAbility v = unavailableAbilities[i];
+				var button = AddChild<ItemCommandAbility>( "command" );
+				button.Disable();
+				button.Update( Selectable, v );
+				Buttons.Add( button );
 			}
 		}
 	}

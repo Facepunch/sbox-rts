@@ -20,14 +20,15 @@ namespace Facepunch.RTS.Buildings
 		public override HashSet<string> Dependencies => new()
 		{
 			"building.headquarters",
-			"building.terryfactory",
-			"tech.machinery"
+			"building.terryfactory"
 		};
 		public override HashSet<string> Queueables => new()
 		{
 			"tech.brewing",
+			"tech.machinery",
 			"tech.extraction",
 			"tech.syringes",
+			"tech.boring",
 			"tech.thermalarmor",
 			"tech.pyrotechnics",
 			"tech.armoredplating",

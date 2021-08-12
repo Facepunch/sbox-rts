@@ -12,7 +12,8 @@ namespace Facepunch.RTS
 		NotEnoughPopulation = 5,
 		InvalidTarget = 6,
 		InvalidPlayer = 7,
-		Cooldown = 8,
-		Unknown = 9
+		Dependencies = 8,
+		Cooldown = 9,
+		Unknown = 10
 	}
 }

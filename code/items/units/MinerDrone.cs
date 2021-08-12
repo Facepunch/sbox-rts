@@ -9,12 +9,14 @@ namespace Facepunch.RTS.Units
 	{
 		public override string Name => "Miner Drone";
 		public override string UniqueId => "unit.minerdrone";
+		public override string Entity => "unit_drone";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
 		public override string Description => "Gathers Stone and Metal for your empire.";
 		public override string Model => "models/vehicles/drones/worker/drone_worker.vmdl";
-		public override float VerticalOffset => 150f;
+		public override float VerticalOffset => 100f;
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;
+		public override float CircleScale => 0.7f;
 		public override bool RagdollOnDeath => false;
 		public override int MaxCarryMultiplier => 3;
 		public override float Speed => 550f;

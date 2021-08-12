@@ -15,7 +15,8 @@ namespace Facepunch.RTS.Upgrades
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 200,
-			[ResourceType.Metal] = 300
+			[ResourceType.Metal] = 300,
+			[ResourceType.Plasma] = 100
 		};
 		public override HashSet<string> Dependencies => new()
 		{
