@@ -4,11 +4,10 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Buildings
 {
 	[Library]
-	public class AdvancedMetalDrill : BaseBuilding
+	public class AdvancedMetalDrill : MetalDrill
 	{
 		public override string Name => "Advanced Metal Drill";
 		public override string UniqueId => "building.advancedmetaldrill";
-		public override string Model => "models/buildings/brewery/brewery.vmdl";
 		public override ResourceGenerator Generator => new()
 		{
 			PerOccupant = true,

@@ -23,7 +23,7 @@ namespace Facepunch.RTS.Buildings
 			[ResourceType.Stone] = 200,
 			[ResourceType.Metal] = 200
 		};
-		public override string Model => "models/buildings/brewery/brewery.vmdl";
+		public override string Model => "models/buildings/stone_drill/stone_drill.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
 			"building.headquarters",
