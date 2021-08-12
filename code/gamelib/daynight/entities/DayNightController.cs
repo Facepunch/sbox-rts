@@ -141,11 +141,8 @@ namespace Gamelib.DayNight
 			environment.Position = Vector3.Zero + Rotation.From( 0, 0, sunAngle + 60f ) * ( radius * Vector3.Right );
 			environment.Position += Rotation.From( 0, sunAngle, 0 ) * ( radius * Vector3.Forward );
 
-			DebugOverlay.Sphere( environment.Position, 2000f, Color.Yellow );
-
 			var direction = (Vector3.Zero - environment.Position).Normal;
 			environment.Rotation = Rotation.LookAt( direction, Vector3.Up );
-			DebugOverlay.Line( environment.Position, environment.Position + environment.Rotation.Forward * 10000f, Color.Blue );
 		}
 	}
 }
