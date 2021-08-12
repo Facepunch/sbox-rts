@@ -1465,20 +1465,23 @@ namespace Facepunch.RTS
 						pathDirection = direction.WithZ( 0f );
 					}
 
-					_flockAgents.Clear();
-					_flockAgents.UnionWith( MoveGroup.Agents );
-
-					if ( _gather.Entity.IsValid() )
+					if ( !_target.HasEntity() || !IsInRange( _target.Entity, _target.Radius * 1.5f ) )
 					{
-						_flockAgents.UnionWith( _gather.Entity.Gatherers );
-					}
+						_flockAgents.Clear();
+						_flockAgents.UnionWith( MoveGroup.Agents );
 
-					if ( _flockAgents.Count > 1 )
-					{
-						var flocker = new Flocker();
-						flocker.Setup( this, _flockAgents, Position );
-						flocker.Flock( Position + direction * Pathfinder.NodeSize );
-						steerDirection = flocker.Force.Normal.WithZ( 0f );
+						if ( _gather.Entity.IsValid() )
+						{
+							_flockAgents.UnionWith( _gather.Entity.Gatherers );
+						}
+
+						if ( _flockAgents.Count > 1 )
+						{
+							var flocker = new Flocker();
+							flocker.Setup( this, _flockAgents, Position );
+							flocker.Flock( Position + direction * Pathfinder.NodeSize );
+							steerDirection = flocker.Force.Normal.WithZ( 0f );
+						}
 					}
 				}
 			}
