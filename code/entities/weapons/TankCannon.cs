@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash/muzzle_large/muzzleflash_large.vpcf";
 		public override string BulletTracer => null;
 		public override float RotationTolerance => 360f;
-		public override string SoundName => "rust_smg.shoot";
+		public override string SoundName => "rts.smg.shoot";
 		public override float Force => 5f;
 		public virtual float RotateSpeed => 10f;
 

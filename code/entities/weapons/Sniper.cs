@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		public override float FireRate => 3f;
 		public override int BaseDamage => 30;
 		public override int HoldType => 4;
-		public override string SoundName => "rust_smg.shoot";
+		public override string SoundName => "rts.smg.shoot";
 		public override float Force => 5f;
 
 		public override void Spawn()

@@ -219,18 +219,23 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			var radius = GetDiameterXY( 0.75f );
-
-			foreach ( var pathfinder in PathManager.All )
-			{
-				pathfinder.UpdateCollisions( Position, radius );
-			}
+			UpdateCollisions();
 
 			IsUnderConstruction = true;
 			RenderAlpha = 0.25f;
 			GlowActive = true;
 			GlowColor = Color.Red;
 			Health = 1f;
+		}
+
+		public void UpdateCollisions()
+		{
+			var radius = GetDiameterXY( 0.75f );
+
+			foreach ( var pathfinder in PathManager.All )
+			{
+				pathfinder.UpdateCollisions( Position, radius );
+			}
 		}
 
 		public UnitEntity SpawnUnit( BaseUnit unit )
@@ -483,6 +488,8 @@ namespace Facepunch.RTS
 
 				if ( Player.IsValid() )
 					Player.MaxPopulation -= Item.PopulationBoost;
+
+				UpdateCollisions();
 
 				EvictAll();
 			}

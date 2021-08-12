@@ -6,10 +6,10 @@ namespace Facepunch.RTS
 	[Library("weapon_smg")]
 	partial class SMG : Weapon, IBallisticsWeapon
 	{
-		public override float FireRate => 0.15f;
-		public override int BaseDamage => 2;
+		public override float FireRate => 0.3f;
+		public override int BaseDamage => 4;
 		public override int HoldType => 2;
-		public override string SoundName => "rust_smg.shoot";
+		public override string SoundName => "rts.smg.shoot";
 		public override float Force => 2f;
 
 		public override void Spawn()

@@ -2,15 +2,15 @@
 {
 	data = 
 	{
+		volume = 0.2
 		sounds = 
 		[
-			"sounds/buildings/rts.collapse1.vsnd",
+			"weapons/rust_smg/sounds/rust_smg_attack.vsnd",
 		]
-		UI = false
-		Volume = 1.0
 		VolumeRandom = 0.0
-		Pitch = 1.0
+		Pitch = 1.1
 		PitchRandom = 0.0
-		DistanceMax = 500.0
+		DistanceMax = 1000.0
+		UI = false
 	}
 }
