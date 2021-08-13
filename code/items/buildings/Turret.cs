@@ -13,6 +13,7 @@ namespace Facepunch.RTS.Buildings
 		public override int BuildTime => 10;
 		public override float MaxHealth => 250f;
 		public override float AttackRadius => 1200f;
+		public override float MinLineOfSight => 1200f;
 		public override float MaxVerticalRange => 150f;
 		public override string Weapon => "weapon_turret";
 		public override Dictionary<ResourceType, int> Costs => new()
