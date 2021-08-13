@@ -14,8 +14,12 @@
 						remaps = 
 						[
 							{
-								from = "phong1.vmat"
-								to = "models/vehicles/tank/material/tank.vmat"
+								from = "models/buildings/buildingtempmaterials/primary_black.vmat"
+								to = "materials/dev/primary_black.vmat"
+							},
+							{
+								from = "models/buildings/buildingtempmaterials/color.vmat"
+								to = "models/buildings/buildingtempmaterials/color.vmat"
 							},
 						]
 						use_global_default = false
