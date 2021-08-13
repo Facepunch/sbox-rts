@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "Tesla Coil";
 		public override string UniqueId => "building.teslacoil";
 		public override string Description => "Base defense structure that evenly distributes damage to targets around it.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/silo.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/teslacoil.png" );
 		public override int BuildTime => 10;
 		public override float MaxHealth => 250f;
 		public override float AttackRadius => 1200f;
