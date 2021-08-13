@@ -13,7 +13,7 @@ namespace Facepunch.RTS.Tech
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 200,
+			[ResourceType.Beer] = 50,
 			[ResourceType.Metal] = 300
 		};
 		public override HashSet<string> Dependencies => new()
