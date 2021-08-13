@@ -28,7 +28,6 @@ metadata
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	startdisabled(boolean) : "Start Disabled" : 0 : "Should this entity start disabled?"
-	filtername(filterclass) : "Filtername" :  : "TODO: Filter to use to see if activator triggers me. See filter_activator_name for more explanation."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 	spawnflags(flags) = [
 		1 : "Clients" : 1
@@ -200,7 +199,6 @@ metadata
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	startdisabled(boolean) : "Start Disabled" : 0 : "Should this entity start disabled?"
-	filtername(filterclass) : "Filtername" :  : "TODO: Filter to use to see if activator triggers me. See filter_activator_name for more explanation."
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 	spawnflags(flags) = [
 		1 : "Clients" : 1

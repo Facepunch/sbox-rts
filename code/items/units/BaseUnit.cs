@@ -18,6 +18,7 @@ namespace Facepunch.RTS.Units
 		public virtual bool UsePathfinder => true;
 		public virtual UnitAnimator Animator => new SimpleTerryAnimator();
 		public virtual float AgentRadiusScale => 2f;
+		public virtual bool CanDisband => true;
 		public virtual bool CanConstruct => false;
 		public virtual bool RagdollOnDeath => true;
 		public virtual string DeathParticles => null;

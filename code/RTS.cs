@@ -31,6 +31,18 @@ namespace Facepunch.RTS
 			}
 		}
 
+		[ServerCmd( "rts_richboy" )]
+		public static void GiveAllResources()
+		{
+			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			{
+				caller.SetResource( ResourceType.Stone, 9999 );
+				caller.SetResource( ResourceType.Metal, 9999 );
+				caller.SetResource( ResourceType.Beer, 9999 );
+				caller.SetResource( ResourceType.Plasma, 9999 );
+			}
+		}
+
 		public Gamemode()
 		{
 			if ( IsServer )
@@ -160,6 +172,7 @@ namespace Facepunch.RTS
 
 		private void CheckMinimumPlayers()
 		{
+			
 			if ( Client.All.Count >= 2 )
 			{
 				if ( Rounds.Current is LobbyRound || Rounds.Current == null )

@@ -120,9 +120,7 @@ namespace Facepunch.RTS
 			if ( ability.TargetType != AbilityTargetType.Self )
 				return;
 
-			var item = Items.Find<BaseItem>( selectable.ItemId );
-
-			if ( selectable.Player == caller && item.Abilities.Contains( abilityId ) )
+			if ( selectable.Player == caller )
 			{
 				if ( ability.CanUse() == RequirementError.Success )
 				{

@@ -16,7 +16,7 @@ namespace Facepunch.RTS.Units
 		public override float VerticalOffset => 100f;
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;
-		public override float CircleScale => 0.7f;
+		public override float CircleScale => 0.5f;
 		public override bool RagdollOnDeath => false;
 		public override int MaxCarryMultiplier => 3;
 		public override float Speed => 550f;

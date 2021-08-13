@@ -15,7 +15,7 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/drones/dive/drone_dive.vmdl";
 		public override float VerticalOffset => 100f;
 		public override bool UseModelPhysics => true;
-		public override float CircleScale => 0.7f;
+		public override float CircleScale => 0.5f;
 		public override bool UseRenderColor => true;
 		public override bool RagdollOnDeath => false;
 		public override float Speed => 450f;

@@ -25,7 +25,7 @@ namespace Facepunch.RTS
 
 	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IMoveAgent, IOccupiableEntity
 	{
-		private class TargetInfo
+		protected class TargetInfo
 		{
 			public Entity Entity;
 			public Vector3? Position;
@@ -36,7 +36,7 @@ namespace Facepunch.RTS
 			public bool HasEntity() => Entity.IsValid();
 		}
 
-		private class GatherInfo
+		protected class GatherInfo
 		{
 			public ResourceEntity Entity;
 			public Vector3 Position;
@@ -57,6 +57,7 @@ namespace Facepunch.RTS
 		[Net] public bool IsGathering { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSightRadius { get; private set; }
+		[Net] public TimeSince LastDamageTime { get; private set; }
 		[Net, OnChangedCallback] public int Kills { get; set; }
 		[Net] public UnitModifiers Modifiers { get; protected set; }
 		public override bool CanMultiSelect => true;
@@ -79,13 +80,13 @@ namespace Facepunch.RTS
 		public EntityHudIcon RankIcon { get; private set; }
 		#endregion
 
-		private readonly GatherInfo _gather = new();
-		private readonly TargetInfo _target = new();
-		private HashSet<IMoveAgent> _flockAgents { get; set; } = new();
-		private List<ISelectable> _targetBuffer = new();
-		private RealTimeUntil _nextRepairTime;
-		private RealTimeUntil _nextFindTarget;
-		private Sound _idleLoopSound;
+		protected readonly GatherInfo _gather = new();
+		protected readonly TargetInfo _target = new();
+		protected HashSet<IMoveAgent> _flockAgents { get; set; } = new();
+		protected List<ISelectable> _targetBuffer = new();
+		protected RealTimeUntil _nextRepairTime;
+		protected RealTimeUntil _nextFindTarget;
+		protected Sound _idleLoopSound;
 
 		public UnitEntity() : base()
 		{
@@ -349,6 +350,8 @@ namespace Facepunch.RTS
 			info = Resistances.Apply( info, Modifiers.Resistances );
 
 			LastDamageTaken = info;
+			LastDamageTime = 0;
+
 			DamageOccupants( info );
 
 			base.TakeDamage( info );
@@ -862,6 +865,19 @@ namespace Facepunch.RTS
 			}
 		}
 
+		protected override void CreateAbilities()
+		{
+			base.CreateAbilities();
+
+			if ( Item.CanDisband )
+			{
+				var disbandId = "ability_disband";
+				var disband = RTS.Abilities.Create( disbandId );
+				disband.Initialize( disbandId, this );
+				Abilities[disbandId] = disband;
+			}
+		}
+
 		protected override void OnItemNetworkIdChanged()
 		{
 			base.OnItemNetworkIdChanged();
@@ -928,6 +944,11 @@ namespace Facepunch.RTS
 							ClearTarget();
 						else if ( !IsMoveGroupValid() )
 							ValidateAttackDistance();
+					}
+					else if ( _target.Type == UnitTargetType.Gather )
+					{
+						if ( !isTargetValid )
+							FindTargetResource();
 					}
 
 					if ( isTargetValid && isTargetInRange )
@@ -1198,6 +1219,8 @@ namespace Facepunch.RTS
 					return;
 				}
 			}
+
+			ClearTarget();
 		}
 
 		private void FindResourceDepo()
@@ -1467,7 +1490,7 @@ namespace Facepunch.RTS
 						pathDirection = direction.WithZ( 0f );
 					}
 
-					if ( !_target.HasEntity() || !IsInRange( _target.Entity, _target.Radius * 1.5f ) )
+					if ( !_target.HasEntity() || !IsInRange( _target.Entity, _target.Radius * 2f ) )
 					{
 						_flockAgents.Clear();
 						_flockAgents.UnionWith( MoveGroup.Agents );
@@ -1495,11 +1518,6 @@ namespace Facepunch.RTS
 					pathDirection = straightDirection;
 				else
 					pathDirection = Vector3.Zero;
-			}
-			else if ( !IsSelected )
-			{
-				if ( _target.Entity is ResourceEntity )
-					FindTargetResource();
 			}
 
 			if ( pathDirection.Length > 0 )
@@ -1640,22 +1658,20 @@ namespace Facepunch.RTS
 			if ( _gather.LastGather < resource.GatherTime )
 				return;
 
-			TakeFrom( resource );
-
 			_gather.LastGather = 0;
 			IsGathering = true;
 
-			if ( !Carrying.TryGetValue( resource.Resource, out var carrying ) )
-				return;
+			TakeFrom( resource );
 
-			var maxCarry = resource.MaxCarry * Item.MaxCarryMultiplier;
+			if ( Carrying.TryGetValue( resource.Resource, out var carrying ) )
+			{
+				var maxCarry = resource.MaxCarry * Item.MaxCarryMultiplier;
 
-			GatherProgress = (1f / maxCarry) * carrying;
+				GatherProgress = (1f / maxCarry) * carrying;
+				if ( carrying < maxCarry ) return;
 
-			if ( carrying < maxCarry ) return;
-
-			// We're full, let's deposit that shit.
-			FindResourceDepo();
+				FindResourceDepo();
+			}
 		}
 	}
 }

@@ -443,12 +443,12 @@ namespace Facepunch.RTS
 			Buttons.Clear();
 
 			if ( selectable is UnitEntity unit )
-				UpdateCommands( unit.Item.Queueables, unit.Item.Abilities );
+				UpdateCommands( unit.Item.Queueables, unit.Abilities );
 			else if ( selectable is BuildingEntity building )
-				UpdateCommands( building.Item.Queueables, building.Item.Abilities );
+				UpdateCommands( building.Item.Queueables, building.Abilities );
 		}
 
-		private void UpdateCommands( HashSet<string> queueables, HashSet<string> abilities = null )
+		private void UpdateCommands( HashSet<string> queueables, Dictionary<string, BaseAbility> abilities = null )
 		{
 			var player = Local.Pawn as Player;
 			var availableQueueables = new List<BaseItem>();
@@ -490,9 +490,9 @@ namespace Facepunch.RTS
 			var availableAbilities = new List<BaseAbility>();
 			var unavailableAbilities = new List<BaseAbility>();
 
-			foreach ( var v in abilities )
+			foreach ( var kv in abilities )
 			{
-				var ability = Selectable.GetAbility( v );
+				var ability = kv.Value;
 
 				if ( ability != null && ability.IsAvailable() )
 				{
