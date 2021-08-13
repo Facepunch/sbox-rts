@@ -6,7 +6,7 @@ namespace Facepunch.RTS.Tech
 {
 	public class ResistanceModifierTech<T> : BaseTech
 	{
-		public virtual Dictionary<string,float> ResistanceModifiers => new();
+		public virtual Dictionary<string, float> ResistanceModifiers => new();
 		public virtual string Tag => "unit";
 
 		public ResistanceModifierTech()
@@ -29,7 +29,7 @@ namespace Facepunch.RTS.Tech
 
 		private void OnUnitTrained( Player player, UnitEntity unit )
 		{
-			if ( Has( player ) && unit.Item is T && v.Tags.Has( Tag ) )
+			if ( Has( player ) && unit.Item is T && unit.Tags.Has( Tag ) )
 			{
 				foreach ( var kv in ResistanceModifiers )
 					unit.Modifiers.AddResistance( kv.Key, kv.Value );

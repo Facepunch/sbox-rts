@@ -658,35 +658,112 @@ namespace Facepunch.RTS
 		}
 	}
 
-	public class ItemMultiIcon : Panel
+	public class ItemMultiHealth : Panel
 	{
-		public Panel Image { get; private set; }
-		public Label Health { get; private set; }
-		public ISelectable Item { get; private set; }
+		public Panel Foreground { get; private set; }
+
+		public ItemMultiHealth()
+		{
+			Foreground = Add.Panel( "foreground" );
+		}
+	}
+
+	public class ItemMultiIcon : Button
+	{
+		public ItemMultiHealth Health { get; private set; }
+		public ISelectable Selectable { get; private set; }
+		public BaseItem Item { get; private set; }
 
 		public ItemMultiIcon()
 		{
-
+			Health = AddChild<ItemMultiHealth>( "health" );
 		}
 
-		public void Update( ISelectable item )
+		protected override void OnClick( MousePanelEvent e )
 		{
-			Item = item;
+			Items.Select( Selectable.NetworkIdent.ToString() );
+			Audio.Play( "rts.pophappy" );
+		}
+
+		protected override void OnMouseOver( MousePanelEvent e )
+		{
+			var tooltip = Hud.Tooltip;
+			tooltip.Update( Item, true );
+			tooltip.Hover( this );
+			tooltip.Show();
+		}
+
+		protected override void OnMouseOut( MousePanelEvent e )
+		{
+			Hud.Tooltip.Hide();
+		}
+
+		public override void Tick()
+		{
+			if ( !(Selectable as Entity).IsValid() )
+			{
+				Delete();
+				return;
+			}
+
+			Health.Foreground.Style.Width = Length.Fraction( Selectable.Health / Selectable.MaxHealth );
+			Health.Foreground.Style.Dirty();
+		}
+
+		public void Update( ISelectable selectable )
+		{
+			Selectable = selectable;
+
+			if ( selectable is UnitEntity unit )
+				Item = unit.Item;
+			else if ( selectable is BuildingEntity building )
+				Item = building.Item;
+
+			Style.Background = null;
+
+			if ( Item.Icon != null )
+			{
+				Style.Background = new PanelBackground
+				{
+					SizeX = Length.Percent( 100f ),
+					SizeY = Length.Percent( 100f ),
+					Texture = Item.Icon
+				};
+			}
+
+			Style.Dirty();
 		}
 	}
 
 	public class ItemMultiDisplay : Panel
 	{
+		public Panel Container { get; private set; }
+		public List<ItemMultiIcon> Icons { get; private set; }
 		public List<ISelectable> Items { get; private set; }
 
 		public ItemMultiDisplay()
 		{
-
+			Icons = new();
+			Container = Add.Panel( "container" );
 		}
 
 		public void Update( List<ISelectable> items )
 		{
 			Items = items;
+
+			foreach ( var icon in Icons )
+			{
+				icon.Delete( true );
+			}
+
+			Icons.Clear();
+
+			foreach ( var item in items )
+			{
+				var icon = Container.AddChild<ItemMultiIcon>( "icon" );
+				icon.Update( item );
+				Icons.Add( icon );
+			}
 		}
 	}
 

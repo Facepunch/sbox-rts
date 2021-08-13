@@ -4,7 +4,7 @@ namespace Facepunch.RTS.Tech
 {
 	public class SpeedModifierTech<T> : BaseTech
 	{
-		public virtual float Speed = 0f;
+		public virtual float Speed => 0f;
 		public virtual string Tag => "unit";
 
 		public SpeedModifierTech()
@@ -26,7 +26,7 @@ namespace Facepunch.RTS.Tech
 
 		private void OnUnitTrained( Player player, UnitEntity unit )
 		{
-			if ( Has( player ) && unit.Item is T && v.Tags.Has( Tag ) )
+			if ( Has( player ) && unit.Item is T && unit.Tags.Has( Tag ) )
 			{
 				unit.Modifiers.Speed += Speed;
 			}

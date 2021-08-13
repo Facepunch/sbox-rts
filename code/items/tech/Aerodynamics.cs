@@ -17,7 +17,7 @@ namespace Facepunch.RTS.Tech
 			[ResourceType.Beer] = 100,
 			[ResourceType.Metal] = 150
 		};
-		public override float Speed = 0.15f;
+		public override float Speed => 0.15f;
 		public override string Tag => "drone";
 	}
 }
