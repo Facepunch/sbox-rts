@@ -101,7 +101,7 @@
 						game_keys = 
 						{
 							name = resource:"particles/drone_snapshot/working_drone_effect.vpcf"
-							attachment_point = "base"
+							attachment_point = ""
 							attachment_type = "point_follow"
 							attachment_offset = [ 0.0, 0.0, 0.0 ]
 						}
