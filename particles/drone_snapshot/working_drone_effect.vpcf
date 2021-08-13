@@ -75,6 +75,7 @@
 			_class = "C_INIT_PositionOffset"
 			m_OffsetMin = [ -5.0, 0.0, 2.0 ]
 			m_OffsetMax = [ -5.0, 0.0, 2.0 ]
+			m_bLocalCoords = true
 		},
 	]
 	m_Operators = 

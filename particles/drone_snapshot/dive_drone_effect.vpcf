@@ -74,6 +74,7 @@
 		},
 		{
 			_class = "C_INIT_PositionOffset"
+			m_bLocalCoords = true
 		},
 	]
 	m_Operators = 
