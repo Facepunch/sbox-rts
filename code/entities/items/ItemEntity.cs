@@ -591,6 +591,12 @@ namespace Facepunch.RTS
 
 		protected virtual void OnItemChanged( T item, T oldItem )
 		{
+			foreach ( var tag in oldItem.Tags )
+				Tags.Remove( tag );
+
+			foreach ( var tag in item.Tags )
+				Tags.Add( tag );
+
 			CreateAbilities();
 		}
 
