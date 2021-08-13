@@ -257,6 +257,16 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public void Kill( DamageInfo damageInfo = default )
+		{
+			if ( Item.RagdollOnDeath )
+				BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, GetHitboxBone( damageInfo.HitboxIndex ) );
+
+			CreateDeathParticles();
+			LifeState = LifeState.Dead;
+			Delete();
+		}
+
 		public bool IsMoveGroupValid()
 		{
 			return (MoveGroup != null && MoveGroup.IsValid());
@@ -343,17 +353,7 @@ namespace Facepunch.RTS
 			if ( damageInfo.Attacker is UnitEntity unit )
 				unit.AddKill();
 
-			if ( Item.RagdollOnDeath )
-				BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, GetHitboxBone( damageInfo.HitboxIndex ) );
-
-			if ( Occupiable.IsValid() && Occupiable is IOccupiableEntity occupiable )
-				occupiable.EvictUnit( this );
-
-			CreateDeathParticles();
-
-			LifeState = LifeState.Dead;
-
-			Delete();
+			Kill( damageInfo );
 		}
 
 		public override void TakeDamage( DamageInfo info )
@@ -921,11 +921,14 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			if ( Player.IsValid() )
-				Player.TakePopulation( Item.Population );
+			if ( Occupiable.IsValid() && Occupiable is IOccupiableEntity occupiable )
+				occupiable.EvictUnit( this );
 
 			if ( _gather.Entity.IsValid() )
 				_gather.Entity.RemoveGatherer( this );
+
+			if ( Player.IsValid() )
+				Player.TakePopulation( Item.Population );
 
 			_idleLoopSound.Stop();
 

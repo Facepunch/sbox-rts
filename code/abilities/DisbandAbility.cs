@@ -30,7 +30,7 @@ namespace Facepunch.RTS
 
 			if ( unit.LastDamageTime >= 5 )
 			{
-				unit.Delete();
+				unit.Kill();
 			}
 		}
 	}

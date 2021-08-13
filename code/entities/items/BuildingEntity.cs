@@ -175,6 +175,13 @@ namespace Facepunch.RTS
 			Occupants.Clear();
 		}
 
+		public void Kill()
+		{
+			Item.PlayDestroySound( this );
+			LifeState = LifeState.Dead;
+			Delete();
+		}
+
 		public void Attack( Entity target )
 		{
 			Target = target;
@@ -257,9 +264,7 @@ namespace Facepunch.RTS
 
 		public override void OnKilled()
 		{
-			Item.PlayDestroySound( this );
-			LifeState = LifeState.Dead;
-			Delete();
+			Kill();
 		}
 
 		public override void TakeDamage( DamageInfo info )
@@ -340,6 +345,19 @@ namespace Facepunch.RTS
 		protected virtual void OnEvicted( UnitEntity unit )
 		{
 
+		}
+
+		protected override void CreateAbilities()
+		{
+			base.CreateAbilities();
+
+			if ( Item.CanDemolish )
+			{
+				var demolishId = "ability_demolish";
+				var demolish = RTS.Abilities.Create( demolishId );
+				demolish.Initialize( demolishId, this );
+				Abilities[demolishId] = demolish;
+			}
 		}
 
 		protected override void ServerTick()
