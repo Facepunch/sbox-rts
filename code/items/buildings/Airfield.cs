@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "Airfield";
 		public override string UniqueId => "building.airfield";
 		public override string Description => "Allows you to train various types of aircraft.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/vehiclefactory.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/airfield.png" );
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

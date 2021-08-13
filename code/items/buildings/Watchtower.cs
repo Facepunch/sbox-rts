@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Watchtower";
 		public override string UniqueId => "building.watchtower";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/pub.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/watchtower.png" );
 		public override string Description => "Useful for seeing across large distances and can hold one unit.";
 		public override int BuildTime => 10;
 		public override float MaxHealth => 250f;

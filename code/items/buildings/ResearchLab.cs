@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Research Lab";
 		public override string UniqueId => "building.researchlab";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/researchlab.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/researchlab.png" );
 		public override string Description => "Research new technologies for your empire.";
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()

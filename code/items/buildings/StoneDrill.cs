@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Stone Drill";
 		public override string UniqueId => "building.stonedrill";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/brewery.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/stonedrill.png" );
 		public override string Description => "Assign up to 4 workers to generate Stone over time.";
 		public override float MaxHealth => 250f;
 		public override int BuildTime => 5;
