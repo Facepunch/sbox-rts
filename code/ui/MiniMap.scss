@@ -1,15 +1,16 @@
 ﻿minimap {
     position: absolute;
     width: 100%;
-    pointer-events: none;
-    bottom: 64px;
-    left: 32px;
+    pointer-events: auto;
+    left: 48px;
+    bottom: 32px;
 
     &.hidden {
         display: none;
     }
 
-    .scene {
+    .map {
+        border-radius: 16px;
         width: 250px;
         height: 250px;
     }
