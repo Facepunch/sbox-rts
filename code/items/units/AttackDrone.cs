@@ -13,6 +13,7 @@ namespace Facepunch.RTS.Units
 		public override string Description => "A fast but weak combat drone to deliver pain from the sky.";
 		public override string Model => "models/vehicles/drones/attack/drone_attack.vmdl";
 		public override string Weapon => "weapon_attack_drone";
+		public override HashSet<string> Tags => new() { "drone" };
 		public override float VerticalOffset => 100f;
 		public override bool UseModelPhysics => true;
 		public override float CircleScale => 0.5f;

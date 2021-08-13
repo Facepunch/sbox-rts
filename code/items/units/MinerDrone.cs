@@ -13,6 +13,7 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
 		public override string Description => "Gathers Stone and Metal for your empire.";
 		public override string Model => "models/vehicles/drones/worker/drone_worker.vmdl";
+		public override HashSet<string> Tags => new() { "drone" };
 		public override float VerticalOffset => 100f;
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;

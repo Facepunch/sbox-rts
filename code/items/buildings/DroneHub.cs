@@ -28,7 +28,9 @@ namespace Facepunch.RTS.Buildings
 			"unit.minerdrone",
 			"unit.attackdrone",
 			"unit.bubbledrone",
-			"unit.suicidedrone"
+			"unit.suicidedrone",
+			"tech.graphitearmor",
+			"tech.aerodynamics"
 		};
 	}
 }

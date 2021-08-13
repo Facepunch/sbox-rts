@@ -1,15 +1,13 @@
-﻿using Sandbox;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Facepunch.RTS.Tech
 {
-	public class ResistanceModifierTech<T> : BaseTech
+	public class SpeedModifierTech<T> : BaseTech
 	{
-		public virtual Dictionary<string,float> ResistanceModifiers => new();
+		public virtual float Speed = 0f;
 		public virtual string Tag => "unit";
 
-		public ResistanceModifierTech()
+		public SpeedModifierTech()
 		{
 			Events.UnitTrained += OnUnitTrained;
 		}
@@ -20,8 +18,7 @@ namespace Facepunch.RTS.Tech
 
 			foreach ( var unit in units )
 			{
-				foreach ( var kv in ResistanceModifiers )
-					unit.Modifiers.AddResistance( kv.Key, kv.Value );
+				unit.Modifiers.Speed += Speed;
 			}
 
 			base.OnCreated( player, target );
@@ -31,9 +28,8 @@ namespace Facepunch.RTS.Tech
 		{
 			if ( Has( player ) && unit.Item is T && v.Tags.Has( Tag ) )
 			{
-				foreach ( var kv in ResistanceModifiers )
-					unit.Modifiers.AddResistance( kv.Key, kv.Value );
-			} 
+				unit.Modifiers.Speed += Speed;
+			}
 		}
 	}
 }

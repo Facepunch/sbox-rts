@@ -13,6 +13,7 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
 		public override string Description => "Can deploy a deployable dome shield to protect units inside.";
 		public override string Model => "models/vehicles/drones/shield/drone_shield.vmdl";
+		public override HashSet<string> Tags => new() { "drone" };
 		public override float VerticalOffset => 100f;
 		public override bool UseModelPhysics => true;
 		public override float CircleScale => 0.5f;
