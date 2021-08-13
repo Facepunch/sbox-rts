@@ -58,14 +58,8 @@ namespace Facepunch.RTS
 
 						player.SetResource( ResourceType.Stone, 1000 );
 						player.SetResource( ResourceType.Metal, 500 );
-						player.SetResource( ResourceType.Beer, 200 );
+						player.SetResource( ResourceType.Beer, 250 );
 						player.SetResource( ResourceType.Plasma, 0 );
-
-
-						player.SetResource( ResourceType.Stone, 5000 );
-						player.SetResource( ResourceType.Metal, 5000 );
-						player.SetResource( ResourceType.Beer, 2000 );
-						player.SetResource( ResourceType.Plasma, 500 );
 
 						player.MakeSpectator( false );
 						player.LookAt( spawnpoint );
