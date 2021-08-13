@@ -340,17 +340,18 @@ namespace Facepunch.RTS
 
 		public bool IsInRange( Entity entity, float radius )
 		{
+			var targetPosition = entity.Position.WithZ( 0f );
+			var selfPosition = Position.WithZ( 0f );
+
 			if ( entity is ModelEntity modelEntity )
 			{
 				// We can try to see if our range overlaps the bounding box of the target.
-				var targetBounds = modelEntity.CollisionBounds + modelEntity.Position;
+				var tolerance = 1.5f;
+				var targetBounds = (modelEntity.CollisionBounds * tolerance) + targetPosition.WithZ( 0f );
 
-				if ( targetBounds.Overlaps( Position.WithZ( modelEntity.Position.z ), radius ) )
+				if ( targetBounds.Overlaps( selfPosition, radius ) )
 					return true;
 			}
-
-			var targetPosition = entity.Position.WithZ( 0f );
-			var selfPosition = Position.WithZ( 0f );
 
 			return (targetPosition.Distance( selfPosition ) < radius);
 		}

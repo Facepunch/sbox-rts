@@ -65,5 +65,10 @@ namespace Facepunch.RTS.Buildings
 			if ( BuiltSounds.Length > 0 )
 				Audio.Play( Rand.FromArray( BuiltSounds ), building.Position );
 		}
+
+		public override bool IsAvailable( Player player, ISelectable target )
+		{
+			return true;
+		}
 	}
 }

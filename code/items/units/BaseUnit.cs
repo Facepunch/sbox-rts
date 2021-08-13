@@ -45,7 +45,6 @@ namespace Facepunch.RTS.Units
 		public virtual float LineOfSightRadius => 700f;
 		public virtual float ConstructRadius => 1500f;
 		public virtual float AttackRadius => 700f;
-		public virtual float InteractRadius => 40f;
 		public virtual Dictionary<string, float> Resistances => new();
 		public virtual List<string> DamageDecals => new()
 		{

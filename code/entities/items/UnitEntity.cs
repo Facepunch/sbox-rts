@@ -601,7 +601,7 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = modelEntity;
-			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
+			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Occupy;
 
 			SetMoveGroup( moveGroup );
@@ -623,7 +623,7 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = building;
-			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
+			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Deposit;
 
 			SetMoveGroup( moveGroup );
@@ -649,7 +649,7 @@ namespace Facepunch.RTS
 				_gather.Entity.RemoveGatherer( this );
 
 			_target.Entity = resource;
-			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
+			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Gather;
 
 			_gather.Type = resource.Resource;
@@ -676,7 +676,7 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = building;
-			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
+			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Repair;
 
 			SetMoveGroup( moveGroup );
@@ -698,7 +698,7 @@ namespace Facepunch.RTS
 			ResetTarget();
 
 			_target.Entity = building;
-			_target.Radius = Item.InteractRadius + (Pathfinder.CollisionSize * 2);
+			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Construct;
 
 			SetMoveGroup( moveGroup );
@@ -778,7 +778,7 @@ namespace Facepunch.RTS
 			var nodeSize = pathfinder.NodeSize;
 
 			// Round up the radius to the nearest node size.
-			var radius = MathF.Ceiling( (model.GetDiameterXY( 0.5f ) + collisionSize / 2f) / nodeSize ) * nodeSize;
+			var radius = MathF.Ceiling( (model.GetDiameterXY( 0.6f ) + collisionSize / 2f) / nodeSize ) * nodeSize;
 			var possibleLocations = new List<Vector3>();
 
 			pathfinder.GetGridPositions( model.Position, radius, possibleLocations, true );
