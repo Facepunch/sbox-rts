@@ -35,6 +35,11 @@ namespace Facepunch.RTS
 			User = user;
 		}
 
+		public virtual string GetDescription()
+		{
+			return Description;
+		}
+
 		public virtual bool IsAvailable()
 		{
 			return true;

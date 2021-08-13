@@ -20,6 +20,16 @@ namespace Facepunch.RTS
 			return hint;
 		}
 
+		public static void Send( Player player, float duration, Vector3 position, ResourceType resource, int amount, Color color )
+		{
+			Host.AssertServer();
+
+			var a = new ResourceType[1] { resource };
+			var b = new int[1] { amount };
+
+			CreateOnClient( To.Single( player ), duration, position, a, b, color );
+		}
+
 		public static void Send( Player player, float duration, Vector3 position, Dictionary<ResourceType, int> resources, Color color )
 		{
 			Host.AssertServer();

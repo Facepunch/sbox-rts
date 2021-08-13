@@ -81,7 +81,7 @@ namespace Facepunch.RTS
 			Name.Style.Dirty();
 
 			Name.Text = ability.Name;
-			Desc.Text = ability.Description;
+			Desc.Text = ability.GetDescription();
 
 			Dependencies.SetVisible( showDependencies );
 

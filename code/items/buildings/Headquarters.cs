@@ -29,7 +29,6 @@ namespace Facepunch.RTS.Buildings
 		{
 			"unit.worker",
 			"unit.scientist"
-			
 		};
 	}
 }

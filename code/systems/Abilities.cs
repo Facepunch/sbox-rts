@@ -48,7 +48,7 @@ namespace Facepunch.RTS
 					if ( !ability.CanTarget( target ) )
 						return;
 
-					ResourceHint.Send( caller, 2f, position, ability.Costs, Color.Green );
+					ResourceHint.Send( caller, 2f, position, ability.Costs, Color.Red );
 
 					caller.TakeResources( ability );
 
@@ -124,7 +124,7 @@ namespace Facepunch.RTS
 			{
 				if ( ability.CanUse() == RequirementError.Success )
 				{
-					ResourceHint.Send( caller, 2f, selectable.Position, ability.Costs, Color.Green );
+					ResourceHint.Send( caller, 2f, selectable.Position, ability.Costs, Color.Red );
 
 					caller.TakeResources( ability );
 
