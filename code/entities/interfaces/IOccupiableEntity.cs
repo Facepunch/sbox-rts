@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 		public float GetMaxVerticalRange();
 		public float GetMinVerticalRange();
 		public float GetAttackRadius();
-		public bool IsInRange( Entity entity, float radius );
+		public bool IsInRange( Entity entity, float radius, float tolerance = 1f );
 		public IList<UnitEntity> GetOccupantsList();
 		public Vector3? GetVacatePosition( UnitEntity unit );
 		public void DamageOccupants( DamageInfo info );

@@ -338,7 +338,7 @@ namespace Facepunch.RTS
 			unit.Position = GetFreePosition( unit, diameterScale );
 		}
 
-		public bool IsInRange( Entity entity, float radius )
+		public bool IsInRange( Entity entity, float radius, float tolerance = 1f )
 		{
 			var targetPosition = entity.Position.WithZ( 0f );
 			var selfPosition = Position.WithZ( 0f );
@@ -346,7 +346,6 @@ namespace Facepunch.RTS
 			if ( entity is ModelEntity modelEntity )
 			{
 				// We can try to see if our range overlaps the bounding box of the target.
-				var tolerance = 1.5f;
 				var targetBounds = (modelEntity.CollisionBounds * tolerance) + targetPosition.WithZ( 0f );
 
 				if ( targetBounds.Overlaps( selfPosition, radius ) )

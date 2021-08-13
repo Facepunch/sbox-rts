@@ -89,7 +89,7 @@ namespace Facepunch.RTS
 			if ( IsTouchingBlocker ) return false;
 
 			var position = trace.EndPos;
-			var bounds = CollisionBounds * 1.25f;
+			var bounds = CollisionBounds * 1.5f;
 			var entities = Physics.GetEntitiesInBox( bounds + position )
 				.Where( i => i != this && i is not FlowFieldGround );
 

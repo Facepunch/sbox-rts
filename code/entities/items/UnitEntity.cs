@@ -230,20 +230,31 @@ namespace Facepunch.RTS
 			if ( Occupiable is IOccupiableEntity occupiable )
 			{
 				var attackRadius = occupiable.GetAttackRadius();
-				return occupiable.IsInRange( target, attackRadius > 0f ? attackRadius : radius );
+
+				if ( attackRadius == 0f )
+					attackRadius = radius;
+
+				return occupiable.IsInRange( target, attackRadius );
 			}
 
-			var minAttackDistance = Item.MinAttackDistance;
-
-			if ( minAttackDistance > 0f )
+			if ( _target.Type == UnitTargetType.Attack )
 			{
-				var tolerance = (Pathfinder.NodeSize * 2f);
+				var minAttackDistance = Item.MinAttackDistance;
 
-				if ( target.Position.WithZ( 0f ).Distance( Position.WithZ( 0f ) ) < minAttackDistance - tolerance )
-					return false;
+				if ( minAttackDistance > 0f )
+				{
+					var tolerance = (Pathfinder.NodeSize * 2f);
+
+					if ( target.Position.WithZ( 0f ).Distance( Position.WithZ( 0f ) ) < minAttackDistance - tolerance )
+						return false;
+				}
+
+				return IsInRange( target, radius );
 			}
-
-			return IsInRange( target, radius );
+			else
+			{
+				return IsInRange( target, radius, 1.5f );
+			}
 		}
 
 		public bool IsMoveGroupValid()
