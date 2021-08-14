@@ -35,7 +35,7 @@ namespace Facepunch.RTS
 		public Image Map;
 		public Texture ColorTexture;
 		public Texture DepthTexture;
-		public bool DrawnOnce;
+		public RealTimeUntil NextRender;
 
 		public MiniMap()
 		{
@@ -62,7 +62,7 @@ namespace Facepunch.RTS
 
 		public override void DrawBackground( ref RenderState state )
 		{
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is Player player && NextRender )
 			{
 				var worldSize = Gamemode.Instance.WorldSize.Size;
 				var cameraHeight = MathF.Max( worldSize.x, worldSize.y );
@@ -70,7 +70,9 @@ namespace Facepunch.RTS
 				var position = Vector3.Up * cameraHeight;
 				var angles = Rotation.LookAt( Vector3.Down ).Angles();
 
-				Render.DrawScene( Map.Texture, DepthTexture, renderSize, SceneWorld.Current, position, angles, 50f, Color.White, Color.Black, 0.1f, cameraHeight );
+				//Render.DrawScene( Map.Texture, DepthTexture, renderSize, SceneWorld.Current, position, angles, 50f, Color.White, Color.Black, 0.1f, cameraHeight );
+
+				NextRender = 0.5f;
 			}
 
 			base.DrawBackground( ref state );
