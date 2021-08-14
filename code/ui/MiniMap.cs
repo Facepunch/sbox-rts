@@ -42,7 +42,7 @@ namespace Facepunch.RTS
 				var renderSize = new Vector2( 512f, 512f );
 				var position = player.Position + Vector3.Up * 10000f;
 				var angles = Rotation.LookAt( Vector3.Down ).Angles();
-				Render.DrawScene( Map.Texture, DepthTexture, renderSize, SceneWorld.Current, position, angles, 60f, Color.White, 0.1f, 20000f );
+				Render.DrawScene( Map.Texture, DepthTexture, renderSize, SceneWorld.Current, position, angles, 60f, Color.White, Color.Black, 0.1f, 20000f );
 			}
 
 
