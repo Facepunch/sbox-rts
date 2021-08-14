@@ -36,6 +36,16 @@ namespace Facepunch.RTS
 			MaxPopulation = 8;
 		}
 
+		[ServerCmd]
+		public static void LookAt( string csv )
+		{
+			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			{
+				var position = csv.ToVector3();
+				caller.Position = position;
+			}
+		}
+
 		public IEnumerable<UnitEntity> GetUnits( BaseUnit unit)
 		{
 			return All.OfType<UnitEntity>().Where( i => i.Player == this && i.Item == unit );

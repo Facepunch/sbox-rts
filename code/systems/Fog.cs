@@ -167,7 +167,7 @@ namespace Facepunch.RTS
 		}
 
 		public static readonly FogBounds Bounds = new();
-		public static bool IsActive { get; private set; }
+		public static bool IsActive { get; set; }
 		public static FogRenderer Renderer { get; private set; }
 
 		private static readonly List<FogCullable> _cullables = new();
