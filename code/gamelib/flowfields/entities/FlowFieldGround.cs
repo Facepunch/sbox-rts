@@ -3,8 +3,14 @@ using System;
 
 namespace Gamelib.FlowFields.Entities
 {
+
+	/// <summary>
+	/// The main component needed for the flowfield to work, basically works as a nav mesh. Must be placed over all the playable space.
+	/// </summary>
+
 	[Library( "flowfield_ground" )]
 	[Hammer.AutoApplyMaterial("materials/rts/hammer/flowfield_ground.vmat")]
+	[Hammer.EntityTool( "FlowField Ground", "FlowField System" )]
 	[Hammer.Solid]
 	public class FlowFieldGround : BaseTrigger
 	{

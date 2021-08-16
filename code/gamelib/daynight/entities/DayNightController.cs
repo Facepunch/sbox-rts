@@ -57,6 +57,11 @@ namespace Gamelib.DayNight
 		}
 	}
 
+	/// <summary>
+	/// A way to set the colour based on the time of day, it will smoothly blend between each colour when the time has changed. Also enables the day night cycle using a "light_environment".
+	/// </summary>
+
+
 	[Library( "daynight_controller" )]
 	[Hammer.EntityTool( "Day Night Controller", "Day Night System" )]
 	[Hammer.EditorSprite("editor/daynight_controller.vmat")]

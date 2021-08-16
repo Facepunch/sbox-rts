@@ -2,6 +2,12 @@
 
 namespace Gamelib.DayNight
 {
+
+	/// <summary>
+	/// An audio controller for when a looping sound should play at each point in the day.
+	/// </summary>
+	/// 
+
 	[Library( "daynight_ambience" )]
 	[Hammer.EntityTool( "Day Night Ambience", "Day Night System" )]
 	[Hammer.EditorSprite("editor/snd_daynight.vmat")]

@@ -2,8 +2,13 @@
 
 namespace Gamelib.FlowFields.Entities
 {
+
+	/// <summary>
+	/// Blocks off areas that players should not be able to access.
+	/// </summary>
 	[Library( "flowfield_blocker" )]
-	[Hammer.AutoApplyMaterial( "materials/gamelib/flowfields/blocker.vmat" )]
+	[Hammer.AutoApplyMaterial( "materials/rts/hammer/flowfield_blocker.vmat" )]
+	[Hammer.EntityTool( "FlowField Blocker", "FlowField System" )]
 	[Hammer.Solid]
 	public class FlowFieldBlocker : ModelEntity
 	{

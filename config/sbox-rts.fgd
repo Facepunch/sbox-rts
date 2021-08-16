@@ -4,9 +4,11 @@
 @SolidClass 
 metadata
 {
-	auto_apply_material = "materials/gamelib/flowfields/blocker.vmat"
+	auto_apply_material = "materials/rts/hammer/flowfield_blocker.vmat"
+	entity_tool_name = "FlowField Blocker"
+	entity_tool_group = "FlowField System"
 }
-= flowfield_blocker : ""
+= flowfield_blocker : "Blocks off areas that players should not be able to access."
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -22,8 +24,10 @@ metadata
 metadata
 {
 	auto_apply_material = "materials/rts/hammer/flowfield_ground.vmat"
+	entity_tool_name = "FlowField Ground"
+	entity_tool_group = "FlowField System"
 }
-= flowfield_ground : ""
+= flowfield_ground : "The main component needed for the flowfield to work, basically works as a nav mesh. Must be placed over all the playable space."
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -61,7 +65,7 @@ metadata
 	entity_tool_name = "Day Night Ambience"
 	entity_tool_group = "Day Night System"
 }
-= daynight_ambience : ""
+= daynight_ambience : "An audio controller for when a looping sound should play at each point in the day."
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -81,7 +85,7 @@ metadata
 	entity_tool_name = "Day Night Controller"
 	entity_tool_group = "Day Night System"
 }
-= daynight_controller : ""
+= daynight_controller : "A way to set the colour based on the time of day, it will smoothly blend between each colour when the time has changed. Also enables the day night cycle using a \"light_environment\"."
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -112,7 +116,7 @@ metadata
 	entity_tool_name = "Day Night Prop"
 	entity_tool_group = "Day Night System"
 }
-= daynight_prop : ""
+= daynight_prop : "Sets the skin of a model depending on if it's day time or night time, example: A street lamp turning on and night time then turning off in the morning."
 [
 	model(studio) [report]: "World Model" : "" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
@@ -135,7 +139,7 @@ metadata
 	entity_tool_name = "Day Night Sound"
 	entity_tool_group = "Day Night System"
 }
-= daynight_sound : ""
+= daynight_sound : "A way to play sounds during the day night cycle, this also allows you to play a looping sound between 2 time periods e.g. 5pm to 6pm. You can also set the sound to only place once."
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -155,7 +159,7 @@ metadata
 	entity_tool_name = "Day Night Window Brush"
 	entity_tool_group = "Day Night System"
 }
-= daynight_window : ""
+= daynight_window : "A brush entity that will enable and disable at random times during the morning and night time."
 [
 	rendercolor(color255) : "FX Color (R G B)" : "255 255 255" : "The FX color is used by the selected Render Mode."
 	renderamt(integer) [ group="Render Properties" ] : "FX Amount (0 - 255)" : 255 : "The FX amount is used by the selected Render Mode."
@@ -193,8 +197,10 @@ metadata
 metadata
 {
 	auto_apply_material = "materials/rts/hammer/building_blocker.vmat"
+	entity_tool_name = "Building Blocker"
+	entity_tool_group = "FlowField System"
 }
-= rts_building_blocker : ""
+= rts_building_blocker : "Blocks the ability to build inside the volume, but still allows units to pass through."
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."

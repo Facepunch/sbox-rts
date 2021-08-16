@@ -14,8 +14,8 @@ Layer0
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
-	g_vColorTint "[0.000000 1.000000 0.364706 0.000000]"
-	TextureColor "materials/gamelib/flowfields/blocker_color.tga"
+	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
+	TextureColor "materials/rts/hammer/flowfield_blocker_color.tga"
 
 	//---- Fade ----
 	g_flFadeExponent "1.000"
@@ -40,10 +40,16 @@ Layer0
 	g_nScaleTexCoordUByModelScaleAxis "0"
 	g_nScaleTexCoordVByModelScaleAxis "0"
 	g_vTexCoordOffset "[0.000 0.000]"
-	g_vTexCoordScale "[0.200 0.200]"
-	g_vTexCoordScrollSpeed "[0.200 0.200]"
+	g_vTexCoordScale "[1.000 1.000]"
+	g_vTexCoordScrollSpeed "[0.000 0.000]"
 
 	//---- Translucent ----
-	g_flOpacityScale "1.000"
-	TextureTranslucency "materials/gamelib/flowfields/blocker_trans.tga"
+	g_flOpacityScale "0.250"
+	TextureTranslucency "materials/default/default_trans.tga"
+
+	SystemAttributes
+	{
+		WorldMappingWidth "256"
+		WorldMappingHeight "256"
+	}
 }
