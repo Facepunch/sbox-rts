@@ -31,7 +31,6 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public static void ShowMarker( Vector3 position )
 		{
-			Log.Info( "Called" );
             Marker?.Destroy();
             Marker = Particles.Create( "particles/movement_marker/movement_marker.vpcf" );
             Marker.SetPosition( 0, position );

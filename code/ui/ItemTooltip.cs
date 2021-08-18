@@ -150,6 +150,7 @@ namespace Facepunch.RTS
 			Dependencies.SetVisible( false );
 			Resistances.SetVisible( false );
 			Population.SetVisible( false );
+			Costs.SetVisible( true );
 		}
 
 		public void Update( BaseItem item, bool hideCosts = false, bool showDependencies = false )
