@@ -33,8 +33,12 @@ namespace Facepunch.RTS
 		{
             Marker?.Destroy();
             Marker = Particles.Create( "particles/movement_marker/movement_marker.vpcf" );
-            Marker.SetPosition( 0, position );
+            Marker.SetPosition( 0, position + Vector3.Up * 5f );
 
+			if ( Local.Pawn is Player player )
+			{
+				Marker.SetPosition( 1, player.TeamColor * 255f );
+			}
         }
 
 		public static BuildingEntity Create( Player player, BaseBuilding item )
