@@ -47,6 +47,11 @@ Layer0
 	g_flOpacityScale "0.300"
 	TextureTranslucency "materials/default/default_trans.tga"
 
+	Attributes
+	{
+		tools.toolsmaterial "1"
+	}
+
 	SystemAttributes
 	{
 		WorldMappingWidth "256"

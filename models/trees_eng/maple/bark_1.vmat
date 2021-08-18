@@ -13,7 +13,7 @@ Layer0
 	TextureAmbientOcclusion "materials/default/default_ao.tga"
 
 	//---- Color ----
-	g_flModelTintAmount "1.000"
+	g_flModelTintAmount "0.000"
 	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
 	TextureColor "models/trees_eng/maple/bark_1.png"
 

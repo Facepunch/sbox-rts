@@ -133,7 +133,7 @@ metadata
 // 
 // Gamelib.DayNight.DayNightSound : Sandbox.Entity 
 // 
-@PointClass iconsprite( "editor/snd_daynight.vmat" ) 
+@PointClass iconsprite( "editor/daynight_sound.vmat" ) 
 metadata
 {
 	entity_tool_name = "Day Night Sound"

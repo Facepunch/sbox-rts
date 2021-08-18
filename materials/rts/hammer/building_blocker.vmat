@@ -50,6 +50,11 @@ Layer0
 	g_flOpacityScale "0.250"
 	TextureTranslucency "materials/rts/hammer/building_blocker_color.tga"
 
+	Attributes
+	{
+		tools.toolsmaterial "1"
+	}
+
 	SystemAttributes
 	{
 		WorldMappingWidth "256"

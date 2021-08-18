@@ -66,6 +66,17 @@
 							},
 						]
 					},
+					{
+						_class = "MaterialGroup"
+						name = "1"
+						remaps = 
+						[
+							{
+								from = "models/trees_eng/oak/leaf 3.vmat"
+								to = "models/trees_eng/oak/leaf_3b.vmat"
+							},
+						]
+					},
 				]
 			},
 			{

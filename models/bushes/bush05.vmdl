@@ -21,6 +21,17 @@
 						use_global_default = false
 						global_default_material = ""
 					},
+					{
+						_class = "MaterialGroup"
+						name = "1"
+						remaps = 
+						[
+							{
+								from = "models/bushes/textures/t_bush05.vmat"
+								to = "models/bushes/textures/t_bush05a.vmat"
+							},
+						]
+					},
 				]
 			},
 			{

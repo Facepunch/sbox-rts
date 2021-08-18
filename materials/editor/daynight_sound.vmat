@@ -1,0 +1,16 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "tools_sprite.vfx"
+
+	F_ALPHA_TEST 2 // Embedded Alpha (RGBA)
+	F_TEXTURED 1
+	F_WORLD_SPACE_SIZE 1 // Size In World Space
+
+	g_flAlphaTestReference "0.300"
+	g_flUniformPointSize "16.000"
+
+	//---- Color ----
+	TextureColor "materials/editor/daynight_sound.tga"
+}

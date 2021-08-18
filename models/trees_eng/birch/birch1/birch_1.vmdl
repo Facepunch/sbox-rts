@@ -73,6 +73,21 @@
 							},
 						]
 					},
+					{
+						_class = "MaterialGroup"
+						name = "3"
+						remaps = 
+						[
+							{
+								from = "models/trees_eng/birch/bark_1.vmat"
+								to = "models/trees_eng/birch/bark_1.vmat"
+							},
+							{
+								from = "models/trees_eng/birch/leaf_3.vmat"
+								to = "models/trees_eng/birch/leaf_3a.vmat"
+							},
+						]
+					},
 				]
 			},
 			{

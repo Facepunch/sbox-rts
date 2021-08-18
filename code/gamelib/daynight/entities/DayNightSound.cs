@@ -9,7 +9,7 @@ namespace Gamelib.DayNight
 
 	[Library( "daynight_sound" )]
 	[Hammer.EntityTool( "Day Night Sound", "Day Night System" )]
-	[Hammer.EditorSprite("editor/snd_daynight.vmat")]
+	[Hammer.EditorSprite("editor/daynight_sound.vmat")]
 	public partial class DayNightSound : Entity
 	{
 		[Property( FGDType = "sound", Title = "Sound To Play" )]

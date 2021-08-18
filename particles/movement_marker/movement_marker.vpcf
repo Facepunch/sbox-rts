@@ -2,9 +2,8 @@
 {
 	_class = "CParticleSystemDefinition"
 	m_nBehaviorVersion = 10
-	m_nMaxParticles = 4
 	m_bShouldSort = false
-	m_bShouldHitboxesFallbackToRenderBounds = false
+	m_bInfiniteBounds = true
 	m_controlPointConfigurations = 
 	[
 		{
@@ -258,7 +257,7 @@
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 0.5
+				m_flLiteralValue = 0.6
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
@@ -307,7 +306,7 @@
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 24.0
+				m_flLiteralValue = 48.0
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
@@ -376,7 +375,8 @@
 		{
 			_class = "C_OP_FadeAndKill"
 			m_flEndFadeInTime = 0.0
-			m_flStartFadeOutTime = 0.85
+			m_flStartFadeOutTime = 0.4
+			m_flEndFadeOutTime = 0.5
 		},
 		{
 			_class = "C_OP_Orient2DRelToCP"
@@ -460,8 +460,8 @@
 		},
 		{
 			_class = "C_OP_RenderTrails"
-			m_flMaxLength = 24.0
-			m_flMinLength = 24.0
+			m_flMaxLength = 48.0
+			m_flMinLength = 48.0
 			m_nOrientationType = 3
 			m_flRadiusScale = 
 			{
@@ -555,14 +555,17 @@
 			}
 			m_bGammaCorrectVertexColors = false
 			m_bSaturateColorPreAlphaBlend = false
-			m_bDisableZBuffering = true
 			m_hTexture = resource:"particles/movement_marker/movement_marker.vtex"
+			m_bDisableZBuffering = true
 		},
 	]
 	m_Children = 
 	[
 		{
 			m_ChildRef = resource:"particles/movement_marker/movement_marker_ring.vpcf"
+		},
+		{
+			m_ChildRef = resource:"particles/movement_marker/movement_marker_ring_drop.vpcf"
 		},
 	]
 }
