@@ -24,27 +24,20 @@ namespace Facepunch.RTS.Units
 		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public override string[] AttackSounds => new string[]
 		{
-			"brute.alright",
-			"brute.move_it",
-			"brute.search_and_destroy",
-			"brute.take_em_down"
+			"rts.drone.attack1",
+			"rts.drone.attack2"
 		};
 		public override string[] MoveSounds => new string[]
 		{
-			"brute.alright_move_out",
-			"brute.as_you_wish",
-			"brute.going_there",
-			"brute.got_it",
-			"brute.lets_do_this",
-			"brute.lets_get_it_done"
+			"rts.drone.move1",
+			"rts.drone.move2"
 		};
 		public override string[] SelectSounds => new string[]
 		{
-			"brute.ready",
-			"brute.ready2",
-			"brute.tell_me_what_to_do",
-			"brute.tell_me_what_to_do2",
-			"brute.yes_boss"
+			"rts.drone.select2",
+			"rts.drone.select3",
+			"rts.drone.select4",
+			"rts.drone.select5"
 		};
 		public override int BuildTime => 1;
 		public override Dictionary<ResourceType, int> Costs => new()

@@ -7,5 +7,7 @@ namespace Facepunch.RTS.Buildings
 		public Dictionary<ResourceType, int> Resources { get; set; }
 		public bool PerOccupant { get; set; }
 		public float Interval { get; set; }
+		public string FinishSound { get; set; }
+		public string LoopSound { get; set; }
 	}
 }

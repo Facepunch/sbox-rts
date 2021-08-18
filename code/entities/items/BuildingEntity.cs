@@ -40,6 +40,7 @@ namespace Facepunch.RTS
 
 		private RealTimeUntil NextConstructionSound { get; set; }
 		private Sound ConstructionSound { get; set; }
+		private Sound? GeneratorSound { get; set; }
 
 		#region UI
 		public EntityHudIconList OccupantsHud { get; private set; }
@@ -364,9 +365,11 @@ namespace Facepunch.RTS
 		{
 			base.ServerTick();
 
+			if ( IsUnderConstruction ) return;
+
 			TickGenerator();
 
-			if ( Weapon.IsValid() && !IsUnderConstruction )
+			if ( Weapon.IsValid() )
 			{
 				if ( Target.IsValid() )
 				{
@@ -392,25 +395,34 @@ namespace Facepunch.RTS
 			var generator = Item.Generator;
 			if ( generator == null ) return;
 
+			var multiplier = 1;
+
+			if ( generator.PerOccupant )
+				multiplier = Occupants.Count;
+
+			if ( multiplier == 0 ) return;
+
+			if ( !GeneratorSound.HasValue && !string.IsNullOrEmpty( generator.LoopSound ) )
+			{
+				GeneratorSound = PlaySound( generator.LoopSound );
+			}
+
 			if ( NextGenerateResources )
 			{
-				var multiplier = 1;
+				var resources = new Dictionary<ResourceType, int>();
 
-				if ( generator.PerOccupant )
-					multiplier = Occupants.Count;
+				foreach ( var kv in generator.Resources )
+					resources.Add( kv.Key, kv.Value * multiplier );
 
-				if ( multiplier > 0 )
-				{
-					var resources = new Dictionary<ResourceType, int>();
-
-					foreach ( var kv in generator.Resources )
-						resources.Add( kv.Key, kv.Value * multiplier );
-
-					ResourceHint.Send( Player, 2f, Position, resources, Color.Green );
-					Player.GiveResources( resources );
-				}
+				ResourceHint.Send( Player, 2f, Position, resources, Color.Green );
+				Player.GiveResources( resources );
 
 				NextGenerateResources = generator.Interval;
+
+				if ( !string.IsNullOrEmpty( generator.FinishSound ) )
+				{
+					PlaySound( generator.FinishSound );
+				}
 			}
 		}
 
@@ -461,6 +473,12 @@ namespace Facepunch.RTS
 				SetupPhysicsFromModel( PhysicsMotionType.Static );
 			}
 
+			if ( GeneratorSound.HasValue )
+			{
+				GeneratorSound.Value.Stop();
+				GeneratorSound = null;
+			}
+
 			if ( item.Generator != null )
 				NextGenerateResources = item.Generator.Interval;
 			else
@@ -506,6 +524,12 @@ namespace Facepunch.RTS
 
 				if ( Player.IsValid() )
 					Player.MaxPopulation -= Item.PopulationBoost;
+
+				if ( GeneratorSound.HasValue )
+				{
+					GeneratorSound.Value.Stop();
+					GeneratorSound = null;
+				}
 
 				UpdateCollisions();
 

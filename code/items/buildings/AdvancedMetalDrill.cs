@@ -12,6 +12,8 @@ namespace Facepunch.RTS.Buildings
 		{
 			PerOccupant = true,
 			Resources = new() {{ ResourceType.Metal, 2 }},
+			FinishSound = "rts.generator.collect1",
+			LoopSound = "rts.generator.drillingloop",
 			Interval = 5f
 		};
 	}

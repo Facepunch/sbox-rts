@@ -15,6 +15,7 @@ namespace Facepunch.RTS
 		public static List<BaseItem> List { get; private set; }
 		public static GhostBuilding Ghost { get; private set; }
 		public static Dictionary<uint,Texture> Icons { get; private set; }
+		public static Particles Marker { get; private set; }
 
 		public static void Initialize()
 		{
@@ -26,6 +27,16 @@ namespace Facepunch.RTS
 		{
 			return Ghost.IsValid();
 		}
+
+		[ClientRpc]
+		public static void ShowMarker( Vector3 position )
+		{
+			Log.Info( "Called" );
+            Marker?.Destroy();
+            Marker = Particles.Create( "particles/movement_marker/movement_marker.vpcf" );
+            Marker.SetPosition( 0, position );
+
+        }
 
 		public static BuildingEntity Create( Player player, BaseBuilding item )
 		{
@@ -432,8 +443,15 @@ namespace Facepunch.RTS
 						}
 					}
 
-					var randomUnit = units[Rand.Int( units.Count - 1 )];
-					randomUnit.Item.PlayMoveSound( caller );
+					// Don't play command sounds too frequently.
+					if ( caller.LastCommandSound > 2 )
+					{
+						var randomUnit = units[Rand.Int( units.Count - 1 )];
+						randomUnit.Item.PlayMoveSound( caller );
+						caller.LastCommandSound = 0;
+					}
+
+                    ShowMarker( To.Single( caller ), position );
 				}
 			}
 		}

@@ -33,6 +33,8 @@ namespace Facepunch.RTS.Buildings
 		{
 			PerOccupant = true,
 			Resources = new() {{ ResourceType.Beer, 5 }},
+			FinishSound = "rts.brewery.collect",
+			LoopSound = "rts.brewery.loop",
 			Interval = 10f
 		};
 	}

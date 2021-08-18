@@ -40,7 +40,7 @@ namespace Gamelib.FlowFields
 		public Vector3 CenterOffset => _centerOffset;
 		public Vector3 CollisionExtents => _collisionExtents;
 		public Vector3 NodeExtents => _nodeExtents;
-		public float HeightThreshold { get; set; } = 40f;
+		public float HeightThreshold { get; set; } = 60f;
 		public Vector3 Origin { get; private set; }
 
 		public GridDefinition ChunkGridSize => _chunkGridSize;
