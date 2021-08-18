@@ -735,9 +735,15 @@ namespace Facepunch.RTS
 		public float GetMinVerticalRange() => Item.MinVerticalRange;
 		public float GetMaxVerticalRange() => Item.MaxVerticalRange;
 
-		public float LookAtPosition( Vector3 position, float? interpolation = null )
+		public float LookAtPosition( Vector3 position, float? interpolation = null, bool ignoreHeight = true )
 		{
-			var targetDirection = (position - Position).WithZ( 0f );
+			var targetDirection = (position - Position);
+			
+			if ( ignoreHeight )
+			{
+				targetDirection = targetDirection.WithZ( 0f );
+			}
+
 			var targetRotation = Rotation.LookAt( targetDirection.Normal, Vector3.Up );
 
 			if ( interpolation.HasValue )
@@ -748,7 +754,7 @@ namespace Facepunch.RTS
 			return Rotation.Distance( targetRotation );
 		}
 
-		public float LookAtEntity( Entity target, float? interpolation = null )
+		public float LookAtEntity( Entity target, float? interpolation = null, bool ignoreHeight = true )
 		{
 			return LookAtPosition( target.Position, interpolation );
 		}
@@ -1358,10 +1364,11 @@ namespace Facepunch.RTS
 					if ( _target.Entity is BuildingEntity building && building.Player == Player )
 					{
 						if ( building.IsUnderConstruction )
-						{
 							TickConstruct( building );
-							return;
-						}
+						else
+							ClearTarget();
+
+						return;
 					}
 				}
 

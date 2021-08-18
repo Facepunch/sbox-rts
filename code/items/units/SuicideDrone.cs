@@ -10,6 +10,7 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Suicide Drone";
 		public override string UniqueId => "unit.suicidedrone";
 		public override string Entity => "unit_drone";
+		public override string Weapon => "weapon_suicide_drone";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
 		public override string Description => "A single-use drone that dives into enemies and explodes.";
 		public override string Model => "models/vehicles/drones/dive/drone_dive.vmdl";
