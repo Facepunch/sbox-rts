@@ -529,6 +529,11 @@ namespace Facepunch.RTS
 				return null;
 		}
 
+		public void Attack( IDamageable target, bool autoFollow = true, MoveGroup moveGroup = null )
+		{
+			Attack( (ModelEntity)target, autoFollow, moveGroup );
+		}
+
 		public void Attack( ISelectable target, bool autoFollow = true, MoveGroup moveGroup = null )
 		{
 			Attack( (ModelEntity)target, autoFollow, moveGroup );
@@ -803,7 +808,7 @@ namespace Facepunch.RTS
 			return possibleLocations;
 		}
 
-		public bool InVerticalRange( ISelectable other )
+		public bool InVerticalRange( Entity other )
 		{
 			var selfPosition = Position;
 			var minVerticalRange = Item.MinVerticalRange;
@@ -1289,7 +1294,7 @@ namespace Facepunch.RTS
 			{
 				if ( entity is ISelectable selectable )
 				{
-					if ( IsEnemy( selectable ) && InVerticalRange( selectable ) )
+					if ( IsEnemy( selectable ) && InVerticalRange( entity ) )
 						_targetBuffer.Add( selectable );
 				}
 			}

@@ -146,11 +146,11 @@ namespace Facepunch.RTS
 
 					if ( trace.Entity is ISelectable selectable )
 					{
-						var targetNetworkId = ((Entity)selectable).NetworkIdent;
+						var targetNetworkId = trace.Entity.NetworkIdent;
 
 						if ( !selectable.IsLocalPlayers )
 						{
-							Items.Attack( ((Entity)selectable).NetworkIdent );
+							Items.Attack( targetNetworkId );
 							return;
 						}
 
@@ -176,6 +176,10 @@ namespace Facepunch.RTS
 								return;
 							}
 						}
+					}
+					else if ( trace.Entity is IDamageable damageable )
+					{
+						Items.Attack( trace.Entity.NetworkIdent );
 					}
 					else if ( trace.Entity is ResourceEntity resource)
 					{
@@ -251,6 +255,12 @@ namespace Facepunch.RTS
 				if ( trace.Entity is ResourceEntity resource && resource.HasBeenSeen )
 				{
 					ItemTooltip.Instance.Update( resource );
+					ItemTooltip.Instance.Hover( trace.Entity );
+					ItemTooltip.Instance.Show( 0.5f );
+				}
+				else if ( trace.Entity is ObstacleEntity obstacle && obstacle.HasBeenSeen )
+				{
+					ItemTooltip.Instance.Update( obstacle );
 					ItemTooltip.Instance.Hover( trace.Entity );
 					ItemTooltip.Instance.Show( 0.5f );
 				}

@@ -278,6 +278,25 @@ metadata
 ]
 
 // 
+// Facepunch.RTS.ObstacleEntity : Sandbox.ModelEntity 
+// 
+@PointClass model() = rts_obstacle : ""
+[
+	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl" : "The model this entity should use."
+	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
+	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	tooltipname(string) : "Tooltip Name" :  : ""
+	maxhealth(float) : "Max Health" : 0 : ""
+	destroysound(string) : "Destroy Sound" : "rts.buildingexplode1" : ""
+	destroyeffect(string) : "Destroy Effect" : "particles/destruction_temp/destruction_temp.vpcf" : ""
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
+// 
 // Facepunch.RTS.TunnelEntity : Facepunch.RTS.BuildingEntity 
 // 
 @PointClass = building_tunnel : ""

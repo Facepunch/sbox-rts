@@ -125,6 +125,20 @@ namespace Facepunch.RTS
 			Population.SetClass( "hidden", true );
 		}
 
+		public void Update( ObstacleEntity entity )
+		{
+			Name.Style.FontColor = new( 0.8f, 0.4f, 0.4f );
+			Name.Style.Dirty();
+
+			Name.Text = entity.TooltipName;
+			Desc.Text = "A destructable obstacle.";
+
+			Dependencies.SetVisible( false );
+			Resistances.SetVisible( false );
+			Population.SetVisible( false );
+			Costs.SetVisible( false );
+		}
+
 		public void Update( ResourceEntity entity )
 		{
 			Name.Style.FontColor = entity.Resource.GetColor();
@@ -239,16 +253,16 @@ namespace Facepunch.RTS
 			{
 				var targetBox = panel.Box.Rect * ScaleFromScreen;
 
-				Style.Left = Length.Pixels( targetBox.Center.x );
-				Style.Top = Length.Pixels( targetBox.top - 32 );
+				Style.Left = Length.Pixels( MathF.Ceiling( targetBox.Center.x ) );
+				Style.Top = Length.Pixels( MathF.Ceiling( targetBox.top - 32 ) );
 				Style.Dirty();
 			}
 			else if ( Target is Entity entity && entity.IsValid() )
 			{
 				var position = entity.Position.ToScreen() * new Vector3( Screen.Width, Screen.Height ) * ScaleFromScreen;
 
-				Style.Left = Length.Pixels( position.x );
-				Style.Top = Length.Pixels( position.y - 32 );
+				Style.Left = Length.Pixels( MathF.Ceiling( position.x ) );
+				Style.Top = Length.Pixels( MathF.Ceiling( position.y - 32 ) );
 				Style.Dirty();
 			}
 		}

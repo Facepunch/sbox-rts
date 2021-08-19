@@ -41,9 +41,11 @@ namespace Facepunch.RTS
 				Rocket = new Projectile
 				{
 					BezierCurve = false,
-					HitSound = "rocket.explode1",
-					Debug = true
+					FaceDirection = true,
+					HitSound = "rocket.explode1"
 				};
+
+				Rocket.SetModel( "models/weapons/rpg_rocket/rpg_rocket.vmdl" );
 
 				Rocket.Initialize( muzzle.Value.Position, Target, 1f, OnRocketHit );
 			}

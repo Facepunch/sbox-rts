@@ -23,8 +23,11 @@ namespace Facepunch.RTS
 
 				Grenade = new Projectile
 				{
-					ExplosionEffect = ExplosionEffect
+					ExplosionEffect = ExplosionEffect,
+					FaceDirection = true
 				};
+
+				Grenade.SetModel( "models/weapons/gl_grenade/gl_grenade.vmdl" );
 
 				var muzzle = unit.Weapon.GetMuzzle();
 

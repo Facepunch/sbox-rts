@@ -3,6 +3,7 @@
     background-color: rgba(0 0 0 0.7);
     pointer-events: none;
     flex-direction: column;
+    backdrop-filter-blur: 8px;
     border-radius: 8px;
     pixel-snap: 0;
     display: flex;

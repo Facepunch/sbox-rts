@@ -69,10 +69,10 @@ namespace Facepunch.RTS
 
 	public class EntityHudAnchor : Panel
 	{
-		public ISelectable Entity { get; private set; }
+		public IHudEntity Entity { get; private set; }
 		public bool IsActive { get; private set; }
 
-		public void SetEntity( ISelectable entity)
+		public void SetEntity( IHudEntity entity )
 		{
 			Entity = entity;
 		}
@@ -125,7 +125,7 @@ namespace Facepunch.RTS
 			Instance = this;
 		}
 
-		public EntityHudAnchor Create( ISelectable entity )
+		public EntityHudAnchor Create( IHudEntity entity )
 		{
 			var container = AddChild<EntityHudAnchor>();
 			container.SetEntity( entity );

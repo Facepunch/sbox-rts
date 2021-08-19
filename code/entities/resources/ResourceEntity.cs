@@ -65,7 +65,6 @@ namespace Facepunch.RTS
 			base.ClientSpawn();
 		}
 
-
 		public override void Spawn()
 		{
 			base.Spawn();
@@ -79,6 +78,8 @@ namespace Facepunch.RTS
 
 		protected override void OnDestroy()
 		{
+			base.OnDestroy();
+
 			if ( IsClient )
 			{
 				Fog.RemoveCullable( this );
@@ -91,8 +92,6 @@ namespace Facepunch.RTS
 			{
 				pathfinder.UpdateCollisions( Position, radius );
 			}
-
-			base.OnDestroy();
 		}
 	}
 }

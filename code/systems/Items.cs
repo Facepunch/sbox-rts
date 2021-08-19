@@ -184,11 +184,11 @@ namespace Facepunch.RTS
 
 			var target = Entity.FindByIndex( id );
 
-			if ( target.IsValid() && target is ISelectable selectable )
+			if ( target.IsValid() && target is IDamageable damageable )
 			{
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( unit.IsUsingAbility() || !unit.InVerticalRange( selectable ) )
+					if ( unit.IsUsingAbility() || !unit.InVerticalRange( target ) )
 						return false;
 
 					return true;
@@ -200,11 +200,11 @@ namespace Facepunch.RTS
 					var agents = units.Cast<IMoveAgent>().ToList();
 					var moveGroup = new MoveGroup();
 
-					moveGroup.Initialize( agents, selectable.Position );
+					moveGroup.Initialize( agents, target.Position );
 
 					for ( var i = 0; i < units.Count; i++ )
 					{
-						units[i].Attack( selectable, true, moveGroup );
+						units[i].Attack( damageable, true, moveGroup );
 					}
 
 					var randomUnit = units[Rand.Int( units.Count - 1 )];

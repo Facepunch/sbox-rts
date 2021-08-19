@@ -13,7 +13,7 @@ using System.IO;
 
 namespace Facepunch.RTS
 {
-	public abstract partial class ItemEntity<T> : AnimEntity, ISelectable where T : BaseItem
+	public abstract partial class ItemEntity<T> : AnimEntity, ISelectable, IHudEntity where T : BaseItem
 	{
 		public virtual bool CanMultiSelect => false;
 		public virtual bool HasSelectionGlow => true;
