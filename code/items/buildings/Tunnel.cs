@@ -11,8 +11,8 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.tunnel";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/tunnel.png" );
 		public override string Description => "Connect two of these together to move units across the map quickly.";
-		public override float MaxHealth => 250f;
-		public override int BuildTime => 10;
+		public override float MaxHealth => 300f;
+		public override int BuildTime => 30;
 		public override HashSet<string> Abilities => new()
 		{
 			"ability_tunnel"

@@ -10,9 +10,9 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.tradingcentre";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/tradingcentre.png" );
 		public override string Description => "You can trade resources from this building.";
-		public override float MaxHealth => 750f;
+		public override float MaxHealth => 1000f;
 		public override float MinLineOfSight => 500f;
-		public override int BuildTime => 10;
+		public override int BuildTime => 40;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Stone] = 500,

@@ -10,10 +10,11 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.terryfactory";
 		public override string Description => "Allows you to train various basic Terrys.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/terryfactory.png" );
-		public override int BuildTime => 5;
+		public override int BuildTime => 30;
+		public override float MaxHealth => 800f;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 200
+			[ResourceType.Stone] = 150
 		};
 		public override string Model => "models/buildings/terryfactory/terryfactory.vmdl";
 		public override HashSet<string> Dependencies => new()

@@ -12,14 +12,15 @@ namespace Facepunch.RTS.Units
 		public override string Description => "This Terry loves fire. A little too much, perhaps.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override float MinAttackDistance => 500f;
-		public override int BuildTime => 1;
+		public override int BuildTime => 20;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150
+			[ResourceType.Beer] = 150,
+			[ResourceType.Metal] = 50
 		};
 		public override string[] AttackSounds => new string[]
 		{

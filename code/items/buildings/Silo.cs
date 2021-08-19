@@ -11,12 +11,11 @@ namespace Facepunch.RTS.Buildings
 		public override string Description => "Acts as a deposit point for resources.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/silo.png" );
 		public override bool CanDepositResources => true;
-		public override float MaxHealth => 250f;
-		public override int BuildTime => 10;
+		public override float MaxHealth => 300f;
+		public override int BuildTime => 20;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 200,
-			[ResourceType.Metal] = 100
+			[ResourceType.Stone] = 100
 		};
 		public override string Model => "models/buildings/silo/silo.vmdl";
 		public override HashSet<string> Dependencies => new()

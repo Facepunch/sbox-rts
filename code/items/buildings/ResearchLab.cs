@@ -10,11 +10,12 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.researchlab";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/researchlab.png" );
 		public override string Description => "Research new technologies for your empire.";
-		public override int BuildTime => 10;
+		public override int BuildTime => 40;
+		public override float MaxHealth => 800f;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 400,
-			[ResourceType.Metal] = 600
+			[ResourceType.Stone] = 300,
+			[ResourceType.Metal] = 200
 		};
 		public override string Model => "models/buildings/research_lab/research_lab.vmdl";
 		public override HashSet<string> Dependencies => new()

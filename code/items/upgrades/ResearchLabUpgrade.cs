@@ -11,10 +11,10 @@ namespace Facepunch.RTS.Upgrades
 		public override string Description => "Unlocks more advanced and expensive research.";
 		public override string ChangeItemTo => "building.advancedresearchlab";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/brewing.png" );
-		public override int BuildTime => 10;
+		public override int BuildTime => 80;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 200,
+			[ResourceType.Stone] = 300,
 			[ResourceType.Metal] = 300,
 			[ResourceType.Plasma] = 100
 		};

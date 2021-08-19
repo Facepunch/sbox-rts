@@ -11,11 +11,11 @@ namespace Facepunch.RTS.Upgrades
 		public override string Description => "Upgrade to produce Metal at twice the rate.";
 		public override string ChangeItemTo => "building.advancedmetaldrill";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/brewing.png" );
-		public override int BuildTime => 10;
+		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 200,
-			[ResourceType.Metal] = 300
+			[ResourceType.Stone] = 200,
+			[ResourceType.Metal] = 200
 		};
 		public override HashSet<string> Dependencies => new()
 		{

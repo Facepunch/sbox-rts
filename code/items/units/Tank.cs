@@ -41,11 +41,11 @@ namespace Facepunch.RTS.Units
 			"brute.yes_boss"
 		};
 		public override float Speed => 250f;
-		public override int BuildTime => 2;
+		public override int BuildTime => 40;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150,
-			[ResourceType.Metal] = 100
+			[ResourceType.Beer] = 50,
+			[ResourceType.Metal] = 300
 		};
 		public override HashSet<string> Dependencies => new()
 		{

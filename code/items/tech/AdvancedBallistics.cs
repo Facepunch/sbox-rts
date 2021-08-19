@@ -11,11 +11,11 @@ namespace Facepunch.RTS.Tech
 		public override string UniqueId => "tech.advancedballistics";
 		public override string Description => "Increases the attack power of projectiles by +1.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
-		public override int BuildTime => 10;
+		public override int BuildTime => 80;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 300,
-			[ResourceType.Metal] = 200
+			[ResourceType.Beer] = 200,
+			[ResourceType.Metal] = 100
 		};
 		public override int DamageModifier => 1;
 	}

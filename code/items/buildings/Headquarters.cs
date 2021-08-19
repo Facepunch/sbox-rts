@@ -13,7 +13,7 @@ namespace Facepunch.RTS.Buildings
 		public override bool CanDepositResources => true;
 		public override float MaxHealth => 2000f;
 		public override float MinLineOfSight => 500f;
-		public override int BuildTime => 10;
+		public override int BuildTime => 60;
 		public override bool CanDemolish => false;
 		public override HashSet<string> Abilities => new()
 		{

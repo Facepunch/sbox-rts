@@ -10,10 +10,10 @@ namespace Facepunch.RTS.Tech
 		public override string UniqueId => "tech.airsuperiority";
 		public override string Description => "The ability to fly can unleash great new military potential.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
-		public override int BuildTime => 10;
+		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 300,
+			[ResourceType.Beer] = 200,
 			[ResourceType.Metal] = 200
 		};
 	}

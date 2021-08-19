@@ -10,8 +10,8 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.metaldrill";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/metaldrill.png" );
 		public override string Description => "Assign up to 4 workers to generate Metal over time.";
-		public override float MaxHealth => 250f;
-		public override int BuildTime => 5;
+		public override float MaxHealth => 400f;
+		public override int BuildTime => 30;
 		public override OccupiableSettings Occupiable => new()
 		{
 			Whitelist = new() { "unit.worker" },

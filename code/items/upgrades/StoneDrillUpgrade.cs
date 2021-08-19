@@ -14,8 +14,8 @@ namespace Facepunch.RTS.Upgrades
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 200,
-			[ResourceType.Metal] = 300
+			[ResourceType.Stone] = 200,
+			[ResourceType.Metal] = 200
 		};
 		public override HashSet<string> Dependencies => new()
 		{

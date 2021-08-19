@@ -10,11 +10,12 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.vehiclefactory";
 		public override string Description => "Allows you to train various types of vehicle.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehiclefactory.png" );
-		public override int BuildTime => 10;
+		public override float MaxHealth => 800f;
+		public override int BuildTime => 30;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 500,
-			[ResourceType.Metal] = 300,
+			[ResourceType.Stone] = 300,
+			[ResourceType.Metal] = 150,
 		};
 		public override string Model => "models/buildings/vehiclefactory/vehiclefactory.vmdl";
 		public override HashSet<string> Dependencies => new()

@@ -10,8 +10,8 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.watchtower";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/watchtower.png" );
 		public override string Description => "Useful for seeing across large distances and can hold one unit.";
-		public override int BuildTime => 10;
-		public override float MaxHealth => 250f;
+		public override int BuildTime => 20;
+		public override float MaxHealth => 200f;
 		public override float MinLineOfSight => 1000f;
 		public override OccupiableSettings Occupiable => new()
 		{
@@ -22,8 +22,8 @@ namespace Facepunch.RTS.Buildings
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 150,
-			[ResourceType.Metal] = 100
+			[ResourceType.Stone] = 200,
+			[ResourceType.Metal] = 50
 		};
 		public override string Model => "models/buildings/watchtower/watchtower.vmdl";
 		public override HashSet<string> Dependencies => new()

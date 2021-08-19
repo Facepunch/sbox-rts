@@ -12,14 +12,15 @@ namespace Facepunch.RTS.Units
 		public override string Description => "A slow Terry armed with a rocket launcher.";
 		public override float Speed => 350f;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
-		public override int BuildTime => 1;
+		public override int BuildTime => 20;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150
+			[ResourceType.Beer] = 75,
+			[ResourceType.Metal] = 25,
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{

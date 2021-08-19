@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.medic";
 		public override string Description => "A special Terry that can heal nearby units.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/naked.png" );
-		public override int BuildTime => 10;
+		public override int BuildTime => 25;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = false
@@ -43,7 +43,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150
+			[ResourceType.Beer] = 150,
+			[ResourceType.Metal] = 25
 		};
 		public override HashSet<string> Dependencies => new()
 		{

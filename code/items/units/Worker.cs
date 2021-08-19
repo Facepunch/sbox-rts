@@ -24,7 +24,7 @@ namespace Facepunch.RTS.Units
 			"worker.ready",
 			"worker.tell_me_what_to_do"
 		};
-		public override int BuildTime => 1;
+		public override int BuildTime => 8;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = false

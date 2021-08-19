@@ -10,8 +10,8 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.pillbox";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/pillbox.png" );
 		public override string Description => "Occupy with units to have them fire at enemies from cover.";
-		public override int BuildTime => 10;
-		public override float MaxHealth => 250f;
+		public override int BuildTime => 30;
+		public override float MaxHealth => 300f;
 		public override float AttackRadius => 0f;
 		public override float MinLineOfSight => 500f;
 		public override OccupiableSettings Occupiable => new()

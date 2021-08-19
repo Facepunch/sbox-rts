@@ -12,11 +12,11 @@ namespace Facepunch.RTS.Tech
 		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
 		public override float Health => 20f;
 		public override string Tag => "drone";
-		public override int BuildTime => 10;
+		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 100,
-			[ResourceType.Metal] = 100
+			[ResourceType.Metal] = 50
 		};
 	}
 }

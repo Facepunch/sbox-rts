@@ -14,7 +14,7 @@ namespace Facepunch.RTS.Units
 		public override float AttackRadius => 1200f;
 		public override float LineOfSightRadius => 1200f;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
-		public override int BuildTime => 1;
+		public override int BuildTime => 30;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true
@@ -25,7 +25,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150
+			[ResourceType.Beer] = 150,
+			[ResourceType.Metal] = 50
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{
@@ -58,7 +59,8 @@ namespace Facepunch.RTS.Units
 		public override string Weapon => "weapon_sniper";
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.carbines"
+			"tech.carbines",
+			"tech.basicballistics"
 		};
 		public override HashSet<string> Clothing => new()
 		{

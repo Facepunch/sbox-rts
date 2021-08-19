@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.cannonfodder";
 		public override string Description => "A basic dispensable Terry armed with only a pistol.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
-		public override int BuildTime => 1;
+		public override int BuildTime => 10;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true
@@ -21,7 +21,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150
+			[ResourceType.Beer] = 60
 		};
 		public override string[] AttackSounds => new string[]
 		{

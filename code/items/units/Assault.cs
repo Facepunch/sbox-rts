@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Description => "A more agile Terry equipped with an assault rifle.";
 		public override float Speed => 350f;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
-		public override int BuildTime => 1;
+		public override int BuildTime => 15;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true
@@ -23,7 +23,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150
+			[ResourceType.Beer] = 75
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{

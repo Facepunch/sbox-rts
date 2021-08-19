@@ -10,11 +10,11 @@ namespace Facepunch.RTS.Tech
 		public override string UniqueId => "tech.darkenergy";
 		public override string Description => "Unlock the secrets of plasma for use in warfare.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
-		public override int BuildTime => 10;
+		public override int BuildTime => 80;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 300,
-			[ResourceType.Metal] = 200,
+			[ResourceType.Beer] = 100,
+			[ResourceType.Metal] = 100,
 			[ResourceType.Plasma] = 100
 		};
 		public override HashSet<string> Dependencies => new()

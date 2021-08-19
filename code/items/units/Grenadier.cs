@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.grenadier";
 		public override string Description => "Launches various grenades at your enemies.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
-		public override int BuildTime => 1;
+		public override int BuildTime => 20;
 		public override HashSet<string> Abilities => new()
 		{
 			"ability_molotov",
@@ -27,7 +27,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150
+			[ResourceType.Beer] = 100,
+			[ResourceType.Metal] = 25
 		};
 		public override string[] AttackSounds => new string[]
 		{

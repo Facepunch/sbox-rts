@@ -10,10 +10,10 @@ namespace Facepunch.RTS.Tech
 		public override string UniqueId => "tech.extraction";
 		public override string Description => "Unlocks the ability to extract plasma with Scientists.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/clothing.png" );
-		public override int BuildTime => 20;
+		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 200
+			[ResourceType.Beer] = 100
 		};
 		public override HashSet<string> Dependencies => new()
 		{

@@ -37,10 +37,9 @@ namespace Facepunch.RTS.Units
 			"rts.drone.select4",
 			"rts.drone.select5"
 		};
-		public override int BuildTime => 1;
+		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 100,
 			[ResourceType.Metal] = 50
 		};
 		public override HashSet<ResourceType> Gatherables => new()

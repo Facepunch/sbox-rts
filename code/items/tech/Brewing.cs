@@ -10,11 +10,11 @@ namespace Facepunch.RTS.Tech
 		public override string UniqueId => "tech.brewing";
 		public override string Description => "Unlocks a revolutionary new way of generating beer.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/brewing.png" );
-		public override int BuildTime => 10;
+		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
 			[ResourceType.Beer] = 50,
-			[ResourceType.Metal] = 300
+			[ResourceType.Metal] = 100
 		};
 		public override HashSet<string> Dependencies => new()
 		{
