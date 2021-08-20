@@ -45,7 +45,7 @@ namespace Facepunch.RTS
 					for ( int y = 0; y < Resolution; y++ )
 					{
 						var index = ((x * Resolution) + y);
-						Data[index + 0] = 255;
+						Data[index + 0] = _unseenAlpha;
 					}
 				}
 			}
@@ -60,7 +60,7 @@ namespace Facepunch.RTS
 				if ( i <= 0 || i > Resolution * Resolution )
 					return false;
 
-				return (Data[i] <= 200);
+				return (Data[i] <= _seenAlpha);
 			}
 
 			public void PunchHole( Vector3n location, float range )
@@ -167,16 +167,18 @@ namespace Facepunch.RTS
 		}
 
 		public static readonly FogBounds Bounds = new();
-		public static bool IsActive { get; set; }
 		public static FogRenderer Renderer { get; private set; }
+		public static bool IsActive { get; set; }
 
 		private static readonly List<FogCullable> _cullables = new();
 		private static readonly List<FogViewer> _viewers = new();
 
 		private static IEnumerable<SceneParticleObject> _particleContainers;
+		private static byte _unseenAlpha = 245;
+		private static byte _seenAlpha = 200;
 		private static FogTexture _texture;
 
-		public static void Initialize( BBox size )
+		public static void Initialize( BBox size, byte seenAlpha = 200, byte unseenAlpha = 245 )
 		{
 			Host.AssertClient();
 
@@ -187,6 +189,9 @@ namespace Facepunch.RTS
 			};
 
 			Bounds.SetFrom( size );
+
+			_unseenAlpha = unseenAlpha;
+			_seenAlpha = seenAlpha;
 
 			UpdateTextureSize();
 
@@ -287,7 +292,7 @@ namespace Facepunch.RTS
 
 				if ( data.Object == viewer )
 				{
-					_texture.FillRegion( data.LastPosition, data.Object.LineOfSightRadius, 200 );
+					_texture.FillRegion( data.LastPosition, data.Object.LineOfSightRadius, _seenAlpha );
 					_viewers.RemoveAt( i );
 					break;
 				}
@@ -309,7 +314,7 @@ namespace Facepunch.RTS
 		public static void MakeVisible( Vector3n position, float range )
 		{
 			_texture.PunchHole( position, range );
-			_texture.FillRegion( position, range, 200 );
+			_texture.FillRegion( position, range, _seenAlpha );
 		}
 
 		private static void UpdateTextureSize()
@@ -427,7 +432,7 @@ namespace Facepunch.RTS
 				for ( var i = 0; i < _viewers.Count; i++ )
 				{
 					var viewer = _viewers[i];
-					_texture.FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, 200 );
+					_texture.FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, _seenAlpha );
 				}
 
 				// Our second pass will show what is currently visible.
