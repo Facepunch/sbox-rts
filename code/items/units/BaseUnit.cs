@@ -14,6 +14,7 @@ namespace Facepunch.RTS.Units
 		public virtual OccupantSettings Occupant => null;
 		public virtual HashSet<string> Clothing => new();
 		public virtual float CircleScale => 1f;
+		public virtual float ModelScale => 1f;
 		public virtual float VerticalOffset => 0f;
 		public virtual bool UsePathfinder => true;
 		public virtual UnitAnimator Animator => new SimpleTerryAnimator();

@@ -21,7 +21,7 @@ namespace Facepunch.RTS.Tech
 			foreach ( var unit in units )
 			{
 				foreach ( var kv in ResistanceModifiers )
-					unit.Modifiers.AddResistance( kv.Key, kv.Value );
+					unit.AddResistance( kv.Key, kv.Value );
 			}
 
 			base.OnCreated( player, target );
@@ -32,7 +32,7 @@ namespace Facepunch.RTS.Tech
 			if ( Has( player ) && unit.Item is T && unit.Tags.Has( Tag ) )
 			{
 				foreach ( var kv in ResistanceModifiers )
-					unit.Modifiers.AddResistance( kv.Key, kv.Value );
+					unit.AddResistance( kv.Key, kv.Value );
 			} 
 		}
 	}

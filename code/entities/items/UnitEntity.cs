@@ -46,6 +46,8 @@ namespace Facepunch.RTS
 
 		public override bool HasSelectionGlow => false;
 
+		public Dictionary<string, float> Resistances { get; set; }
+		[Net, OnChangedCallback] private List<float> ResistanceList { get; set; }
 		[Net] public List<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
 		public UnitTargetType TargetType => _target.Type;
@@ -82,7 +84,7 @@ namespace Facepunch.RTS
 
 		protected readonly GatherInfo _gather = new();
 		protected readonly TargetInfo _target = new();
-		protected HashSet<IMoveAgent> _flockAgents { get; set; } = new();
+		protected HashSet<IMoveAgent> _flockAgents = new();
 		protected List<ISelectable> _targetBuffer = new();
 		protected RealTimeUntil _nextRepairTime;
 		protected RealTimeUntil _nextFindTarget;
@@ -96,6 +98,9 @@ namespace Facepunch.RTS
 			{
 				Carrying = new();
 			}
+
+			ResistanceList = new List<float>();
+			Resistances = new();
 
 			// Don't collide with anything but static shit.
 			CollisionGroup = CollisionGroup.Debris;
@@ -272,6 +277,27 @@ namespace Facepunch.RTS
 			return (MoveGroup != null && MoveGroup.IsValid());
 		}
 
+		public void AddResistance( string id, float amount )
+		{
+			Host.AssertServer();
+
+			var resistance = RTS.Resistances.Find( id );
+
+			if ( Resistances.ContainsKey( id ) )
+				Resistances[id] += amount;
+			else
+				Resistances[id] = amount;
+
+			var networkId = resistance.NetworkId;
+
+			while ( ResistanceList.Count <= networkId )
+			{
+				ResistanceList.Add( 0f );
+			}
+
+			ResistanceList[(int)networkId] = Resistances[id];
+		}
+
 		public bool TakeFrom( ResourceEntity resource )
 		{
 			if ( resource.Stock <= 0 ) return false;
@@ -358,7 +384,7 @@ namespace Facepunch.RTS
 
 		public override void TakeDamage( DamageInfo info )
 		{
-			info = Resistances.Apply( info, Modifiers.Resistances );
+			info = RTS.Resistances.Apply( info, Resistances );
 
 			LastDamageTaken = info;
 			LastDamageTime = 0;
@@ -381,7 +407,21 @@ namespace Facepunch.RTS
 
 			return trace.EndPos.z + Item.VerticalOffset;
 		}
-		
+
+		private void OnResistanceListChanged()
+		{
+			for ( var i = 0; i < ResistanceList.Count; i++ )
+			{
+				var resistance = RTS.Resistances.Find<BaseResistance>( (uint)i );
+				var uniqueId = resistance.UniqueId;
+
+				if ( ResistanceList[i] != 0f )
+					Resistances[uniqueId] = ResistanceList[i];
+				else if ( Resistances.ContainsKey( uniqueId ) )
+					Resistances.Remove( uniqueId );
+			}
+		}
+
 		private Vector3 GetGroundNormal()
 		{
 			var trace = Trace.Ray( Position.WithZ( 1000f ), Position.WithZ( -1000f ) )
@@ -447,13 +487,6 @@ namespace Facepunch.RTS
 		public virtual bool CanOccupantsAttack()
 		{
 			return true;
-		}
-
-		public override void StartAbility( BaseAbility ability, AbilityTargetInfo info )
-		{
-			if ( IsServer ) ClearTarget();
-
-			base.StartAbility( ability, info );
 		}
 
 		public override void ClientSpawn()
@@ -1029,6 +1062,7 @@ namespace Facepunch.RTS
 				AttachClothing( clothes );
 			}
 
+			Scale = item.ModelScale;
 			Health = item.MaxHealth;
 			MaxHealth = item.MaxHealth;
 			EyePos = Position + Vector3.Up * 64;
@@ -1040,12 +1074,12 @@ namespace Facepunch.RTS
 			{
 				// Remove the old base resistances.
 				foreach ( var kv in item.Resistances )
-					Modifiers.AddResistance( kv.Key, -kv.Value );
+					AddResistance( kv.Key, -kv.Value );
 			}
 
 			// Add the new base resistances.
 			foreach ( var kv in item.Resistances )
-				Modifiers.AddResistance( kv.Key, kv.Value );
+				AddResistance( kv.Key, kv.Value );
 
 			if ( item.UsePathfinder )
 				Pathfinder = PathManager.GetPathfinder( item.NodeSize, item.CollisionSize );

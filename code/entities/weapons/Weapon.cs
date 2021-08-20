@@ -30,7 +30,7 @@ namespace Facepunch.RTS
 
 		public int GetDamagePerSecond()
 		{
-			return (GetDamage() / FireRate).CeilToInt();
+			return (GetDamage() / GetFireRate()).CeilToInt();
 		}
 
 		public virtual bool CanSeeTarget()
@@ -57,6 +57,16 @@ namespace Facepunch.RTS
 			return IsTargetVisible;
 		}
 
+		public virtual float GetFireRate()
+		{
+			var fireRate = FireRate;
+
+			if ( Attacker is UnitEntity unit )
+				fireRate *= unit.Modifiers.FireRate;
+
+			return fireRate;
+		}
+
 		public virtual int GetDamage()
 		{
 			var damage = BaseDamage;
@@ -70,7 +80,7 @@ namespace Facepunch.RTS
 		public virtual bool CanAttack()
 		{
 			if ( !CanSeeTarget() ) return false;
-			return (LastAttack > FireRate);
+			return (LastAttack > GetFireRate());
 		}
 
 		public virtual void Dummy( Vector3 position )

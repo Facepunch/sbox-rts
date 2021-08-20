@@ -25,6 +25,7 @@ namespace Facepunch.RTS.Buildings
 		{
 			"unit.cannonfodder",
 			"unit.assault",
+			"unit.heavy",
 			"unit.medic",
 			"unit.grenadier",
 			"unit.antitank",

@@ -60,7 +60,7 @@ namespace Facepunch.RTS
 
 				Fire.SetPosition( 1, position );
 
-				KillFireTime = FireRate * 2f;
+				KillFireTime = GetFireRate() * 2f;
 			}
 		}
 

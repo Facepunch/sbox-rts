@@ -639,7 +639,7 @@ namespace Facepunch.RTS
 			QueueList.Update( null );
 			OccupantList.Update( entity );
 
-			var resistances = entity.Modifiers.Resistances;
+			var resistances = entity.Resistances;
 
 			Resistances.SetVisible( resistances.Count > 0 );
 
