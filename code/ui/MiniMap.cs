@@ -24,7 +24,6 @@ namespace Facepunch.RTS
 				var positionY = (largestSide * fractionY) - (largestSide * 0.5f);
 
 				player.Position = new Vector3( -positionY, -positionX );
-
 				Player.LookAt( player.Position.ToCSV() );
 			}
 		}

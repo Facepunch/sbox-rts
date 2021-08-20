@@ -10,7 +10,7 @@
         flex-direction: row;
 
         selectiongroup {
-            width: 116px;
+            width: 124px;
             padding: 8px;
             margin-right: 16px;
             border-radius: 8px;
@@ -24,6 +24,7 @@
                 .icon {
                     width: 20px;
                     height: 20px;
+                    margin-right: 2px;
                     background-repeat: no-repeat;
 
                     .health {

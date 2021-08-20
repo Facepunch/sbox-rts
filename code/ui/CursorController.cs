@@ -20,7 +20,10 @@ namespace Facepunch.RTS
 		public bool IsSelecting { get; private set; }
 		public bool IsMultiSelect { get; private set; }
 
+		private RealTimeSince _lastSlotPressTime;
 		private float _spotLightBrightness;
+		private bool _lookAtSelection;
+		private int _slotPressed;
 
 		public CursorController()
 		{
@@ -125,15 +128,48 @@ namespace Facepunch.RTS
 						break;
 					}
 
-					var selectables = SelectionGroups.GetInSlot( i );
-
-					if ( selectables.Count > 0 )
+					if ( _slotPressed == i && _lastSlotPressTime < 0.2 )
 					{
-						var list = string.Join( ",", selectables.Select( u => u.NetworkIdent ) );
-						Items.Select( list );
-						break;
+						_lookAtSelection = true;
+					}
+					else
+					{
+						_lastSlotPressTime = 0;
+						_lookAtSelection = false;
+						_slotPressed = i;
+					}
+
+					break;
+				}
+			}
+
+			if ( _slotPressed > 0 && _lastSlotPressTime > 0.2)
+			{
+				var selectables = SelectionGroups.GetInSlot( _slotPressed );
+
+				if ( selectables.Count > 0 )
+				{
+					var list = string.Join( ",", selectables.Select( u => u.NetworkIdent ) );
+					Items.Select( list, false );
+
+					if ( _lookAtSelection )
+					{
+						var cameraPosition = Vector3.Zero;
+						var itemCount = selectables.Count;
+
+						for ( var i = 0; i < itemCount; i++ ) {
+							var item = selectables[i];
+							cameraPosition += item.Position;
+						}
+
+						cameraPosition /= itemCount;
+
+						player.Position = cameraPosition;
+						Player.LookAt( cameraPosition.ToCSV() );
 					}
 				}
+
+				_slotPressed = -1;
 			}
 
 			if ( builder.Released( InputButton.Attack2 ) )
