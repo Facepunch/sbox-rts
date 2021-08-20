@@ -58,6 +58,8 @@ namespace Facepunch.RTS
 			Queue = new List<QueueItem>();
 		}
 
+		public BaseItem GetBaseItem() => Item;
+
 		public void QueueItem( BaseItem item )
 		{
 			Host.AssertServer();

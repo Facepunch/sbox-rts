@@ -5,21 +5,21 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
-	public class UnitGroup : Panel
+	public class SelectionGroup : Panel
 	{
-		private class UnitAndImage
+		private class SelectableAndImage
 		{
-			public UnitEntity Unit;
+			public ISelectable Selectable;
 			public Panel Health;
 			public Image Icon;
 		}
 
 		private Label Slot;
 		private Panel Container;
-		private List<UnitAndImage> List;
+		private List<SelectableAndImage> List;
 		private RealTimeUntil NextUpdateTime;
 
-		public UnitGroup()
+		public SelectionGroup()
 		{
 			Slot = Add.Label( "", "slot" );
 			Container = Add.Panel( "icons" );
@@ -31,13 +31,13 @@ namespace Facepunch.RTS
 			Slot.Text = $"{slot}.";
 		}
 
-		public List<UnitEntity> GetUnits()
+		public List<ISelectable> GetSelectables()
 		{
-			var output = new List<UnitEntity>();
+			var output = new List<ISelectable>();
 
 			for ( var i = 0; i < List.Count; i++ )
 			{
-				output.Add( List[i].Unit );
+				output.Add( List[i].Selectable );
 			}
 
 			return output;
@@ -49,16 +49,16 @@ namespace Facepunch.RTS
 			List.Clear();
 		}
 
-		public void AddUnit( UnitEntity unit )
+		public void AddSelectable( ISelectable selectable )
 		{
 			var icon = Container.Add.Image( null, "icon" );
-			icon.Texture = unit.Item.Icon;
+			icon.Texture = selectable.GetBaseItem().Icon;
 
-			List.Add( new UnitAndImage()
+			List.Add( new SelectableAndImage()
 			{
 				Health = icon.Add.Panel( "health" ),
 				Icon = icon,
-				Unit = unit
+				Selectable = selectable
 			} );
 		}
 
@@ -69,15 +69,16 @@ namespace Facepunch.RTS
 				for ( var i = List.Count - 1; i >= 0; i-- )
 				{
 					var data = List[i];
+					var entity = (data.Selectable as Entity);
 
-					if ( !data.Unit.IsValid() )
+					if ( !entity.IsValid() )
 					{
 						data.Icon.Delete();
 						List.RemoveAt( i );
 						continue;
 					}
 
-					var fraction = Length.Fraction( 1f - (data.Unit.Health / data.Unit.MaxHealth) );
+					var fraction = Length.Fraction( 1f - (data.Selectable.Health / data.Selectable.MaxHealth) );
 
 					if ( data.Health.Style.Width != fraction )
 					{
@@ -95,41 +96,41 @@ namespace Facepunch.RTS
 		}
 	}
 
-	public class UnitGroups : Panel
+	public class SelectionGroups : Panel
 	{
-		private static UnitGroups Instance { get; set; }
+		private static SelectionGroups Instance { get; set; }
 
-		public UnitGroup[] Groups { get; private set; } = new UnitGroup[9];
+		public SelectionGroup[] Groups { get; private set; } = new SelectionGroup[9];
 
 		public Panel Container { get; private set; }
 
-		public static void Update( int slot, List<UnitEntity> units )
+		public static void Update( int slot, List<ISelectable> selectables )
 		{
 			var group = Instance.Groups[slot - 1];
 
 			group.Clear();
 
-			for ( var i = 0; i < units.Count; i++ )
+			for ( var i = 0; i < selectables.Count; i++ )
 			{
-				group.AddUnit( units[i] );
+				group.AddSelectable( selectables[i] );
 			}
 		}
 
-		public static List<UnitEntity> GetUnits( int slot )
+		public static List<ISelectable> GetInSlot( int slot )
 		{
 			var group = Instance.Groups[slot - 1];
-			return group.GetUnits();
+			return group.GetSelectables();
 		}
 
-		public UnitGroups()
+		public SelectionGroups()
 		{
-			StyleSheet.Load( "/ui/UnitGroups.scss" );
+			StyleSheet.Load( "/ui/SelectionGroups.scss" );
 
 			Container = Add.Panel( "container" );
 
 			for ( var i = 0; i < Groups.Length; i++ )
 			{
-				var group = Container.AddChild<UnitGroup>();
+				var group = Container.AddChild<SelectionGroup>();
 				group.SetSlot( i + 1 );
 				Groups[i] = group;
 			}

@@ -80,7 +80,7 @@ namespace Facepunch.RTS
 			TopBar.AddChild<ResourceList>();
 			TopBar.AddChild<PopulationCount>();
 
-			RootPanel.AddChild<UnitGroups>();
+			RootPanel.AddChild<SelectionGroups>();
 			RootPanel.AddChild<SelectedItem>();
 			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();

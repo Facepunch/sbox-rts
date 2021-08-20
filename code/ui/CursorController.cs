@@ -121,15 +121,15 @@ namespace Facepunch.RTS
 				{
 					if ( builder.Down( InputButton.Run ) )
 					{
-						UnitGroups.Update( i, player.GetSelected<UnitEntity>() );
+						SelectionGroups.Update( i, player.GetSelected<ISelectable>() );
 						break;
 					}
 
-					var units = UnitGroups.GetUnits( i );
+					var selectables = SelectionGroups.GetInSlot( i );
 
-					if ( units.Count > 0 )
+					if ( selectables.Count > 0 )
 					{
-						var list = string.Join( ",", units.Select( u => u.NetworkIdent ) );
+						var list = string.Join( ",", selectables.Select( u => u.NetworkIdent ) );
 						Items.Select( list );
 						break;
 					}

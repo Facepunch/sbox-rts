@@ -22,6 +22,7 @@ namespace Facepunch.RTS
 		public List<QueueItem> Queue { get; }
 		public bool IsLocalPlayers { get; }
 		public Vector3 Position { get; set; }
+		public BaseItem GetBaseItem();
 		public int GetAttackPriority();
 		public bool HasStatus( string id );
 		public bool IsInQueue( BaseItem item );

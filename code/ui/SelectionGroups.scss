@@ -1,4 +1,4 @@
-﻿unitgroups {
+﻿selectiongroups {
     position: absolute;
     pointer-events: none;
     display: flex;
@@ -9,7 +9,7 @@
     .container {
         flex-direction: row;
 
-        unitgroup {
+        selectiongroup {
             width: 116px;
             padding: 8px;
             margin-right: 16px;
