@@ -88,6 +88,9 @@ namespace Facepunch.RTS
 				if ( selectable.Position.Distance( position ) > ability.MaxDistance )
 					return;
 
+				if ( !ability.IsLocationValid( position ) )
+					return;
+
 				if ( ability.CanUse() == RequirementError.Success )
 				{
 					ResourceHint.Send( caller, 2f, position, ability.Costs, Color.Red );
@@ -193,13 +196,20 @@ namespace Facepunch.RTS
 
 				if ( ability.User.Position.Distance( trace.EndPos ) < ability.MaxDistance )
 				{
-					TargetCircle.TargetColor = Color.Green;
-
-					if ( Input.Down( InputButton.Attack1 ) )
+					if ( ability.IsLocationValid( trace.EndPos ) )
 					{
-						StopSelectingTarget();
-						UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPos.ToCSV() );
-						return;
+						TargetCircle.TargetColor = Color.Green;
+
+						if ( Input.Down( InputButton.Attack1 ) )
+						{
+							StopSelectingTarget();
+							UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPos.ToCSV() );
+							return;
+						}
+					}
+					else
+					{
+						TargetCircle.TargetColor = Color.Red;
 					}
 				}
 				else

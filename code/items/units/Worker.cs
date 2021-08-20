@@ -57,6 +57,7 @@ namespace Facepunch.RTS.Units
 			"building.tradingcentre",
 			"building.tunnel",
 			"building.researchlab",
+			"building.radarjammer",
 			"building.samsite",
 			"building.launchpad",
 			"building.watchtower",

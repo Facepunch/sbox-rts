@@ -82,6 +82,11 @@ namespace Facepunch.RTS
 			return true;
 		}
 
+		public virtual bool IsLocationValid( Vector3 position )
+		{
+			return true;
+		}
+
 		public virtual bool IsTargetValid( ISelectable target )
 		{
 			var player = User.Player;

@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "Advanced Research Lab";
 		public override string UniqueId => "building.advancedresearchlab";
 		public override string Description => "Research extraordinary new technologies for your empire.";
-		public override string Model => "models/buildings/research_lab/research_lab.vmdl";
+		public override string Model => "models/buildings/research_lab/research_lab_level2.vmdl";
 		public override string[] ActsAsProxyFor => new string[] { "building.researchlab" };
 		public override HashSet<string> Queueables => new( base.Queueables )
 		{

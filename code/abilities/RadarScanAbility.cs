@@ -1,5 +1,7 @@
-﻿using Sandbox;
+﻿using Facepunch.RTS.Buildings;
+using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facepunch.RTS
 {
@@ -46,6 +48,13 @@ namespace Facepunch.RTS
 			base.OnStarted();
 		}
 
+		public override bool IsLocationValid( Vector3 position )
+		{
+			return !Physics.GetEntitiesInSphere( position, AreaOfEffectRadius )
+				.Where( IsRadarJammer )
+				.Any();
+		}
+
 		public override void OnFinished()
 		{
 			Reset();
@@ -58,6 +67,14 @@ namespace Facepunch.RTS
 			Reset();
 
 			base.OnCancelled();
+		}
+
+		private bool IsRadarJammer( Entity entity )
+		{
+			if ( entity is BuildingEntity building && building.Item is RadarJammer )
+				return building.Player != User.Player;
+			else
+				return false;
 		}
 
 		private void Reset()
