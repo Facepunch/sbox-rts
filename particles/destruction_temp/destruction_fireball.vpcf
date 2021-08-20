@@ -1327,10 +1327,10 @@
 			m_ChildRef = resource:"particles/destruction_temp/destruction_shock_ring.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/destruction_temp/destruction_smoke2.vpcf"
+			m_ChildRef = resource:"particles/destruction_temp/explosion_smoke2.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/destruction_temp/destruction_fire_ring.vpcf"
+			m_ChildRef = resource:"particles/destruction_temp/explosion_fire_ring.vpcf"
 		},
 	]
 }
