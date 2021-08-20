@@ -4,7 +4,15 @@ using Sandbox;
 
 namespace Facepunch.RTS
 {
+
+	/// <summary>
+	/// An entity to block units from passing through, They must destroy the obstacle to pass.
+	/// </summary>
+	/// 
+
+
 	[Library( "rts_obstacle") ]
+	[Hammer.EntityTool( "Obstacle", "RTS Entity" )]
 	[Hammer.Model( Model = "models/rocks/rock_large_00.vmdl" )]
 	public partial class ObstacleEntity : ModelEntity, IDamageable, IFogCullable, IHudEntity
 	{

@@ -280,7 +280,13 @@ metadata
 // 
 // Facepunch.RTS.ObstacleEntity : Sandbox.ModelEntity 
 // 
-@PointClass model() = rts_obstacle : ""
+@PointClass model() 
+metadata
+{
+	entity_tool_name = "Obstacle"
+	entity_tool_group = "RTS Entity"
+}
+= rts_obstacle : "An entity to block units from passing through, They must destroy the obstacle to pass."
 [
 	model(studio) [report]: "World Model" : "models/rocks/rock_large_00.vmdl" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
