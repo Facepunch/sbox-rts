@@ -348,6 +348,12 @@ namespace Facepunch.RTS
 
 			if ( IsLocalPawn )
 			{
+				// We have to do this here for now because there's problems detecting it within panels themselves.
+				if ( Input.Released( InputButton.Score ) )
+				{
+					SelectedItem.Instance.Next();
+				}
+
 				Sound.Listener = new Transform()
 				{
 					Position = lookAtPosition,

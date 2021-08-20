@@ -742,6 +742,7 @@ namespace Facepunch.RTS
 	public class ItemMultiDisplay : Panel
 	{
 		public Panel Container { get; private set; }
+		public ItemMultiIcon Active { get; private set; }
 		public List<ItemMultiIcon> Icons { get; private set; }
 		public List<ISelectable> Items { get; private set; }
 
@@ -751,8 +752,22 @@ namespace Facepunch.RTS
 			Container = Add.Panel( "container" );
 		}
 
+		public void SetActive( ISelectable item )
+		{
+			if ( Active != null ) Active.RemoveClass( "active" );
+
+			var icon = Icons.Find( v => v.Selectable == item );
+
+			if ( icon != null )
+			{
+				Active = icon;
+				Active.AddClass( "active" ); 
+			}
+		}
+
 		public void Update( List<ISelectable> items )
 		{
+			Active = null;
 			Items = items;
 
 			foreach ( var icon in Icons )
@@ -761,6 +776,8 @@ namespace Facepunch.RTS
 			}
 
 			Icons.Clear();
+
+			Items.Sort( ( a, b ) => a.ItemNetworkId.CompareTo( b.ItemNetworkId ) );
 
 			foreach ( var item in items )
 			{
@@ -775,6 +792,7 @@ namespace Facepunch.RTS
 	{
 		public static SelectedItem Instance { get; private set; }
 
+		public ISelectable Active { get; private set; }
 		public List<ISelectable> Items { get; private set; }
 		public ItemMultiDisplay MultiDisplay { get; private set; }
 		public ItemInformation Information { get; private set; }
@@ -805,16 +823,47 @@ namespace Facepunch.RTS
 			if ( items.Count == 0 ) return;
 
 			if ( items.Count > 1 )
-				MultiDisplay.Update( items );
-			else
-				Information.Update( items[0] );
+			{
+				if ( Active != null && !items.Contains( Active ) )
+				{
+					Active = items[0];
+				}
 
-			CommandList.Update( items[0] );
+				MultiDisplay.Update( items );
+				MultiDisplay.SetActive( Active );
+			}
+			else
+			{
+				Information.Update( items[0] );
+				Active = items[0];
+			}
+
+			CommandList.Update( Active );
 		}
 
 		public void Update( IList<Entity> entities )
 		{
 			Update( entities.Cast<ISelectable>().ToList() );
+		}
+
+		public void Next()
+		{
+			if ( Items.Count <= 1 ) return;
+
+			var index = Items.IndexOf( Active );
+
+			if ( index >= 0 )
+			{
+				var nextIndex = index + 1;
+
+				if ( nextIndex >= Items.Count )
+					nextIndex = 0;
+
+				Active = Items[nextIndex];
+
+				MultiDisplay.SetActive( Active );
+				CommandList.Update( Active );
+			}
 		}
 
 		public override void Tick()
@@ -834,7 +883,7 @@ namespace Facepunch.RTS
 				MultiDisplay.SetClass( "hidden", Items.Count < 2 );
 				Information.SetClass( "hidden", Items.Count > 1 );
 			}
-
+			
 			SetClass( "hidden", isHidden );
 
 			base.Tick();

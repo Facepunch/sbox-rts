@@ -42,6 +42,10 @@
                         }
                     }
 
+                    &.active {
+                        border: 2px solid white;
+                    }
+
                     .health {
                         position: absolute;
                         border: 1px black solid;

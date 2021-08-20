@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Heavy";
 		public override string UniqueId => "unit.heavy";
 		public override string Description => "A slow moving but hard hitting heavy machine gunner.";
-		public override float ModelScale => 1.3f;
+		public override float ModelScale => 1.15f;
 		public override float Speed => 250f;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 20;

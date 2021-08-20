@@ -10,6 +10,10 @@ Layer0
 	//---- Unlit ----
 	F_UNLIT 1
 
+	//---- Z-Buffering ----
+	F_DISABLE_Z_BUFFERING 1
+	F_DISABLE_Z_PREPASS 1
+
 	//---- Ambient Occlusion ----
 	TextureAmbientOcclusion "materials/default/default_ao.tga"
 
