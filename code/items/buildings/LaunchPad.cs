@@ -20,6 +20,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/nuke_launch_site/nuke_launch_site.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
+			"building.commandcentre3",
 			"tech.armageddon"
 		};
 		public override HashSet<string> Abilities => new()

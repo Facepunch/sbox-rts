@@ -19,7 +19,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/terryfactory/terryfactory.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters"
+			"building.commandcentre"
 		};
 		public override HashSet<string> Queueables => new()
 		{

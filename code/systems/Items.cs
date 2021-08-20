@@ -525,8 +525,10 @@ namespace Facepunch.RTS
 
 		public static T Find<T>( uint id ) where T : BaseItem
 		{
-			if ( id < List.Count )
-				return (List[(int)id] as T);
+			var index = id - 1;
+
+			if ( index < List.Count )
+				return (List[(int)index] as T);
 
 			return null;
 		}
@@ -598,9 +600,9 @@ namespace Facepunch.RTS
 				Table.Add( item.UniqueId, item );
 				List.Add( item );
 
-				item.NetworkId = (uint)i;
+				item.NetworkId = (uint)(i + 1);
 
-				Log.Info( $"Adding {item.UniqueId} to the available items (id = {i})" );
+				Log.Info( $"Adding {item.UniqueId} to the available items (id = {item.NetworkId})" );
 			}
 		}
 	}

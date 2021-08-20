@@ -199,7 +199,8 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			Player.AddDependency( Item );
+			AddDependencies( Item );
+
 			Player.MaxPopulation += Item.PopulationBoost;
 
 			IsUnderConstruction = false;
@@ -467,6 +468,12 @@ namespace Facepunch.RTS
 
 		protected override void OnItemChanged( BaseBuilding item, BaseBuilding oldItem )
 		{
+			if ( oldItem != null && !IsUnderConstruction )
+			{
+				RemoveDependencies( oldItem );
+				AddDependencies( item );
+			}
+
 			if ( !string.IsNullOrEmpty( item.Model ) )
 			{
 				SetModel( item.Model );
@@ -517,10 +524,7 @@ namespace Facepunch.RTS
 		{
 			if ( IsServer )
 			{
-				var others = Player.GetBuildings( Item );
-
-				if ( !others.Any() )
-					Player.RemoveDependency( Item );
+				RemoveDependencies( Item );
 
 				if ( Player.IsValid() )
 					Player.MaxPopulation -= Item.PopulationBoost;
@@ -545,6 +549,42 @@ namespace Facepunch.RTS
 			}
 
 			base.OnDestroy();
+		}
+
+		private void AddDependencies( BaseBuilding item )
+		{
+			Player.AddDependency( item );
+
+			var proxyList = item.ActsAsProxyFor;
+
+			for ( var i = 0; i < proxyList.Length; i++ )
+			{
+				var proxyItem = Items.Find<BaseBuilding>( proxyList[i] );
+				if ( proxyItem == null ) continue;
+
+				Player.AddDependency( proxyItem );
+			}
+		}
+
+		private void RemoveDependencies( BaseBuilding item )
+		{
+			var others = Player.GetBuildings( item );
+
+			if ( others.Count() == 1 )
+				Player.RemoveDependency( item );
+
+			var proxyList = item.ActsAsProxyFor;
+
+			for ( var i = 0; i < proxyList.Length; i++ )
+			{
+				var proxyItem = Items.Find<BaseBuilding>( proxyList[i] );
+				if ( proxyItem == null ) continue;
+
+				others = Player.GetBuildings( proxyItem );
+
+				if ( others.Count() == 1 )
+					Player.RemoveDependency( proxyItem );
+			}
 		}
 
 		private void FindTargetUnit()

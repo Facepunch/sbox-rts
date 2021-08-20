@@ -26,7 +26,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/stone_drill/stone_drill.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters",
+			"building.commandcentre",
 			"tech.boring"
 		};
 		public override ResourceGenerator Generator => new()

@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.researchlab";
 		public override string Description => "Unlocks more advanced and expensive research.";
 		public override string ChangeItemTo => "building.advancedresearchlab";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/brewing.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/researchlab.png" );
 		public override int BuildTime => 80;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

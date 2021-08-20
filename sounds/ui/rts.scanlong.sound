@@ -6,7 +6,7 @@
 		[
 			"sounds/ui/rts.scanlong.vsnd",
 		]
-		UI = true
+		UI = false
 		Volume = 0.5
 		VolumeRandom = 0.0
 		Pitch = 1.0

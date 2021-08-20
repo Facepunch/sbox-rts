@@ -20,7 +20,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/silo/silo.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters"
+			"building.commandcentre"
 		};
 	}
 }

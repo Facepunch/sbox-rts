@@ -45,7 +45,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Queueables => new()
 		{
-			"building.headquarters",
+			"building.commandcentre",
 			"building.brewery",
 			"building.pub",
 			"building.silo",

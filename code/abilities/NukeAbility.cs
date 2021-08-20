@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 		public override string Description => "Now I am become Death, the destroyer of worlds.";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
-		public override float Cooldown => 1f;
+		public override float Cooldown => 180f;
 		public override float Duration => 20f;
 		public override float MaxDistance => 3000f;
 		public override float AreaOfEffectRadius => 800f;

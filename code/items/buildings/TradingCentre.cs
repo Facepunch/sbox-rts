@@ -28,6 +28,7 @@ namespace Facepunch.RTS.Buildings
 		};
 		public override HashSet<string> Dependencies => new()
 		{
+			"building.commandcentre2",
 			"tech.supplylines"
 		};
 	}

@@ -20,7 +20,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/drone_hub/drone_hub.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters",
+			"building.commandcentre2",
 			"building.terryfactory",
 			"tech.remotedrones"
 		};

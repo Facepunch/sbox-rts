@@ -11,6 +11,7 @@ namespace Facepunch.RTS.Buildings
 		public virtual OccupiableSettings Occupiable => new();
 		public virtual bool CanDepositResources => false;
 		public virtual Dictionary<string, float> Resistances => new();
+		public virtual string[] ActsAsProxyFor => Array.Empty<string>();
 		public virtual string[] PlaceSounds => new string[]
 		{
 			"rts.placemetal"

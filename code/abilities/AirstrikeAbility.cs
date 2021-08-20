@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 		public override string Description => "Rain down fire upon your enemies, but be careful not to hit your own units!";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
-		public override float Cooldown => 1f;//100f;
+		public override float Cooldown => 80f;
 		public override float Duration => 10f;
 		public override float MaxDistance => 3000f;
 		public override float AreaOfEffectRadius => 500f;

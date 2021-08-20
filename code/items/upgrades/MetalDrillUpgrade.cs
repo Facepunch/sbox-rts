@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.metaldrill";
 		public override string Description => "Upgrade to produce Metal at twice the rate.";
 		public override string ChangeItemTo => "building.advancedmetaldrill";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/brewing.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/metaldrill.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

@@ -29,7 +29,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/pillbox/pillbox.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.headquarters",
+			"building.commandcentre",
 			"tech.armoredplating"
 		};
 	}
