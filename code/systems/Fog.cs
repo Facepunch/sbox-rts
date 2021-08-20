@@ -174,11 +174,11 @@ namespace Facepunch.RTS
 		private static readonly List<FogViewer> _viewers = new();
 
 		private static IEnumerable<SceneParticleObject> _particleContainers;
-		private static byte _unseenAlpha = 245;
+		private static byte _unseenAlpha = 240;
 		private static byte _seenAlpha = 200;
 		private static FogTexture _texture;
 
-		public static void Initialize( BBox size, byte seenAlpha = 200, byte unseenAlpha = 245 )
+		public static void Initialize( BBox size, byte seenAlpha = 200, byte unseenAlpha = 240 )
 		{
 			Host.AssertClient();
 
