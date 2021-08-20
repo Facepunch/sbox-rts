@@ -11,6 +11,7 @@ namespace Facepunch.RTS
 		public Dictionary<string, IStatus> Statuses { get; }
 		public BBox WorldSpaceBounds { get; }
 		public Vector3 LocalCenter { get; }
+		public uint ItemNetworkId { get; }
 		public int NetworkIdent { get; }
 		public string ItemId { get; }
 		public Player Player { get; }

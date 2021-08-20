@@ -681,7 +681,11 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			Items.Select( Selectable.NetworkIdent.ToString() );
+			if ( Input.Down( InputButton.Duck ) )
+				Items.RefineSelection( Selectable.ItemNetworkId.ToString() );
+			else
+				Items.Select( Selectable.NetworkIdent.ToString() );
+			
 			Audio.Play( "rts.pophappy" );
 		}
 

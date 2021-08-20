@@ -460,6 +460,28 @@ namespace Facepunch.RTS
 		}
 
 		[ServerCmd]
+		public static void RefineSelection( string itemId )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var itemNetworkId = uint.Parse( itemId );
+			var entities = caller.Selection
+				.OfType<ISelectable>()
+				.Where( v => v.ItemNetworkId == itemNetworkId )
+				.ToList();
+
+			caller.ClearSelection();
+
+			foreach ( var entity in entities )
+			{
+				entity.Select();
+			}
+		}
+
+		[ServerCmd]
 		public static void Select( string csv = null, bool isAdditive = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
