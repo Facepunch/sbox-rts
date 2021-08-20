@@ -35,7 +35,7 @@ namespace Facepunch.RTS
 					Fog.AddTimedViewer( TargetInfo.Origin, AreaOfEffectRadius, Duration );
 
 					Effect = Particles.Create( "particles/radar_scan/radar_scan.vpcf" );
-					Effect.SetPosition( 0, TargetInfo.Origin.WithZ( 5f ) );
+					Effect.SetPosition( 0, TargetInfo.Origin );
 					Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius, 0f, 0f ) );
 					Effect.SetPosition( 2, User.Player.TeamColor * 255f );
 
