@@ -49,6 +49,17 @@
 							},
 						]
 					},
+					{
+						_class = "MaterialGroup"
+						name = "Breakable"
+						remaps = 
+						[
+							{
+								from = "models/rocks/texture/rocks_1.vmat"
+								to = "models/rocks/texture/rocks_breakable.vmat"
+							},
+						]
+					},
 				]
 			},
 			{
