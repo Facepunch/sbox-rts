@@ -42,6 +42,8 @@ namespace Facepunch.RTS
 					Color.Yellow
 				};
 
+				colors.Shuffle();
+
 				foreach ( var player in players )
 				{
 					if ( spawnpoints.Count > 0 )
