@@ -103,6 +103,7 @@ namespace Facepunch.RTS
 			Resistances = new();
 
 			// Don't collide with anything but static shit.
+			EnableDrawOverWorld = true;
 			CollisionGroup = CollisionGroup.Debris;
 			Occupants = new List<UnitEntity>();
 			
@@ -809,6 +810,7 @@ namespace Facepunch.RTS
 
 			entity.SetModel( modelName );
 			entity.SetParent( this, true );
+			entity.EnableDrawOverWorld = true;
 
 			Clothing.Add( entity );
 
@@ -1105,6 +1107,7 @@ namespace Facepunch.RTS
 			{
 				Weapon = Library.Create<Weapon>( item.Weapon );
 				Weapon.Attacker = this;
+				Weapon.EnableDrawOverWorld = true;
 
 				var attachment = GetAttachment( "weapon", true );
 				
