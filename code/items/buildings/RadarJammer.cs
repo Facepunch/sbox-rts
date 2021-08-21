@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "Radar Jammer";
 		public override string UniqueId => "building.radarjammer";
 		public override string Description => "Base defense structure that automatically blocks radar scans within its range.";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/samsite.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/radarjammer.png" );
 		public override int BuildTime => 30;
 		public override float MaxHealth => 200f;
 		public override Dictionary<ResourceType, int> Costs => new()
