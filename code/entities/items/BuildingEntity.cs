@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity
+	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity, IDamageable
 	{
 		[Net, OnChangedCallback] public List<UnitEntity> Occupants { get; private set; }
 
@@ -276,6 +276,16 @@ namespace Facepunch.RTS
 			DamageOccupants( info );
 
 			base.TakeDamage( info );
+		}
+
+		public virtual void DoImpactEffects( Vector3 position, Vector3 normal )
+		{
+
+		}
+
+		public virtual void CreateDamageDecals( Vector3 position )
+		{
+
 		}
 
 		public virtual Vector3? GetVacatePosition( UnitEntity unit )

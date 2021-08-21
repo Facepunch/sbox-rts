@@ -47,6 +47,8 @@ namespace Facepunch.RTS.Units
 		{
 			"building.commandcentre",
 			"building.brewery",
+			"building.stonedrill",
+			"building.metaldrill",
 			"building.pub",
 			"building.silo",
 			"building.turret",

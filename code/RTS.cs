@@ -1,4 +1,5 @@
-﻿using Facepunch.RTS.Units;
+﻿using Facepunch.RTS.Tech;
+using Facepunch.RTS.Units;
 using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Gamelib.FlowFields.Entities;
@@ -29,6 +30,18 @@ namespace Facepunch.RTS
 					unit.TakeDamage( DamageInfo.Generic( unit.Health * 2f ) );
 					return false;
 				} );
+			}
+		}
+
+		[ServerCmd( "rts_learnit" )]
+		public static void LearnTechnology( string technology )
+		{
+			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			{
+				var item = Items.Find<BaseTech>( technology );
+
+				caller.AddDependency( item );
+				item.OnCreated( caller, null );
 			}
 		}
 

@@ -62,6 +62,11 @@ namespace Facepunch.RTS.Units
 			"tech.carbines",
 			"tech.basicballistics"
 		};
+		public override HashSet<string> Queueables => new()
+		{
+			"upgrade.electricsniper",
+			"upgrade.plasmasniper"
+		};
 		public override HashSet<string> Clothing => new()
 		{
 			CitizenClothing.Shoes.WorkBoots,

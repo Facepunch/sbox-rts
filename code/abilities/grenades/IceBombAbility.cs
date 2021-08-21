@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
@@ -13,7 +14,11 @@ namespace Facepunch.RTS
 		public override float Duration => 1f;
 		public override float AreaOfEffectRadius => 300f;
 		public override string ExplosionEffect => "particles/weapons/explosion_ground_ice/explosion_ground_ice.vpcf";
-		public override string AreaEffect => null;
+		public override string AreaEffect => "particles/weapons/ice_ground/ice_ground_base.vpcf";
+		public override HashSet<string> Dependencies => new()
+		{
+			"tech.cryogenics"
+		};
 
 		public override void OnFinished()
 		{

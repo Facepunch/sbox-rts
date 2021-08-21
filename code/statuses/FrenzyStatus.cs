@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 		public override string Description => "I can't stop shooting!";
 
 		private Particles Particles { get; set; }
-		private float Reduction { get; set; }
+		private float FireRateDelta { get; set; }
 
 		public override void OnApplied()
 		{
@@ -24,8 +24,9 @@ namespace Facepunch.RTS
 
 			if ( Host.IsServer && Target is UnitEntity unit )
 			{
-				Reduction = (unit.Modifiers.FireRate * Data.Modifier);
+				var oldValue = unit.Modifiers.FireRate;
 				unit.Modifiers.FireRate *= Data.Modifier;
+				FireRateDelta = oldValue - unit.Modifiers.FireRate;
 			}
 		}
 
@@ -39,7 +40,7 @@ namespace Facepunch.RTS
 
 			if ( Host.IsServer && Target is UnitEntity unit )
 			{
-				unit.Modifiers.FireRate += Reduction;
+				unit.Modifiers.FireRate += FireRateDelta;
 			}
 		}
 

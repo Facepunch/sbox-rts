@@ -9,6 +9,7 @@ namespace Facepunch.RTS
 		[Net] public AnimEntity Attacker { get; set; }
 		[Net] public Entity Occupiable { get; set; }
 		[Net] public Entity Target { get; set; }
+		public virtual DamageFlags DamageType => DamageFlags.Bullet;
 		public virtual bool BoneMerge => true;
 		public virtual bool IsMelee => false;
 		public virtual int BaseDamage => 10;
@@ -193,7 +194,7 @@ namespace Facepunch.RTS
 
 		public void ShootBullet( float force, float damage )
 		{
-			DamageTarget( DamageFlags.Bullet, force, damage );
+			DamageTarget( DamageType, force, damage );
 		}
 	}
 }

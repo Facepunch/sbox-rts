@@ -5,12 +5,13 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class AntiTank : BaseUnit
+	public class Rocketman : BaseUnit
 	{
-		public override string Name => "Anti-Tank";
-		public override string UniqueId => "unit.antitank";
-		public override string Description => "A slow Terry armed with a rocket launcher.";
+		public override string Name => "Rocketman";
+		public override string UniqueId => "unit.rocketman";
+		public override string Description => "A slow Terry armed with a rocket launcher. Can attack aircraft.";
 		public override float Speed => 350f;
+		public override float MaxVerticalRange => 650f;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 20;
 		public override OccupantSettings Occupant => new()

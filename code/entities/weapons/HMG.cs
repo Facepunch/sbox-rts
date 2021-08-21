@@ -4,7 +4,7 @@ using System;
 namespace Facepunch.RTS
 {
 	[Library("weapon_hmg")]
-	partial class HMG : Weapon, IBallisticsWeapon
+	public partial class HMG : Weapon, IBallisticsWeapon
 	{
 		public override float FireRate => 0.3f;
 		public override int BaseDamage => 8;

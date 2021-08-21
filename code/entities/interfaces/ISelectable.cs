@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Facepunch.RTS.Upgrades;
 using Sandbox;
+using Sandbox.Internal;
 
 namespace Facepunch.RTS
 {
@@ -14,6 +14,7 @@ namespace Facepunch.RTS
 		public uint ItemNetworkId { get; }
 		public int NetworkIdent { get; }
 		public string ItemId { get; }
+		public EntityTags Tags { get; }
 		public Player Player { get; }
 		public bool IsSelected { get; }
 		public bool CanMultiSelect { get; }
@@ -35,6 +36,8 @@ namespace Facepunch.RTS
 		public void TakeDamage( DamageInfo info );
 		public float GetDiameterXY( float scalar, bool smallestSide );
 		public S ApplyStatus<S>( StatusData data ) where S : IStatus;
+		public bool HasStatus<S>() where S : IStatus;
+		public IEnumerable<BaseUpgrade> GetUpgrades();
 		public bool HasUpgrade( BaseUpgrade item );
 		public bool HasUpgrade( uint id );
 		public void RemoveStatus( string id );

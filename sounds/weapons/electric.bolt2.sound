@@ -4,13 +4,7 @@
 	{
 		sounds = 
 		[
-			"sounds/weapons/sniper.plasma1.vsnd",
+			"sounds/weapons/electric.bolt2.vsnd",
 		]
-		UI = false
-		Volume = 1.0
-		VolumeRandom = 0.0
-		Pitch = 1.0
-		PitchRandom = 0.0
-		DistanceMax = 6000.0
 	}
 }

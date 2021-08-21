@@ -23,13 +23,14 @@ namespace Facepunch.RTS.Buildings
 		};
 		public override HashSet<string> Queueables => new()
 		{
-			"unit.cannonfodder",
+			"unit.grunt",
 			"unit.assault",
 			"unit.heavy",
 			"unit.medic",
 			"unit.grenadier",
-			"unit.antitank",
-			"unit.pyromaniac"
+			"unit.rocketman",
+			"unit.pyromaniac",
+			"unit.cryomaniac"
 		};
 	}
 }

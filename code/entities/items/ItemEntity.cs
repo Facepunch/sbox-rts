@@ -132,6 +132,15 @@ namespace Facepunch.RTS
 			return false;
 		}
 
+		public IEnumerable<BaseUpgrade> GetUpgrades()
+		{
+			for ( var i = 0; i < Upgrades.Count; i++ )
+			{
+				var networkId = Upgrades[i];
+				yield return Items.Find<BaseUpgrade>( networkId );
+			}
+		}
+
 		public bool HasUpgrade( BaseUpgrade item )
 		{
 			return Upgrades.Contains( item.NetworkId );
@@ -191,6 +200,12 @@ namespace Facepunch.RTS
 		public bool HasStatus( string id )
 		{
 			return Statuses.ContainsKey( id );
+		}
+
+		public bool HasStatus<S>() where S : IStatus
+		{
+			var id = Library.GetAttribute( typeof( S ) ).Name;
+			return HasStatus( id );
 		}
 
 		public S ApplyStatus<S>( StatusData data ) where S : IStatus

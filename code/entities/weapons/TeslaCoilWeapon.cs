@@ -15,6 +15,7 @@ namespace Facepunch.RTS
 		{
 			LastAttack = 0f;
 			DamageInRange();
+			PlaySound( "rts.tesla.pulse" );
 		}
 
 		public override Transform? GetMuzzle()
@@ -48,6 +49,11 @@ namespace Facepunch.RTS
 				bolt.SetPosition( 1, target.WorldSpaceBounds.Center );
 
 				DamageEntity( (Entity)target, DamageFlags.Shock, 5f, damage );
+
+				if ( Rand.Float() >= 0.75f )
+				{
+					PlaySound( $"electric.bolt{Rand.Int(1, 3)}" );
+				}
 
 				await GameTask.Delay( Rand.Int( 0, 5 ) );
 			}

@@ -16,9 +16,11 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsClient )
 			{
-				Particles = Particles.Create( "particles/weapons/flamethrower/flamethrower_fire.vpcf" );
+				var radius = Target.GetDiameterXY( 0.5f, true );
+
+				Particles = Particles.Create( "particles/weapons/ice_ground/ice_ground_ice.vpcf" );
 				Particles.SetPosition( 0, Target.Position );
-				Particles.SetPosition( 1, new Vector3( 1f, 0f, 0f ) );
+				Particles.SetPosition( 1, new Vector3( radius, 0f, 0f ) );
 			}
 
 			if ( Host.IsServer && Target is UnitEntity unit )

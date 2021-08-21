@@ -5,6 +5,7 @@
 		public override Color Color => Color.Green;
 
 		public virtual string ChangeItemTo => null;
+		public virtual string ChangeWeaponTo => null;
 
 		public override bool Has( Player player, ISelectable target )
 		{

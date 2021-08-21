@@ -1,5 +1,6 @@
 ﻿using Facepunch.RTS;
 using Facepunch.RTS.Units;
+using Facepunch.RTS.Upgrades;
 using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Gamelib.FlowFields.Grid;
@@ -288,6 +289,8 @@ namespace Facepunch.RTS
 				Resistances[id] += amount;
 			else
 				Resistances[id] = amount;
+
+			Resistances[id] = Resistances[id].Clamp( -1f, 1f );
 
 			var networkId = resistance.NetworkId;
 
@@ -922,6 +925,21 @@ namespace Facepunch.RTS
 			}
 		}
 
+		protected override void OnQueueItemCompleted( QueueItem queueItem )
+		{
+			base.OnQueueItemCompleted( queueItem );
+
+			if ( queueItem.Item is BaseUpgrade upgrade )
+			{
+				var changeWeaponTo = upgrade.ChangeWeaponTo;
+
+				if ( !string.IsNullOrEmpty( changeWeaponTo ) )
+				{
+					ChangeWeapon( changeWeaponTo );
+				}
+			}
+		}
+
 		protected override void CreateAbilities()
 		{
 			base.CreateAbilities();
@@ -1105,27 +1123,38 @@ namespace Facepunch.RTS
 
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
 			{
-				Weapon = Library.Create<Weapon>( item.Weapon );
-				Weapon.Attacker = this;
-				Weapon.EnableDrawOverWorld = true;
-
-				var attachment = GetAttachment( "weapon", true );
-				
-				if ( attachment.HasValue )
-				{
-					Weapon.SetParent( this );
-					Weapon.Position = attachment.Value.Position;
-				}
-				else 
-				{
-					Weapon.Position = Position;
-					Weapon.SetParent( this, Weapon.BoneMerge );
-				}
+				ChangeWeapon( item.Weapon );
 			}
 
 			Position = Position.WithZ( GetVerticalOffset() );
 
 			base.OnItemChanged( item, oldItem );
+		}
+
+		public void ChangeWeapon( string name )
+		{
+			if ( Weapon.IsValid() )
+			{
+				Weapon.Delete();
+				Weapon = null;
+			}
+
+			Weapon = Library.Create<Weapon>( name );
+			Weapon.Attacker = this;
+			Weapon.EnableDrawOverWorld = true;
+
+			var attachment = GetAttachment( "weapon", true );
+
+			if ( attachment.HasValue )
+			{
+				Weapon.SetParent( this );
+				Weapon.Position = attachment.Value.Position;
+			}
+			else
+			{
+				Weapon.Position = Position;
+				Weapon.SetParent( this, Weapon.BoneMerge );
+			}
 		}
 
 		protected virtual void CreateModifiers()

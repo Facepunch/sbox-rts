@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Cannonfodder : BaseUnit
+	public class Grunt : BaseUnit
 	{
-		public override string Name => "Cannonfodder";
-		public override string UniqueId => "unit.cannonfodder";
+		public override string Name => "Grunt";
+		public override string UniqueId => "unit.grunt";
 		public override string Description => "A basic dispensable Terry armed with only a pistol.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 10;

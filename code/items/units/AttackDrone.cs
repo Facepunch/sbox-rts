@@ -52,6 +52,11 @@ namespace Facepunch.RTS.Units
 		{
 			"ability_dome_shield"
 		};
+		public override HashSet<string> Queueables => new()
+		{
+			"upgrade.electricattackdrone",
+			"upgrade.plasmaattackdrone"
+		};
 		public override HashSet<string> Dependencies => new()
 		{
 			"tech.carbines"

@@ -17,7 +17,7 @@ namespace Facepunch.RTS
 		public override string AreaEffect => "particles/weapons/plasma_ground/plasma_ground.vpcf";
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Plasma] = 50
+			[ResourceType.Plasma] = 20
 		};
 		public override HashSet<string> Dependencies => new()
 		{
@@ -28,11 +28,10 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsServer )
 			{
-				Statuses.Apply<DissolvingStatus>( TargetInfo.Origin, AreaOfEffectRadius, new DamageData()
+				Statuses.Apply<WeakStatus>( TargetInfo.Origin, AreaOfEffectRadius, new ModifierData()
 				{
-					Interval = 0.2f,
-					Duration = 5f,
-					Damage = 0.5f
+					Modifier = 0.2f,
+					Duration = 5f
 				} );
 			}
 
