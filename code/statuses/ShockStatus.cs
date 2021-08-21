@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 
 				Particles = Particles.Create( "particles/weapons/emp_ground/emp_ground_emp.vpcf" );
 				Particles.SetPosition( 0, Target.Position );
-				Particles.SetPosition( 1, new Vector3( radius, 0f, 1f ) );
+				Particles.SetPosition( 1, new Vector3( radius, 0f, 0f ) );
 			}
 
 			if ( Host.IsServer && Target is UnitEntity unit )
