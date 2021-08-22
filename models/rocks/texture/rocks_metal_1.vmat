@@ -2,12 +2,14 @@
 
 Layer0
 {
-	shader "vr_simple.vfx"
+	shader "complex.vfx"
 
 	//---- PBR ----
-	F_METALNESS_TEXTURE 1
+	F_SELF_ILLUM 1
 
 	//---- Ambient Occlusion ----
+	g_flAmbientOcclusionDirectDiffuse "0.000"
+	g_flAmbientOcclusionDirectSpecular "0.000"
 	TextureAmbientOcclusion "materials/default/default_ao.tga"
 
 	//---- Color ----
@@ -26,13 +28,21 @@ Layer0
 	g_flDirectionalLightmapStrength "1.000"
 
 	//---- Metalness ----
-	TextureMetalness "[0.000000 0.000000 0.000000 0.000000]"
+	g_flMetalness "0.000"
 
 	//---- Normal ----
 	TextureNormal "models/rocks/texture/rocks_1_normal.png"
 
 	//---- Roughness ----
 	TextureRoughness "[0.305882 0.290196 0.290196 0.000000]"
+
+	//---- Self Illum ----
+	g_flSelfIllumAlbedoFactor "1.000"
+	g_flSelfIllumBrightness "0.000"
+	g_flSelfIllumScale "1.000"
+	g_vSelfIllumScrollSpeed "[0.000 0.000]"
+	g_vSelfIllumTint "[1.000000 1.000000 1.000000 0.000000]"
+	TextureSelfIllumMask "[0.500000 0.500000 0.500000 0.000000]"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
