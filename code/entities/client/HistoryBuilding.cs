@@ -33,6 +33,7 @@ namespace Facepunch.RTS
 
 			PlaybackRate = master.PlaybackRate;
 			RenderColor = master.RenderColor;
+			RenderAlpha = master.RenderAlpha;
 			Rotation = master.Rotation;
 			Position = master.Position;
 			Master = master;

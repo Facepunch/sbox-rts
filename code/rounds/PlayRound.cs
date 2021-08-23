@@ -44,11 +44,15 @@ namespace Facepunch.RTS
 
 				colors.Shuffle();
 
+				var teamGroup = 0;
+
 				foreach ( var player in players )
 				{
 					if ( spawnpoints.Count > 0 )
 					{
+						player.TeamGroup = teamGroup;
 						player.TeamColor = colors[0];
+
 						colors.RemoveAt( 0 );
 
 						var spawnpoint = spawnpoints[0];
@@ -71,6 +75,8 @@ namespace Facepunch.RTS
 						Fog.MakeVisible( player, spawnpoint.Position, 2500f );
 
 						AddPlayer( player );
+
+						teamGroup++;
 					}
 					else
 					{

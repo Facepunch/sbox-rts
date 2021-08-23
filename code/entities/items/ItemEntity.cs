@@ -35,7 +35,8 @@ namespace Facepunch.RTS
 
 		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );
-		public bool IsLocalPlayers => Local.Pawn == Player;
+		public bool IsLocalPlayers => Player.IsValid() && Local.Pawn == Player;
+		public bool IsLocalTeamGroup => Player.IsValid() && (Local.Pawn as Player).TeamGroup == Player.TeamGroup;
 
 		private T _itemCache;
 
@@ -252,6 +253,11 @@ namespace Facepunch.RTS
 			Statuses.Clear();
 		}
 
+		public bool IsSameTeamGroup( ISelectable other )
+		{
+			return (other.Player.TeamGroup == Player.TeamGroup);
+		}
+
 		public void RemoveStatus( string id )
 		{
 			if ( Statuses.TryGetValue( id, out var status ) )
@@ -327,7 +333,7 @@ namespace Facepunch.RTS
 
 		public bool IsEnemy( ISelectable other )
 		{
-			return (other.Player != Player);
+			return !IsSameTeamGroup( other );
 		}
 
 		public Vector3 GetFreePosition( UnitEntity unit, float diameterScale = 0.75f )

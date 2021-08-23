@@ -77,6 +77,18 @@ namespace Facepunch.RTS
 
 		public void MakeVisible( bool isVisible, bool wasVisible )
 		{
+			if ( IsLocalTeamGroup )
+			{
+				TargetAlpha = 1f;
+				return;
+			}
+
+			if ( IsBlueprint )
+			{
+				TargetAlpha = 0f;
+				return;
+			}
+
 			if ( HasBeenSeen && !isVisible && !wasVisible )
 			{
 				if ( !_historyBuilding.IsValid() )
@@ -232,6 +244,10 @@ namespace Facepunch.RTS
 
 		public void Kill()
 		{
+			var particles = Particles.Create( "particles/destruction_temp/destruction_temp.vpcf" );
+			particles.SetPosition( 0, Position );
+			particles.SetPosition( 1, new Vector3( GetDiameterXY( 1f, false ) * 0.5f, 0f, 0f ) );
+
 			Item.PlayDestroySound( this );
 			LifeState = LifeState.Dead;
 			Delete();
@@ -266,7 +282,7 @@ namespace Facepunch.RTS
 			IsBlueprint = false;
 			Health = Item.MaxHealth;
 
-			AddAsFogViewer( To.Single( Player ) );
+			AddAsFogViewer( To.Everyone );
 
 			Audio.Play( Player, "announcer.construction_complete" );
 
@@ -302,6 +318,7 @@ namespace Facepunch.RTS
 		public override void ClientSpawn()
 		{
 			RenderAlpha = 0f;
+			TargetAlpha = 0f;
 
 			Fog.AddCullable( this );
 
@@ -324,14 +341,16 @@ namespace Facepunch.RTS
 
 		public override void StartTouch( Entity other )
 		{
-			TouchingEntities.Add( other );
+			if ( !other.IsWorld )
+				TouchingEntities.Add( other );
 
 			base.StartTouch( other );
 		}
 
 		public override void EndTouch( Entity other )
 		{
-			TouchingEntities.Remove( other );
+			if ( !other.IsWorld )
+				TouchingEntities.Remove( other );
 
 			base.EndTouch( other );
 		}
@@ -442,12 +461,15 @@ namespace Facepunch.RTS
 
 			var targetAlpha = TargetAlpha;
 
-			if ( IsUnderConstruction && ( IsLocalPlayers || !IsBlueprint ))
+			if ( IsUnderConstruction )
 			{
-				targetAlpha = MathF.Min( 0.25f + (0.75f / Item.MaxHealth) * Health, targetAlpha );
+				if ( IsLocalTeamGroup || !IsBlueprint )
+					targetAlpha = MathF.Min( 0.25f + (0.75f / Item.MaxHealth) * Health, targetAlpha );
+				else
+					targetAlpha = 0f;
 			}
 
-			if ( IsLocalPlayers )
+			if ( IsLocalTeamGroup )
 			{
 				RenderAlpha = targetAlpha;
 				return;
@@ -664,15 +686,10 @@ namespace Facepunch.RTS
 				}
 
 				UpdateCollisions();
-
 				EvictAll();
 			}
 			else
 			{
-				var particles = Particles.Create( "particles/destruction_temp/destruction_temp.vpcf" );
-				particles.SetPosition( 0, Position );
-				particles.SetPosition( 1, new Vector3( GetDiameterXY( 1f, false ) * 0.5f, 0f, 0f ) );
-
 				Fog.RemoveCullable( this );
 				Fog.RemoveViewer( this );
 			}
@@ -743,7 +760,10 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		private void AddAsFogViewer()
 		{
-			Fog.AddViewer( this );
+			if ( IsLocalTeamGroup )
+			{
+				Fog.AddViewer( this );
+			}
 		}
 
 		private void OnIsUnderConstructionChanged()

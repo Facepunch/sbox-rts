@@ -32,7 +32,7 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsClient )
 			{
-				if ( User.IsLocalPlayers )
+				if ( User.IsLocalTeamGroup )
 				{
 					Fog.AddTimedViewer( TargetInfo.Origin, AreaOfEffectRadius, Duration );
 

@@ -505,7 +505,7 @@ namespace Facepunch.RTS
 			Circle.SetParent( this );
 			Circle.LocalPosition = Vector3.Zero;
 
-			if ( Player.IsValid() && Player.IsLocalPawn )
+			if ( IsLocalTeamGroup )
 				Fog.AddViewer( this );
 			else
 				Fog.AddCullable( this );

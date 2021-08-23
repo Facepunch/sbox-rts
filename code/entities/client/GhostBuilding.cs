@@ -89,7 +89,7 @@ namespace Facepunch.RTS
 
 			if ( entity is BuildingEntity building )
 			{
-				if ( !building.IsLocalPlayers && building.IsBlueprint )
+				if ( building.Player != Worker.Player && building.IsBlueprint )
 					return false;
 			}
 
@@ -107,8 +107,10 @@ namespace Facepunch.RTS
 			var entities = Physics.GetEntitiesInBox( bounds + position )
 				.Where( e => IsBlockingEntity( e ) );
 
+			/*
 			if ( IsClient && !Fog.IsAreaSeen( position ) )
 				return false;
+			*/
 
 			if ( entities.Count() > 0 )
 				return false;

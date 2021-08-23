@@ -22,12 +22,14 @@ namespace Facepunch.RTS
 		public float MaxHealth { get; set; }
 		public List<QueueItem> Queue { get; }
 		public bool IsLocalPlayers { get; }
+		public bool IsLocalTeamGroup { get; }
 		public Vector3 Position { get; set; }
 		public BaseItem GetBaseItem();
 		public int GetAttackPriority();
 		public bool HasStatus( string id );
 		public bool IsInQueue( BaseItem item );
 		public void QueueItem( BaseItem item );
+		public bool IsSameTeamGroup( ISelectable other );
 		public BaseItem UnqueueItem( uint queueId );
 		public bool HasComponent<C>() where C : ItemComponent;
 		public C GetComponent<C>() where C : ItemComponent;

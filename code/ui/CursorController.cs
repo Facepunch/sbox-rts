@@ -186,7 +186,9 @@ namespace Facepunch.RTS
 
 						if ( !selectable.IsLocalPlayers )
 						{
-							Items.Attack( targetNetworkId );
+							if ( !selectable.IsLocalTeamGroup )
+								Items.Attack( targetNetworkId );
+
 							return;
 						}
 

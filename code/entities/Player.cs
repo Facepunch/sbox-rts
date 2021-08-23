@@ -22,6 +22,8 @@ namespace Facepunch.RTS
 		[Net] public EloScore Elo { get; private set; }
 		[Net] public Color TeamColor { get; set; }
 		[Net] public List<int> Resources { get; private set; }
+		[Net] public int TeamGroup { get; set; }
+
 		public TimeSince LastCommandSound { get; set; }
 
 		public Player()
@@ -354,7 +356,7 @@ namespace Facepunch.RTS
 
 				var building = Items.Create<BuildingEntity>( bot, "building.radarjammer" );
 				building.Position = trace.EndPos;
-				building.FinishConstruction();
+				//building.FinishConstruction();
 			}
 
 			if ( IsLocalPawn )
