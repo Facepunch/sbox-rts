@@ -50,6 +50,7 @@ namespace Facepunch.RTS
 		public bool ShouldUpdateHud();
 		public void UpdateHudComponents();
 		public bool CanSelect();
+		public void CancelAction();
 		public void Select();
 		public void Deselect();
 	}

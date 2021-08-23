@@ -118,7 +118,6 @@ namespace Facepunch.RTS
 						var building = Create( caller, item );
 
 						building.Position = trace.EndPos;
-						building.StartConstruction();
 						building.Item.PlayPlaceSound( caller );
 
 						worker.Construct( building );
@@ -481,6 +480,25 @@ namespace Facepunch.RTS
 			}
 		}
 
+		[ServerCmd]
+		public static void CancelAction( int id )
+		{
+			var caller = ConsoleSystem.Caller.Pawn as Player;
+
+			if ( !caller.IsValid() || caller.IsSpectator )
+				return;
+
+			var target = Entity.FindByIndex( id );
+
+			if ( target.IsValid() && target is ISelectable selectable )
+			{
+				if ( selectable.Player == caller )
+				{
+					selectable.CancelAction();
+				}
+			}
+		}
+		
 		[ServerCmd]
 		public static void Select( string csv = null, bool isAdditive = false )
 		{

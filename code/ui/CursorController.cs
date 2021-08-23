@@ -276,10 +276,17 @@ namespace Facepunch.RTS
 				{
 					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
 
-					if ( trace.Entity is ISelectable selectable && selectable.CanSelect() )
-						Items.Select( trace.Entity.NetworkIdent.ToString(), Input.Down( InputButton.Run ) );
+					if ( trace.Entity is ISelectable selectable )
+					{
+						if ( selectable.CanSelect() )
+							Items.Select( trace.Entity.NetworkIdent.ToString(), Input.Down( InputButton.Run ) );
+						else
+							Items.CancelAction( trace.Entity.NetworkIdent );
+					}
 					else
+					{
 						Items.Select();
+					}
 				}
 
 				IsSelecting = false;

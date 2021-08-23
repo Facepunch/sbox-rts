@@ -16,7 +16,9 @@ namespace Facepunch.RTS
 
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
 		[Net, OnChangedCallback] public bool IsUnderConstruction { get; private set; }
+		public HashSet<Entity> TouchingEntities { get; private set; }
 		[Net] public float LineOfSightRadius { get; private set; }
+		[Net] public bool IsBlueprint { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public Entity Target { get; private set; }
 		public RealTimeUntil NextFindTarget { get; private set; }
@@ -57,7 +59,18 @@ namespace Facepunch.RTS
 		{
 			Tags.Add( "building", "selectable" );
 
+			TouchingEntities = new();
 			Occupants = new List<UnitEntity>();
+
+			if ( IsServer )
+			{
+				EnableSolidCollisions = false;
+				IsUnderConstruction = true;
+				IsBlueprint = true;
+				EnableTouch = true;
+				GlowColor = Color.Red;
+				Health = 1f;
+			}
 		}
 
 		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
@@ -87,11 +100,23 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public void CancelConstruction()
+		{
+			ResourceHint.Send( Player, 2f, Position, Item.Costs, Color.Green );
+			Player.GiveResources( Item );
+			Delete();
+		}
+
 		public void UpdateConstruction()
 		{
 			Host.AssertServer();
 
 			GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
+
+			if ( IsBlueprint )
+			{
+				UpgradeFromBlueprint();
+			}
 
 			if ( Item.ConstructionSounds.Length > 0 && NextConstructionSound )
 			{
@@ -228,12 +253,17 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
+			if ( IsBlueprint )
+			{
+				UpgradeFromBlueprint();
+			}
+
 			AddDependencies( Item );
 
 			Player.MaxPopulation += Item.PopulationBoost;
 
 			IsUnderConstruction = false;
-			RenderAlpha = 1f;
+			IsBlueprint = false;
 			Health = Item.MaxHealth;
 
 			AddAsFogViewer( To.Single( Player ) );
@@ -250,17 +280,6 @@ namespace Facepunch.RTS
 			Host.AssertServer();
 
 			Item.PlayBuiltSound( this );
-		}
-
-		public void StartConstruction()
-		{
-			Host.AssertServer();
-
-			UpdateCollisions();
-
-			IsUnderConstruction = true;
-			GlowColor = Color.Red;
-			Health = 1f;
 		}
 
 		public void UpdateCollisions()
@@ -292,6 +311,29 @@ namespace Facepunch.RTS
 		public override int GetAttackPriority()
 		{
 			return Item.AttackPriority;
+		}
+
+		public override void CancelAction()
+		{
+			if ( IsUnderConstruction )
+			{
+				Audio.Play( Player, "rts.beepvibrato" );
+				CancelConstruction();
+			}
+		}
+
+		public override void StartTouch( Entity other )
+		{
+			TouchingEntities.Add( other );
+
+			base.StartTouch( other );
+		}
+
+		public override void EndTouch( Entity other )
+		{
+			TouchingEntities.Remove( other );
+
+			base.EndTouch( other );
 		}
 
 		public override bool CanSelect()
@@ -400,7 +442,7 @@ namespace Facepunch.RTS
 
 			var targetAlpha = TargetAlpha;
 
-			if ( IsUnderConstruction )
+			if ( IsUnderConstruction && ( IsLocalPlayers || !IsBlueprint ))
 			{
 				targetAlpha = MathF.Min( 0.25f + (0.75f / Item.MaxHealth) * Health, targetAlpha );
 			}
@@ -567,7 +609,6 @@ namespace Facepunch.RTS
 			LineOfSightRadius = item.MinLineOfSight + CollisionBounds.Size.Length;
 			LocalCenter = CollisionBounds.Center;
 			MaxHealth = item.MaxHealth;
-			Health = item.MaxHealth;
 
 			if ( Weapon.IsValid() ) Weapon.Delete();
 
@@ -637,6 +678,13 @@ namespace Facepunch.RTS
 			}
 
 			base.OnDestroy();
+		}
+
+		private void UpgradeFromBlueprint()
+		{
+			EnableSolidCollisions = true;
+			UpdateCollisions();
+			IsBlueprint = false;
 		}
 
 		private void AddDependencies( BaseBuilding item )

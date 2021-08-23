@@ -28,10 +28,11 @@ namespace Facepunch.RTS
 		{
 			SetModel( master.GetModelName() );
 
-			//SequenceCycle = master.SequenceCycle;
+			CurrentSequence.TimeNormalized = master.CurrentSequence.TimeNormalized;
+			CurrentSequence.Name = master.CurrentSequence.Name;
+
 			PlaybackRate = master.PlaybackRate;
 			RenderColor = master.RenderColor;
-			Sequence = master.Sequence;
 			Rotation = master.Rotation;
 			Position = master.Position;
 			Master = master;

@@ -1728,6 +1728,22 @@ namespace Facepunch.RTS
 
 		private void TickConstruct( BuildingEntity building )
 		{
+			if ( building.TouchingEntities.Count > 0 )
+			{
+				var blueprints = building.TouchingEntities
+					.OfType<BuildingEntity>()
+					.Where( v => v.IsBlueprint );
+
+				foreach ( var blueprint in blueprints )
+				{
+					blueprint.CancelConstruction();
+				}
+
+				SpinSpeed = 0;
+
+				return;
+			}
+
 			building.Health += (building.MaxHealth / building.Item.BuildTime * Time.Delta);
 			building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
 

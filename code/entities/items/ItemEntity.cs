@@ -413,6 +413,8 @@ namespace Facepunch.RTS
 			Assign( player, item );
 		}
 
+		public virtual void CancelAction() { }
+
 		public virtual void Select()
 		{
 			if ( Player.IsValid() )

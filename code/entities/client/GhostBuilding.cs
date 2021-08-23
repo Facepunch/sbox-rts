@@ -82,6 +82,20 @@ namespace Facepunch.RTS
 				.Run();
 		}
 
+		private bool IsBlockingEntity( Entity entity )
+		{
+			if ( entity == this || entity is FlowFieldGround )
+				return false;
+
+			if ( entity is BuildingEntity building )
+			{
+				if ( !building.IsLocalPlayers && building.IsBlueprint )
+					return false;
+			}
+
+			return true;
+		}
+
 		public bool IsPlacementValid( TraceResult trace )
 		{
 			if ( !Worker.IsValid() ) return false;
@@ -91,7 +105,7 @@ namespace Facepunch.RTS
 			var position = trace.EndPos;
 			var bounds = CollisionBounds * 1.5f;
 			var entities = Physics.GetEntitiesInBox( bounds + position )
-				.Where( i => i != this && i is not FlowFieldGround );
+				.Where( e => IsBlockingEntity( e ) );
 
 			if ( IsClient && !Fog.IsAreaSeen( position ) )
 				return false;
@@ -99,8 +113,11 @@ namespace Facepunch.RTS
 			if ( entities.Count() > 0 )
 				return false;
 
-			if ( position.Distance( Worker.Position ) > Worker.Item.ConstructRadius )
-				return false;
+			if ( Worker.Item.ConstructRadius > 0f )
+			{
+				if ( position.Distance( Worker.Position ) > Worker.Item.ConstructRadius )
+					return false;
+			}
 
 			var groundBounds = bounds;
 			groundBounds.Mins = groundBounds.Mins.WithZ( 0f );
