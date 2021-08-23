@@ -35,15 +35,15 @@ namespace Facepunch.RTS
 			if ( !Attacking )
 			{
 				if ( Speed >= 0.5f )
-					entity.CurrentSequence.Name = Lookup[HoldType].Run;
+					entity.Sequence = Lookup[HoldType].Run;
 				else if ( Speed > 0f )
-					entity.CurrentSequence.Name = Lookup[HoldType].Walk;
+					entity.Sequence = Lookup[HoldType].Walk;
 				else
-					entity.CurrentSequence.Name = Lookup[HoldType].Idle;
+					entity.Sequence = Lookup[HoldType].Idle;
 			}
 			else
 			{
-				entity.CurrentSequence.Name = Lookup[HoldType].Attack;
+				entity.Sequence = Lookup[HoldType].Attack;
 			}
 		}
 	}
