@@ -76,12 +76,6 @@ namespace Facepunch.RTS
 			}
 			else
 			{
-				if ( isVisible && _historyBuilding.IsValid() )
-				{
-					_historyBuilding.Delete();
-					_historyBuilding = null;
-				}
-
 				TargetAlpha = isVisible ? 1f : 0f;
 			}
 		}
@@ -406,8 +400,7 @@ namespace Facepunch.RTS
 
 			if ( IsLocalPlayers )
 			{
-				var isOnScreen = IsOnScreen();
-				RenderAlpha = isOnScreen ? targetAlpha : 0f;
+				RenderAlpha = targetAlpha;
 				return;
 			}
 
