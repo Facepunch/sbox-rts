@@ -8,6 +8,7 @@ namespace Facepunch.RTS
 	public partial class BeerResource : ResourceEntity
 	{
 		public override ResourceType Resource => ResourceType.Beer;
+		public override int DefaultStock => 300;
 		public override string[] GatherSounds => new string[]
 		{
 			"gatherbeer1"

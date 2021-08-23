@@ -315,6 +315,23 @@ namespace Facepunch.RTS
 		{
 			_texture.PunchHole( position, range );
 			_texture.FillRegion( position, range, _seenAlpha );
+
+			FogCullable cullable;
+
+			// We multiply by 12.5% to cater for the render range.
+			var renderRange = range * 1.125f;
+
+			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			{
+				cullable = _cullables[i];
+
+				if ( cullable.IsVisible ) continue;
+
+				if ( cullable.Object.Position.Distance( position ) <= renderRange )
+				{
+					cullable.Object.HasBeenSeen = true;
+				}
+			}
 		}
 
 		private static void UpdateTextureSize()

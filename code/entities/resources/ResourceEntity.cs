@@ -10,6 +10,7 @@ namespace Facepunch.RTS
 	public partial class ResourceEntity : ModelEntity, IFogCullable
 	{
 		public virtual ResourceType Resource => ResourceType.Stone;
+		public virtual int DefaultStock => 250;
 		public virtual string Description => "";
 		public virtual string Name => "";
 		public virtual float GatherTime => 0.5f;
@@ -22,7 +23,7 @@ namespace Facepunch.RTS
 		};
 		public virtual int MaxCarry => 20;
 
-		[Property, Net] public int Stock { get; set; } = 250;
+		[Property, Net] public int Stock { get; set; }
 
 		public HashSet<IMoveAgent> Gatherers { get; private set; } = new();
 		public bool IsLocalPlayers => false;
@@ -58,6 +59,18 @@ namespace Facepunch.RTS
 			_nextGatherSound = 0.5f;
 		}
 
+		public void ShowOutline()
+		{
+			GlowColor = Resource.GetColor() * 0.1f;
+			GlowState = GlowStates.GlowStateOn;
+			GlowActive = true;
+		}
+
+		public void HideOutline()
+		{
+			GlowActive = false;
+		}
+		
 		public override void ClientSpawn()
 		{
 			Fog.AddCullable( this );
@@ -73,7 +86,7 @@ namespace Facepunch.RTS
 			Transmit = TransmitType.Always;
 
 			// Let's make sure there is stock.
-			if ( Stock == 0 ) Stock = 250;
+			if ( Stock == 0 ) Stock = DefaultStock;
 		}
 
 		protected override void OnDestroy()
@@ -92,6 +105,15 @@ namespace Facepunch.RTS
 			{
 				pathfinder.UpdateCollisions( Position, radius );
 			}
+		}
+
+		[Event.Tick.Client]
+		private void ClientTick()
+		{
+			if ( Local.Pawn is Player player && player.Position.Distance( Position ) <= 1000f )
+				ShowOutline();
+			else
+				HideOutline();
 		}
 	}
 }
