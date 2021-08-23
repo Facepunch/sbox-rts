@@ -347,14 +347,14 @@ namespace Facepunch.RTS
 				worker.Position = trace.EndPos;
 				*/
 
+				/*
 				var worker = Items.Create<UnitEntity>( bot, "unit.worker" );
 				worker.Position = trace.EndPos;
+				*/
 
-				/*
-				var building = Items.Create<BuildingEntity>( bot, "building.silo" );
+				var building = Items.Create<BuildingEntity>( client.Pawn as Player, "building.radarjammer" );
 				building.Position = trace.EndPos;
 				building.FinishConstruction();
-				*/
 			}
 
 			if ( IsLocalPawn )
