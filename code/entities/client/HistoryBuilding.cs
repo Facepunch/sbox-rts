@@ -7,6 +7,8 @@ namespace Facepunch.RTS
 		public BuildingEntity Master { get; set; }
 		public bool HasBeenSeen { get; set; }
 		public bool IsFadingOut { get; set; }
+		
+		private RealTimeSince CreationTime { get; set; }
 
 		public void MakeVisible( bool isVisible, bool wasVisible )
 		{
@@ -39,6 +41,8 @@ namespace Facepunch.RTS
 		{
 			Fog.AddCullable( this );
 
+			CreationTime = 0f;
+
 			base.Spawn();
 		}
 
@@ -57,6 +61,11 @@ namespace Facepunch.RTS
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
+			if ( CreationTime > 0.1f && Master.IsValid() )
+			{
+				Master.EnableDrawing = false;
+			}
+
 			if ( !IsFadingOut ) return;
 
 			RenderAlpha = RenderAlpha.LerpTo( 0f, Time.Delta * 2f );

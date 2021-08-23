@@ -419,7 +419,7 @@ namespace Facepunch.RTS
 				Hud.Style.Dirty();
 			}
 
-			Hud.SetActive( RenderAlpha > 0f );
+			Hud.SetActive( EnableDrawing && RenderAlpha > 0f );
 		}
 
 		protected override void CreateAbilities()
