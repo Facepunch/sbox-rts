@@ -20,7 +20,7 @@ namespace Facepunch.RTS
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public Entity Target { get; private set; }
 		public RealTimeUntil NextFindTarget { get; private set; }
-		public float TargetAlpha { get; set; }
+		public float TargetAlpha { get; private set; }
 		public bool HasBeenSeen { get; set; }
 
 		public bool CanDepositResources
@@ -72,11 +72,18 @@ namespace Facepunch.RTS
 					_historyBuilding.Copy( this );
 				}
 
-				TargetAlpha = 0f;
+				EnableDrawing = true;
+				TargetAlpha = 1f;
 			}
 			else
 			{
-				TargetAlpha = isVisible ? 1f : 0f;
+				if ( isVisible && _historyBuilding.IsValid() )
+				{
+					_historyBuilding.Delete();
+					_historyBuilding = null;
+				} else {
+					TargetAlpha = isVisible ? 1f : 0f;
+				}
 			}
 		}
 

@@ -12,21 +12,26 @@ namespace Facepunch.RTS
 		{
 			if ( isVisible )
 			{
+				if ( Master.IsValid() )
+				{
+					Delete();
+					return;
+				}
+
 				IsFadingOut = true;
 			}
 		}
 
 		public void Copy( BuildingEntity master )
 		{
-			SetModel( master.GetModel() );
+			SetModel( master.GetModelName() );
 
+			//SequenceCycle = master.SequenceCycle;
 			PlaybackRate = master.PlaybackRate;
 			RenderColor = master.RenderColor;
 			Sequence = master.Sequence;
 			Rotation = master.Rotation;
 			Position = master.Position;
-			//AnimCycle = master.AnimCycle;
-			//AnimTime = master.AnimTime;
 			Master = master;
 		}
 
@@ -40,6 +45,11 @@ namespace Facepunch.RTS
 		protected override void OnDestroy()
 		{
 			Fog.RemoveCullable( this );
+
+			if ( Master.IsValid() )
+			{
+				Master.EnableDrawing = true;
+			}
 
 			base.OnDestroy();
 		}
