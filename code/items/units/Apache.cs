@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Entity => "unit_apache";
 		public override string Model => "models/vehicles/apache/apache.vmdl";
 		public override string Description => "An armored aircraft that occupies one ranged unit.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/apache.png" );
 		public override float VerticalOffset => 600f;
 		public override bool UsePathfinder => false;
 		public override bool UseRenderColor => true;

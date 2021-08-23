@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Entity => "unit_aircraft";
 		public override string Model => "models/vehicles/chinook/chinook.vmdl";
 		public override string Description => "An armored aircraft for transporting many units.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/chinook.png" );
 		public override float VerticalOffset => 600f;
 		public override bool UsePathfinder => false;
 		public override bool UseRenderColor => true;
