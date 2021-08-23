@@ -28,8 +28,8 @@ namespace Facepunch.RTS
 		{
 			SetModel( master.GetModelName() );
 
-			CurrentSequence.TimeNormalized = master.CurrentSequence.TimeNormalized;
-			CurrentSequence.Name = master.CurrentSequence.Name;
+			//CurrentSequence.TimeNormalized = master.CurrentSequence.TimeNormalized;
+			//CurrentSequence.Name = master.CurrentSequence.Name;
 
 			PlaybackRate = master.PlaybackRate;
 			RenderColor = master.RenderColor;
