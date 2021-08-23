@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.apc";
 		public override string Model => "models/vehicles/apc/apc.vmdl";
 		public override string Description => "An armored vehicle for transporting units long distance.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/scout.png" );
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/apc.png" );
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
 		public override int NodeSize => 50;
