@@ -41,7 +41,7 @@ namespace Facepunch.RTS
 			Delete();
 		}
 
-		public void MakeVisible( bool isVisible )
+		public void MakeVisible( bool isVisible, bool wasVisible )
 		{
 			Hud.SetActive( isVisible );
 

@@ -352,7 +352,7 @@ namespace Facepunch.RTS
 				worker.Position = trace.EndPos;
 				*/
 
-				var building = Items.Create<BuildingEntity>( client.Pawn as Player, "building.radarjammer" );
+				var building = Items.Create<BuildingEntity>( bot, "building.radarjammer" );
 				building.Position = trace.EndPos;
 				building.FinishConstruction();
 			}

@@ -127,7 +127,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public void MakeVisible( bool isVisible )
+		public void MakeVisible( bool isVisible, bool wasVisible )
 		{
 			TargetAlpha = isVisible ? 1f : 0f;
 		}

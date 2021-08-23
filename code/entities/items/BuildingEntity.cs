@@ -2,23 +2,26 @@
 using Facepunch.RTS.Units;
 using Gamelib.FlowFields;
 using Sandbox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity, IDamageable
+	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity, IDamageable, IFogCullable
 	{
 		[Net, OnChangedCallback] public List<UnitEntity> Occupants { get; private set; }
 
 		public IOccupiableItem OccupiableItem => Item;
 
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
-		[Net] public bool IsUnderConstruction { get; private set; }
+		[Net, OnChangedCallback] public bool IsUnderConstruction { get; private set; }
 		[Net] public float LineOfSightRadius { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public Entity Target { get; private set; }
 		public RealTimeUntil NextFindTarget { get; private set; }
+		public float TargetAlpha { get; set; }
+		public bool HasBeenSeen { get; set; }
 
 		public bool CanDepositResources
 		{
@@ -48,6 +51,8 @@ namespace Facepunch.RTS
 		public EntityHudBar HealthBar { get; private set; }
 		#endregion
 
+		private HistoryBuilding _historyBuilding;
+
 		public BuildingEntity() : base()
 		{
 			Tags.Add( "building", "selectable" );
@@ -57,11 +62,34 @@ namespace Facepunch.RTS
 
 		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
 
+		public void MakeVisible( bool isVisible, bool wasVisible )
+		{
+			if ( HasBeenSeen && !isVisible && !wasVisible )
+			{
+				if ( !_historyBuilding.IsValid() )
+				{
+					_historyBuilding = new HistoryBuilding();
+					_historyBuilding.Copy( this );
+				}
+
+				TargetAlpha = 0f;
+			}
+			else
+			{
+				if ( isVisible && _historyBuilding.IsValid() )
+				{
+					_historyBuilding.Delete();
+					_historyBuilding = null;
+				}
+
+				TargetAlpha = isVisible ? 1f : 0f;
+			}
+		}
+
 		public void UpdateConstruction()
 		{
 			Host.AssertServer();
 
-			RenderAlpha = 0.25f + (0.75f / Item.MaxHealth) * Health;
 			GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
 
 			if ( Item.ConstructionSounds.Length > 0 && NextConstructionSound )
@@ -205,7 +233,6 @@ namespace Facepunch.RTS
 
 			IsUnderConstruction = false;
 			RenderAlpha = 1f;
-			GlowActive = false;
 			Health = Item.MaxHealth;
 
 			AddAsFogViewer( To.Single( Player ) );
@@ -231,8 +258,6 @@ namespace Facepunch.RTS
 			UpdateCollisions();
 
 			IsUnderConstruction = true;
-			RenderAlpha = 0.25f;
-			GlowActive = true;
 			GlowColor = Color.Red;
 			Health = 1f;
 		}
@@ -252,6 +277,15 @@ namespace Facepunch.RTS
 			var entity = Items.Create( Player, unit );
 			PlaceNear( entity );
 			return entity;
+		}
+
+		public override void ClientSpawn()
+		{
+			RenderAlpha = 0f;
+
+			Fog.AddCullable( this );
+
+			base.ClientSpawn();
 		}
 
 		public override int GetAttackPriority()
@@ -357,6 +391,35 @@ namespace Facepunch.RTS
 		protected virtual void OnEvicted( UnitEntity unit )
 		{
 
+		}
+
+		protected override void ClientTick()
+		{
+			base.ClientTick();
+
+			var targetAlpha = TargetAlpha;
+
+			if ( IsUnderConstruction )
+			{
+				targetAlpha = MathF.Min( 0.25f + (0.75f / Item.MaxHealth) * Health, targetAlpha );
+			}
+
+			if ( IsLocalPlayers )
+			{
+				var isOnScreen = IsOnScreen();
+				RenderAlpha = isOnScreen ? targetAlpha : 0f;
+				return;
+			}
+
+			RenderAlpha = RenderAlpha.LerpTo( targetAlpha, Time.Delta * 2f );
+
+			if ( Hud.Style.Opacity != RenderAlpha )
+			{
+				Hud.Style.Opacity = RenderAlpha;
+				Hud.Style.Dirty();
+			}
+
+			Hud.SetActive( RenderAlpha > 0f );
 		}
 
 		protected override void CreateAbilities()
@@ -530,6 +593,20 @@ namespace Facepunch.RTS
 			base.OnItemChanged( item, oldItem );
 		}
 
+		protected override void AddHudComponents()
+		{
+			// We only want a generator bar is it's our building.
+			if ( IsLocalPlayers && Item.Generator != null )
+				GeneratorBar = Hud.AddChild<EntityHudBar>( "generator" );
+
+			if ( IsLocalPlayers )
+				OccupantsHud = Hud.AddChild<EntityHudIconList>();
+
+			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
+
+			base.AddHudComponents();
+		}
+
 		protected override void OnDestroy()
 		{
 			if ( IsServer )
@@ -555,6 +632,7 @@ namespace Facepunch.RTS
 				particles.SetPosition( 0, Position );
 				particles.SetPosition( 1, new Vector3( GetDiameterXY( 1f, false ) * 0.5f, 0f, 0f ) );
 
+				Fog.RemoveCullable( this );
 				Fog.RemoveViewer( this );
 			}
 
@@ -620,18 +698,12 @@ namespace Facepunch.RTS
 			Fog.AddViewer( this );
 		}
 
-		protected override void AddHudComponents()
+		private void OnIsUnderConstructionChanged()
 		{
-			// We only want a generator bar is it's our building.
-			if ( IsLocalPlayers && Item.Generator != null )
-				GeneratorBar = Hud.AddChild<EntityHudBar>( "generator" );
-
 			if ( IsLocalPlayers )
-				OccupantsHud = Hud.AddChild<EntityHudIconList>();
-
-			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
-
-			base.AddHudComponents();
+			{
+				GlowActive = IsUnderConstruction;
+			}
 		}
 	}
 }

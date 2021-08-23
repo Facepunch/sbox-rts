@@ -380,7 +380,7 @@ namespace Facepunch.RTS
 				if ( cullable.Object.Position.Distance( position ) <= renderRange )
 				{
 					cullable.Object.HasBeenSeen = true;
-					cullable.Object.MakeVisible( true );
+					cullable.Object.MakeVisible( true, cullable.IsVisible );
 					cullable.IsVisible = true;
 				}
 			}
@@ -438,8 +438,8 @@ namespace Facepunch.RTS
 				for ( var i = _cullables.Count - 1; i >= 0; i-- )
 				{
 					cullable = _cullables[i];
+					cullable.Object.MakeVisible( false, cullable.IsVisible );
 					cullable.IsVisible = false;
-					cullable.Object.MakeVisible( false );
 				}
 
 				_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();

@@ -31,7 +31,7 @@ namespace Facepunch.RTS
 
 		private RealTimeUntil _nextGatherSound;
 
-		public void MakeVisible( bool isVisible )
+		public void MakeVisible( bool isVisible, bool wasVisible )
 		{
 			if ( isVisible )
 			{
