@@ -485,8 +485,6 @@ namespace Facepunch.RTS
 
 			RenderAlpha = RenderAlpha.LerpTo( targetAlpha, Time.Delta * 2f );
 
-			Log.Info( RenderAlpha + " / " + TargetAlpha );
-
 			if ( Hud.Style.Opacity != RenderAlpha )
 			{
 				Hud.Style.Opacity = RenderAlpha;
