@@ -1,9 +1,11 @@
-﻿namespace Gamelib.FlowFields
+﻿using System.Collections.Generic;
+
+namespace Gamelib.FlowFields
 {
 	public interface IMoveCommand
 	{
-		public Vector3 Position { get; set; }
+		public List<Vector3> Positions { get; set; }
 		public bool IsFinished( MoveGroup moveGroup, IMoveAgent agent );
-		public void Execute( MoveGroup moveGroup );
+		public void Execute( MoveGroup moveGroup, IMoveAgent agent );
 	}
 }

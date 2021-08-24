@@ -1,32 +1,28 @@
 ﻿using Gamelib.FlowFields;
 using Sandbox;
+using System.Collections.Generic;
 
 namespace Facepunch.RTS.Commands
 {
     public struct GatherCommand : IMoveCommand
 	{
 		public ResourceEntity Target { get; set; }
-		public Vector3 Position { get; set; }
+		public List<Vector3> Positions { get; set; }
 
-		public void Execute( MoveGroup moveGroup )
+		public void Execute( MoveGroup moveGroup, IMoveAgent agent )
 		{
 			if ( !Target.IsValid() ) return;
 
-			for ( int i = 0; i < moveGroup.Agents.Count; i++ )
-			{
-				var agent = moveGroup.Agents[i];
+			if ( agent is not UnitEntity unit )
+				return;
 
-				if ( agent is not UnitEntity unit )
-					continue;
+			if ( unit.IsUsingAbility() )
+				return;
 
-				if ( unit.IsUsingAbility() )
-					continue;
+			if ( !unit.CanGather( Target.Resource ) )
+				return;
 
-				if ( !unit.CanGather( Target.Resource ) )
-					continue;
-
-				unit.Gather( Target, moveGroup );
-			}
+			unit.SetGatherTarget( Target );
 		}
 
 		public bool IsFinished( MoveGroup moveGroup, IMoveAgent agent )

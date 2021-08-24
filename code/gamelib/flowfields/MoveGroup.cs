@@ -12,9 +12,9 @@ namespace Gamelib.FlowFields
 	{
 		private struct SimpleMoveCommand : IMoveCommand
 		{
-			public Vector3 Position { get; set; }
+			public List<Vector3> Positions { get; set; }
 
-			public void Execute( MoveGroup moveGroup ) { }
+			public void Execute( MoveGroup moveGroup, IMoveAgent agent ) { }
 
 			public bool IsFinished( MoveGroup moveGroup, IMoveAgent agent )
 			{
@@ -26,9 +26,8 @@ namespace Gamelib.FlowFields
 		public List<IMoveAgent> Agents { get; private set; }
 		public PathRequest PathRequest { get; private set; }
 		public Pathfinder Pathfinder { get; private set; }
-		public Queue<IMoveCommand> Queue { get; set; }
-
-		private IMoveCommand Command { get; set; }
+		public Queue<IMoveCommand> Queue { get; private set; }
+		public IMoveCommand Command { get; private set; }
 
 		public MoveGroup()
 		{
@@ -42,6 +41,7 @@ namespace Gamelib.FlowFields
 			Agents = new List<IMoveAgent>() { agent };
 			Queue.Enqueue( command );
 			NextCommand();
+			Command.Execute( this, agent );
 		}
 
 		public void Initialize( List<IMoveAgent> agents, IMoveCommand command )
@@ -50,6 +50,28 @@ namespace Gamelib.FlowFields
 			Agents = agents;
 			Queue.Enqueue( command );
 			NextCommand();
+
+			for ( int i = 0; i < Agents.Count; i++ )
+			{
+				var agent = Agents[i];
+				Command.Execute( this, agent );
+			}
+		}
+
+		public void AddAgent( IMoveAgent agent )
+		{
+			if ( IsValid() && Command != null && !Agents.Contains( agent ) )
+			{
+				Command.Execute( this, agent );
+			}
+		}
+
+		public void Resume( IMoveAgent agent )
+		{
+			if ( IsValid() && Command != null && Agents.Contains( agent ) )
+			{
+				Command.Execute( this, agent );
+			}
 		}
 
 		public void Enqueue( MoveGroup other )
@@ -67,17 +89,25 @@ namespace Gamelib.FlowFields
 			Queue.Enqueue( command );
 		}
 
+		public void Enqueue( List<Vector3> destinations )
+		{
+			Queue.Enqueue( new SimpleMoveCommand
+			{
+				Positions = destinations
+			} ); ;
+		}
+
 		public void Enqueue( Vector3 destination )
 		{
 			Queue.Enqueue( new SimpleMoveCommand
 			{
-				Position = destination
-			} );
+				Positions = new List<Vector3> { destination }
+			} ); ;
 		}
 
-		public bool Finish( IMoveAgent agent )
+		public bool TryFinish( IMoveAgent agent )
 		{
-			if ( !IsValid() || ReachedGoal.Contains( agent) )
+			if ( !IsValid() || ReachedGoal.Contains( agent ) )
 				return true;
 
 			if ( !Command.IsFinished( this, agent ) )
@@ -85,28 +115,20 @@ namespace Gamelib.FlowFields
 
 			ReachedGoal.Add( agent );
 
-			if ( ReachedGoal.Count == Agents.Count )
+			if ( ReachedGoal.Count < Agents.Count )
+				return true;
+
+			NextCommand();
+
+			for ( int i = 0; i < Agents.Count; i++ )
 			{
-				NextCommand();
+				agent = Agents[i];
+
+				if ( agent.MoveGroup == this )
+					Command.Execute( this, agent );
 			}
 
 			return true;
-		}
-
-		public void NextCommand()
-		{
-			if ( Queue.Count == 0 || Agents.Count == 0 )
-			{
-				Dispose();
-				return;
-			}
-
-			Command = Queue.Dequeue();
-
-			PathRequest = Pathfinder.Request( Command.Position );
-			ReachedGoal.Clear();
-
-			Command.Execute( this );
 		}
 
 		public void Remove( IMoveAgent agent )
@@ -179,15 +201,25 @@ namespace Gamelib.FlowFields
 				for ( int i = 0; i < Agents.Count; i++ )
 				{
 					var agent = Agents[i];
-
-					if ( agent.MoveGroup == this )
-					{
-						agent.OnMoveGroupDisposed();
-					}
+					agent.OnMoveGroupDisposed( this );
 				}
 
 				Agents.Clear();
 			}
+		}
+
+		private void NextCommand()
+		{
+			if ( Queue.Count == 0 || Agents.Count == 0 )
+			{
+				Dispose();
+				return;
+			}
+
+			Command = Queue.Dequeue();
+
+			PathRequest = Pathfinder.Request( Command.Positions );
+			ReachedGoal.Clear();
 		}
 
 		private Pathfinder GetPathfinder( List<IMoveAgent> agents )

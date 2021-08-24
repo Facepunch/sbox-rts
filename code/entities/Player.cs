@@ -349,7 +349,7 @@ namespace Facepunch.RTS
 				worker.Position = trace.EndPos;
 				*/
 
-				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.assault" );
+				var worker = Items.Create<UnitEntity>( bot, "unit.pyromaniac" );
 				worker.Position = trace.EndPos;
 
 				/*

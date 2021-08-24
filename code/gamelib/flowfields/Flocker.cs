@@ -8,11 +8,11 @@ namespace Gamelib.FlowFields
 		public Vector3 Position;
 		public Vector3 Force;
 		public IMoveAgent Agent;
-		public HashSet<IMoveAgent> Agents;
+		public List<IMoveAgent> Agents;
 		public float MaxForce;
 		public float MaxSpeed;
 
-		public void Setup( IMoveAgent agent, HashSet<IMoveAgent> agents, Vector3 position )
+		public void Setup( IMoveAgent agent, List<IMoveAgent> agents, Vector3 position )
 		{
 			Position = position;
 			Force = Vector3.Zero;

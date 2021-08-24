@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamelib.FlowFields;
 using Facepunch.RTS.Commands;
+using Gamelib.FlowFields.Extensions;
 
 namespace Facepunch.RTS
 {
@@ -121,9 +122,9 @@ namespace Facepunch.RTS
 						building.Position = trace.EndPos;
 						building.Item.PlayPlaceSound( caller );
 
-						var command = new ConstructCommand()
+						var command = new ConstructCommand
 						{
-							Position = Rand.FromList( worker.GetDestinations( building ) ),
+							Positions = worker.GetDestinations( building ),
 							Target = building
 						};
 
@@ -205,16 +206,23 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
-					var command = new AttackCommand()
+					var modelEntity = (ModelEntity)damageable;
+					var pathfinder = GetLargestPathfinder( units );
+					var destinations = modelEntity.GetDestinations( pathfinder, true );
+
+					if ( destinations.Count > 0 )
 					{
-						Position = units[0].GetDestinations( (ModelEntity)damageable ),
-						Target = damageable
-					};
+						var command = new AttackCommand()
+						{
+							Positions = destinations,
+							Target = damageable
+						};
 
-					StartOrQueue( units, command, shouldQueue );
+						StartOrQueue( units, command, shouldQueue );
 
-					var randomUnit = units[Rand.Int( units.Count - 1 )];
-					randomUnit.Item.PlayAttackSound( caller );
+						var randomUnit = units[Rand.Int( units.Count - 1 )];
+						randomUnit.Item.PlayAttackSound( caller );
+					}
 				}
 			}
 		}
@@ -266,14 +274,14 @@ namespace Facepunch.RTS
 					if ( !unit.CanOccupy( target ) )
 						return false;
 
-					unit.Occupy( target );
+					unit.SetOccupyTarget( target );
 					return true;
 				} );
 			}
 		}
 
 		[ServerCmd]
-		public static void RepairOrDeposit( int id )
+		public static void RepairOrDeposit( int id, bool shouldQueue )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -286,38 +294,75 @@ namespace Facepunch.RTS
 			{
 				if ( building.Player != caller ) return;
 
-				var units = caller.ForEachSelected<UnitEntity>( unit =>
+				var depositUnits = caller.ForEachSelected<UnitEntity>( unit =>
 				{
 					if ( unit.IsUsingAbility() )
 						return false;
 
-					if ( unit.Carrying.Count == 0 )
+					if ( unit.Carrying.Count > 0 && building.CanDepositResources )
 					{
-						if ( unit.CanConstruct && !building.IsUnderConstruction && building.IsDamaged()  )
-						{
-							unit.Repair( building );
-							return true;
-						}
-
-						return false;
-					}
-					else if ( building.CanDepositResources )
-					{
-						unit.Deposit( building );
+						unit.SetDepositTarget( building );
 						return true;
 					}
 
 					return false;
 				} );
 
-				if ( units.Count > 0 )
+				var repairUnits = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					if ( unit.IsUsingAbility() )
+						return false;
 
-					if ( randomUnit.TargetType == UnitTargetType.Deposit )
-						randomUnit.Item.PlayDepositSound( caller );
-					else if ( randomUnit.TargetType == UnitTargetType.Repair )
+					if ( unit.Carrying.Count == 0 )
+					{
+						if ( unit.CanConstruct && !building.IsUnderConstruction && building.IsDamaged() )
+						{
+							unit.SetRepairTarget( building );
+							return true;
+						}
+					}
+
+					return false;
+				} );
+
+				if ( depositUnits.Count > 0 )
+				{
+					var pathfinder = GetLargestPathfinder( depositUnits );
+					var destinations = building.GetDestinations( pathfinder, true );
+
+					if ( destinations.Count > 0 )
+					{
+						var command = new DepositCommand
+						{
+							Positions = destinations,
+							Target = building
+						};
+
+						StartOrQueue( depositUnits, command, shouldQueue );
+					}
+
+					var randomUnit = depositUnits[Rand.Int( depositUnits.Count - 1 )];
+					randomUnit.Item.PlayDepositSound( caller );
+				}
+
+				if ( repairUnits.Count > 0 )
+				{
+					var pathfinder = GetLargestPathfinder( repairUnits );
+					var destinations = building.GetDestinations( pathfinder, true );
+
+					if ( destinations.Count > 0 )
+					{
+						var command = new RepairCommand
+						{
+							Positions = destinations,
+							Target = building
+						};
+
+						StartOrQueue( repairUnits, command, shouldQueue );
+
+						var randomUnit = repairUnits[Rand.Int( repairUnits.Count - 1 )];
 						randomUnit.Item.PlayConstructSound( caller );
+					}
 				}
 			}
 		}
@@ -341,32 +386,35 @@ namespace Facepunch.RTS
 						return false;
 
 					if ( unit.CanGather( resourceType ) )
-					{
-						unit.Gather( resource );
 						return true;
-					}
 
 					return false;
 				} );
 
 				if ( units.Count > 0 )
 				{
-					var command = new GatherCommand
+					var pathfinder = GetLargestPathfinder( units );
+					var destinations = resource.GetDestinations( pathfinder, true );
+
+					if ( destinations.Count > 0 )
 					{
-						Position = resource.Position,
-						Target = resource
-					};
+						var command = new GatherCommand
+						{
+							Positions = destinations,
+							Target = resource
+						};
 
-					StartOrQueue( units, command, shouldQueue );
+						StartOrQueue( units, command, shouldQueue );
 
-					var randomUnit = units[Rand.Int( units.Count - 1 )];
-					randomUnit.Item.PlayGatherSound( caller, resourceType );
+						var randomUnit = units[Rand.Int( units.Count - 1 )];
+						randomUnit.Item.PlayGatherSound( caller, resourceType );
+					}
 				}
 			}
 		}
 
 		[ServerCmd]
-		public static void Construct( int id )
+		public static void Construct( int id, bool shouldQueue )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -385,18 +433,29 @@ namespace Facepunch.RTS
 							return false;
 
 						if ( unit.CanConstruct )
-						{
-							unit.Construct( building );
 							return true;
-						}
 
 						return false;
 					} );
 
 					if ( units.Count > 0 )
 					{
-						var randomUnit = units[Rand.Int( units.Count - 1 )];
-						randomUnit.Item.PlayConstructSound( caller );
+						var pathfinder = GetLargestPathfinder( units );
+						var destinations = building.GetDestinations( pathfinder, true );
+
+						if ( destinations.Count > 0 )
+						{
+							var command = new ConstructCommand()
+							{
+								Positions = destinations,
+								Target = building
+							};
+
+							StartOrQueue( units, command, shouldQueue );
+
+							var randomUnit = units[Rand.Int( units.Count - 1 )];
+							randomUnit.Item.PlayConstructSound( caller );
+						}
 					}
 				}
 			}
@@ -429,7 +488,7 @@ namespace Facepunch.RTS
 				{
 					var command = new MoveCommand()
 					{
-						Position = position
+						Positions = new List<Vector3>() { position }
 					};
 
 					StartOrQueue( units, command, shouldQueue );
@@ -449,28 +508,38 @@ namespace Facepunch.RTS
 
 		public static void StartOrQueue( List<UnitEntity> units, IMoveCommand command, bool shouldQueue = false )
 		{
-			var moveGroups = new HashSet<MoveGroup>();
-			var agents = new List<IMoveAgent>();
+			var existingGroups = new HashSet<MoveGroup>();
+			var idleUnits = new List<UnitEntity>();
 
 			for ( int i = 0; i < units.Count; i++ )
 			{
 				var unit = units[i];
 
 				if ( shouldQueue && unit.IsMoveGroupValid() )
-					moveGroups.Add( unit.MoveGroup );
+					existingGroups.Add( unit.MoveGroup );
 				else
-					agents.Add( unit );
+					idleUnits.Add( unit );
 			}
 
-			if ( agents.Count > 0 )
+			if ( idleUnits.Count > 0 )
 			{
 				var moveGroup = new MoveGroup();
+				var agents = idleUnits.Cast<IMoveAgent>().ToList();
+
 				moveGroup.Initialize( agents, command );
+
+				for ( var i = 0; i < idleUnits.Count; i++ )
+				{
+					var unit = idleUnits[i];
+
+					unit.ClearMoveStack();
+					unit.PushMoveGroup( moveGroup );
+				}
 			}
 
 			if ( shouldQueue )
 			{
-				foreach ( var group in moveGroups )
+				foreach ( var group in existingGroups )
 				{
 					group.Enqueue( command );
 				}
@@ -600,6 +669,21 @@ namespace Facepunch.RTS
 			Ghost.SetWorkerAndBuilding( worker, building );
 
 			ClientTick();
+		}
+
+		private static Pathfinder GetLargestPathfinder( List<UnitEntity> units )
+		{
+			Pathfinder pathfinder = null;
+
+			for ( var i = 0; i < units.Count; i++ )
+			{
+				var unit = units[i];
+
+				if ( pathfinder == null || unit.Pathfinder.CollisionSize > pathfinder.CollisionSize )
+					pathfinder = unit.Pathfinder;
+			}
+
+			return pathfinder;
 		}
 
 		[Event.Tick.Client]

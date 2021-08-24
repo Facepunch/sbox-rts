@@ -7,6 +7,6 @@
 		public float AgentRadius { get; }
 		public Pathfinder Pathfinder { get; }
 		public MoveGroup MoveGroup { get; }
-		public void OnMoveGroupDisposed();
+		public void OnMoveGroupDisposed( MoveGroup group );
 	}
 }

@@ -1,36 +1,39 @@
 ﻿using Gamelib.FlowFields;
 using Sandbox;
+using System.Collections.Generic;
 
 namespace Facepunch.RTS.Commands
 {
     public struct AttackCommand : IMoveCommand
 	{
 		public IDamageable Target { get; set; }
-		public Vector3 Position { get; set; }
+		public List<Vector3> Positions { get; set; }
 
-		public void Execute( MoveGroup moveGroup )
+		public void Execute( MoveGroup moveGroup, IMoveAgent agent )
 		{
-			if ( !((Entity)Target).IsValid() ) return;
+			if ( !IsTargetValid() )
+				return;
 
-			for ( int i = 0; i < moveGroup.Agents.Count; i++ )
+			if ( agent is not UnitEntity unit )
+				return;
+
+			if ( !unit.IsUsingAbility() && unit.InVerticalRange( (Entity)Target ) )
 			{
-				var agent = moveGroup.Agents[i];
-
-				if ( agent is not UnitEntity unit ) return;
-
-				if ( !unit.IsUsingAbility() && unit.InVerticalRange( (Entity)Target ) )
-				{
-					unit.Attack( Target, true, moveGroup );
-				}
+				unit.SetAttackTarget( Target, true );
 			}
 		}
 
 		public bool IsFinished( MoveGroup moveGroup, IMoveAgent agent )
 		{
-			if ( !((Entity)Target).IsValid() )
+			if ( !IsTargetValid() )
 				return true;
 
 			return false;
+		}
+
+		private bool IsTargetValid()
+		{
+			return ((Entity)Target).IsValid();
 		}
 	}
 }

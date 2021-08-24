@@ -25,7 +25,6 @@ namespace Facepunch.RTS
 
 		[Property, Net] public int Stock { get; set; }
 
-		public HashSet<IMoveAgent> Gatherers { get; private set; } = new();
 		public bool IsLocalPlayers => false;
 		public bool HasBeenSeen { get; set; }
 
@@ -40,16 +39,6 @@ namespace Facepunch.RTS
 		}
 
 		public void MakeVisible( bool isVisible ) { }
-
-		public void RemoveGatherer( IMoveAgent gatherer )
-		{
-			Gatherers.Remove( gatherer );
-		}
-
-		public void AddGatherer( IMoveAgent gatherer )
-		{
-			Gatherers.Add( gatherer );
-		}
 
 		public void PlayGatherSound()
 		{

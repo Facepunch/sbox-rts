@@ -93,10 +93,14 @@ namespace Gamelib.FlowFields
 		}
 
 		private static Dictionary<int, Pathfinder> _pathfinders = new();
+		private static Pathfinder _smallest;
+		private static Pathfinder _largest;
 		private static Pathfinder _default;
 		private static BBox? _bounds;
 
 		public static List<Pathfinder> All { get; private set; } = new();
+		public static Pathfinder Smallest => _smallest;
+		public static Pathfinder Largest => _largest;
 		public static Pathfinder Default => _default;
 		public static BBox? Bounds => _bounds;
 
@@ -141,7 +145,14 @@ namespace Gamelib.FlowFields
 			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
 
 			pathfinder.Initialize();
+
 			_pathfinders[hash] = pathfinder;
+
+			if ( _largest == null || collisionSize > _largest.CollisionSize )
+				_largest = pathfinder;
+
+			if ( _smallest == null || collisionSize < _smallest.CollisionSize )
+				_smallest = pathfinder;
 
 			if ( _default == null )
 				_default = pathfinder;

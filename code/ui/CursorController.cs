@@ -188,7 +188,7 @@ namespace Facepunch.RTS
 					{
 						if ( blueprint.IsUnderConstruction )
 						{
-							Items.Construct( trace.Entity.NetworkIdent );
+							Items.Construct( trace.Entity.NetworkIdent, isHoldingShift );
 							return;
 						}
 					}
@@ -223,12 +223,12 @@ namespace Facepunch.RTS
 						{
 							if ( building.IsUnderConstruction )
 							{
-								Items.Construct( targetNetworkId );
+								Items.Construct( targetNetworkId, isHoldingShift );
 								return;
 							}
 							else
 							{
-								Items.RepairOrDeposit( targetNetworkId );
+								Items.RepairOrDeposit( targetNetworkId, isHoldingShift );
 								return;
 							}
 						}

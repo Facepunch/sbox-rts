@@ -1,22 +1,18 @@
 ﻿using Gamelib.FlowFields;
+using System.Collections.Generic;
 
 namespace Facepunch.RTS.Commands
 {
     public struct MoveCommand : IMoveCommand
 	{
-		public Vector3 Position { get; set; }
+		public List<Vector3> Positions { get; set; }
 
-		public void Execute( MoveGroup moveGroup )
+		public void Execute( MoveGroup moveGroup, IMoveAgent agent )
 		{
-			for ( int i = 0; i < moveGroup.Agents.Count; i++ )
-			{
-				var agent = moveGroup.Agents[i];
+			if ( agent is not UnitEntity unit )
+				return;
 
-				if ( agent is not UnitEntity unit )
-					return;
-
-				unit.MoveTo( moveGroup );
-			}
+			unit.SetMoveTarget( moveGroup );
 		}
 
 		public bool IsFinished( MoveGroup moveGroup, IMoveAgent agent )
