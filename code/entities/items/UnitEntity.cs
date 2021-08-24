@@ -1318,7 +1318,7 @@ namespace Facepunch.RTS
 
 		private void FindResourceDepo()
 		{
-			var buildings = Player.GetBuildings().Where( i => i.Item.CanDepositResources );
+			var buildings = Player.GetBuildings().Where( i => i.CanDepositResources );
 			var closestDepo = (BuildingEntity)null;
 			var closestDistance = 0f;
 
