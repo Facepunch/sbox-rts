@@ -10,96 +10,103 @@ namespace Gamelib.FlowFields
 {
 	public class MoveGroup : IDisposable
 	{
+		private struct SimpleMoveCommand : IMoveCommand
+		{
+			public Vector3 Position { get; set; }
+
+			public void Execute( MoveGroup moveGroup ) { }
+
+			public bool IsFinished( MoveGroup moveGroup, IMoveAgent agent )
+			{
+				return moveGroup.IsDestination( agent, agent.Position );
+			}
+		}
+
 		public HashSet<IMoveAgent> ReachedGoal { get; private set; }
 		public List<IMoveAgent> Agents { get; private set; }
 		public PathRequest PathRequest { get; private set; }
 		public Pathfinder Pathfinder { get; private set; }
-		private Queue<Vector3> Queue { get; set; }
+		public Queue<IMoveCommand> Queue { get; set; }
 
-		public MoveGroup( bool autoSortAgents = false )
+		private IMoveCommand Command { get; set; }
+
+		public MoveGroup()
 		{
-			if ( autoSortAgents )
-			{
-				Event.Register( this );
-			}
-
 			ReachedGoal = new();
+			Queue = new();
 		}
 
-		public void Initialize( List<IMoveAgent> agents, Vector3 destination, bool addNearbyNodes = false )
-		{
-			if ( addNearbyNodes && agents.Count > 1 )
-			{
-				Pathfinder = GetPathfinder( agents );
-
-				var targetRadius = Pathfinder.NodeSize * agents.Count * 0.5f;
-				var destinations = new List<Vector3>();
-
-				Pathfinder.GetGridPositions( destination, targetRadius, destinations );
-
-				Initialize( agents, destinations );
-			}
-			else
-			{
-				Pathfinder = GetPathfinder( agents );
-				PathRequest = Pathfinder.Request( destination );
-				Agents = agents;
-			}
-		}
-
-		public void Initialize( IMoveAgent agent, Vector3 destination )
+		public void Initialize( IMoveAgent agent, IMoveCommand command )
 		{
 			Pathfinder = GetPathfinder( agent );
-			PathRequest = Pathfinder.Request( destination );
 			Agents = new List<IMoveAgent>() { agent };
+			Queue.Enqueue( command );
+			NextCommand();
 		}
 
-		public void Initialize( List<IMoveAgent> agents, List<Vector3> destinations )
+		public void Initialize( List<IMoveAgent> agents, IMoveCommand command )
 		{
-			if ( destinations.Count > 0 )
+			Pathfinder = GetPathfinder( agents );
+			Agents = agents;
+			Queue.Enqueue( command );
+			NextCommand();
+		}
+
+		public void Enqueue( MoveGroup other )
+		{
+			if ( other == null ) return;
+
+			foreach ( var command in other.Queue )
 			{
-				Pathfinder = GetPathfinder( agents );
-				PathRequest = Pathfinder.Request( destinations );
-				Agents = agents;
+				Enqueue( command );
 			}
 		}
 
-		public void Initialize( IMoveAgent agent, List<Vector3> destinations )
+		public void Enqueue( IMoveCommand command )
 		{
-			if ( destinations.Count > 0 )
-			{
-				Pathfinder = GetPathfinder( agent );
-				PathRequest = Pathfinder.Request( destinations );
-				Agents = new List<IMoveAgent>() { agent };
-			}
+			Queue.Enqueue( command );
 		}
 
 		public void Enqueue( Vector3 destination )
 		{
-			Queue ??= new();
-			Queue.Enqueue( destination );
+			Queue.Enqueue( new SimpleMoveCommand
+			{
+				Position = destination
+			} );
 		}
 
-		public void Finish( IMoveAgent agent )
+		public bool Finish( IMoveAgent agent )
 		{
 			if ( !IsValid() || ReachedGoal.Contains( agent) )
-				return;
+				return true;
+
+			if ( !Command.IsFinished( this, agent ) )
+				return false;
 
 			ReachedGoal.Add( agent );
 
 			if ( ReachedGoal.Count == Agents.Count )
 			{
-				if ( Queue == null || Queue.Count == 0 )
-				{
-					Dispose();
-					return;
-				}
-
-				var next = Queue.Dequeue();
-
-				PathRequest = Pathfinder.Request( next );
-				ReachedGoal.Clear();
+				NextCommand();
 			}
+
+			return true;
+		}
+
+		public void NextCommand()
+		{
+			if ( Queue.Count == 0 || Agents.Count == 0 )
+			{
+				Dispose();
+				return;
+			}
+
+			Command = Queue.Dequeue();
+
+			PathRequest = Pathfinder.Request( Command.Position );
+			ReachedGoal.Clear();
+
+			Command.Execute( this );
 		}
 
 		public void Remove( IMoveAgent agent )
@@ -117,14 +124,15 @@ namespace Gamelib.FlowFields
 
 		public Vector3 GetDestination()
 		{
-			if ( !IsValid() ) return Vector3.Zero;
+			if ( !IsValid() || PathRequest == null )
+				return Vector3.Zero;
 
 			return PathRequest.GetDestination();
 		}
 
 		public Vector3 GetDirection( Vector3 position )
 		{
-			if ( IsValid() )
+			if ( IsValid() && PathRequest != null )
 				return PathRequest.GetDirection( position );
 
 			return Vector3.Zero;
@@ -135,7 +143,7 @@ namespace Gamelib.FlowFields
 			if ( !IsValid() || ReachedGoal.Contains( agent ) )
 				return true;
 
-			if ( checkPathRequest && PathRequest.IsDestination( position ) )
+			if ( checkPathRequest && ( PathRequest == null || PathRequest.IsDestination( position ) ) )
 				return true;
 
 			var groundPosition = agent.Position.WithZ( 0f );
@@ -158,7 +166,7 @@ namespace Gamelib.FlowFields
 
 		public bool IsValid()
 		{
-			return (PathRequest != null && Agents != null);
+			return Agents.Count > 0;
 		}
 
 		public void Dispose()
@@ -178,43 +186,8 @@ namespace Gamelib.FlowFields
 					}
 				}
 
-				Agents = null;
+				Agents.Clear();
 			}
-
-			Event.Unregister( this );
-		}
-
-		public void ScaleSpeed( IMoveAgent agent, ref float speed )
-		{
-			var index = Agents.IndexOf( agent );
-
-			for ( var i = index + 1; i < Agents.Count; i++ )
-			{
-				var other = Agents[i];
-				var distance = other.Position.Distance( agent.Position );
-
-				if ( distance <= agent.AgentRadius )
-				{
-					speed *= 0.6f;
-				}
-			}
-		}
-
-		[Event.Tick.Server]
-		private void SortByDistance()
-		{
-			if ( !IsValid() )
-			{
-				Event.Unregister( this );
-				return;
-			}
-
-			var destination = PathRequest.GetDestination();
-
-			Agents.Sort( ( a, b ) =>
-			{
-				return b.Position.Distance( destination ).CompareTo( a.Position.Distance( destination ) );
-			} );
 		}
 
 		private Pathfinder GetPathfinder( List<IMoveAgent> agents )

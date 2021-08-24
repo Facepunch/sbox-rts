@@ -1,4 +1,5 @@
 ﻿using Facepunch.RTS;
+using Facepunch.RTS.Commands;
 using Facepunch.RTS.Units;
 using Facepunch.RTS.Upgrades;
 using Gamelib.Extensions;
@@ -124,6 +125,23 @@ namespace Facepunch.RTS
 				Kills += 1;
 				UpdateRank( Ranks.Find( Kills ) );
 			}
+		}
+
+		public bool IsAtDestination()
+		{
+			if ( !IsMoveGroupValid() )
+				return true;
+
+			if ( Item.UsePathfinder )
+				return MoveGroup.IsDestination( this, Position );
+
+			var groundPosition = Position.WithZ( 0f );
+			var destination = MoveGroup.GetDestination();
+
+			if ( groundPosition.Distance( destination ) <= AgentRadius * 0.5f )
+				return true;
+
+			return MoveGroup.IsDestination( this, Position, false );
 		}
 
 		public Entity GetTargetEntity() => _target.Entity;
@@ -566,17 +584,17 @@ namespace Facepunch.RTS
 				return null;
 		}
 
-		public void Attack( IDamageable target, bool autoFollow = true, MoveGroup moveGroup = null )
+		public void Attack( IDamageable target, bool autoFollow = true, MoveGroup group = null )
 		{
-			Attack( (ModelEntity)target, autoFollow, moveGroup );
+			Attack( (ModelEntity)target, autoFollow, group );
 		}
 
-		public void Attack( ISelectable target, bool autoFollow = true, MoveGroup moveGroup = null )
+		public void Attack( ISelectable target, bool autoFollow = true, MoveGroup group = null )
 		{
-			Attack( (ModelEntity)target, autoFollow, moveGroup );
+			Attack( (ModelEntity)target, autoFollow, group );
 		}
 
-		public void Attack( ModelEntity target, bool autoFollow = true, MoveGroup moveGroup = null )
+		public void Attack( ModelEntity target, bool autoFollow = true, MoveGroup group = null )
 		{
 			ResetTarget();
 
@@ -585,7 +603,7 @@ namespace Facepunch.RTS
 			_target.Radius = Item.AttackRadius;
 			_target.Type = UnitTargetType.Attack;
 
-			SetMoveGroup( moveGroup );
+			SetMoveGroup( group );
 			OnTargetChanged();
 		}
 
@@ -609,17 +627,30 @@ namespace Facepunch.RTS
 			OnTargetChanged();
 		}
 
-		public MoveGroup CreateMoveGroup( Vector3 destination )
+		public MoveGroup CreateMoveGroup( Vector3 destination, IMoveCommand command = null, MoveGroup enqueue = null )
 		{
 			var moveGroup = new MoveGroup();
-			moveGroup.Initialize( this, destination );
+
+			command ??= new MoveCommand();
+			command.Position = destination;
+
+			moveGroup.Initialize( this, command );
+			moveGroup.Enqueue( enqueue );
+
 			return moveGroup;
 		}
 
-		public MoveGroup CreateMoveGroup( List<Vector3> destinations )
+		public MoveGroup CreateMoveGroup( List<Vector3> destinations, IMoveCommand command = null, MoveGroup enqueue = null )
 		{
 			var moveGroup = new MoveGroup();
-			moveGroup.Initialize( this, destinations );
+			var destination = destinations.Count > 0 ? destinations[0] : Position;
+
+			command ??= new MoveCommand();
+			command.Position = destination;
+
+			moveGroup.Initialize( this, command );
+			moveGroup.Enqueue( enqueue );
+
 			return moveGroup;
 		}
 
@@ -633,7 +664,7 @@ namespace Facepunch.RTS
 			return whitelist.Contains( Item.UniqueId );
 		}
 
-		public bool Occupy( IOccupiableEntity occupiable, MoveGroup moveGroup = null )
+		public bool Occupy( IOccupiableEntity occupiable, MoveGroup group = null )
 		{
 			var modelEntity = (occupiable as ModelEntity);
 
@@ -643,9 +674,9 @@ namespace Facepunch.RTS
 				return false;
 			}
 
-			moveGroup ??= CreateMoveGroup( GetDestinations( modelEntity ) );
+			group ??= CreateMoveGroup( GetDestinations( modelEntity ) );
 
-			if ( !moveGroup.IsValid() )
+			if ( !group.IsValid() )
 			{
 				ClearTarget();
 				return false;
@@ -657,17 +688,17 @@ namespace Facepunch.RTS
 			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Occupy;
 
-			SetMoveGroup( moveGroup );
+			SetMoveGroup( group );
 			OnTargetChanged();
 
 			return true;
 		}
 
-		public bool Deposit( BuildingEntity building, MoveGroup moveGroup = null )
+		public bool Deposit( BuildingEntity building, MoveGroup group = null )
 		{
-			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
+			group ??= CreateMoveGroup( GetDestinations( building ) );
 
-			if ( !moveGroup.IsValid() )
+			if ( !group.IsValid() )
 			{
 				ClearTarget();
 				return false;
@@ -679,18 +710,18 @@ namespace Facepunch.RTS
 			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Deposit;
 
-			SetMoveGroup( moveGroup );
+			SetMoveGroup( group );
 
 			OnTargetChanged();
 
 			return true;
 		}
 
-		public bool Gather( ResourceEntity resource, MoveGroup moveGroup = null )
+		public bool Gather( ResourceEntity resource, MoveGroup group = null )
 		{
-			moveGroup ??= CreateMoveGroup( GetDestinations( resource ) );
+			group ??= CreateMoveGroup( GetDestinations( resource ) );
 
-			if ( !moveGroup.IsValid() )
+			if ( !group.IsValid() )
 			{
 				ClearTarget();
 				return false;
@@ -707,17 +738,17 @@ namespace Facepunch.RTS
 			_gather.Entity.AddGatherer( this );
 			_gather.Position = resource.Position;
 
-			SetMoveGroup( moveGroup );
+			SetMoveGroup( group );
 			OnTargetChanged();
 
 			return true;
 		}
 
-		public bool Repair( BuildingEntity building, MoveGroup moveGroup = null )
+		public bool Repair( BuildingEntity building, MoveGroup group = null )
 		{
-			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
+			group ??= CreateMoveGroup( GetDestinations( building ) );
 
-			if ( !moveGroup.IsValid() )
+			if ( !group.IsValid() )
 			{
 				ClearTarget();
 				return false;
@@ -729,17 +760,17 @@ namespace Facepunch.RTS
 			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Repair;
 
-			SetMoveGroup( moveGroup );
+			SetMoveGroup( group );
 			OnTargetChanged();
 
 			return true;
 		}
 
-		public bool Construct( BuildingEntity building, MoveGroup moveGroup = null )
+		public bool Construct( BuildingEntity building, MoveGroup group = null )
 		{
-			moveGroup ??= CreateMoveGroup( GetDestinations( building ) );
+			group ??= CreateMoveGroup( GetDestinations( building ) );
 
-			if ( !moveGroup.IsValid() )
+			if ( !group.IsValid() )
 			{
 				ClearTarget();
 				return false;
@@ -751,7 +782,7 @@ namespace Facepunch.RTS
 			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Construct;
 
-			SetMoveGroup( moveGroup );
+			SetMoveGroup( group );
 			OnTargetChanged();
 
 			return true;
@@ -759,6 +790,12 @@ namespace Facepunch.RTS
 
 		public void ClearTarget()
 		{
+			// Check if we've finished our move group command.
+			if ( IsMoveGroupValid() )
+			{
+				MoveGroup.Finish( this );
+			}
+
 			_target.Entity = null;
 			_target.Position = null;
 			_target.Follow = false;
@@ -766,7 +803,6 @@ namespace Facepunch.RTS
 
 			IsGathering = false;
 
-			ClearMoveGroup();
 			OnTargetChanged();
 		}
 
@@ -995,7 +1031,7 @@ namespace Facepunch.RTS
 
 			_idleLoopSound.Stop();
 
-			ClearMoveGroup();
+			SetMoveGroup( null );
 		}
 
 		protected override void ServerTick()
@@ -1030,7 +1066,6 @@ namespace Facepunch.RTS
 
 					if ( isTargetValid && isTargetInRange )
 					{
-						ClearMoveGroup();
 						TickInteractWithTarget();
 					}
 					else
@@ -1265,6 +1300,13 @@ namespace Facepunch.RTS
 
 		private void SetMoveGroup( MoveGroup group )
 		{
+			if ( MoveGroup == group ) return;
+
+			if ( IsMoveGroupValid() )
+			{
+				MoveGroup.Remove( this );
+			}
+
 			MoveGroup = group;
 		}
 
@@ -1279,26 +1321,28 @@ namespace Facepunch.RTS
 			_target.Type = UnitTargetType.None;
 
 			IsGathering = false;
-
-			ClearMoveGroup();
-		}
-
-		private void ClearMoveGroup()
-		{
-			if ( MoveGroup != null && MoveGroup.IsValid() )
-			{
-				MoveGroup.Remove( this );
-			}
-
-			SetMoveGroup( null );
 		}
 
 		private void FindTargetResource()
 		{
+			GatherCommand command;
+
 			// If our last resource entity is valid just use that.
 			if ( _gather.Entity.IsValid() )
 			{
-				Gather( _gather.Entity );
+				command = new GatherCommand
+				{
+					Target = _gather.Entity
+				};
+
+				CreateMoveGroup( GetDestinations( _gather.Entity ), command, MoveGroup );
+				return;
+			}
+
+			// Check if we have other orders in our move queue.
+			if ( IsMoveGroupValid() && MoveGroup.Queue.Count > 0 )
+			{
+				ClearTarget();
 				return;
 			}
 
@@ -1308,7 +1352,12 @@ namespace Facepunch.RTS
 			{
 				if ( entity is ResourceEntity resource && resource.Resource == _gather.Type )
 				{
-					Gather( resource );
+					command = new GatherCommand
+					{
+						Target = resource
+					};
+
+					CreateMoveGroup( GetDestinations( resource ), command, MoveGroup );
 					return;
 				}
 			}
@@ -1334,9 +1383,18 @@ namespace Facepunch.RTS
 			}
 
 			if ( closestDepo.IsValid() )
-				Deposit( closestDepo );
-			else
-				ClearTarget();
+			{
+				var command = new DepositCommand
+				{
+					Target = closestDepo
+				};
+
+				CreateMoveGroup( GetDestinations( closestDepo ), command, MoveGroup );
+
+				return;
+			}
+			
+			ClearTarget();
 		}
 
 		private void FindTargetEnemy()
@@ -1517,7 +1575,7 @@ namespace Facepunch.RTS
 			if ( !position.HasValue )
 				return true;
 
-			SetMoveGroup( CreateMoveGroup( position.Value ) );
+			CreateMoveGroup( position.Value, null, MoveGroup );
 
 			return false;
 		}
@@ -1530,23 +1588,6 @@ namespace Facepunch.RTS
 				return;
 
 			LookAtPosition( ability.TargetInfo.Origin, Time.Delta * Item.RotateToTargetSpeed );
-		}
-
-		private bool IsAtDestination()
-		{
-			if ( !IsMoveGroupValid() )
-				return true;
-
-			if ( Item.UsePathfinder )
-				return MoveGroup.IsDestination( this, Position );
-
-			var groundPosition = Position.WithZ( 0f );
-			var destination = MoveGroup.GetDestination();
-
-			if ( groundPosition.Distance( destination ) <= AgentRadius * 0.5f )
-				return true;
-
-			return MoveGroup.IsDestination( this, Position, false );
 		}
 
 		private void TickMoveToTarget( bool isTargetValid, UnitAnimator animator )
@@ -1565,11 +1606,7 @@ namespace Facepunch.RTS
 				var node = Pathfinder.CreateWorldPosition( Position );
 				Pathfinder.DrawBox( node, Color.Green );
 
-				if ( IsAtDestination() )
-				{
-					MoveGroup.Finish( this );
-				}
-				else
+				if ( !MoveGroup.Finish( this ) )
 				{
 					Vector3 direction;
 

@@ -174,6 +174,8 @@ namespace Facepunch.RTS
 
 			if ( builder.Released( InputButton.Attack2 ) )
 			{
+				var isHoldingShift = Input.Down( InputButton.Run );
+
 				if ( player.Selection.Count > 0 )
 				{
 					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction )
@@ -203,7 +205,7 @@ namespace Facepunch.RTS
 						if ( !selectable.IsLocalPlayers )
 						{
 							if ( !selectable.IsLocalTeamGroup )
-								Items.Attack( targetNetworkId );
+								Items.Attack( targetNetworkId, isHoldingShift );
 
 							return;
 						}
@@ -233,15 +235,15 @@ namespace Facepunch.RTS
 					}
 					else if ( trace.Entity is IDamageable damageable )
 					{
-						Items.Attack( trace.Entity.NetworkIdent );
+						Items.Attack( trace.Entity.NetworkIdent, isHoldingShift );
 					}
 					else if ( trace.Entity is ResourceEntity resource)
 					{
-						Items.Gather( resource.NetworkIdent );
+						Items.Gather( resource.NetworkIdent, isHoldingShift );
 					}
 					else
 					{
-						Items.MoveToLocation( trace.EndPos.ToCSV(), Input.Down( InputButton.Run ) );
+						Items.MoveToLocation( trace.EndPos.ToCSV(), isHoldingShift );
 					}
 				}
 			}

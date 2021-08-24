@@ -17,6 +17,7 @@ namespace Facepunch.RTS
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
 		[Net, OnChangedCallback] public bool IsUnderConstruction { get; private set; }
 		public HashSet<Entity> TouchingEntities { get; private set; }
+		[Net] public Vector3 RallyPosition { get; set; }
 		[Net] public float LineOfSightRadius { get; private set; }
 		[Net] public bool IsBlueprint { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }

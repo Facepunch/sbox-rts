@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gamelib.FlowFields;
+using Facepunch.RTS.Commands;
 
 namespace Facepunch.RTS
 {
@@ -86,7 +87,7 @@ namespace Facepunch.RTS
 		}
 
 		[ServerCmd]
-		public static void StartBuilding( int workerId, uint itemId, string cursorOrigin, string cursorAim )
+		public static void StartBuilding( int workerId, uint itemId, string cursorOrigin, string cursorAim, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -120,7 +121,14 @@ namespace Facepunch.RTS
 						building.Position = trace.EndPos;
 						building.Item.PlayPlaceSound( caller );
 
-						worker.Construct( building );
+						var command = new ConstructCommand()
+						{
+							Position = Rand.FromList( worker.GetDestinations( building ) ),
+							Target = building
+						};
+
+						StartOrQueue( new List<UnitEntity> { worker }, command, shouldQueue );
+
 						worker.Item.PlayConstructSound( caller );
 					}
 				}
@@ -174,7 +182,7 @@ namespace Facepunch.RTS
 		}
 
 		[ServerCmd]
-		public static void Attack( int id )
+		public static void Attack( int id, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -194,19 +202,16 @@ namespace Facepunch.RTS
 
 					return true;
 				} );
-				
 
 				if ( units.Count > 0 )
 				{
-					var agents = units.Cast<IMoveAgent>().ToList();
-					var moveGroup = new MoveGroup();
-
-					moveGroup.Initialize( agents, target.Position );
-
-					for ( var i = 0; i < units.Count; i++ )
+					var command = new AttackCommand()
 					{
-						units[i].Attack( damageable, true, moveGroup );
-					}
+						Position = units[0].GetDestinations( (ModelEntity)damageable ),
+						Target = damageable
+					};
+
+					StartOrQueue( units, command, shouldQueue );
 
 					var randomUnit = units[Rand.Int( units.Count - 1 )];
 					randomUnit.Item.PlayAttackSound( caller );
@@ -318,7 +323,7 @@ namespace Facepunch.RTS
 		}
 
 		[ServerCmd]
-		public static void Gather( int id )
+		public static void Gather( int id, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -346,6 +351,14 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
+					var command = new GatherCommand
+					{
+						Position = resource.Position,
+						Target = resource
+					};
+
+					StartOrQueue( units, command, shouldQueue );
+
 					var randomUnit = units[Rand.Int( units.Count - 1 )];
 					randomUnit.Item.PlayGatherSound( caller, resourceType );
 				}
@@ -414,38 +427,12 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
-					var moveGroups = new HashSet<MoveGroup>();
-					var agents = new List<IMoveAgent>();
-
-					for ( int i = 0; i < units.Count; i++ )
+					var command = new MoveCommand()
 					{
-						var unit = units[i];
+						Position = position
+					};
 
-						if ( shouldQueue && unit.IsMoveGroupValid() )
-							moveGroups.Add( unit.MoveGroup );
-						else
-							agents.Add( unit );
-					}
-
-					if ( agents.Count > 0 )
-					{
-						var moveGroup = new MoveGroup();
-						moveGroup.Initialize( agents, position );
-
-						for ( int i = 0; i < units.Count; i++ )
-						{
-							var unit = units[i];
-							unit.MoveTo( moveGroup );
-						}
-					}
-
-					if ( shouldQueue )
-					{
-						foreach ( var group in moveGroups )
-						{
-							group.Enqueue( position );
-						}
-					}
+					StartOrQueue( units, command, shouldQueue );
 
 					// Don't play command sounds too frequently.
 					if ( caller.LastCommandSound > 2 )
@@ -456,6 +443,36 @@ namespace Facepunch.RTS
 					}
 
                     ShowMarker( To.Single( caller ), position );
+				}
+			}
+		}
+
+		public static void StartOrQueue( List<UnitEntity> units, IMoveCommand command, bool shouldQueue = false )
+		{
+			var moveGroups = new HashSet<MoveGroup>();
+			var agents = new List<IMoveAgent>();
+
+			for ( int i = 0; i < units.Count; i++ )
+			{
+				var unit = units[i];
+
+				if ( shouldQueue && unit.IsMoveGroupValid() )
+					moveGroups.Add( unit.MoveGroup );
+				else
+					agents.Add( unit );
+			}
+
+			if ( agents.Count > 0 )
+			{
+				var moveGroup = new MoveGroup();
+				moveGroup.Initialize( agents, command );
+			}
+
+			if ( shouldQueue )
+			{
+				foreach ( var group in moveGroups )
+				{
+					group.Enqueue( command );
 				}
 			}
 		}
@@ -610,7 +627,8 @@ namespace Facepunch.RTS
 
 			if ( valid && Input.Down( InputButton.Attack1 ) )
 			{
-				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorOrigin.ToCSV(), cursorAim.ToCSV() );
+				var isHoldingShift = Input.Down( InputButton.Run );
+				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorOrigin.ToCSV(), cursorAim.ToCSV(), isHoldingShift );
 				Ghost.Delete();
 			}
 			else if ( Input.Down( InputButton.Attack2 ) )
