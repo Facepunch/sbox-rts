@@ -99,15 +99,6 @@ namespace Facepunch.RTS
 			Ratings[client.SteamId] = player.Elo.Rating;
 		}
 
-		public async Task StartSecondTimer()
-		{
-			while (true)
-			{
-				await Task.DelaySeconds( 1 );
-				OnSecond();
-			}
-		}
-
 		public override void DoPlayerNoclip( Client client )
 		{
 			// Do nothing. The player can't noclip in this mode.
@@ -116,28 +107,6 @@ namespace Facepunch.RTS
 		public override void DoPlayerSuicide( Client client )
 		{
 			// Do nothing. The player can't suicide in this mode.
-		}
-
-		public override void PostLevelLoaded()
-		{
-			_ = StartSecondTimer();
-
-			if ( IsServer )
-			{
-				var units = Items.List.OfType<BaseUnit>();
-
-				PathManager.SetBounds( WorldSize );
-
-				foreach ( var unit in units )
-				{
-					var collisionSize = unit.CollisionSize;
-					var nodeSize = unit.NodeSize;
-
-					PathManager.Create( nodeSize, collisionSize );
-				}
-			}
-
-			base.PostLevelLoaded();
 		}
 
 		public override void OnKilled( Entity entity )
@@ -166,12 +135,55 @@ namespace Facepunch.RTS
 			base.ClientJoined( client );
 		}
 
+		[Event.Entity.PostSpawn]
+		private void OnEntityPostSpawn()
+		{
+			if ( IsServer )
+			{
+				_ = StartSecondTimer();
+
+				var units = Items.List.OfType<BaseUnit>();
+
+				PathManager.SetBounds( WorldSize );
+
+				foreach ( var unit in units )
+				{
+					var collisionSize = unit.CollisionSize;
+					var nodeSize = unit.NodeSize;
+
+					PathManager.Create( nodeSize, collisionSize );
+				}
+			}
+			else
+			{
+				_ = StartFogUpdater();
+			}
+		}
+
 		private void OnGroundUpdated()
 		{
 			WorldSize = FlowFieldGround.Bounds;
 
 			if ( IsClient )
 				Fog.UpdateSize( WorldSize );
+		}
+
+		private async Task StartSecondTimer()
+		{
+			while ( true )
+			{
+				await Task.DelaySeconds( 1 );
+				OnSecond();
+			}
+		}
+
+		private async Task StartFogUpdater()
+		{
+			while ( true )
+			{
+				await Task.Delay( 100 );
+				Fog.Update();
+			}
 		}
 
 		private void OnSecond()
@@ -196,7 +208,6 @@ namespace Facepunch.RTS
 
 		private void CheckMinimumPlayers()
 		{
-			
 			if ( Client.All.Count >= 2 )
 			{
 				if ( Rounds.Current is LobbyRound || Rounds.Current == null )

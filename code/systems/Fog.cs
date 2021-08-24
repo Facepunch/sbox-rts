@@ -206,10 +206,8 @@ namespace Facepunch.RTS
 			_seenAlpha = seenAlpha;
 
 			UpdateTextureSize();
-
 			Clear();
-
-			UpdateFogMap();
+			Update();
 		}
 
 		public static void UpdateSize( BBox size )
@@ -435,66 +433,43 @@ namespace Facepunch.RTS
 			Fog.RemoveViewer( viewer );
 		}
 
-		private static async void UpdateFogMap()
+		public static void Update()
 		{
-			while ( true )
+			if ( !IsActive ) return;
+
+			FogCullable cullable;
+
+			for ( var i = _cullables.Count - 1; i >= 0; i-- )
 			{
-				if ( !IsActive )
-				{
-					try
-					{
-						await GameTask.Delay( 100 );
-						continue;
-					}
-					catch
-					{
-						break;
-					}
-				}
-
-				FogCullable cullable;
-
-				for ( var i = _cullables.Count - 1; i >= 0; i-- )
-				{
-					cullable = _cullables[i];
-					cullable.Object.MakeVisible( false );
-					cullable.WasVisible = cullable.IsVisible;
-					cullable.IsVisible = false;
-				}
-
-				_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();
-				CullParticles();
-
-				// Our first pass will create the seen history map.
-				for ( var i = 0; i < _viewers.Count; i++ )
-				{
-					var viewer = _viewers[i];
-					_texture.FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, _seenAlpha );
-				}
-
-				// Our second pass will show what is currently visible.
-				for ( var i = 0; i < _viewers.Count; i++ )
-				{
-					var viewer = _viewers[i];
-					var position = viewer.Object.Position;
-					var range = viewer.Object.LineOfSightRadius;
-
-					AddRange( position, range );
-
-					viewer.LastPosition = position;
-				}
-
-				_texture.Update();
-
-				try
-				{
-					await GameTask.Delay( 100 );
-				}
-				catch
-				{
-					break;
-				}
+				cullable = _cullables[i];
+				cullable.Object.MakeVisible( false );
+				cullable.WasVisible = cullable.IsVisible;
+				cullable.IsVisible = false;
 			}
+
+			_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();
+			CullParticles();
+
+			// Our first pass will create the seen history map.
+			for ( var i = 0; i < _viewers.Count; i++ )
+			{
+				var viewer = _viewers[i];
+				_texture.FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, _seenAlpha );
+			}
+
+			// Our second pass will show what is currently visible.
+			for ( var i = 0; i < _viewers.Count; i++ )
+			{
+				var viewer = _viewers[i];
+				var position = viewer.Object.Position;
+				var range = viewer.Object.LineOfSightRadius;
+
+				AddRange( position, range );
+
+				viewer.LastPosition = position;
+			}
+
+			_texture.Update();
 		}
 	}
 }
