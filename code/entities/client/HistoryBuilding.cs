@@ -30,10 +30,8 @@ namespace Facepunch.RTS
 		{
 			SetModel( master.GetModelName() );
 
-			//CurrentSequence.TimeNormalized = master.CurrentSequence.TimeNormalized;
-			//CurrentSequence.Name = master.CurrentSequence.Name;
-
-			Log.Info( "Copying: " + master.RenderAlpha );
+			CurrentSequence.TimeNormalized = master.CurrentSequence.TimeNormalized;
+			CurrentSequence.Name = master.CurrentSequence.Name;
 
 			PlaybackRate = master.PlaybackRate;
 			RenderColor = master.RenderColor;
