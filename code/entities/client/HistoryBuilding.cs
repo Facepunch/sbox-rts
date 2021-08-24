@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 		
 		private RealTimeSince CreationTime { get; set; }
 
-		public void MakeVisible( bool isVisible, bool wasVisible )
+		public void OnVisibilityChanged( bool isVisible )
 		{
 			if ( isVisible )
 			{
@@ -24,12 +24,16 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public void MakeVisible( bool isVisible ) { }
+
 		public void Copy( BuildingEntity master )
 		{
 			SetModel( master.GetModelName() );
 
 			//CurrentSequence.TimeNormalized = master.CurrentSequence.TimeNormalized;
 			//CurrentSequence.Name = master.CurrentSequence.Name;
+
+			Log.Info( "Copying: " + master.RenderAlpha );
 
 			PlaybackRate = master.PlaybackRate;
 			RenderColor = master.RenderColor;

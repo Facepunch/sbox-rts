@@ -41,7 +41,7 @@ namespace Facepunch.RTS
 			Delete();
 		}
 
-		public void MakeVisible( bool isVisible, bool wasVisible )
+		public void MakeVisible( bool isVisible )
 		{
 			Hud.SetActive( isVisible );
 
@@ -50,6 +50,8 @@ namespace Facepunch.RTS
 				Fog.RemoveCullable( this );
 			}
 		}
+
+		public void OnVisibilityChanged( bool isVisible ) { }
 
 		public void UpdateCollisions()
 		{

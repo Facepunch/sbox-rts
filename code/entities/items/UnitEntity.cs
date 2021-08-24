@@ -798,7 +798,9 @@ namespace Facepunch.RTS
 			return LookAtPosition( target.Position, interpolation );
 		}
 
-		public void MakeVisible( bool isVisible, bool wasVisible )
+		public void OnVisibilityChanged( bool isVisible ) { }
+
+		public void MakeVisible( bool isVisible )
 		{
 			TargetAlpha = isVisible ? 1f : 0f;
 			Hud.SetActive( isVisible );

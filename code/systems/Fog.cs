@@ -21,6 +21,7 @@ namespace Facepunch.RTS
 		internal class FogCullable
 		{
 			public IFogCullable Object;
+			public bool WasVisible;
 			public bool IsVisible;
 
 			public bool IsInRange( Vector3n position, float radius )
@@ -270,6 +271,8 @@ namespace Facepunch.RTS
 				IsVisible = false,
 				Object = cullable
 			} );
+
+			cullable.OnVisibilityChanged( false );
 		}
 
 		public static void RemoveCullable( IFogCullable cullable )
@@ -390,9 +393,14 @@ namespace Facepunch.RTS
 
 				if ( cullable.IsInRange( position, renderRange ) )
 				{
+					var wasVisible = cullable.WasVisible;
+
 					cullable.Object.HasBeenSeen = true;
-					cullable.Object.MakeVisible( true, cullable.IsVisible );
+					cullable.Object.MakeVisible( true );
 					cullable.IsVisible = true;
+
+					if ( !wasVisible )
+						cullable.Object.OnVisibilityChanged( true );
 				}
 			}
 
@@ -449,7 +457,8 @@ namespace Facepunch.RTS
 				for ( var i = _cullables.Count - 1; i >= 0; i-- )
 				{
 					cullable = _cullables[i];
-					cullable.Object.MakeVisible( false, cullable.IsVisible );
+					cullable.Object.MakeVisible( false );
+					cullable.WasVisible = cullable.IsVisible;
 					cullable.IsVisible = false;
 				}
 

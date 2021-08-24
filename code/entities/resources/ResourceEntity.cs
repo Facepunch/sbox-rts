@@ -31,13 +31,15 @@ namespace Facepunch.RTS
 
 		private RealTimeUntil _nextGatherSound;
 
-		public void MakeVisible( bool isVisible, bool wasVisible )
+		public void OnVisibilityChanged( bool isVisible )
 		{
 			if ( isVisible )
 			{
 				Fog.RemoveCullable( this );
 			}
 		}
+
+		public void MakeVisible( bool isVisible ) { }
 
 		public void RemoveGatherer( IMoveAgent gatherer )
 		{

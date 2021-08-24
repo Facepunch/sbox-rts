@@ -75,7 +75,7 @@ namespace Facepunch.RTS
 
 		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
 
-		public void MakeVisible( bool isVisible, bool wasVisible )
+		public void OnVisibilityChanged( bool isVisible )
 		{
 			if ( IsLocalTeamGroup )
 			{
@@ -89,7 +89,7 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			if ( HasBeenSeen && !isVisible && !wasVisible )
+			if ( HasBeenSeen && !isVisible )
 			{
 				if ( !_historyBuilding.IsValid() )
 				{
@@ -106,11 +106,15 @@ namespace Facepunch.RTS
 				{
 					_historyBuilding.Delete();
 					_historyBuilding = null;
-				} else {
+				}
+				else
+				{
 					TargetAlpha = isVisible ? 1f : 0f;
 				}
 			}
 		}
+
+		public void MakeVisible( bool isVisible ) { }
 
 		public void CancelConstruction()
 		{
@@ -480,6 +484,8 @@ namespace Facepunch.RTS
 			}
 
 			RenderAlpha = RenderAlpha.LerpTo( targetAlpha, Time.Delta * 2f );
+
+			Log.Info( RenderAlpha + " / " + TargetAlpha );
 
 			if ( Hud.Style.Opacity != RenderAlpha )
 			{
