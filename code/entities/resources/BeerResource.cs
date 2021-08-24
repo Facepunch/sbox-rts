@@ -11,7 +11,9 @@ namespace Facepunch.RTS
 		public override int DefaultStock => 300;
 		public override string[] GatherSounds => new string[]
 		{
-			"gatherbeer1"
+			"gatherbeer1",
+			"gatherbeer2",
+			"gatherbeer3"
 		};
 		public override string Description => "You can find Beer for your empire in this cache.";
 		public override string Name => "Beer Cache";

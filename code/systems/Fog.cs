@@ -1,4 +1,5 @@
-﻿using Gamelib.FlowFields.Entities;
+﻿using Gamelib.Extensions;
+using Gamelib.FlowFields.Entities;
 using Gamelib.FlowFields.Grid;
 using Sandbox;
 using System;
@@ -21,6 +22,16 @@ namespace Facepunch.RTS
 		{
 			public IFogCullable Object;
 			public bool IsVisible;
+
+			public bool IsInRange( Vector3n position, float radius )
+			{
+				var targetBounds = (Object.CollisionBounds) + Object.Position;
+
+				if ( targetBounds.Overlaps( position, radius ) )
+					return true;
+
+				return false;
+			}
 		}
 
 		internal class TimedViewer : IFogViewer
@@ -327,7 +338,7 @@ namespace Facepunch.RTS
 
 				if ( cullable.IsVisible ) continue;
 
-				if ( cullable.Object.Position.Distance( position ) <= renderRange )
+				if ( cullable.IsInRange( position, renderRange ) )
 				{
 					cullable.Object.HasBeenSeen = true;
 				}
@@ -377,7 +388,7 @@ namespace Facepunch.RTS
 
 				if ( cullable.IsVisible ) continue;
 
-				if ( cullable.Object.Position.Distance( position ) <= renderRange )
+				if ( cullable.IsInRange( position, renderRange ) )
 				{
 					cullable.Object.HasBeenSeen = true;
 					cullable.Object.MakeVisible( true, cullable.IsVisible );

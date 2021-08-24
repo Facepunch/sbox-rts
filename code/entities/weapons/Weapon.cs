@@ -41,7 +41,6 @@ namespace Facepunch.RTS
 				var aimRay = GetAimRay();
 				var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
 					.EntitiesOnly()
-					.HitLayer( CollisionLayer.Debris, false )
 					.WithoutTags( "obstacle" )
 					.WithoutTags( "building" )
 					.WithoutTags( "unit" )

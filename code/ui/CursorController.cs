@@ -177,6 +177,22 @@ namespace Facepunch.RTS
 				if ( player.Selection.Count > 0 )
 				{
 					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction )
+						.WithAnyTags( "blueprint" )
+						.Radius( 5f )
+						.Run();
+
+					// We need to check this layer first because blueprints will be on the Debris layer.
+					if ( trace.Entity is BuildingEntity blueprint && blueprint.IsLocalPlayers )
+					{
+						if ( blueprint.IsUnderConstruction )
+						{
+							Items.Construct( trace.Entity.NetworkIdent );
+							return;
+						}
+					}
+
+					trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction )
+						.WithoutTags( "blueprint" )
 						.Radius( 5f )
 						.Run();
 

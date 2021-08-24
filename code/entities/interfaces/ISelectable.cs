@@ -51,6 +51,7 @@ namespace Facepunch.RTS
 		public void Assign( Player player, string itemId );
 		public bool ShouldUpdateHud();
 		public void UpdateHudComponents();
+		public bool CanBeAttacked();
 		public bool CanSelect();
 		public void CancelAction();
 		public void Select();

@@ -698,9 +698,6 @@ namespace Facepunch.RTS
 
 			ResetTarget();
 
-			if ( _gather.Entity.IsValid() )
-				_gather.Entity.RemoveGatherer( this );
-
 			_target.Entity = resource;
 			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
 			_target.Type = UnitTargetType.Gather;
@@ -1271,6 +1268,9 @@ namespace Facepunch.RTS
 
 		private void ResetTarget()
 		{
+			if ( _gather.Entity.IsValid() )
+				_gather.Entity.RemoveGatherer( this );
+
 			_target.Entity = null;
 			_target.Position = null;
 			_target.Follow = false;
@@ -1358,14 +1358,15 @@ namespace Facepunch.RTS
 
 			foreach ( var entity in entities )
 			{
-				if ( entity is ISelectable selectable )
+				if ( entity is ISelectable selectable && selectable.CanBeAttacked() )
 				{
 					if ( IsEnemy( selectable ) && InVerticalRange( entity ) )
 						_targetBuffer.Add( selectable );
 				}
 			}
 
-			_targetBuffer.OrderByDescending( s => s.GetAttackPriority() ).ThenBy( s => s.Position.Distance( searchPosition ) );
+			_targetBuffer.OrderByDescending( s => s.GetAttackPriority() )
+				.ThenBy( s => s.Position.Distance( searchPosition ) );
 
 			if ( _targetBuffer.Count > 0 )
 			{

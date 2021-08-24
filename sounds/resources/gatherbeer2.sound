@@ -4,7 +4,7 @@
 	{
 		sounds = 
 		[
-			"sounds/resources/gatherbeer1.vsnd",
+			"sounds/resources/gatherbeer2.vsnd",
 		]
 		UI = false
 		Volume = 1.0

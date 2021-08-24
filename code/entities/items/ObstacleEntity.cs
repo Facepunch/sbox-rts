@@ -61,6 +61,11 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public virtual bool CanBeAttacked()
+		{
+			return true;
+		}
+
 		public virtual bool ShouldUpdateHud()
 		{
 			return EnableDrawing && Hud.IsActive;

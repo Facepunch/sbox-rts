@@ -185,6 +185,8 @@ namespace Facepunch.RTS
 
 			if ( target.IsValid() && target is IDamageable damageable )
 			{
+				if ( !damageable.CanBeAttacked() ) return; 
+
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
 					if ( unit.IsUsingAbility() || !unit.InVerticalRange( target ) )

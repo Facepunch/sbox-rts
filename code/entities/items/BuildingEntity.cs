@@ -57,7 +57,7 @@ namespace Facepunch.RTS
 
 		public BuildingEntity() : base()
 		{
-			Tags.Add( "building", "selectable" );
+			Tags.Add( "building", "selectable", "blueprint" );
 
 			TouchingEntities = new();
 			Occupants = new List<UnitEntity>();
@@ -279,7 +279,6 @@ namespace Facepunch.RTS
 			Player.MaxPopulation += Item.PopulationBoost;
 
 			IsUnderConstruction = false;
-			IsBlueprint = false;
 			Health = Item.MaxHealth;
 
 			AddAsFogViewer( To.Everyone );
@@ -323,6 +322,11 @@ namespace Facepunch.RTS
 			Fog.AddCullable( this );
 
 			base.ClientSpawn();
+		}
+
+		public override bool CanBeAttacked()
+		{
+			return !IsBlueprint;
 		}
 
 		public override int GetAttackPriority()
@@ -700,6 +704,7 @@ namespace Facepunch.RTS
 		private void UpgradeFromBlueprint()
 		{
 			EnableSolidCollisions = true;
+			Tags.Remove( "blueprint" );
 			UpdateCollisions();
 			IsBlueprint = false;
 		}
