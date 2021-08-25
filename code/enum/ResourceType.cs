@@ -18,7 +18,7 @@ namespace Facepunch.RTS
 				return Color.White;
 
 			if ( type == ResourceType.Metal )
-				return new Color( 0.2f, 0.2f, 0.2f );
+				return new Color( 0.4f, 0.4f, 0.7f );
 
 			if ( type == ResourceType.Plasma )
 				return Color.Magenta;
