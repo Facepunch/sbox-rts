@@ -150,26 +150,26 @@ namespace Facepunch.RTS
 				if ( selectables.Count > 0 )
 				{
 					var list = string.Join( ",", selectables.Select( u => u.NetworkIdent ) );
+
 					Items.Select( list, false );
 
 					if ( _lookAtSelection )
 					{
-						var cameraPosition = Vector3.Zero;
-						var itemCount = selectables.Count;
-
-						for ( var i = 0; i < itemCount; i++ ) {
-							var item = selectables[i];
-							cameraPosition += item.Position;
-						}
-
-						cameraPosition /= itemCount;
-
-						player.Position = cameraPosition;
-						Player.LookAt( cameraPosition.ToCSV() );
+						Items.FocusCameraOn( selectables );
 					}
 				}
 
 				_slotPressed = -1;
+			}
+
+			if ( builder.Released( InputButton.Jump ) )
+			{
+				var selectables = player.GetAllSelected();
+
+				if ( selectables.Count > 0 )
+				{
+					Items.FocusCameraOn( selectables );
+				}
 			}
 
 			if ( builder.Released( InputButton.Attack2 ) )

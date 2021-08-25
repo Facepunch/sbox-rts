@@ -30,6 +30,25 @@ namespace Facepunch.RTS
 			return Ghost.IsValid();
 		}
 
+		public static void FocusCameraOn( List<ISelectable> selectables )
+		{
+			if ( Local.Pawn is not Player player ) return;
+
+			var cameraPosition = Vector3.Zero;
+			var itemCount = selectables.Count;
+
+			for ( var i = 0; i < itemCount; i++ )
+			{
+				var item = selectables[i];
+				cameraPosition += item.Position;
+			}
+
+			cameraPosition /= itemCount;
+
+			player.Position = cameraPosition;
+			Player.LookAt( cameraPosition.ToCSV() );
+		}
+
 		[ClientRpc]
 		public static void ShowMarker( Vector3 position )
 		{
