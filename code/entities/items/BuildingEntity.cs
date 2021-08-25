@@ -730,7 +730,7 @@ namespace Facepunch.RTS
 			{
 				RemoveDependencies( Item );
 
-				if ( Player.IsValid() )
+				if ( Player.IsValid() && !IsUnderConstruction )
 					Player.MaxPopulation -= Item.PopulationBoost;
 
 				if ( GeneratorSound.HasValue )
