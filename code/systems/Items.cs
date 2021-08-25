@@ -361,7 +361,7 @@ namespace Facepunch.RTS
 					Target = resource
 				};
 
-				if ( ShouldPlaceRallyPoint( caller.Selection, out var trainer ) )
+				if ( ShouldPlaceRallyPoint( caller.GetAllSelected(), out var trainer ) )
 				{
 					trainer.SetRallyCommand( command, resource.Position );
 					return;
@@ -408,7 +408,7 @@ namespace Facepunch.RTS
 						Target = building
 					};
 
-					if ( ShouldPlaceRallyPoint( caller.Selection, out var trainer ) )
+					if ( ShouldPlaceRallyPoint( caller.GetAllSelected(), out var trainer ) )
 					{
 						trainer.SetRallyCommand( command, building.Position );
 						return;
@@ -456,7 +456,7 @@ namespace Facepunch.RTS
 					Destinations = new List<Vector3>() { position }
 				};
 
-				if ( ShouldPlaceRallyPoint( caller.Selection, out var trainer ) )
+				if ( ShouldPlaceRallyPoint( caller.GetAllSelected(), out var trainer ) )
 				{
 					trainer.SetRallyCommand( command, position );
 					return;
@@ -709,7 +709,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		private static bool ShouldPlaceRallyPoint( IList<Entity> selection, out BuildingEntity trainer )
+		private static bool ShouldPlaceRallyPoint( List<ISelectable> selection, out BuildingEntity trainer )
 		{
 			if ( selection.Count == 1 && selection[0] is BuildingEntity entity && entity.CanSetRallyPoint )
 			{

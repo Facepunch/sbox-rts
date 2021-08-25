@@ -80,13 +80,18 @@ namespace Facepunch.RTS
 			Population = Math.Max( Population - population, 0 );
 		}
 
+		public List<ISelectable> GetAllSelected()
+		{
+			return GetSelected<ISelectable>();
+		}
+
 		public List<T> GetSelected<T>() where T : ISelectable
 		{
 			var output = new List<T>();
 
 			foreach ( var entity in Selection )
 			{
-				if ( entity is T selected )
+				if ( entity is T selected && selected.IsLocalPlayers )
 				{
 					output.Add( selected );
 				}
@@ -101,7 +106,7 @@ namespace Facepunch.RTS
 
 			foreach ( var entity in Selection )
 			{
-				if ( entity is T selected )
+				if ( entity is T selected && selected.IsLocalPlayers )
 				{
 					if ( callback( selected ) )
 						output.Add( selected );
@@ -265,15 +270,11 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			for ( var i = Selection.Count - 1; i >= 0; i-- )
+			var selection = GetAllSelected();
+
+			for ( var i = selection.Count - 1; i >= 0; i-- )
 			{
-				var entity = Selection[i];
-
-				if ( entity is not ISelectable selectable )
-					continue;
-
-				if ( !entity.IsValid() )
-					continue;
+				var selectable = selection[i];
 
 				if ( selectable.IsSelected )
 					selectable.Deselect();
