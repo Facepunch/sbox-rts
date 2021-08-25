@@ -34,13 +34,13 @@ namespace Facepunch.RTS
 			SpotLight = new SpotLightEntity
 			{
 				Color = Color.White,
-				Range = 1500f,
+				Range = 3000f,
+				Falloff = 0f,
 				Enabled = false,
-				OuterConeAngle = 50f,
-				InnerConeAngle = 30f,
-				BrightnessMultiplier = 5f,
-				Rotation = Rotation.LookAt( Vector3.Down ),
-				Falloff = 1000f
+				OuterConeAngle = 15f,
+				InnerConeAngle = 1f,
+				BrightnessMultiplier = 50f,
+				Rotation = Rotation.LookAt( Vector3.Down )
 			};
 
 			DayNightManager.OnSectionChanged += HandleTimeSectionChanged;
@@ -49,7 +49,7 @@ namespace Facepunch.RTS
 		private void HandleTimeSectionChanged( TimeSection section )
 		{
 			if ( section == TimeSection.Dusk || section == TimeSection.Night )
-				_spotLightBrightness = 5f;
+				_spotLightBrightness = 10f;
 			else
 				_spotLightBrightness = 0f;
 		}
@@ -58,16 +58,23 @@ namespace Facepunch.RTS
 		{
 			SelectionArea.SetClass( "hidden", !IsSelecting || !IsMultiSelect );
 
+			var brightness = _spotLightBrightness;
+
 			if ( SpotLight.Enabled )
 			{
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction )
 					.WorldOnly()
 					.Run();
 
-				SpotLight.Position = trace.EndPos + Vector3.Up * 1000f;
+				SpotLight.Position = trace.EndPos + Vector3.Up * 2000f;
+
+				if ( !Fog.IsAreaSeen( SpotLight.Position ) )
+				{
+					brightness = MathF.Max( brightness, 20f );
+				}
 			}
 
-			SpotLight.Brightness = SpotLight.Brightness.LerpTo( _spotLightBrightness, Time.Delta * 5f );
+			SpotLight.Brightness = SpotLight.Brightness.LerpTo( brightness, Time.Delta * 5f );
 			SpotLight.Enabled = (SpotLight.Brightness > 0f);
 
 			base.Tick();

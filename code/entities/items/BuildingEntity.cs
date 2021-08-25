@@ -482,7 +482,7 @@ namespace Facepunch.RTS
 			if ( IsUnderConstruction )
 			{
 				if ( IsLocalTeamGroup || !IsBlueprint )
-					targetAlpha = MathF.Min( 0.25f + (0.75f / Item.MaxHealth) * Health, targetAlpha );
+					targetAlpha = MathF.Min( 0.5f + (0.5f / Item.MaxHealth) * Health, targetAlpha );
 				else
 					targetAlpha = 0f;
 			}
@@ -730,8 +730,11 @@ namespace Facepunch.RTS
 			{
 				RemoveDependencies( Item );
 
-				if ( Player.IsValid() && !IsUnderConstruction )
-					Player.MaxPopulation -= Item.PopulationBoost;
+				if ( Player.IsValid() )
+				{
+					if ( !IsUnderConstruction )
+						Player.MaxPopulation -= Item.PopulationBoost;
+				}
 
 				if ( GeneratorSound.HasValue )
 				{
