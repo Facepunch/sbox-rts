@@ -1780,6 +1780,23 @@ namespace Facepunch.RTS
 				return;
 			}
 
+			var itemNetworkId = building.ItemNetworkId;
+
+			// Check if we can build this instantly.
+			if ( !Player.InstantBuildCache.Contains( itemNetworkId ) )
+			{
+				if ( building.Item.BuildFirstInstantly )
+				{
+					Player.InstantBuildCache.Add( itemNetworkId );
+
+					LookAtEntity( building );
+					building.FinishConstruction();
+					ClearTarget();
+
+					return;
+				}
+			}
+
 			building.Health += (building.MaxHealth / building.Item.BuildTime * Time.Delta);
 			building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
 

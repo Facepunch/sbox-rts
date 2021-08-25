@@ -24,6 +24,7 @@ namespace Facepunch.RTS
 		[Net] public List<int> Resources { get; private set; }
 		[Net] public int TeamGroup { get; set; }
 
+		public HashSet<uint> InstantBuildCache { get; private set; }
 		public TimeSince LastCommandSound { get; set; }
 
 		public Player()
@@ -36,6 +37,7 @@ namespace Facepunch.RTS
 			Selection = new List<Entity>();
 			Researching = new List<uint>();
 			Dependencies = new List<uint>();
+			InstantBuildCache = new HashSet<uint>();
 			MaxPopulation = 8;
 			LastCommandSound = 0;
 		}

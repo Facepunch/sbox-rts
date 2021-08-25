@@ -42,6 +42,7 @@ namespace Facepunch.RTS.Buildings
 		public virtual float AttackRadius => 600f;
 		public virtual float MaxVerticalRange => 100f;
 		public virtual float MinVerticalRange => 0f;
+		public virtual bool BuildFirstInstantly => false;
 		public virtual bool CanDemolish => true;
 		public virtual string Weapon => "";
 
