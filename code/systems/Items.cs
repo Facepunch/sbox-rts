@@ -159,6 +159,8 @@ namespace Facepunch.RTS
 						StartOrQueue( new List<UnitEntity> { worker }, command, shouldQueue );
 
 						worker.Item.PlayConstructSound( caller );
+
+						ShowMarker( To.Single( caller ), building.Position );
 					}
 				}
 			}
@@ -243,6 +245,8 @@ namespace Facepunch.RTS
 
 					var randomUnit = units[Rand.Int( units.Count - 1 )];
 					randomUnit.Item.PlayAttackSound( caller );
+
+					ShowMarker( To.Single( caller ), target.Position );
 				}
 			}
 		}
@@ -370,6 +374,8 @@ namespace Facepunch.RTS
 					var randomUnit = repairUnits[Rand.Int( repairUnits.Count - 1 )];
 					randomUnit.Item.PlayConstructSound( caller );
 				}
+
+				ShowMarker( To.Single( caller ), building.Position );
 			}
 		}
 
@@ -414,6 +420,8 @@ namespace Facepunch.RTS
 
 					var randomUnit = units[Rand.Int( units.Count - 1 )];
 					randomUnit.Item.PlayGatherSound( caller, resourceType );
+
+					ShowMarker( To.Single( caller ), resource.Position );
 				}
 			}
 		}
@@ -460,6 +468,8 @@ namespace Facepunch.RTS
 
 						var randomUnit = units[Rand.Int( units.Count - 1 )];
 						randomUnit.Item.PlayConstructSound( caller );
+
+						ShowMarker( To.Single( caller ), building.Position );
 					}
 				}
 			}
