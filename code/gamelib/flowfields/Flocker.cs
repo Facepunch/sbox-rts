@@ -8,26 +8,30 @@ namespace Gamelib.FlowFields
 		public Vector3 Position;
 		public Vector3 Force;
 		public IMoveAgent Agent;
-		public List<IMoveAgent> Agents;
+		public IEnumerable<IMoveAgent> Agents;
 		public float MaxForce;
 		public float MaxSpeed;
 
-		public void Setup( IMoveAgent agent, List<IMoveAgent> agents, Vector3 position )
+		public void Setup( IMoveAgent agent, IEnumerable<IMoveAgent> agents, Vector3 position, float speed )
 		{
 			Position = position;
 			Force = Vector3.Zero;
 			Agent = agent;
 			Agents = agents;
-			MaxForce = 1f;
-			MaxSpeed = 1f;
+			MaxForce = speed;
+			MaxSpeed = speed * 0.5f;
 		}
 
 		public void Flock( Vector3 target )
 		{
 			var seek = Seek( target );
+
+			//Have each unit steer to avoid hitting its neighbors.
 			var sep = Separate() * 4f;
-			var coh = Cohesion() * 0.1f;
-			var ali = Align() * 0.5f;
+			// Have each unit steer toward the average position of its neighbors.
+			var coh = Cohesion() * 0.5f;
+			// Have each unit steer so as to align itself to the average heading of its neighbors.
+			var ali = Align() * 0f;
 
 			Force = ((seek + sep) + coh) + ali;
 		}
@@ -50,7 +54,7 @@ namespace Gamelib.FlowFields
 
 			foreach ( var agent in Agents )
 			{
-				if ( agent != Agent )
+				if ( agent != Agent && agent is Entity )
 				{
 					var distance = Agent.Position.Distance( agent.Position );
 
@@ -80,12 +84,15 @@ namespace Gamelib.FlowFields
 
 			foreach ( var agent in Agents )
 			{
-				var distance = Agent.Position.Distance( agent.Position );
-
-				if ( distance < Agent.AgentRadius && agent.Velocity.Length > 0 )
+				if ( agent != Agent && agent is Entity )
 				{
-					averageHeading = averageHeading + agent.Velocity.Normal;
-					neighboursCount++;
+					var distance = Agent.Position.Distance( agent.Position );
+
+					if ( distance < Agent.AgentRadius && agent.Velocity.Length > 0 )
+					{
+						averageHeading = averageHeading + agent.Velocity.Normal;
+						neighboursCount++;
+					}
 				}
 			}
 
@@ -109,7 +116,7 @@ namespace Gamelib.FlowFields
 
 			foreach ( var agent in Agents )
 			{
-				if ( agent != Agent )
+				if ( agent != Agent && agent is Entity )
 				{
 					var distance = Agent.Position.Distance( agent.Position );
 

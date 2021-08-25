@@ -1613,15 +1613,14 @@ namespace Facepunch.RTS
 			}
 
 			var steerDirection = Vector3.Zero;
-			var pathDirection = Vector3.Zero;
+			var nodeDirection = Vector3.Zero;
 			var movementSpeed = GetSpeed();
+			var direction = Vector3.Zero;
 
 			if ( MoveStack.TryPeek( out var group ) )
 			{
 				var node = Pathfinder.CreateWorldPosition( Position );
 				Pathfinder.DrawBox( node, Color.Green );
-
-				Vector3 direction;
 
 				if ( !IsAtDestination() )
 				{
@@ -1629,23 +1628,12 @@ namespace Facepunch.RTS
 					{
 						var offset = Pathfinder.CenterOffset.Normal;
 						direction = group.GetDirection( Position );
-						pathDirection = (direction.Normal * offset).WithZ( 0f );
+						nodeDirection = (direction.Normal * offset).WithZ( 0f );
 					}
 					else
 					{
 						direction = (group.GetDestination() - Position).Normal;
-						pathDirection = direction.WithZ( 0f );
-					}
-
-					if ( !_target.HasEntity() || !IsInRange( _target.Entity, _target.Radius * 4f ) )
-					{
-						if ( group.Agents.Count > 1 )
-						{
-							var flocker = new Flocker();
-							flocker.Setup( this, MoveGroup.Agents, Position );
-							flocker.Flock( Position + direction * Pathfinder.NodeSize );
-							steerDirection = flocker.Force.Normal.WithZ( 0f );
-						}
+						nodeDirection = direction.WithZ( 0f );
 					}
 				}
 			}
@@ -1654,38 +1642,32 @@ namespace Facepunch.RTS
 				var straightDirection = (_target.Position.Value - Position).Normal.WithZ( 0f );
 
 				if ( Pathfinder.IsAvailable( Position + (straightDirection * Pathfinder.NodeSize) ) )
-					pathDirection = straightDirection;
+					nodeDirection = straightDirection;
 				else
-					pathDirection = Vector3.Zero;
+					nodeDirection = Vector3.Zero;
 			}
 
-			if ( pathDirection.Length > 0 )
+			var others = Physics.GetEntitiesInSphere( Position, AgentRadius * 0.5f )
+				.OfType<UnitEntity>()
+				.Where( ShouldOtherUnitFlock )
+				.Cast<IMoveAgent>();
+
+			var flocker = new Flocker();
+			flocker.Setup( this, others, Position, movementSpeed );
+			flocker.Flock( Position + direction * Pathfinder.NodeSize );
+			steerDirection = flocker.Force.WithZ( 0f );
+
+			if ( steerDirection.Length > 0 )
 			{
-				if ( animator != null )
+				if ( !Item.UsePathfinder || Pathfinder.IsAvailable( Position + (steerDirection.Normal * Pathfinder.NodeSize) ) )
 				{
-					if ( movementSpeed >= 300f )
-						animator.Speed = 1f;
-					else
-						animator.Speed = 0.5f;
-				}
-
-				// First we'll try our steer direction and see if we can go there.
-				if ( steerDirection.Length > 0 )
-				{
-					if ( !Item.UsePathfinder || Pathfinder.IsAvailable( Position + (steerDirection * Pathfinder.NodeSize) ) )
-					{
-						Velocity = (steerDirection * movementSpeed) * Time.Delta;
-					}
-				}
-
-				if ( Velocity.Length == 0 )
-				{
-					Velocity = (pathDirection * movementSpeed) * Time.Delta;
+					Velocity = steerDirection * Time.Delta;
 				}
 			}
-			else
+
+			if ( Velocity.Length == 0 )
 			{
-				Velocity = 0;
+				Velocity = (nodeDirection * movementSpeed) * Time.Delta;
 			}
 
 			var verticalOffset = GetVerticalOffset();
@@ -1706,8 +1688,26 @@ namespace Facepunch.RTS
 
 			if ( walkVelocity.Length > 1 )
 			{
+				if ( animator != null )
+				{
+					if ( movementSpeed >= 300f )
+						animator.Speed = 1f;
+					else
+						animator.Speed = 0.5f;
+				}
+
 				Rotation = Rotation.Lerp( Rotation, Rotation.LookAt( walkVelocity.Normal, Vector3.Up ), Time.Delta * 10f );
 			}
+		}
+
+		private bool ShouldOtherUnitFlock( UnitEntity unit )
+		{
+			if ( unit.TargetType == UnitTargetType.Gather && unit.Velocity.Length == 0 )
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		private void TickOccupy( IOccupiableEntity occupiable )
