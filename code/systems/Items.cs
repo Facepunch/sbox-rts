@@ -593,6 +593,13 @@ namespace Facepunch.RTS
 
 			entities.Sort( ( a, b ) => b.CanMultiSelect.CompareTo( a.CanMultiSelect ) );
 
+			// We can show information about a single enemy unit.
+			if ( entities.Count == 1 && entities[0] is UnitEntity target && target.Player != caller )
+			{
+				caller.Selection.Add( target );
+				return;
+			}
+
 			foreach ( var entity in entities )
 			{
 				if ( entity is not ISelectable selectable )

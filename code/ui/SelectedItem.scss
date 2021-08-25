@@ -7,14 +7,14 @@
     bottom: 16px;
 
     .left {
+        backdrop-filter-blur: 8px;
         bottom: 16px;
-        width: 40%;
+        width: 30%;
         height: 250px;
 
         itemmultidisplay {
             background-color: rgba(0 0 0 0.8);
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
+            border-radius: 8px;
             padding: 16px;
             width: 100%;
 
@@ -84,8 +84,7 @@
         iteminformation {
             background-color: rgba(0 0 0 0.8);
             flex-direction: column;
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
+            border-radius: 8px;
             display: flex;
             padding: 16px;
             width: 100%;
@@ -231,14 +230,14 @@
     }
 
     .right {
+        margin-left: 24px;
         bottom: 16px;
-        width: 25%;
+        width: 27%;
         height: 250px;
 
         itemcommandlist {
             background-color: rgba(15 0 0 1);
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
+            border-radius: 8px;
             flex-wrap: wrap;
             padding: 16px;
             width: 100%;
@@ -276,6 +275,10 @@
                     }
                 }
             }
+        }
+
+        &.hidden {
+            display: none;
         }
     }
 

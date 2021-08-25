@@ -442,10 +442,16 @@ namespace Facepunch.RTS
 			Buttons.ForEach( b => b.Delete( true ) );
 			Buttons.Clear();
 
-			if ( selectable is UnitEntity unit )
-				UpdateCommands( unit.Item.Queueables, unit.Abilities );
-			else if ( selectable is BuildingEntity building )
-				UpdateCommands( building.Item.Queueables, building.Abilities );
+			// Don't show commands for enemy selectables.
+			if ( selectable.IsLocalPlayers )
+			{
+				if ( selectable is UnitEntity unit )
+					UpdateCommands( unit.Item.Queueables, unit.Abilities );
+				else if ( selectable is BuildingEntity building )
+					UpdateCommands( building.Item.Queueables, building.Abilities );
+			}
+
+			Parent.SetClass( "hidden", Buttons.Count == 0 );
 		}
 
 		private void UpdateCommands( HashSet<string> queueables, Dictionary<string, BaseAbility> abilities = null )

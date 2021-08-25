@@ -268,6 +268,8 @@ namespace Facepunch.RTS
 			}
 			else if ( IsSelecting )
 			{
+				IsSelecting = false;
+
 				if ( IsMultiSelect )
 				{
 					var selectable = Entity.All.OfType<ISelectable>();
@@ -283,6 +285,9 @@ namespace Facepunch.RTS
 
 							if ( SelectionRect.IsInside( new Rect( screenX, screenY, 1f, 1f ) ) )
 							{
+								if ( !b.IsLocalPlayers && !Fog.IsAreaSeen( b.Position ) )
+									continue;
+
 								entities.Add( entity.NetworkIdent );
 							}
 						}
@@ -298,18 +303,24 @@ namespace Facepunch.RTS
 
 					if ( trace.Entity is ISelectable selectable )
 					{
-						if ( selectable.CanSelect() )
-							Items.Select( trace.Entity.NetworkIdent.ToString(), Input.Down( InputButton.Run ) );
+						if ( !selectable.IsLocalPlayers )
+						{
+							if ( Fog.IsAreaSeen( selectable.Position ) )
+								Items.Select( trace.Entity.NetworkIdent.ToString() );
+						}
 						else
-							Items.CancelAction( trace.Entity.NetworkIdent );
+						{
+							if ( selectable.CanSelect() )
+								Items.Select( trace.Entity.NetworkIdent.ToString(), Input.Down( InputButton.Run ) );
+							else
+								Items.CancelAction( trace.Entity.NetworkIdent );
+						}
 					}
 					else
 					{
 						Items.Select();
 					}
 				}
-
-				IsSelecting = false;
 			}
 			else
 			{
