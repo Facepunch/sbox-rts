@@ -10,6 +10,7 @@ namespace Facepunch.RTS.Buildings
 		public virtual ResourceGenerator Generator => null;
 		public virtual OccupiableSettings Occupiable => new();
 		public virtual bool CanDepositResources => false;
+		public virtual bool CanSetRallyPoint => true;
 		public virtual Dictionary<string, float> Resistances => new();
 		public virtual string[] ActsAsProxyFor => Array.Empty<string>();
 		public virtual string[] PlaceSounds => new string[]

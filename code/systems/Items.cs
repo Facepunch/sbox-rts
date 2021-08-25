@@ -124,7 +124,6 @@ namespace Facepunch.RTS
 
 						var command = new ConstructCommand
 						{
-							Positions = worker.GetDestinations( building ),
 							Target = building
 						};
 
@@ -194,7 +193,12 @@ namespace Facepunch.RTS
 
 			if ( target.IsValid() && target is IDamageable damageable )
 			{
-				if ( !damageable.CanBeAttacked() ) return; 
+				if ( !damageable.CanBeAttacked() ) return;
+
+				var command = new AttackCommand()
+				{
+					Target = damageable
+				};
 
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
@@ -206,23 +210,10 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
-					var modelEntity = (ModelEntity)damageable;
-					var pathfinder = GetLargestPathfinder( units );
-					var destinations = modelEntity.GetDestinations( pathfinder, true );
+					StartOrQueue( units, command, shouldQueue );
 
-					if ( destinations.Count > 0 )
-					{
-						var command = new AttackCommand()
-						{
-							Positions = destinations,
-							Target = damageable
-						};
-
-						StartOrQueue( units, command, shouldQueue );
-
-						var randomUnit = units[Rand.Int( units.Count - 1 )];
-						randomUnit.Item.PlayAttackSound( caller );
-					}
+					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					randomUnit.Item.PlayAttackSound( caller );
 				}
 			}
 		}
@@ -327,19 +318,12 @@ namespace Facepunch.RTS
 
 				if ( depositUnits.Count > 0 )
 				{
-					var pathfinder = GetLargestPathfinder( depositUnits );
-					var destinations = building.GetDestinations( pathfinder, true );
-
-					if ( destinations.Count > 0 )
+					var command = new DepositCommand
 					{
-						var command = new DepositCommand
-						{
-							Positions = destinations,
-							Target = building
-						};
+						Target = building
+					};
 
-						StartOrQueue( depositUnits, command, shouldQueue );
-					}
+					StartOrQueue( depositUnits, command, shouldQueue );
 
 					var randomUnit = depositUnits[Rand.Int( depositUnits.Count - 1 )];
 					randomUnit.Item.PlayDepositSound( caller );
@@ -347,22 +331,15 @@ namespace Facepunch.RTS
 
 				if ( repairUnits.Count > 0 )
 				{
-					var pathfinder = GetLargestPathfinder( repairUnits );
-					var destinations = building.GetDestinations( pathfinder, true );
-
-					if ( destinations.Count > 0 )
+					var command = new RepairCommand
 					{
-						var command = new RepairCommand
-						{
-							Positions = destinations,
-							Target = building
-						};
+						Target = building
+					};
 
-						StartOrQueue( repairUnits, command, shouldQueue );
+					StartOrQueue( repairUnits, command, shouldQueue );
 
-						var randomUnit = repairUnits[Rand.Int( repairUnits.Count - 1 )];
-						randomUnit.Item.PlayConstructSound( caller );
-					}
+					var randomUnit = repairUnits[Rand.Int( repairUnits.Count - 1 )];
+					randomUnit.Item.PlayConstructSound( caller );
 				}
 			}
 		}
@@ -379,6 +356,17 @@ namespace Facepunch.RTS
 
 			if ( target.IsValid() && target is ResourceEntity resource )
 			{
+				var command = new GatherCommand
+				{
+					Target = resource
+				};
+
+				if ( ShouldPlaceRallyPoint( caller.Selection, out var trainer ) )
+				{
+					trainer.SetRallyCommand( command, resource.Position );
+					return;
+				}
+
 				var resourceType = resource.Resource;
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
@@ -393,22 +381,10 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
-					var pathfinder = GetLargestPathfinder( units );
-					var destinations = resource.GetDestinations( pathfinder, true );
+					StartOrQueue( units, command, shouldQueue );
 
-					if ( destinations.Count > 0 )
-					{
-						var command = new GatherCommand
-						{
-							Positions = destinations,
-							Target = resource
-						};
-
-						StartOrQueue( units, command, shouldQueue );
-
-						var randomUnit = units[Rand.Int( units.Count - 1 )];
-						randomUnit.Item.PlayGatherSound( caller, resourceType );
-					}
+					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					randomUnit.Item.PlayGatherSound( caller, resourceType );
 				}
 			}
 		}
@@ -427,6 +403,17 @@ namespace Facepunch.RTS
 			{
 				if ( building.IsUnderConstruction && building.Player == caller )
 				{
+					var command = new ConstructCommand()
+					{
+						Target = building
+					};
+
+					if ( ShouldPlaceRallyPoint( caller.Selection, out var trainer ) )
+					{
+						trainer.SetRallyCommand( command, building.Position );
+						return;
+					}
+
 					var units = caller.ForEachSelected<UnitEntity>( unit =>
 					{
 						if ( unit.IsUsingAbility() )
@@ -440,22 +427,10 @@ namespace Facepunch.RTS
 
 					if ( units.Count > 0 )
 					{
-						var pathfinder = GetLargestPathfinder( units );
-						var destinations = building.GetDestinations( pathfinder, true );
+						StartOrQueue( units, command, shouldQueue );
 
-						if ( destinations.Count > 0 )
-						{
-							var command = new ConstructCommand()
-							{
-								Positions = destinations,
-								Target = building
-							};
-
-							StartOrQueue( units, command, shouldQueue );
-
-							var randomUnit = units[Rand.Int( units.Count - 1 )];
-							randomUnit.Item.PlayConstructSound( caller );
-						}
+						var randomUnit = units[Rand.Int( units.Count - 1 )];
+						randomUnit.Item.PlayConstructSound( caller );
 					}
 				}
 			}
@@ -476,6 +451,17 @@ namespace Facepunch.RTS
 			if ( entries.Count == 3 )
 			{
 				var position = new Vector3( entries[0], entries[1], entries[2] );
+				var command = new MoveCommand()
+				{
+					Destinations = new List<Vector3>() { position }
+				};
+
+				if ( ShouldPlaceRallyPoint( caller.Selection, out var trainer ) )
+				{
+					trainer.SetRallyCommand( command, position );
+					return;
+				}
+
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
 					if ( unit.IsUsingAbility() )
@@ -486,11 +472,6 @@ namespace Facepunch.RTS
 
 				if ( units.Count > 0 )
 				{
-					var command = new MoveCommand()
-					{
-						Positions = new List<Vector3>() { position }
-					};
-
 					StartOrQueue( units, command, shouldQueue );
 
 					// Don't play command sounds too frequently.
@@ -720,7 +701,21 @@ namespace Facepunch.RTS
 				Ghost.Delete();
 			}
 		}
-		
+
+		private static bool ShouldPlaceRallyPoint( IList<Entity> selection, out BuildingEntity trainer )
+		{
+			if ( selection.Count == 1 && selection[0] is BuildingEntity entity && entity.CanSetRallyPoint )
+			{
+				trainer = entity;
+				return true;
+			}
+			else
+			{
+				trainer = null;
+				return false;
+			}
+		}
+
 		private static void BuildTable()
 		{
 			Table = new();

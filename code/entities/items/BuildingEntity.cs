@@ -17,12 +17,14 @@ namespace Facepunch.RTS
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
 		[Net, OnChangedCallback] public bool IsUnderConstruction { get; private set; }
 		public HashSet<Entity> TouchingEntities { get; private set; }
-		[Net] public Vector3 RallyPosition { get; set; }
+		[Net, OnChangedCallback] public Vector3 RallyPosition { get; set; }
+		public IMoveCommand RallyCommand { get; set; }
 		[Net] public float LineOfSightRadius { get; private set; }
 		[Net] public bool IsBlueprint { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public Entity Target { get; private set; }
 		public RealTimeUntil NextFindTarget { get; private set; }
+		public bool CanSetRallyPoint { get; private set; }
 		public float TargetAlpha { get; private set; }
 		public bool HasBeenSeen { get; set; }
 
@@ -55,6 +57,7 @@ namespace Facepunch.RTS
 		#endregion
 
 		private HistoryBuilding _historyBuilding;
+		private Particles _rallyMarker;
 
 		public BuildingEntity() : base()
 		{
@@ -169,6 +172,12 @@ namespace Facepunch.RTS
 		{
 			if ( !Target.IsValid() ) return false;
 			return (Target.IsValid() && Target.Position.Distance( Position ) < Item.AttackRadius);
+		}
+
+		public void SetRallyCommand( IMoveCommand command, Vector3 position )
+		{
+			RallyCommand = command;
+			RallyPosition = position;
 		}
 
 		public bool IsDamaged()
@@ -599,6 +608,13 @@ namespace Facepunch.RTS
 			if ( queueItem.Item is BaseUnit unit )
 			{
 				var entity = SpawnUnit( unit );
+
+				if ( RallyCommand != null )
+				{
+					entity.ClearMoveStack();
+					entity.PushMoveGroup( RallyCommand );
+				}
+
 				Events.InvokeUnitTrained( Player, entity );
 			}
 
@@ -641,6 +657,21 @@ namespace Facepunch.RTS
 			LocalCenter = CollisionBounds.Center;
 			MaxHealth = item.MaxHealth;
 
+			var canTrainUnits = false;
+
+			foreach ( var q in item.Queueables )
+			{
+				var queueable = Items.Find<BaseUnit>( q );
+
+				if ( queueable != null )
+				{
+					canTrainUnits = true;
+					break;
+				}
+			}
+
+			CanSetRallyPoint = (item.CanSetRallyPoint && canTrainUnits);
+
 			if ( Weapon.IsValid() ) Weapon.Delete();
 
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
@@ -677,6 +708,20 @@ namespace Facepunch.RTS
 			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
 
 			base.AddHudComponents();
+		}
+
+		protected override void OnSelected()
+		{
+			base.OnSelected();
+
+			ShowRallyMarker();
+		}
+
+		protected override void OnDeselected()
+		{
+			base.OnDeselected();
+
+			HideRallyMarker();
 		}
 
 		protected override void OnDestroy()
@@ -765,6 +810,32 @@ namespace Facepunch.RTS
 			}
 
 			NextFindTarget = 0.5f;
+		}
+
+		private void OnRallyPositionChanged()
+		{
+			if ( IsSelected )
+			{
+				ShowRallyMarker();
+			}
+		}
+
+		private void HideRallyMarker()
+		{
+			_rallyMarker?.Destroy();
+			_rallyMarker = null;
+		}
+
+		private void ShowRallyMarker()
+		{
+			if ( RallyPosition.IsNearZeroLength )
+				return;
+
+			HideRallyMarker();
+
+			_rallyMarker = Particles.Create( "particles/flag_marker/flag_marker.vpcf" );
+			_rallyMarker.SetPosition( 0, RallyPosition );
+			_rallyMarker.SetPosition( 1, Player.TeamColor * 255f );
 		}
 
 		[ClientRpc]

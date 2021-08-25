@@ -12,13 +12,18 @@ namespace Gamelib.FlowFields
 	{
 		private struct SimpleMoveCommand : IMoveCommand
 		{
-			public List<Vector3> Positions { get; set; }
+			public List<Vector3> Destinations { get; set; }
 
-			public void Execute( MoveGroup moveGroup, IMoveAgent agent ) { }
-
-			public bool IsFinished( MoveGroup moveGroup, IMoveAgent agent )
+			public List<Vector3> GetDestinations( MoveGroup group )
 			{
-				return moveGroup.IsDestination( agent, agent.Position );
+				return Destinations;
+			}
+
+			public void Execute( MoveGroup group, IMoveAgent agent ) { }
+
+			public bool IsFinished( MoveGroup group, IMoveAgent agent )
+			{
+				return group.IsDestination( agent, agent.Position );
 			}
 		}
 
@@ -93,7 +98,7 @@ namespace Gamelib.FlowFields
 		{
 			Queue.Enqueue( new SimpleMoveCommand
 			{
-				Positions = destinations
+				Destinations = destinations
 			} ); ;
 		}
 
@@ -101,7 +106,7 @@ namespace Gamelib.FlowFields
 		{
 			Queue.Enqueue( new SimpleMoveCommand
 			{
-				Positions = new List<Vector3> { destination }
+				Destinations = new List<Vector3> { destination }
 			} ); ;
 		}
 
@@ -218,8 +223,17 @@ namespace Gamelib.FlowFields
 
 			Command = Queue.Dequeue();
 
-			PathRequest = Pathfinder.Request( Command.Positions );
-			ReachedGoal.Clear();
+			var destinations = Command.GetDestinations( this );
+
+			if ( destinations != null && destinations.Count > 0 )
+			{
+				PathRequest = Pathfinder.Request( destinations );
+				ReachedGoal.Clear();
+			}
+			else
+			{
+				NextCommand();
+			}
 		}
 
 		private Pathfinder GetPathfinder( List<IMoveAgent> agents )

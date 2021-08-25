@@ -5,17 +5,32 @@ namespace Facepunch.RTS.Commands
 {
     public struct MoveCommand : IMoveCommand
 	{
-		public List<Vector3> Positions { get; set; }
+		public List<Vector3> Destinations { get; set; }
 
-		public void Execute( MoveGroup moveGroup, IMoveAgent agent )
+		public MoveCommand( Vector3 destination )
+		{
+			Destinations = new List<Vector3>() { destination };
+		}
+
+		public MoveCommand( List<Vector3> destinations )
+		{
+			Destinations = destinations;
+		}
+
+		public void Execute( MoveGroup group, IMoveAgent agent )
 		{
 			if ( agent is not UnitEntity unit )
 				return;
 
-			unit.SetMoveTarget( moveGroup );
+			unit.SetMoveTarget( group );
 		}
 
-		public bool IsFinished( MoveGroup moveGroup, IMoveAgent agent )
+		public List<Vector3> GetDestinations( MoveGroup group )
+		{
+			return Destinations; ;
+		}
+
+		public bool IsFinished( MoveGroup group, IMoveAgent agent )
 		{
 			if ( agent is UnitEntity unit )
 			{

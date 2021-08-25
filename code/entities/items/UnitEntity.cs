@@ -649,15 +649,24 @@ namespace Facepunch.RTS
 			return group;
 		}
 
+		public MoveGroup PushMoveGroup( IMoveCommand command )
+		{
+			TryFinishMoveGroup();
+
+			var moveGroup = new MoveGroup();
+			moveGroup.Initialize( this, command );
+
+			MoveStack.Push( moveGroup );
+
+			return moveGroup;
+		}
+
 		public MoveGroup PushMoveGroup( Vector3 destination, IMoveCommand command = null )
 		{
 			TryFinishMoveGroup();
 
 			var moveGroup = new MoveGroup();
-
-			command ??= new MoveCommand();
-			command.Positions = new List<Vector3>() { destination };
-
+			command ??= new MoveCommand( destination );
 			moveGroup.Initialize( this, command );
 
 			MoveStack.Push( moveGroup );
@@ -673,10 +682,7 @@ namespace Facepunch.RTS
 			TryFinishMoveGroup();
 
 			var moveGroup = new MoveGroup();
-
-			command ??= new MoveCommand();
-			command.Positions = destinations;
-
+			command ??= new MoveCommand( destinations );
 			moveGroup.Initialize( this, command );
 
 			MoveStack.Push( moveGroup );
