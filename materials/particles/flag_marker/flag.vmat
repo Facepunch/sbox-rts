@@ -13,6 +13,9 @@ Layer0
 	//---- Translucent ----
 	F_TRANSLUCENT 1
 
+	//---- Z-Buffering ----
+	F_DISABLE_Z_BUFFERING 1
+
 	//---- Ambient Occlusion ----
 	g_flAmbientOcclusionDirectDiffuse "0.000"
 	g_flAmbientOcclusionDirectSpecular "0.000"

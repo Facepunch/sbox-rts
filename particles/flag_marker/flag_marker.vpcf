@@ -67,8 +67,8 @@
 		},
 		{
 			_class = "C_INIT_PositionOffset"
-			m_OffsetMin = [ 0.0, 0.0, -150.0 ]
-			m_OffsetMax = [ 0.0, 0.0, -150.0 ]
+			m_OffsetMin = [ 0.0, 0.0, -40.0 ]
+			m_OffsetMax = [ 0.0, 0.0, -40.0 ]
 		},
 	]
 	m_Operators = 
@@ -87,8 +87,8 @@
 		{
 			_class = "C_OP_BasicMovement"
 			m_Gravity = [ 0.0, 0.0, 600.0 ]
-			m_flOpStartFadeOutTime = 0.5
-			m_flOpEndFadeOutTime = 0.7
+			m_flOpStartFadeOutTime = 0.2
+			m_flOpEndFadeOutTime = 0.4
 		},
 		{
 			_class = "C_OP_SetFloat"
