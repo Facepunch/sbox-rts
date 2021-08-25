@@ -91,7 +91,7 @@ namespace Facepunch.RTS
 
 			foreach ( var entity in Selection )
 			{
-				if ( entity is T selected && selected.IsLocalPlayers )
+				if ( entity is T selected && selected.Player == this )
 				{
 					output.Add( selected );
 				}
@@ -106,7 +106,7 @@ namespace Facepunch.RTS
 
 			foreach ( var entity in Selection )
 			{
-				if ( entity is T selected && selected.IsLocalPlayers )
+				if ( entity is T selected && selected.Player == this )
 				{
 					if ( callback( selected ) )
 						output.Add( selected );
