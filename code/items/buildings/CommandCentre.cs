@@ -14,7 +14,7 @@ namespace Facepunch.RTS.Buildings
 		public override float MaxHealth => 2000f;
 		public override float MinLineOfSight => 500f;
 		public override bool BuildFirstInstantly => true;
-		public override int BuildTime => 30;
+		public override int BuildTime => 60;
 		public override bool CanDemolish => false;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
