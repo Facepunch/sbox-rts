@@ -53,10 +53,10 @@ namespace Facepunch.RTS
 		[Net, OnChangedCallback] private List<float> ResistanceList { get; set; }
 		[Net] public List<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
-		public UnitTargetType TargetType => _target.Type;
 		public IOccupiableItem OccupiableItem => Item;
 
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
+		[Net] public UnitTargetType TargetType { get; protected set; }
 		[Net] public Entity Occupiable { get; private set; }
 		[Net] public float GatherProgress { get; private set; }
 		[Net] public bool IsGathering { get; private set; }
@@ -167,6 +167,11 @@ namespace Facepunch.RTS
 			Rank?.OnTaken( this );
 			Rank = rank;
 			Rank.OnGiven( this );
+		}
+
+		public bool CanGatherAny()
+		{
+			return Item.Gatherables.Count > 0;
 		}
 
 		public bool CanGather( ResourceType type )
@@ -880,7 +885,10 @@ namespace Facepunch.RTS
 				if ( next != null )
 				{
 					next.Resume( this );
+					return;
 				}
+
+				ClearTarget();
 			}
 		}
 
@@ -1096,6 +1104,9 @@ namespace Facepunch.RTS
 
 			// Let's see if our move group has finished now.
 			TryFinishMoveGroup();
+
+			// Network the current target type.
+			TargetType = _target.Type;
 
 			animator?.Apply( this );
 		}

@@ -1,0 +1,44 @@
+﻿idleutilityunits {
+    position: absolute;
+    pointer-events: auto;
+    right: 48px;
+    bottom: 32px;
+
+    .button {
+        background-color: rgba(0 0 0 0.6);
+        border: 2px rgba( 255 255 255 0.1 );
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        height: 80px;
+
+        &.idle {
+            background-color: rgba(100 0 0 0.6);
+        }
+
+        .icon {
+            background-size: 100%;
+            background-image: url( /textures/rts/idleutilityunits.png );
+            width: 40px;
+            height: 40px;
+        }
+
+        .label {
+            margin-top: 4px;
+            font-size: 16px;
+            color: white;
+        }
+
+        &:hover {
+            border: 2px cyan;
+        }
+    }
+
+
+    &.hidden {
+        display: none;
+    }
+}

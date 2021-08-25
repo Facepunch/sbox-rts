@@ -122,7 +122,7 @@ namespace Facepunch.RTS
 			{
 				if ( builder.Pressed( SlotByIndex( i ) ) )
 				{
-					if ( builder.Down( InputButton.Run ) )
+					if ( builder.Down( InputButton.Duck ) )
 					{
 						SelectionGroups.Update( i, player.GetSelected<ISelectable>() );
 						break;
