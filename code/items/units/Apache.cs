@@ -18,6 +18,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
 		public override bool RagdollOnDeath => false;
+		public override float AgentRadiusScale => 1.5f;
 		public override bool AlignToSurface => false;
 		public override string IdleLoopSound => "rts.helicopterloop";
 		public override float AttackRadius => 1000f;

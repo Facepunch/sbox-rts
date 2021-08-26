@@ -17,6 +17,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;
 		public override bool UseBoundsToAlign => true;
+		public override float AgentRadiusScale => 1.5f;
 		public override float RotateToTargetSpeed => 10f;
 		public override string Weapon => "weapon_tank_cannon";
 		public override int NodeSize => 50;

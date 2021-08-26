@@ -75,7 +75,7 @@ namespace Facepunch.RTS
 		public bool IsStatic { get; private set; }
 		public DamageInfo LastDamageTaken { get; private set; }
 		public Stack<MoveGroup> MoveStack { get; private set; }
-		public Vector3 InputVelocity { get; private set; }
+		public Vector3 TargetVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
 		public BaseRank Rank { get; private set; }
 
@@ -87,6 +87,7 @@ namespace Facepunch.RTS
 
 		protected readonly GatherInfo _gather = new();
 		protected readonly TargetInfo _target = new();
+		protected IMoveAgent[] _flockBuffer = new IMoveAgent[8];
 		protected List<ISelectable> _targetBuffer = new();
 		protected RealTimeUntil _nextRepairTime;
 		protected RealTimeUntil _nextFindTarget;
@@ -148,9 +149,10 @@ namespace Facepunch.RTS
 				return group.IsDestination( this, Position );
 
 			var groundPosition = Position.WithZ( 0f );
-			var destination = group.GetDestination();
+			var groundDestination = group.GetDestination().WithZ( 0f );
+			var tolerance = AgentRadius * 0.5f;
 
-			if ( groundPosition.Distance( destination ) <= AgentRadius * 0.5f )
+			if ( groundPosition.Distance( groundDestination ) <= tolerance )
 				return true;
 
 			return group.IsDestination( this, Position, false );
@@ -1460,7 +1462,7 @@ namespace Facepunch.RTS
 			if ( _nextFindTarget )
 			{
 				FindTargetEnemy();
-				_nextFindTarget = 1;
+				_nextFindTarget = 1f;
 			}
 		}
 
@@ -1605,14 +1607,42 @@ namespace Facepunch.RTS
 			LookAtPosition( ability.TargetInfo.Origin, Time.Delta * Item.RotateToTargetSpeed );
 		}
 
-		private void TickMoveToTarget( bool isTargetValid, UnitAnimator animator )
+		private void UpdateFlockBuffer()
 		{
-			if ( isTargetValid && _target.Follow )
+			var bufferIndex = 0;
+			var neighbours = Physics.GetEntitiesInSphere( Position, AgentRadius * 0.35f );
+
+			foreach ( var neighbour in neighbours )
 			{
-				_target.Position = _target.Entity.Position;
+				if ( neighbour is UnitEntity unit && ShouldOtherUnitFlock( unit ) )
+				{
+					_flockBuffer[bufferIndex] = unit;
+
+					bufferIndex++;
+
+					if ( bufferIndex >= _flockBuffer.Length )
+						break;
+				}
 			}
 
-			var steerDirection = Vector3.Zero;
+			if ( bufferIndex < 8 )
+			{
+				Array.Clear( _flockBuffer, bufferIndex, _flockBuffer.Length - bufferIndex );
+			}
+		}
+
+		private void UpdateFollowPosition( bool isTargetValid )
+		{
+			if ( !isTargetValid || !_target.Follow )
+				return;
+
+			_target.Position = _target.Entity.Position;
+		}
+
+		private void TickMoveToTarget( bool isTargetValid, UnitAnimator animator )
+		{
+			UpdateFollowPosition( isTargetValid );
+
 			var nodeDirection = Vector3.Zero;
 			var movementSpeed = GetSpeed();
 			var direction = Vector3.Zero;
@@ -1647,32 +1677,36 @@ namespace Facepunch.RTS
 					nodeDirection = Vector3.Zero;
 			}
 
-			var others = Physics.GetEntitiesInSphere( Position, AgentRadius * 0.5f )
-				.OfType<UnitEntity>()
-				.Where( ShouldOtherUnitFlock )
-				.Cast<IMoveAgent>();
+			if ( IsSlowTick() )
+			{
+				UpdateFlockBuffer();
+			}
 
 			var flocker = new Flocker();
-			flocker.Setup( this, others, Position, movementSpeed );
-			flocker.Flock( Position + direction * Pathfinder.NodeSize );
-			steerDirection = flocker.Force.WithZ( 0f );
+			flocker.Setup( this, _flockBuffer, Position, movementSpeed );
+			flocker.Flock( Position + direction * Math.Max( AgentRadius, Pathfinder.NodeSize ) );
+			var steerDirection = flocker.Force.WithZ( 0f );
 
 			if ( steerDirection.Length > 0 )
 			{
 				if ( !Item.UsePathfinder || Pathfinder.IsAvailable( Position + (steerDirection.Normal * Pathfinder.NodeSize) ) )
 				{
-					Velocity = steerDirection * Time.Delta;
+					Velocity = steerDirection;
 				}
 			}
 
+			var acceleration = 4f;
+
 			if ( Velocity.Length == 0 )
 			{
-				Velocity = (nodeDirection * movementSpeed) * Time.Delta;
+				acceleration = 16f;
+				Velocity = (nodeDirection * movementSpeed);
 			}
+			
+			TargetVelocity = TargetVelocity.LerpTo( Velocity, Time.Delta * acceleration );
+			Position += TargetVelocity * Time.Delta;
 
 			var verticalOffset = GetVerticalOffset();
-
-			Position += Velocity;
 			Position = Position.LerpTo( Position.WithZ( verticalOffset ), Time.Delta * GetVerticalSpeed() );
 
 			if ( Item.AlignToSurface )
@@ -1696,7 +1730,7 @@ namespace Facepunch.RTS
 						animator.Speed = 0.5f;
 				}
 
-				Rotation = Rotation.Lerp( Rotation, Rotation.LookAt( walkVelocity.Normal, Vector3.Up ), Time.Delta * 10f );
+				Rotation = Rotation.Lerp( Rotation, Rotation.LookAt( walkVelocity.Normal, Vector3.Up ), Time.Delta * 4f );
 			}
 		}
 

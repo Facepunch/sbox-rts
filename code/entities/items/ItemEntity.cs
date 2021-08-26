@@ -84,6 +84,11 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public bool IsSlowTick()
+		{
+			return (Time.Tick % 3 == 0);
+		}
+
 		public BaseItem UnqueueItem( uint queueId )
 		{
 			Host.AssertServer();

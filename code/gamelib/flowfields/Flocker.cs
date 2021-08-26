@@ -8,13 +8,13 @@ namespace Gamelib.FlowFields
 		public Vector3 Position;
 		public Vector3 Force;
 		public IMoveAgent Agent;
-		public IEnumerable<IMoveAgent> Agents;
+		public IMoveAgent[] Agents;
 		public float MaxForce;
 		public float MaxSpeed;
 
-		public void Setup( IMoveAgent agent, IEnumerable<IMoveAgent> agents, Vector3 position, float speed )
+		public void Setup( IMoveAgent agent, IMoveAgent[] agents, Vector3 position, float speed )
 		{
-			Position = position;
+			Position = position.WithZ( 0f );
 			Force = Vector3.Zero;
 			Agent = agent;
 			Agents = agents;
@@ -24,10 +24,10 @@ namespace Gamelib.FlowFields
 
 		public void Flock( Vector3 target )
 		{
-			var seek = Seek( target );
+			var seek = Seek( target.WithZ( 0f ) );
 
 			//Have each unit steer to avoid hitting its neighbors.
-			var sep = Separate() * 4f;
+			var sep = Separate() * 4f; // MaxForce * 0.01f;
 			// Have each unit steer toward the average position of its neighbors.
 			var coh = Cohesion() * 0.5f;
 			// Have each unit steer so as to align itself to the average heading of its neighbors.
@@ -38,6 +38,8 @@ namespace Gamelib.FlowFields
 
 		public Vector3 Seek( Vector3 target )
 		{
+			//var tolerance = Agent.AgentRadius * 0.5f;
+
 			if ( target.Distance( Position ) <= 1f )
 				return Vector3.Zero;
 
@@ -51,17 +53,22 @@ namespace Gamelib.FlowFields
 		{
 			var totalForce = Vector3.Zero;
 			var neighboursCount = 0;
+			var ourPosition = Agent.Position.WithZ( 0f );
+			var ourRadius = Agent.AgentRadius;
 
-			foreach ( var agent in Agents )
+			for ( int i = 0; i < Agents.Length; i++ )
 			{
+				var agent = Agents[i];
+
 				if ( agent != Agent && agent is Entity )
 				{
-					var distance = Agent.Position.Distance( agent.Position );
+					var theirPosition = agent.Position.WithZ( 0f );
+					var distance = ourPosition.Distance( theirPosition );
 
-					if ( distance < Agent.AgentRadius && distance > 0 )
+					if ( distance < ourRadius && distance > 0 )
 					{
-						var pushForce = Agent.Position - agent.Position;
-						pushForce = pushForce.Normal * (1f - (pushForce.Length / Agent.AgentRadius));
+						var pushForce = ourPosition - theirPosition;
+						pushForce = pushForce.Normal * (1f - (pushForce.Length / ourRadius));
 						totalForce += pushForce;
 						neighboursCount++;
 					}
@@ -81,14 +88,19 @@ namespace Gamelib.FlowFields
 		{
 			var averageHeading = Vector3.Zero;
 			var neighboursCount = 0;
+			var ourPosition = Agent.Position.WithZ( 0f );
+			var ourRadius = Agent.AgentRadius;
 
-			foreach ( var agent in Agents )
+			for ( int i = 0; i < Agents.Length; i++ )
 			{
+				var agent = Agents[i];
+
 				if ( agent != Agent && agent is Entity )
 				{
-					var distance = Agent.Position.Distance( agent.Position );
+					var theirPosition = agent.Position.WithZ( 0f );
+					var distance = ourPosition.Distance( theirPosition );
 
-					if ( distance < Agent.AgentRadius && agent.Velocity.Length > 0 )
+					if ( distance < ourRadius && agent.Velocity.Length > 0 )
 					{
 						averageHeading = averageHeading + agent.Velocity.Normal;
 						neighboursCount++;
@@ -113,16 +125,21 @@ namespace Gamelib.FlowFields
 		{
 			var centerOfMass = Agent.Position;
 			var neighboursCount = 1;
+			var ourPosition = Agent.Position.WithZ( 0f );
+			var ourRadius = Agent.AgentRadius;
 
-			foreach ( var agent in Agents )
+			for ( int i = 0; i < Agents.Length; i++ )
 			{
+				var agent = Agents[i];
+
 				if ( agent != Agent && agent is Entity )
 				{
-					var distance = Agent.Position.Distance( agent.Position );
+					var theirPosition = agent.Position.WithZ( 0f );
+					var distance = ourPosition.Distance( theirPosition );
 
-					if ( distance < Agent.AgentRadius )
+					if ( distance < ourRadius )
 					{
-						centerOfMass = centerOfMass + agent.Position;
+						centerOfMass = centerOfMass + theirPosition;
 						neighboursCount++;
 					}
 				}

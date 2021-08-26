@@ -11,7 +11,7 @@ namespace Gamelib.FlowFields
 		private static void UpdateCollisions()
 		{
 			foreach ( var pathfinder in All )
-				pathfinder.UpdateCollisions();
+				_ = pathfinder.UpdateCollisions();
 		}
 
 		[ServerCmd( "ff_show_chunks" )]

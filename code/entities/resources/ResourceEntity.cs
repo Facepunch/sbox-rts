@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 		public virtual int DefaultStock => 250;
 		public virtual string Description => "";
 		public virtual string Name => "";
-		public virtual float GatherTime => 0.5f;
+		public virtual float GatherTime => 0.25f;
 		public virtual string[] GatherSounds => new string[]
 		{
 			"minerock1",
@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 			"minerock3",
 			"minerock4"
 		};
-		public virtual int MaxCarry => 20;
+		public virtual int MaxCarry => 10;
 
 		[Property, Net] public int Stock { get; set; }
 

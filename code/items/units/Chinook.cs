@@ -16,6 +16,7 @@ namespace Facepunch.RTS.Units
 		public override float VerticalOffset => 600f;
 		public override bool UsePathfinder => false;
 		public override bool UseRenderColor => true;
+		public override float AgentRadiusScale => 1.5f;
 		public override bool UseModelPhysics => true;
 		public override bool RagdollOnDeath => false;
 		public override bool AlignToSurface => false;

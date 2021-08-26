@@ -13,12 +13,12 @@ namespace Facepunch.RTS.Units
 		public virtual OccupiableSettings Occupiable => new();
 		public virtual OccupantSettings Occupant => null;
 		public virtual HashSet<string> Clothing => new();
-		public virtual float CircleScale => 1f;
+		public virtual float CircleScale => 0.8f;
 		public virtual float ModelScale => 1f;
 		public virtual float VerticalOffset => 0f;
 		public virtual bool UsePathfinder => true;
 		public virtual UnitAnimator Animator => new SimpleTerryAnimator();
-		public virtual float AgentRadiusScale => 2f;
+		public virtual float AgentRadiusScale => 2.5f;
 		public virtual bool CanDisband => true;
 		public virtual bool CanConstruct => false;
 		public virtual bool RagdollOnDeath => true;

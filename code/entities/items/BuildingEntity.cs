@@ -521,7 +521,11 @@ namespace Facepunch.RTS
 		{
 			base.ServerTick();
 
-			if ( IsUnderConstruction ) return;
+			if ( IsUnderConstruction )
+				return;
+
+			if ( !IsSlowTick() )
+				return;
 
 			TickGenerator();
 
@@ -539,10 +543,7 @@ namespace Facepunch.RTS
 						Weapon.Attack();
 				}
 
-				if ( NextFindTarget )
-				{
-					FindTargetUnit();
-				}
+				FindTargetUnit();
 			}
 		}
 
@@ -800,6 +801,8 @@ namespace Facepunch.RTS
 
 		private void FindTargetUnit()
 		{
+			if ( !NextFindTarget ) return;
+
 			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRadius )
 				.OfType<UnitEntity>()
 				.Where( ( a ) => IsEnemy( a ) && InVerticalRange( a ) )

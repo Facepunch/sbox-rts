@@ -16,6 +16,7 @@ namespace Facepunch.RTS.Units
 		public override bool UseRenderColor => true;
 		public override float RotateToTargetSpeed => 10f;
 		public override bool UseBoundsToAlign => true;
+		public override float AgentRadiusScale => 1.5f;
 		public override string Entity => "unit_buggy";
 		public override int NodeSize => 50;
 		public override int CollisionSize => 100;
