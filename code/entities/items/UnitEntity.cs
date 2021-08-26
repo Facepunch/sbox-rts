@@ -890,7 +890,10 @@ namespace Facepunch.RTS
 					return;
 				}
 
-				ClearTarget();
+				OnMoveStackEmpty();
+
+				if ( MoveStack.Count == 0 )
+					ClearTarget();
 			}
 		}
 
@@ -1072,11 +1075,6 @@ namespace Facepunch.RTS
 						else
 							ValidateAttackDistance();
 					}
-					else if ( _target.Type == UnitTargetType.Gather )
-					{
-						if ( !isTargetValid )
-							FindTargetResource();
-					}
 
 					if ( isTargetValid && isTargetInRange )
 						TickInteractWithTarget();
@@ -1204,6 +1202,14 @@ namespace Facepunch.RTS
 			{
 				Weapon.Position = Position;
 				Weapon.SetParent( this, Weapon.BoneMerge );
+			}
+		}
+
+		protected virtual void OnMoveStackEmpty()
+		{
+			if ( _target.Type == UnitTargetType.Gather )
+			{
+				FindTargetResource();
 			}
 		}
 
