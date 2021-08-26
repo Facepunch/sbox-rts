@@ -12,6 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/buggy/buggy.vmdl";
 		public override string Description => "A fast vehicle that occupies one ranged unit.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/buggy.png" );
+		public override float MaxHealth => 150f;
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;
 		public override float RotateToTargetSpeed => 10f;
@@ -57,8 +58,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.armoredplating",
-			"tech.pyrotechnics"
+			"tech.armoredplating"
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{

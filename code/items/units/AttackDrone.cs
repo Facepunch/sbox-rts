@@ -13,6 +13,7 @@ namespace Facepunch.RTS.Units
 		public override string Description => "A fast but weak combat drone to deliver pain from the sky.";
 		public override string Model => "models/vehicles/drones/attack/drone_attack.vmdl";
 		public override string Weapon => "weapon_attack_drone";
+		public override float MaxHealth => 75f;
 		public override HashSet<string> Tags => new() { "drone" };
 		public override float VerticalOffset => 100f;
 		public override bool UseModelPhysics => true;
@@ -46,7 +47,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{
-			["resistance.fire"] = 0.2f
+			["resistance.fire"] = 0.2f,
+			["resistance.bullet"] = 0.1f,
 		};
 		public override HashSet<string> Abilities => new()
 		{

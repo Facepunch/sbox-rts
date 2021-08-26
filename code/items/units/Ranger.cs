@@ -12,6 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/humvee/humvee.vmdl";
 		public override string Description => "A basic vehicle good for scouting large areas.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/humvee.png" );
+		public override float MaxHealth => 200f;
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
 		public override bool RagdollOnDeath => false;

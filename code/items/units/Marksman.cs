@@ -11,6 +11,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.marksman";
 		public override string Description => "A stealthy long-ranged Terry ready to scope in on targets.";
 		public override float Speed => 250f;
+		public override float MaxHealth => 125f;
 		public override float AttackRadius => 1200f;
 		public override float LineOfSightRadius => 1200f;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );

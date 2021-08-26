@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Description => "Base defense structure that automatically fires upon enemy ground units.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/turret.png" );
 		public override int BuildTime => 20;
-		public override float MaxHealth => 300f;
+		public override float MaxHealth => 400f;
 		public override float AttackRadius => 1200f;
 		public override float MinLineOfSight => 1200f;
 		public override float MaxVerticalRange => 150f;
@@ -26,6 +26,11 @@ namespace Facepunch.RTS.Buildings
 		{
 			"building.commandcentre",
 			"tech.machinery"
+		};
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.bullet"] = 0.3f,
+			["resistance.fire"] = 0.1f
 		};
 	}
 }

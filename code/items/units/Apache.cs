@@ -14,6 +14,7 @@ namespace Facepunch.RTS.Units
 		public override string Description => "An armored aircraft that occupies one ranged unit.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/apache.png" );
 		public override float VerticalOffset => 600f;
+		public override float MaxHealth => 250f;
 		public override bool UsePathfinder => false;
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;

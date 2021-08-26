@@ -14,6 +14,7 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/apc.png" );
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
+		public override float MaxHealth => 250f;
 		public override int NodeSize => 50;
 		public override int CollisionSize => 100;
 		public override bool RagdollOnDeath => false;

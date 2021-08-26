@@ -49,7 +49,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{
-			["resistance.fire"] = 0.2f
+			["resistance.fire"] = 0.2f,
+			["resistance.bullet"] = 0.2f
 		};
 	}
 }

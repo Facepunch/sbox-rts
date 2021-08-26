@@ -60,7 +60,10 @@ namespace Gamelib.FlowFields
 			{
 				var agent = Agents[i];
 
-				if ( agent != Agent && agent is Entity )
+				if ( agent == Agent )
+					continue;
+
+				if ( agent is Entity entity && entity.IsValid() )
 				{
 					var theirPosition = agent.Position.WithZ( 0f );
 					var distance = ourPosition.Distance( theirPosition );
@@ -95,7 +98,10 @@ namespace Gamelib.FlowFields
 			{
 				var agent = Agents[i];
 
-				if ( agent != Agent && agent is Entity )
+				if ( agent == Agent )
+					continue;
+
+				if ( agent is Entity entity && entity.IsValid() )
 				{
 					var theirPosition = agent.Position.WithZ( 0f );
 					var distance = ourPosition.Distance( theirPosition );
@@ -132,7 +138,10 @@ namespace Gamelib.FlowFields
 			{
 				var agent = Agents[i];
 
-				if ( agent != Agent && agent is Entity )
+				if ( agent == Agent )
+					continue;
+
+				if ( agent is Entity entity && entity.IsValid() )
 				{
 					var theirPosition = agent.Position.WithZ( 0f );
 					var distance = ourPosition.Distance( theirPosition );

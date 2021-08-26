@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Buildings
 		public override string UniqueId => "building.tunnel";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/tunnel.png" );
 		public override string Description => "Connect two of these together to move units across the map quickly.";
-		public override float MaxHealth => 300f;
+		public override float MaxHealth => 600f;
 		public override int BuildTime => 30;
 		public override HashSet<string> Abilities => new()
 		{
@@ -25,14 +25,19 @@ namespace Facepunch.RTS.Buildings
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 150,
-			[ResourceType.Metal] = 100
+			[ResourceType.Stone] = 300,
+			[ResourceType.Metal] = 150
 		};
 		public override string Model => "models/buildings/tunnel/tunnel.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
 			"building.commandcentre",
 			"tech.boring"
+		};
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.bullet"] = 0.2f,
+			["resistance.fire"] = -0.5f
 		};
 	}
 }

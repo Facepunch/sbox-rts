@@ -12,6 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Description => "This Terry loves freezing others to slow them down. And death, he loves that too.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override float MinAttackDistance => 500f;
+		public override float MaxHealth => 125f;
 		public override int BuildTime => 20;
 		public override OccupantSettings Occupant => new()
 		{

@@ -15,6 +15,7 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/drones/shield/drone_shield.vmdl";
 		public override HashSet<string> Tags => new() { "drone" };
 		public override float VerticalOffset => 100f;
+		public override float MaxHealth => 125f;
 		public override bool UseModelPhysics => true;
 		public override float CircleScale => 0.5f;
 		public override bool UseRenderColor => true;
@@ -42,7 +43,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{
-			["resistance.fire"] = 0.2f
+			["resistance.fire"] = 0.2f,
+			["resistance.bullet"] = 0.2f
 		};
 		public override HashSet<string> Abilities => new()
 		{

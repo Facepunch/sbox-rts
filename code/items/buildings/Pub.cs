@@ -21,8 +21,8 @@ namespace Facepunch.RTS.Buildings
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 100,
-			[ResourceType.Metal] = 50
+			[ResourceType.Stone] = 150,
+			[ResourceType.Metal] = 100
 		};
 		public override string Model => "models/buildings/pub/pub.vmdl";
 		public override HashSet<string> Dependencies => new()

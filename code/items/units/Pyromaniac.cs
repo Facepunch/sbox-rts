@@ -13,6 +13,7 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override float MinAttackDistance => 500f;
 		public override int BuildTime => 20;
+		public override float MaxHealth => 125f;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true

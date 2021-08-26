@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Buildings
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/watchtower.png" );
 		public override string Description => "Useful for seeing across large distances and can hold one unit.";
 		public override int BuildTime => 20;
-		public override float MaxHealth => 200f;
+		public override float MaxHealth => 400f;
 		public override float MinLineOfSight => 1000f;
 		public override OccupiableSettings Occupiable => new()
 		{
@@ -30,6 +30,11 @@ namespace Facepunch.RTS.Buildings
 		{
 			"building.commandcentre",
 			"tech.infrastructure"
+		};
+		public override Dictionary<string, float> Resistances => new()
+		{
+			["resistance.bullet"] = 0.3f,
+			["resistance.fire"] = -0.3f
 		};
 	}
 }
