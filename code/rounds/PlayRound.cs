@@ -43,8 +43,8 @@ namespace Facepunch.RTS
 						worker.Position = spawnpoint.Position + (Vector3.Random * 20f).WithZ( spawnpoint.Position.z );
 						player.AddPopulation( worker.Item.Population );
 
-						player.SetResource( ResourceType.Stone, 1000 );
-						player.SetResource( ResourceType.Metal, 500 );
+						player.SetResource( ResourceType.Stone, 1200 );
+						player.SetResource( ResourceType.Metal, 600 );
 						player.SetResource( ResourceType.Beer, 250 );
 						player.SetResource( ResourceType.Plasma, 0 );
 

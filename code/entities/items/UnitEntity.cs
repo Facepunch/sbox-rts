@@ -1070,9 +1070,7 @@ namespace Facepunch.RTS
 
 					if ( _target.Type == UnitTargetType.Attack )
 					{
-						if ( !isTargetValid )
-							ClearTarget();
-						else
+						if ( isTargetValid )
 							ValidateAttackDistance();
 					}
 
@@ -1207,7 +1205,8 @@ namespace Facepunch.RTS
 
 		protected virtual void OnMoveStackEmpty()
 		{
-			if ( _target.Type == UnitTargetType.Gather )
+			if ( _target.Type == UnitTargetType.Gather
+				|| _target.Type == UnitTargetType.Deposit )
 			{
 				FindTargetResource();
 			}
@@ -1366,7 +1365,7 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			var entities = Physics.GetEntitiesInSphere( _gather.Position, 1000f );
+			var entities = Physics.GetEntitiesInSphere( _gather.Position, 2000f );
 
 			foreach ( var entity in entities )
 			{
@@ -1382,8 +1381,6 @@ namespace Facepunch.RTS
 					return;
 				}
 			}
-
-			ClearTarget();
 		}
 
 		private bool FindResourceDepo()
@@ -1414,8 +1411,6 @@ namespace Facepunch.RTS
 
 				return true;
 			}
-			
-			ClearTarget();
 
 			return false;
 		}
@@ -1520,8 +1515,6 @@ namespace Facepunch.RTS
 					{
 						if ( building.IsUnderConstruction )
 							TickConstruct( building );
-						else
-							ClearTarget();
 
 						return;
 					}
@@ -1742,10 +1735,15 @@ namespace Facepunch.RTS
 
 		private bool ShouldOtherUnitFlock( UnitEntity unit )
 		{
-			if ( unit.TargetType == UnitTargetType.Gather && unit.Velocity.Length == 0 )
-			{
+			if ( unit.Velocity.Length > 0 )
+				return true;
+
+			if ( unit.TargetType == UnitTargetType.Gather )
 				return false;
-			}
+			else if ( unit.TargetType == UnitTargetType.Construct )
+				return false;
+			else if ( unit.TargetType == UnitTargetType.Repair )
+				return false;
 
 			return true;
 		}
@@ -1803,7 +1801,6 @@ namespace Facepunch.RTS
 			{
 				LookAtEntity( building );
 				building.FinishRepair();
-				ClearTarget();
 			}
 			else
 			{
@@ -1842,7 +1839,6 @@ namespace Facepunch.RTS
 
 					LookAtEntity( building );
 					building.FinishConstruction();
-					ClearTarget();
 
 					return;
 				}
@@ -1857,7 +1853,6 @@ namespace Facepunch.RTS
 			{
 				LookAtEntity( building );
 				building.FinishConstruction();
-				ClearTarget();
 			}
 			else
 			{

@@ -827,7 +827,7 @@ namespace Facepunch.RTS
 
 		private void OnRallyPositionChanged()
 		{
-			if ( IsSelected )
+			if ( IsSelected && IsLocalPlayers )
 			{
 				ShowRallyMarker();
 			}

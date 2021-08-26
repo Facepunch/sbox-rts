@@ -40,6 +40,7 @@ namespace Facepunch.RTS
 
 		public void LerpTo( int value, float duration )
 		{
+			_lerpToStartValue = NumericValue;
 			_lerpToEndValue = value;
 			_lerpToEndTime = duration;
 			_lerpToDuration = duration;
