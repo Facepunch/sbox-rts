@@ -185,7 +185,6 @@ namespace Facepunch.RTS
 		private static readonly List<FogCullable> _cullables = new();
 		private static readonly List<FogViewer> _viewers = new();
 
-		private static IEnumerable<SceneParticleObject> _particleContainers;
 		private static byte _unseenAlpha = 240;
 		private static byte _seenAlpha = 200;
 		private static FogTexture _texture;
@@ -407,8 +406,13 @@ namespace Facepunch.RTS
 
 		private static void CheckParticleVisibility( Vector3n position, float range )
 		{
-			foreach ( var container in _particleContainers )
+			var sceneObjects = SceneWorld.Current.SceneObjects;
+
+			for ( int i = 0; i < sceneObjects.Count; i++ )
 			{
+				if ( sceneObjects[i] is not SceneParticleObject container )
+					continue;
+
 				if ( container.RenderParticles )
 					continue;
 
@@ -421,8 +425,13 @@ namespace Facepunch.RTS
 
 		private static void CullParticles()
 		{
-			foreach ( var container in _particleContainers )
+			var sceneObjects = SceneWorld.Current.SceneObjects;
+
+			for ( int i = 0; i < sceneObjects.Count; i++ )
 			{
+				if ( sceneObjects[i] is not SceneParticleObject container )
+					continue;
+
 				container.RenderParticles = false;
 			}
 		}
@@ -447,7 +456,6 @@ namespace Facepunch.RTS
 				cullable.IsVisible = false;
 			}
 
-			_particleContainers = SceneWorld.Current.SceneObjects.OfType<SceneParticleObject>();
 			CullParticles();
 
 			// Our first pass will create the seen history map.
