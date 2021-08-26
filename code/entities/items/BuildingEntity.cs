@@ -330,13 +330,17 @@ namespace Facepunch.RTS
 
 		public override void ClientSpawn()
 		{
-			RenderAlpha = 0f;
-			TargetAlpha = 0f;
-
-			if ( !IsLocalTeamGroup )
+			if ( IsLocalTeamGroup )
 			{
 				Fog.AddCullable( this );
+				TargetAlpha = 0f;
 			}
+			else
+			{
+				TargetAlpha = 1f;
+			}
+
+			RenderAlpha = 0f;
 
 			base.ClientSpawn();
 		}
