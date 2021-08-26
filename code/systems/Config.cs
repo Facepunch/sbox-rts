@@ -44,7 +44,7 @@ namespace Facepunch.RTS
 				ZoomScale = 0.6f,
 				FOV = 30f,
 				ZNear = 1000f,
-				ZFar = 7500f,
+				ZFar = 10000f,
 				Backward = 2500f,
 				Left = 2500f,
 				Up = 5000f
