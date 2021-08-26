@@ -1697,7 +1697,7 @@ namespace Facepunch.RTS
 			{
 				if ( !Item.UsePathfinder || Pathfinder.IsAvailable( Position + (steerDirection.Normal * Pathfinder.NodeSize) ) )
 				{
-					Velocity = steerDirection;
+					Velocity = steerDirection.ClampLength( movementSpeed );
 				}
 			}
 
