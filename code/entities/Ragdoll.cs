@@ -14,6 +14,7 @@ namespace Facepunch.RTS
 		public override void Spawn()
 		{
 			Fog.AddCullable( this );
+
 			base.Spawn();
 		}
 

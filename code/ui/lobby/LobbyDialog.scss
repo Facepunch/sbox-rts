@@ -1,0 +1,37 @@
+﻿lobbydialog {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    right: 20%;
+    bottom: 20%;
+    pointer-events: auto;
+    border-radius: 16px;
+    backdrop-filter-blur: 8px;
+    background-color: rgba(0 0 0 0.5);
+    padding: 24px;
+    z-index: 4;
+
+    chatbox {
+        bottom: 32px;
+        width: 50%;
+        left: 50%;
+    }
+
+    lobbyplayerlist {
+        position: absolute;
+        width: 30%;
+        left: 32px;
+        top: 32px;
+    }
+
+    lobbyreadybutton {
+        position: absolute;
+        width: 30%;
+        bottom: 32px;
+        left: 32px;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

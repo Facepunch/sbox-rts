@@ -140,8 +140,6 @@ namespace Facepunch.RTS
 		{
 			if ( IsServer )
 			{
-				_ = StartSecondTimer();
-
 				var units = Items.List.OfType<BaseUnit>();
 
 				PathManager.SetBounds( WorldSize );
@@ -153,6 +151,8 @@ namespace Facepunch.RTS
 
 					PathManager.Create( nodeSize, collisionSize );
 				}
+
+				Rounds.Change( new LobbyRound() );
 			}
 			else
 			{
@@ -168,15 +168,6 @@ namespace Facepunch.RTS
 				Fog.UpdateSize( WorldSize );
 		}
 
-		private async Task StartSecondTimer()
-		{
-			while ( true )
-			{
-				await Task.DelaySeconds( 1 );
-				OnSecond();
-			}
-		}
-
 		private async Task StartFogUpdater()
 		{
 			while ( true )
@@ -184,11 +175,6 @@ namespace Facepunch.RTS
 				await Task.Delay( 100 );
 				Fog.Update();
 			}
-		}
-
-		private void OnSecond()
-		{
-			CheckMinimumPlayers();
 		}
 
 		[Event.Tick]
@@ -206,6 +192,7 @@ namespace Facepunch.RTS
 			Ratings = FileSystem.Mounted.ReadJsonOrDefault<Dictionary<ulong, int>>( "data/rts/ratings.json" ) ?? new();
 		}
 
+		/*
 		private void CheckMinimumPlayers()
 		{
 			if ( Client.All.Count >= 2 )
@@ -220,5 +207,6 @@ namespace Facepunch.RTS
 				Rounds.Change( new LobbyRound() );
 			}
 		}
+		*/
 	}
 }

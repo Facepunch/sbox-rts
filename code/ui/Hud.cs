@@ -8,6 +8,7 @@ namespace Facepunch.RTS
 	public partial class Hud : HudEntity<RootPanel>
 	{
 		public static ItemTooltip Tooltip => ItemTooltip.Instance;
+		public static ChatBox ChatBox { get; private set; }
 
 		public static void ToastAll( string text, BaseItem item )
 		{
@@ -86,8 +87,8 @@ namespace Facepunch.RTS
 			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();
 
-			var chatBox = RootPanel.AddChild<ChatBox>();
-			chatBox.StyleSheet.Load( "/ui/Hud.scss" );
+			ChatBox = RootPanel.AddChild<ChatBox>();
+			ChatBox.StyleSheet.Load( "/ui/Hud.scss" );
 
 			RootPanel.AddChild<ToastList>();
 			RootPanel.AddChild<LoadingScreen>();

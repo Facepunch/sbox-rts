@@ -1243,7 +1243,7 @@ namespace Facepunch.RTS
 				Circle.Alpha = 1f;
 			}
 
-			if ( IsLocalPlayers )
+			if ( IsLocalTeamGroup )
 			{
 				var isOnScreen = IsOnScreen();
 

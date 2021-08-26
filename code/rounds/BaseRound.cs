@@ -18,7 +18,7 @@ namespace Facepunch.RTS
 		{
 			get
 			{
-				return RoundEndTime - Sandbox.Time.Now;
+				return RoundEndTime - Time.Now;
 			}
 		}
 
@@ -27,7 +27,7 @@ namespace Facepunch.RTS
 		public void Start()
 		{
 			if ( Host.IsServer && RoundDuration > 0 )
-				RoundEndTime = Sandbox.Time.Now + RoundDuration;
+				RoundEndTime = Time.Now + RoundDuration;
 			
 			OnStart();
 		}

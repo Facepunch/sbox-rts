@@ -1,0 +1,56 @@
+﻿lobbyreadybutton {
+    display: flex;
+    flex-direction: row;
+    border-radius: 8px;
+    align-items: center;
+    background-color: rgba(255 0 90 0.1 );
+    padding: 8px;
+
+    .checkbox {
+        width: 72px;
+        height: 72px;
+        margin-right: 16px;
+        background-color: rgba( 0 0 0 0.8 );
+        border-radius: 8px;
+        justify-content: center;
+        align-items: center;
+
+        .icon {
+            background-size: 100%;
+            background-image: url( textures/rts/readyup.png );
+            width: 56px;
+            height: 56px;
+
+            &.hidden {
+                display: none;
+            }
+        }
+
+        &:hover {
+            border: 2px solid green;
+        }
+
+        &.enabled {
+            &:hover {
+                border: 2px solid red;
+            }
+        }
+    }
+
+    .label {
+        font-size: 32px;
+        color: rgba( 255 255 255 0.7 );
+    }
+
+    &.ready {
+        background-color: rgba(0 255 144 0.1 );
+
+        .label {
+            color: rgba( 255 255 255 0.9 );
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

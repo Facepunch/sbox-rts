@@ -333,7 +333,10 @@ namespace Facepunch.RTS
 			RenderAlpha = 0f;
 			TargetAlpha = 0f;
 
-			Fog.AddCullable( this );
+			if ( !IsLocalTeamGroup )
+			{
+				Fog.AddCullable( this );
+			}
 
 			base.ClientSpawn();
 		}

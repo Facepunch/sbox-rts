@@ -21,11 +21,13 @@ namespace Facepunch.RTS
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
 		[Net] public Color TeamColor { get; set; }
+		[Net] public bool IsReady { get; set; }
 		[Net] public List<int> Resources { get; private set; }
 		[Net] public int TeamGroup { get; set; }
 
 		public HashSet<uint> InstantBuildCache { get; private set; }
 		public TimeSince LastCommandSound { get; set; }
+		public Client Client => GetClientOwner();
 
 		public Player()
 		{
@@ -167,6 +169,19 @@ namespace Facepunch.RTS
 		public bool CanAfford( BaseItem item, out ResourceType missingResource )
 		{
 			return CanAfford( item.Costs, out missingResource );
+		}
+
+		public IEnumerable<Player> GetAllTeamPlayers()
+		{
+			return All.OfType<Player>()
+				.Where( p => p.TeamGroup == TeamGroup );
+		}
+
+		public IEnumerable<Client> GetAllTeamClients()
+		{
+			return All.OfType<Player>()
+				.Where( p => p.TeamGroup == TeamGroup )
+				.Select( p => p.GetClientOwner() );
 		}
 
 		public void GiveResources( Dictionary<ResourceType, int> resources, int multiplier = 1 )

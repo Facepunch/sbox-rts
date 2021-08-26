@@ -217,7 +217,7 @@ namespace Facepunch.RTS
 
 		public static void MakeVisible( Player player, Vector3 position, float radius )
 		{
-			MakeVisible( To.Single( player ), position, radius );
+			MakeVisible( To.Multiple( player.GetAllTeamClients() ), position, radius );
 		}
 
 		[ClientRpc]
@@ -229,7 +229,7 @@ namespace Facepunch.RTS
 				LineOfSightRadius = radius
 			};
 
-			Fog.AddViewer( viewer );
+			AddViewer( viewer );
 
 			_ = RemoveViewerAfter( viewer, duration );
 		}
