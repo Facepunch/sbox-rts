@@ -1,6 +1,7 @@
 using Gamelib.Maths;
 using Sandbox;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gamelib.FlowFields
 {
@@ -144,7 +145,7 @@ namespace Gamelib.FlowFields
 		{
 			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
 
-			pathfinder.Initialize();
+			_ = pathfinder.Initialize();
 
 			_pathfinders[hash] = pathfinder;
 

@@ -5,6 +5,7 @@ using Gamelib.FlowFields.Grid;
 using Gamelib.FlowFields.Connectors;
 using Sandbox;
 using Gamelib.FlowFields.Entities;
+using System.Threading.Tasks;
 
 namespace Gamelib.FlowFields
 {
@@ -117,12 +118,14 @@ namespace Gamelib.FlowFields
 			request.FlowField = null;
 		}
 
-		public void UpdateCollisions()
+		public async Task UpdateCollisions()
         {
             for ( var index = 0; index < WorldGridSize.Size; index++ )
             {
 				UpdateCollisions( index );
 			}
+
+			await GameTask.Delay( 50 );
 		}
 
 		public TraceResult GetCollisionTrace( Vector3 position, int worldIndex )
@@ -211,7 +214,7 @@ namespace Gamelib.FlowFields
 			DrawBox( GetPosition( position ), position.WorldIndex, color, duration );
 		}
 
-        public void Initialize()
+        public async Task Initialize()
         {
 			_positionOffset = Origin + new Vector3(
 				_worldGridSize.Columns * _nodeSize / 2f,
@@ -228,8 +231,10 @@ namespace Gamelib.FlowFields
 			_chunkBuffer.Clear();
 
 			CreateChunks();
-			CreateHeightMap();
-			UpdateCollisions();
+
+			await CreateHeightMap();
+			await UpdateCollisions();
+
 			ConnectPortals();
 
 			// Create a good amount of flow fields ready in the pool.
@@ -239,7 +244,7 @@ namespace Gamelib.FlowFields
 			}
 		}
 
-		public void CreateHeightMap()
+		public async Task CreateHeightMap()
 		{
 			var worldSizeLength = _worldGridSize.Size;
 
@@ -267,6 +272,8 @@ namespace Gamelib.FlowFields
 					}
 				}
 			}
+
+			await GameTask.Delay( 50 );
 		}
 
 		private bool CheckHeightDifference( int index, float height, GridDirection direction, bool[] heightFlags, bool[] collisionFlags )
@@ -276,6 +283,7 @@ namespace Gamelib.FlowFields
 			if ( neighbor != int.MinValue ) //&& !collisionFlags[neighbor] )
 			{
 				DoHeightMapTrace( neighbor, heightFlags );
+
 				var neighborHeight = _heightMap[neighbor];
 
 				// Check if there's a large enough height distance.
@@ -294,11 +302,8 @@ namespace Gamelib.FlowFields
 			if ( heightFlags[index] ) return;
 
 			var position = GetPosition( index );
-			var trace = Trace.Ray( position.WithZ( 1000f ), position.WithZ( -1000f ) )
-				.WorldOnly()
-				.Run();
+			_heightMap[index] = HeightCache.GetHeight( position );
 
-			_heightMap[index] = trace.EndPos.z;
 			heightFlags[index] = true;
 		}
 

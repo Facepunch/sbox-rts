@@ -1,3 +1,4 @@
+using Sandbox;
 using System;
 
 namespace Gamelib.Maths
@@ -13,6 +14,12 @@ namespace Gamelib.Maths
             this.x = x;
             this.y = y;
         }
+
+		public Vector2i( Vector3 position )
+		{
+			x = position.x.CeilToInt();
+			y = position.y.CeilToInt();
+		}
 
         public static Vector2i operator *( Vector2i a, Vector2i b )
         {
