@@ -109,6 +109,9 @@ namespace Facepunch.RTS
 			if ( unit.TargetType != UnitTargetType.None )
 				return false;
 
+			if ( unit.Occupiable != null )
+				return false;
+
 			return true;
  		}
 	}
