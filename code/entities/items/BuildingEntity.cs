@@ -780,7 +780,7 @@ namespace Facepunch.RTS
 			{
 				var proxyItem = Items.Find<BaseBuilding>( proxyList[i] );
 				if ( proxyItem == null || Player.HasDependency( proxyItem ) ) continue;
-				
+
 				AddDependencies( proxyItem );
 			}
 		}
