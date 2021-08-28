@@ -64,6 +64,44 @@ namespace Facepunch.RTS
 			return All.OfType<UnitEntity>().Where( i => i.Player == this );
 		}
 
+		private bool IsProxyOfBuilding ( BaseBuilding proxy, BaseBuilding building, Dictionary<string, bool> checkedProxies )
+		{
+			if ( proxy == building ) return true;
+
+			string uniqueId = proxy.UniqueId;
+			bool isChecked;
+
+			checkedProxies.TryGetValue( uniqueId, out isChecked );
+
+			if ( isChecked ) return false;
+
+			checkedProxies.Add( uniqueId, true );
+
+			var proxyList = proxy.ActsAsProxyFor;
+
+			for ( var i = 0; i < proxyList.Length; i++ )
+			{
+				var proxyItem = Items.Find<BaseBuilding>( proxyList[i] );
+
+				if ( proxyItem != null && IsProxyOfBuilding( proxyItem, building, checkedProxies ) ) 
+					return true;
+			}
+
+			return false;
+		}
+
+		private bool IsProxyOfBuilding ( BaseBuilding proxy, BaseBuilding building )
+		{
+			Dictionary<string, bool> checkedProxies = new Dictionary<string, bool>( 5 );
+
+			return IsProxyOfBuilding( proxy, building, checkedProxies );
+		}
+
+		public IEnumerable<BuildingEntity> GetBuildingsProxiesIncluded( BaseBuilding building )
+		{
+			return All.OfType<BuildingEntity>().Where( i => i.Player == this && IsProxyOfBuilding( i.Item, building ) );
+		}
+
 		public IEnumerable<BuildingEntity> GetBuildings( BaseBuilding building )
 		{
 			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item == building );
@@ -273,14 +311,19 @@ namespace Facepunch.RTS
 
 		public void RemoveDependency( BaseItem item )
 		{
-			if ( Dependencies.Contains( item.NetworkId ) )
+			if ( HasDependency( item ) )
 				Dependencies.Remove( item.NetworkId );
 		}
 
 		public void AddDependency( BaseItem item )
 		{
-			if ( !Dependencies.Contains( item.NetworkId ) )
+			if ( !HasDependency( item ) )
 				Dependencies.Add( item.NetworkId );
+		}
+
+		public bool HasDependency( BaseItem item )
+		{
+			return Dependencies.Contains( item.NetworkId );
 		}
 
 		public void ClearSelection()

@@ -12,6 +12,7 @@ namespace Facepunch.RTS.Buildings
 		{
 			"ability_airstrike"
 		};
+		public override string[] ActsAsProxyFor => new string[] { "building.commandcentre2" };
 		public override string Model => "models/buildings/headquarters/headquarters_level3.vmdl";
 	}
 }

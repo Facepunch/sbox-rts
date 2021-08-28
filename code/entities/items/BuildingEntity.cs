@@ -779,17 +779,17 @@ namespace Facepunch.RTS
 			for ( var i = 0; i < proxyList.Length; i++ )
 			{
 				var proxyItem = Items.Find<BaseBuilding>( proxyList[i] );
-				if ( proxyItem == null ) continue;
-
-				Player.AddDependency( proxyItem );
+				if ( proxyItem == null || Player.HasDependency( proxyItem ) ) continue;
+				
+				AddDependencies( proxyItem );
 			}
 		}
 
 		private void RemoveDependencies( BaseBuilding item )
 		{
-			var others = Player.GetBuildings( item );
+			var others = Player.GetBuildingsProxiesIncluded( item );
 
-			if ( others.Count() == 1 )
+			if ( others.Count() <= 1 )
 				Player.RemoveDependency( item );
 
 			var proxyList = item.ActsAsProxyFor;
@@ -797,12 +797,9 @@ namespace Facepunch.RTS
 			for ( var i = 0; i < proxyList.Length; i++ )
 			{
 				var proxyItem = Items.Find<BaseBuilding>( proxyList[i] );
-				if ( proxyItem == null ) continue;
+				if ( proxyItem == null || !Player.HasDependency( proxyItem ) ) continue;
 
-				others = Player.GetBuildings( proxyItem );
-
-				if ( others.Count() == 1 )
-					Player.RemoveDependency( proxyItem );
+				RemoveDependencies( proxyItem );
 			}
 		}
 
