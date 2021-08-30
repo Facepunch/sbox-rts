@@ -13,6 +13,15 @@ namespace Facepunch.RTS
 		public BaseBuilding Building { get; private set; }
 		public UnitEntity Worker { get; private set; }
 		public bool IsTouchingBlocker { get; private set; }
+		public override Vector3 Position
+		{
+			get => base.Position;
+			set
+			{
+				base.Position = value;
+				PhysicsBody.Position = value;
+			}
+		}
 
 		public GhostBuilding()
 		{
