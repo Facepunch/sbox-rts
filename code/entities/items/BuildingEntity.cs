@@ -149,39 +149,6 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public bool IsProxyOf( BaseBuilding other, Dictionary<string, bool> checkedProxies )
-		{
-			if ( other == Item ) return true;
-
-			string uniqueId = other.UniqueId;
-			bool isChecked;
-
-			checkedProxies.TryGetValue( uniqueId, out isChecked );
-
-			if ( isChecked ) return false;
-
-			checkedProxies.Add( uniqueId, true );
-
-			var proxyList = other.ActsAsProxyFor;
-
-			for ( var i = 0; i < proxyList.Length; i++ )
-			{
-				var proxyItem = Items.Find<BaseBuilding>( proxyList[i] );
-
-				if ( proxyItem != null && IsProxyOf( proxyItem, checkedProxies ) )
-					return true;
-			}
-
-			return false;
-		}
-
-		public bool IsProxyOf( BaseBuilding other )
-		{
-			var checkedProxies = new Dictionary<string, bool>( 5 );
-
-			return IsProxyOf( other, checkedProxies );
-		}
-
 		public void UpdateRepair()
 		{
 			Host.AssertServer();

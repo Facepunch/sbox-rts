@@ -67,7 +67,7 @@ namespace Facepunch.RTS
 
 		public IEnumerable<BuildingEntity> GetBuildingsProxiesIncluded( BaseBuilding building )
 		{
-			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.IsProxyOf( building ) );
+			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item.IsProxyOf( building ) );
 		}
 
 		public IEnumerable<BuildingEntity> GetBuildings( BaseBuilding building )
