@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 			"building.tunnel"
 		};
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
-		public override float MaxDistance => 10000f;
+		public override float MaxDistance => 15000f;
 		public override float AreaOfEffectRadius => 200f;
 
 		public override bool IsAvailable()

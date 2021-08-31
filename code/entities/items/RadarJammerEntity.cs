@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 	[Library( "building_radar_jammer" )]
 	public partial class RadarJammerEntity : BuildingEntity
 	{
-		private RadarJammerRange _range;
+		private RangeEntity _range;
 
 		protected override void OnSelected()
 		{

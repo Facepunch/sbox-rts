@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS
 {
-	public partial class RadarJammerRange : RenderEntity
+	public partial class RangeEntity : RenderEntity
 	{
 		public Material CircleMaterial = Material.Load( "materials/rts/ability_circle.vmat" );
 		public Color Color { get; set; }
