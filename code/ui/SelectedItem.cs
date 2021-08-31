@@ -889,7 +889,7 @@ namespace Facepunch.RTS
 				MultiDisplay.SetClass( "hidden", Items.Count < 2 );
 				Information.SetClass( "hidden", Items.Count > 1 );
 			}
-			
+
 			SetClass( "hidden", isHidden );
 
 			base.Tick();

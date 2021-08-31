@@ -316,6 +316,8 @@ namespace Facepunch.RTS
 					};
 
 					StartOrQueue( units, command, shouldQueue );
+
+					ShowMarker( To.Single( caller ), target.Position );
 				}
 			}
 		}
