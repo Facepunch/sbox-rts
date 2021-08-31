@@ -80,7 +80,13 @@ namespace Facepunch.RTS
 			if ( Queue.Count == 1 )
 			{
 				queueItem.Start();
-				StartQueueItem( To.Single( Player ), LastQueueId, queueItem.FinishTime );
+
+				var finishTime = queueItem.FinishTime;
+
+				if ( Player.SkipAllWaiting )
+					finishTime = 1f;
+
+				StartQueueItem( To.Single( Player ), LastQueueId, finishTime );
 			}
 		}
 

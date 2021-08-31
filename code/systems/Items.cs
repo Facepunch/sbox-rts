@@ -151,12 +151,19 @@ namespace Facepunch.RTS
 						building.Position = trace.EndPos;
 						building.Item.PlayPlaceSound( caller );
 
-						var command = new ConstructCommand
+						if ( !caller.SkipAllWaiting )
 						{
-							Target = building
-						};
+							var command = new ConstructCommand
+							{
+								Target = building
+							};
 
-						StartOrQueue( new List<UnitEntity> { worker }, command, shouldQueue );
+							StartOrQueue( new List<UnitEntity> { worker }, command, shouldQueue );
+						}
+						else
+						{
+							building.FinishConstruction();
+						}
 
 						worker.Item.PlayConstructSound( caller );
 

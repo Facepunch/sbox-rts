@@ -33,6 +33,15 @@ namespace Facepunch.RTS
 			}
 		}
 
+		[ServerCmd( "rts_doitnow" )]
+		public static void SkipAllWaiting()
+		{
+			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			{
+				caller.SkipAllWaiting = true;
+			}
+		}
+
 		[ServerCmd( "rts_learnit" )]
 		public static void LearnTechnology( string technology )
 		{

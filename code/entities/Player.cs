@@ -24,6 +24,7 @@ namespace Facepunch.RTS
 		[Net] public bool IsReady { get; set; }
 		[Net] public List<int> Resources { get; private set; }
 		[Net] public int TeamGroup { get; set; }
+		public bool SkipAllWaiting { get; set;  }
 
 		public HashSet<uint> InstantBuildCache { get; private set; }
 		public TimeSince LastCommandSound { get; set; }

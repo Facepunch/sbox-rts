@@ -363,7 +363,7 @@ namespace Facepunch.RTS
 
 		public override void ClientSpawn()
 		{
-			if ( IsLocalTeamGroup )
+			if ( !IsLocalTeamGroup )
 			{
 				Fog.AddCullable( this );
 				TargetAlpha = 0f;
