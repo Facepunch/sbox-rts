@@ -125,6 +125,9 @@ namespace Facepunch.RTS
 			if ( Local.Pawn is not Player player )
 				return;
 
+			if ( !Hud.IsLocalPlaying() )
+				return;
+
 			if ( builder.Pressed( InputButton.Attack1 ) )
 			{
 				StartSelection = Mouse.Position;
@@ -271,6 +274,7 @@ namespace Facepunch.RTS
 					Math.Abs( StartSelection.x - position.x ),
 					Math.Abs( StartSelection.y - position.y )
 				);
+
 				SelectionArea.Style.Left = Length.Pixels( selection.left * ScaleFromScreen );
 				SelectionArea.Style.Top = Length.Pixels( selection.top * ScaleFromScreen );
 				SelectionArea.Style.Width = Length.Pixels( selection.width * ScaleFromScreen );

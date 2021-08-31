@@ -92,6 +92,7 @@ namespace Facepunch.RTS
 
 			RootPanel.AddChild<ToastList>();
 			RootPanel.AddChild<LoadingScreen>();
+			RootPanel.AddChild<MouseCursor>();
 		}
 	}
 }
