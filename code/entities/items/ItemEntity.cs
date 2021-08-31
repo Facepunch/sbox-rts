@@ -73,6 +73,13 @@ namespace Facepunch.RTS
 				Id = LastQueueId
 			};
 
+			if ( Player.SkipAllWaiting )
+			{
+				OnQueueItemCompleted( queueItem );
+				queueItem.Item.OnCreated( Player, this );
+				return;
+			}
+
 			Queue.Add( queueItem );
 
 			AddToQueue( To.Single( Player ), LastQueueId, item.NetworkId );
@@ -80,13 +87,7 @@ namespace Facepunch.RTS
 			if ( Queue.Count == 1 )
 			{
 				queueItem.Start();
-
-				var finishTime = queueItem.FinishTime;
-
-				if ( Player.SkipAllWaiting )
-					finishTime = 1f;
-
-				StartQueueItem( To.Single( Player ), LastQueueId, finishTime );
+				StartQueueItem( To.Single( Player ), LastQueueId, queueItem.FinishTime );
 			}
 		}
 

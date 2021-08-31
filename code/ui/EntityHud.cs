@@ -92,10 +92,8 @@ namespace Facepunch.RTS
 			var position = (Entity.Position + Entity.LocalCenter + Vector3.Up * 80f).ToScreen();
 			if ( position.z < 0 ) return;
 
-			position *= new Vector3( Screen.Width, Screen.Height ) * ScaleFromScreen;
-
-			Style.Left = Length.Pixels( position.x );
-			Style.Top = Length.Pixels( position.y );
+			Style.Left = Length.Fraction( position.x );
+			Style.Top = Length.Fraction( position.y );
 			Style.Dirty();
 		}
 
