@@ -282,7 +282,7 @@ namespace Facepunch.RTS
 		}
 
 		[ServerCmd]
-		public static void Occupy( int occupiableId )
+		public static void Occupy( int occupiableId, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
 
@@ -294,7 +294,7 @@ namespace Facepunch.RTS
 				if ( target.Player != caller ) return;
 				if ( !target.CanOccupyUnits ) return;
 
-				caller.ForEachSelected<UnitEntity>( unit =>
+				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
 					if ( unit.Item.Occupant == null )
 						return false;
@@ -305,9 +305,18 @@ namespace Facepunch.RTS
 					if ( !unit.CanOccupy( target ) )
 						return false;
 
-					unit.SetOccupyTarget( target );
 					return true;
 				} );
+
+				if ( units.Count > 0 )
+				{
+					var command = new OccupyCommand
+					{
+						Target = target
+					};
+
+					StartOrQueue( units, command, shouldQueue );
+				}
 			}
 		}
 

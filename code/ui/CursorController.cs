@@ -228,7 +228,7 @@ namespace Facepunch.RTS
 						{
 							if ( selectable is IOccupiableEntity occupiable && occupiable.CanOccupyUnits )
 							{
-								Items.Occupy( targetNetworkId );
+								Items.Occupy( targetNetworkId, isHoldingShift );
 								return;
 							}
 						}
