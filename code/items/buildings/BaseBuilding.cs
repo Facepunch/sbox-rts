@@ -74,5 +74,35 @@ namespace Facepunch.RTS.Buildings
 		{
 			return true;
 		}
+
+		public bool IsProxyOf( BaseBuilding other, Dictionary<string, bool> checkedProxies )
+		{
+			if ( other == this ) return true;
+
+			bool isChecked;
+
+			checkedProxies.TryGetValue( UniqueId, out isChecked );
+
+			if ( isChecked ) return false;
+
+			checkedProxies.Add( UniqueId, true );
+
+			for ( var i = 0; i < ActsAsProxyFor.Length; i++ )
+			{
+				var proxyItem = Items.Find<BaseBuilding>( ActsAsProxyFor[i] );
+
+				if ( proxyItem != null && proxyItem.IsProxyOf( other, checkedProxies ) )
+					return true;
+			}
+
+			return false;
+		}
+
+		public bool IsProxyOf( BaseBuilding other )
+		{
+			var checkedProxies = new Dictionary<string, bool>( 5 );
+
+			return IsProxyOf( other, checkedProxies );
+		}
 	}
 }
