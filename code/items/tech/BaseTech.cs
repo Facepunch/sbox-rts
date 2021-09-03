@@ -4,10 +4,14 @@ namespace Facepunch.RTS.Tech
 {
     public abstract class BaseTech : BaseItem
 	{
+		public virtual bool AlwaysShowInList => true;
 		public override Color Color => Color.Yellow;
 
 		public override bool IsAvailable( Player player, ISelectable target )
 		{
+			if ( !AlwaysShowInList && !HasDependencies( player ) )
+				return false;
+
 			return !IsResearching( player ) && !Has( player );
 		}
 
