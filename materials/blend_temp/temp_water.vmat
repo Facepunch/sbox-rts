@@ -13,10 +13,10 @@ Layer0
 	//---- Color ----
 	g_flModelTintAmount "1.000"
 	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
-	TextureColor "[0.784314 0.960784 0.945098 0.000000]"
+	TextureColor "[0.568627 0.921569 0.886275 0.000000]"
 
 	//---- Emissive ----
-	g_flEmissiveEdgeColorFalloff "3.000"
+	g_flEmissiveEdgeColorFalloff "3.270"
 	g_flEmissiveEdgeColorThickness "0.100"
 	g_flEmissiveStrength "0.500"
 	g_vEmissiveColor "[0.000000 0.000000 0.000000 0.000000]"
@@ -30,10 +30,10 @@ Layer0
 	g_flGlassFogExtinctionAmount "0.000"
 
 	//---- Glass Color ----
-	g_flEdgeColorFalloff "5.260"
-	g_flEdgeColorMaxOpacity "0.968"
-	g_flEdgeColorThickness "0.461"
-	g_vEdgeColor "[0.000000 0.000000 0.000000 0.000000]"
+	g_flEdgeColorFalloff "10.000"
+	g_flEdgeColorMaxOpacity "1.000"
+	g_flEdgeColorThickness "0.300"
+	g_vEdgeColor "[0.756863 0.960784 1.000000 0.000000]"
 	GlassTintColor "materials/default/default_color.tga"
 
 	//---- Lighting ----
@@ -41,10 +41,10 @@ Layer0
 	g_flDirectionalLightmapStrength "1.000"
 
 	//---- Metalness ----
-	g_flMetalness "0.000"
+	g_flMetalness "0.134"
 
 	//---- Normal ----
-	TextureNormal "[0.501961 0.501961 1.000000 0.000000]"
+	TextureNormal "textures/water/water_01a.tga"
 
 	//---- Roughness ----
 	TextureRoughness "materials/default/default_rough.tga"
@@ -58,7 +58,7 @@ Layer0
 
 	//---- Translucent ----
 	g_flOpacityScale "0.169"
-	TextureTranslucency "materials/default/default_trans.tga"
+	TextureTranslucency "textures/water/water_01a.tga"
 
 	SystemAttributes
 	{
