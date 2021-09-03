@@ -73,6 +73,67 @@
 					},
 				]
 			},
+			{
+				_class = "GameDataList"
+				children = 
+				[
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_box"
+						game_keys = 
+						{
+							bonename = ""
+							dimensions = [ 192.187, 324.771, 65.2624 ]
+							offset_origin = [ 95.5711, 157.384, 27.6313 ]
+							offset_angles = [ 0.0, 0.0, 0.0 ]
+						}
+					},
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_box"
+						game_keys = 
+						{
+							bonename = ""
+							dimensions = [ 192.187, 324.771, 65.2624 ]
+							offset_origin = [ -157.684, -95.6837, 27.6313 ]
+							offset_angles = [ -0.0, 90.0, 0.0 ]
+						}
+					},
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_box"
+						game_keys = 
+						{
+							bonename = ""
+							dimensions = [ 320.94, 321.406, 65.2624 ]
+							offset_origin = [ 96.1841, -96.3841, 27.6313 ]
+							offset_angles = [ -0.0, 90.0, 0.0 ]
+						}
+					},
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_box"
+						game_keys = 
+						{
+							bonename = ""
+							dimensions = [ 21.1015, 128.663, 65.2624 ]
+							offset_origin = [ -6.04348, 192.21, 27.6313 ]
+							offset_angles = [ 0.0, 0.0, 0.0 ]
+						}
+					},
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_box"
+						game_keys = 
+						{
+							bonename = ""
+							dimensions = [ 21.1015, 128.663, 65.2624 ]
+							offset_origin = [ -192.583, 6.37985, 27.6313 ]
+							offset_angles = [ -0.0, 90.0, 0.0 ]
+						}
+					},
+				]
+			},
 		]
 		model_archetype = ""
 		primary_associated_entity = ""

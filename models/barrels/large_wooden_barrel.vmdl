@@ -76,6 +76,23 @@
 					},
 				]
 			},
+			{
+				_class = "GameDataList"
+				children = 
+				[
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_capsule"
+						game_keys = 
+						{
+							bonename = ""
+							radius = 15.6966
+							point0 = [ 0.0, 0.0, -0.388359 ]
+							point1 = [ 0.0, 0.0, 51.4181 ]
+						}
+					},
+				]
+			},
 		]
 		model_archetype = ""
 		primary_associated_entity = ""

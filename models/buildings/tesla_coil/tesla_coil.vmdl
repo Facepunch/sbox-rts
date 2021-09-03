@@ -57,6 +57,17 @@
 							attachment_offset = [ 0.0, 0.0, 0.0 ]
 						}
 					},
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_capsule"
+						game_keys = 
+						{
+							bonename = ""
+							radius = 46.1524
+							point0 = [ 0.0, 0.0, -41.4292 ]
+							point1 = [ 0.0, 0.0, 48.4836 ]
+						}
+					},
 				]
 			},
 		]
