@@ -33,6 +33,7 @@ namespace Facepunch.RTS.Buildings
 			"tech.supplylines",
 			"tech.thermalarmor",
 			"tech.pyrotechnics",
+			"tech.kevlararmor",
 			"tech.armoredplating",
 			"tech.infrastructure",
 			"tech.remotedrones",

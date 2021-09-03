@@ -18,5 +18,9 @@ namespace Facepunch.RTS.Tech
 			[ResourceType.Metal] = 100
 		};
 		public override int DamageModifier => 1;
+		public override HashSet<string> Dependencies => new()
+		{
+			"tech.basicballistics"
+		};
 	}
 }
