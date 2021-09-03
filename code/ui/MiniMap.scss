@@ -1,7 +1,6 @@
 ﻿minimap {
     position: absolute;
     width: 100%;
-    pointer-events: auto;
     left: 48px;
     bottom: 32px;
 
@@ -11,6 +10,7 @@
 
     .map {
         border-radius: 16px;
+        pointer-events: auto;
         width: 250px;
         height: 250px;
     }
