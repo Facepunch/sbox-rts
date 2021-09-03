@@ -74,6 +74,9 @@
 						recenter_on_parent_bone = false
 						offset_origin = [ 0.0, 0.0, 0.0 ]
 						offset_angles = [ 0.0, 0.0, 0.0 ]
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
 						filename = "models/rocks/rock_large_02/rock_large_02.fbx"
 						import_scale = 0.1
 						maxMeshVertices = 80
@@ -120,6 +123,23 @@
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
+					},
+				]
+			},
+			{
+				_class = "GameDataList"
+				children = 
+				[
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_capsule"
+						game_keys = 
+						{
+							bonename = ""
+							radius = 32.1019
+							point0 = [ 2.63863, -0.003147, 0.808605 ]
+							point1 = [ 2.63195, -0.002346, 3.04482 ]
+						}
 					},
 				]
 			},
