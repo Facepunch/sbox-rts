@@ -95,6 +95,8 @@ namespace Facepunch.RTS
 
 				Tags.Add( "blueprint" );
 				Tags.Remove( "blueprint" );
+
+				Global.TickRate = 20;
 			}
 
 			FlowFieldGround.OnUpdated += OnGroundUpdated;
