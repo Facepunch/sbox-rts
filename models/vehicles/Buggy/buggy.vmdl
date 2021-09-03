@@ -126,6 +126,17 @@
 							]
 						}
 					},
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_box"
+						game_keys = 
+						{
+							bonename = ""
+							dimensions = [ 147.797, 31.0573, 44.4864 ]
+							offset_origin = [ 36.5199, -0.343253, 17.2427 ]
+							offset_angles = [ 0.0, 0.0, 0.0 ]
+						}
+					},
 				]
 			},
 			{
