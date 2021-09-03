@@ -65,6 +65,21 @@
 				]
 			},
 			{
+				_class = "AttachmentList"
+				children = 
+				[
+					{
+						_class = "Attachment"
+						name = "muzzle"
+						parent_bone = "base"
+						relative_origin = [ 75.914223, 12.468506, -0.00038 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+				]
+			},
+			{
 				_class = "AnimationList"
 				children = 
 				[
