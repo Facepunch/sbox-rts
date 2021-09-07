@@ -56,7 +56,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.armoredplating"
+
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{

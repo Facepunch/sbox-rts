@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Tech
 {
 	[Library]
-	public class Aerodynamics : SpeedModifierTech<BaseUnit>
+	public class Aerodynamics : SpeedModifierTech<IDroneUnit>
 	{
 		public override string Name => "Aerodynamics";
 		public override string UniqueId => "tech.aerodynamics";
@@ -18,6 +18,5 @@ namespace Facepunch.RTS.Tech
 			[ResourceType.Metal] = 50
 		};
 		public override float Speed => 0.15f;
-		public override string Tag => "drone";
 	}
 }

@@ -21,8 +21,7 @@ namespace Facepunch.RTS.Upgrades
 		public override HashSet<string> Dependencies => new()
 		{
 			"tech.infrastructure",
-			"tech.extraction",
-			"tech.carbines"
+			"tech.extraction"
 		};
 	}
 }

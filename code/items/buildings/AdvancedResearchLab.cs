@@ -14,9 +14,7 @@ namespace Facepunch.RTS.Buildings
 		public override HashSet<string> Queueables => new( base.Queueables )
 		{
 			"tech.advancedballistics",
-			"tech.airsuperiority",
 			"tech.advancedboring",
-			"tech.advancedkevlar",
 			"tech.armageddon",
 			"tech.cryogenics",
 			"tech.overvoltage",

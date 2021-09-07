@@ -413,6 +413,11 @@ namespace Facepunch.RTS
 			ItemNetworkId = item.NetworkId;
 			ClearItemCache();
 			OnItemChanged( item, oldItem );
+
+			if ( IsSelected )
+			{
+				ForceClientReselect( To.Single( Player ) );
+			}
 		}
 
 		public float GetDiameterXY( float scalar = 1f, bool smallestSide = false )
@@ -551,6 +556,16 @@ namespace Facepunch.RTS
 			if ( ability != null && ability.LastUsedTime >= ability.Duration )
 			{
 				FinishAbility();
+			}
+		}
+
+		[ClientRpc]
+		protected virtual void ForceClientReselect()
+		{
+			if ( IsLocalPlayers && IsSelected )
+			{
+				SelectedItem.Instance.Update( Player.Selection );
+				OnSelected();
 			}
 		}
 

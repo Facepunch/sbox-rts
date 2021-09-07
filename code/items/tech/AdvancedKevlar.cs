@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Tech
 {
 	[Library]
-	public class AdvancedKevlar : ResistanceModifierTech<BaseUnit>
+	public class AdvancedKevlar : ResistanceModifierTech<IInfantryUnit>
 	{
 		public override string Name => "Advanced Kevlar";
 		public override string UniqueId => "tech.advancedkevlar";

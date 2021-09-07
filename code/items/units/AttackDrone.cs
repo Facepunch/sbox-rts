@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class AttackDrone : BaseUnit
+	public class AttackDrone : BaseUnit, IDroneUnit
 	{
 		public override string Name => "Attack Drone";
 		public override string UniqueId => "unit.attackdrone";
@@ -61,7 +61,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.carbines"
+
 		};
 	}
 }

@@ -28,17 +28,13 @@ namespace Facepunch.RTS.Buildings
 			"tech.brewing",
 			"tech.machinery",
 			"tech.extraction",
-			"tech.syringes",
 			"tech.boring",
 			"tech.supplylines",
 			"tech.thermalarmor",
 			"tech.pyrotechnics",
-			"tech.kevlararmor",
-			"tech.armoredplating",
 			"tech.infrastructure",
 			"tech.remotedrones",
 			"tech.basicballistics",
-			"tech.carbines",
 			"upgrade.researchlab"
 		};
 	}

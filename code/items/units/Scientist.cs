@@ -5,7 +5,7 @@ using Sandbox;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Scientist : BaseUnit
+	public class Scientist : BaseUnit, IInfantryUnit
 	{
 		public override string Name => "Scientist";
 		public override string UniqueId => "unit.scientist";

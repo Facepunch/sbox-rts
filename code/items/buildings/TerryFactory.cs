@@ -25,12 +25,10 @@ namespace Facepunch.RTS.Buildings
 		{
 			"unit.grunt",
 			"unit.assault",
-			"unit.heavy",
 			"unit.medic",
-			"unit.grenadier",
-			"unit.rocketman",
-			"unit.pyromaniac",
-			"unit.cryomaniac"
+			"tech.syringes",
+			"tech.kevlararmor",
+			"upgrade.terryfactory"
 		};
 	}
 }

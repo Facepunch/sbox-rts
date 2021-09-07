@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Cryomaniac : BaseUnit
+	public class Cryomaniac : BaseUnit, IInfantryUnit
 	{
 		public override string Name => "Cryomaniac";
 		public override string UniqueId => "unit.cryomaniac";

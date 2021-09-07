@@ -5,11 +5,11 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Tech
 {
 	[Library]
-	public class KevlarArmor : ResistanceModifierTech<BaseUnit>
+	public class KevlarArmor : ResistanceModifierTech<IInfantryUnit>
 	{
 		public override string Name => "Kevlar Armor";
 		public override string UniqueId => "tech.kevlararmor";
-		public override string Description => "Increases the bullet resistance of all units by 10%.";
+		public override string Description => "Increases the bullet resistance of all infantry units by 10%.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()

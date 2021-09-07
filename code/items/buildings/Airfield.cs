@@ -20,15 +20,13 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/airfield/airfield.vmdl";
 		public override HashSet<string> Dependencies => new()
 		{
-			"building.commandcentre2",
 			"building.terryfactory",
-			"building.vehiclefactory",
-			"tech.airsuperiority"
+			"building.vehiclefactory"
 		};
 		public override HashSet<string> Queueables => new()
 		{
 			"unit.chinook",
-			"unit.apache"
+			"upgrade.airfield"
 		};
 	}
 }

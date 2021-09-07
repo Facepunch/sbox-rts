@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS.Tech
 {
-	public class HealthIncreaseTech : BaseTech
+	public class HealthIncreaseTech<T> : BaseTech
 	{
 		public virtual float Health => 0f;
 		public virtual string Tag => "unit";
@@ -14,7 +14,7 @@ namespace Facepunch.RTS.Tech
 
 		public override void OnCreated( Player player, ISelectable target )
 		{
-			var units = player.GetUnits().Where( v => v.Tags.Has( Tag ) );
+			var units = player.GetUnits().Where( v => v.Item is T && v.Tags.Has( Tag ) );
 
 			foreach ( var unit in units )
 			{
@@ -26,7 +26,7 @@ namespace Facepunch.RTS.Tech
 
 		private void OnUnitTrained( Player player, UnitEntity unit )
 		{
-			if ( Has( player ) && unit.Tags.Has( Tag ) )
+			if ( Has( player ) && unit is T && unit.Tags.Has( Tag ) )
 			{
 				unit.MaxHealth += Health;
 				unit.Health += Health;

@@ -1,4 +1,7 @@
 ﻿using Facepunch.RTS.Buildings;
+using Facepunch.RTS.Tech;
+using Facepunch.RTS.Units;
+using Facepunch.RTS.Upgrades;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -454,42 +457,54 @@ namespace Facepunch.RTS
 			Parent.SetClass( "hidden", Buttons.Count == 0 );
 		}
 
-		private void UpdateCommands( HashSet<string> queueables, Dictionary<string, BaseAbility> abilities = null )
+		private void AddQueueables<T>( Player player, HashSet<string> queueables, List<BaseItem> available, List<BaseItem> unavailable ) where T : BaseItem
 		{
-			var player = Local.Pawn as Player;
-			var availableQueueables = new List<BaseItem>();
-			var unavailableQueueables = new List<BaseItem>();
+			available.Clear();
+			unavailable.Clear();
 
 			foreach ( var v in queueables )
 			{
 				var queueable = Items.Find<BaseItem>( v );
-				if ( queueable == null ) return;
+				if ( queueable is not T ) continue;
 
 				if ( queueable.IsAvailable( player, Selectable ) )
 				{
 					if ( queueable.HasDependencies( player ) )
-						availableQueueables.Add( queueable );
+						available.Add( queueable );
 					else
-						unavailableQueueables.Add( queueable );
+						unavailable.Add( queueable );
 				}
 			}
 
-			for ( int i = 0; i < availableQueueables.Count; i++ )
+			for ( int i = 0; i < available.Count; i++ )
 			{
-				BaseItem v = availableQueueables[i];
+				var v = available[i];
 				var button = AddChild<ItemCommandQueueable>( "command" );
 				button.Update( Selectable, v );
 				Buttons.Add( button );
 			}
 
-			for ( int i = 0; i < unavailableQueueables.Count; i++ )
+			for ( int i = 0; i < unavailable.Count; i++ )
 			{
-				BaseItem v = unavailableQueueables[i];
+				var v = unavailable[i];
 				var button = AddChild<ItemCommandQueueable>( "command" );
 				button.Disable();
 				button.Update( Selectable, v );
 				Buttons.Add( button );
 			}
+		}
+
+		private void UpdateCommands( HashSet<string> queueables, Dictionary<string, BaseAbility> abilities = null )
+		{
+			var player = Local.Pawn as Player;
+
+			var availableQueueables = new List<BaseItem>();
+			var unavailableQueueables = new List<BaseItem>();
+
+			AddQueueables<BaseUnit>( player, queueables, availableQueueables, unavailableQueueables );
+			AddQueueables<BaseBuilding>( player, queueables, availableQueueables, unavailableQueueables );
+			AddQueueables<BaseTech>( player, queueables, availableQueueables, unavailableQueueables );
+			AddQueueables<BaseUpgrade>( player, queueables, availableQueueables, unavailableQueueables );
 
 			if ( abilities == null ) return;
 

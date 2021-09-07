@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class APC : BaseUnit
+	public class APC : BaseUnit, IVehicleUnit
 	{
 		public override string Name => "APC";
 		public override string UniqueId => "unit.apc";
@@ -54,7 +54,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.armoredplating"
+
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{

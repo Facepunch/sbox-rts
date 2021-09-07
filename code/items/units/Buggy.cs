@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Buggy : BaseUnit
+	public class Buggy : BaseUnit, IVehicleUnit
 	{
 		public override string Name => "Buggy";
 		public override string UniqueId => "unit.buggy";
@@ -58,7 +58,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.armoredplating"
+
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{

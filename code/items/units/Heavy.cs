@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Heavy : BaseUnit
+	public class Heavy : BaseUnit, IInfantryUnit
 	{
 		public override string Name => "Heavy";
 		public override string UniqueId => "unit.heavy";
@@ -60,8 +60,7 @@ namespace Facepunch.RTS.Units
 		public override string Weapon => "weapon_hmg";
 		public override HashSet<string> Dependencies => new()
 		{
-			"tech.carbines",
-			"tech.basicballistics"
+
 		};
 		public override HashSet<string> Queueables => new()
 		{

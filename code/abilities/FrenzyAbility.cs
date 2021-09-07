@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 		public override float Cooldown => 60f;
 		public override HashSet<string> Dependencies => new()
 		{
-			
+			"tech.syringes"
 		};
 
 		public override void OnFinished()
