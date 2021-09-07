@@ -983,11 +983,12 @@ namespace Facepunch.RTS
 			}
 		}
 
+		[ClientRpc]
 		protected void CreatePathParticles()
 		{
 			if ( _pathParticles != null )
 			{
-				_pathParticles.Destroy();
+				_pathParticles.Destroy( true );
 				_pathParticles = null;
 			}
 
@@ -995,7 +996,7 @@ namespace Facepunch.RTS
 			{
 				_pathParticles = Particles.Create( "particles/movement_path/movement_path.vpcf" );
 				_pathParticles.SetEntity( 0, this );
-				_pathParticles.SetPosition( 1, Destination );
+				_pathParticles.SetPosition( 1, Destination.WithZ( Position.z ) );
 				_pathParticles.SetPosition( 3, Player.TeamColor * 255f );
 			}
 		}
@@ -1004,7 +1005,7 @@ namespace Facepunch.RTS
 		{
 			if ( _pathParticles != null )
 			{
-				_pathParticles.Destroy();
+				_pathParticles.Destroy( true );
 				_pathParticles = null;
 			}
 		}
@@ -1261,7 +1262,6 @@ namespace Facepunch.RTS
 			Modifiers = new UnitModifiers();
 		}
 
-		// TODO: I don't want to do half of this shit each tick.
 		protected override void ClientTick()
 		{
 			base.ClientTick();
@@ -1273,6 +1273,8 @@ namespace Facepunch.RTS
 			}
 
 			Hud.SetActive( RenderAlpha > 0f );
+
+			UpdatePathParticles();
 
 			if ( Occupiable.IsValid() )
 			{
@@ -1328,10 +1330,17 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ClientRpc]
 		protected virtual void UpdatePathParticles()
 		{
-			CreatePathParticles();
+			if ( _pathParticles == null ) return;
+
+			if ( Destination.IsNearZeroLength )
+			{
+				RemovePathParticles();
+				return;
+			}
+
+			_pathParticles.SetPosition( 1, Destination.WithZ( Position.z ) );
 		}
 
 		protected virtual void OnTargetChanged()
@@ -1342,10 +1351,7 @@ namespace Facepunch.RTS
 				Weapon.Occupiable = Occupiable;
 			}
 
-			if ( IsSelected )
-			{
-				UpdatePathParticles( To.Single( Player ) );
-			}
+			CreatePathParticles();
 
 			SpinSpeed = null;
 		}
