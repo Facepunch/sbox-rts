@@ -609,7 +609,7 @@ namespace Facepunch.RTS
 
 		protected override void OnTagAdded( string tag )
 		{
-			if ( HasSelectionGlow && IsLocalPlayers && tag == "selected" )
+			if ( IsLocalPlayers && tag == "selected" )
 			{
 				OnSelected();
 			}
@@ -619,7 +619,7 @@ namespace Facepunch.RTS
 
 		protected override void OnTagRemoved( string tag )
 		{
-			if ( HasSelectionGlow && IsLocalPlayers && tag == "selected" )
+			if ( IsLocalPlayers && tag == "selected" )
 			{
 				OnDeselected();
 			}
@@ -629,14 +629,20 @@ namespace Facepunch.RTS
 
 		protected virtual void OnSelected()
 		{
-			GlowActive = true;
-			GlowState = GlowStates.GlowStateOn;
-			GlowColor = Player.TeamColor.WithAlpha( 0.5f );
+			if ( HasSelectionGlow )
+			{
+				GlowActive = true;
+				GlowState = GlowStates.GlowStateOn;
+				GlowColor = Player.TeamColor.WithAlpha( 0.5f );
+			}
 		}
 
 		protected virtual void OnDeselected()
 		{
-			GlowActive = false;
+			if ( HasSelectionGlow )
+			{
+				GlowActive = false;
+			}
 		}
 
 		protected virtual void OnPlayerAssigned( Player player) { }

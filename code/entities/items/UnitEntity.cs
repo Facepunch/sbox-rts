@@ -62,6 +62,7 @@ namespace Facepunch.RTS
 		[Net] public bool IsGathering { get; private set; }
 		[Net] public Weapon Weapon { get; private set; }
 		[Net] public float LineOfSightRadius { get; private set; }
+		[Net] public Vector3 Destination { get; private set; }
 		[Net] public TimeSince LastDamageTime { get; private set; }
 		[Net, OnChangedCallback] public int Kills { get; set; }
 		[Net] public UnitModifiers Modifiers { get; protected set; }
@@ -89,6 +90,7 @@ namespace Facepunch.RTS
 		protected readonly TargetInfo _target = new();
 		protected IMoveAgent[] _flockBuffer = new IMoveAgent[8];
 		protected List<ISelectable> _targetBuffer = new();
+		protected Particles _pathParticles;
 		protected RealTimeUntil _nextRepairTime;
 		protected RealTimeUntil _nextFindTarget;
 		protected Sound _idleLoopSound;
@@ -981,6 +983,46 @@ namespace Facepunch.RTS
 			}
 		}
 
+		protected void CreatePathParticles()
+		{
+			if ( _pathParticles != null )
+			{
+				_pathParticles.Destroy();
+				_pathParticles = null;
+			}
+
+			if ( !Destination.IsNearZeroLength )
+			{
+				_pathParticles = Particles.Create( "particles/movement_path/movement_path.vpcf" );
+				_pathParticles.SetEntity( 0, this );
+				_pathParticles.SetPosition( 1, Destination );
+				_pathParticles.SetPosition( 2, Player.TeamColor * 255f );
+			}
+		}
+
+		protected void RemovePathParticles()
+		{
+			if ( _pathParticles != null )
+			{
+				_pathParticles.Destroy();
+				_pathParticles = null;
+			}
+		}
+
+		protected override void OnSelected()
+		{
+			base.OnSelected();
+
+			CreatePathParticles();
+		}
+
+		protected override void OnDeselected()
+		{
+			base.OnDeselected();
+
+			RemovePathParticles();
+		}
+
 		protected override void OnQueueItemCompleted( QueueItem queueItem )
 		{
 			base.OnQueueItemCompleted( queueItem );
@@ -1037,6 +1079,8 @@ namespace Facepunch.RTS
 
 				Fog.RemoveViewer( this );
 				Fog.RemoveCullable( this );
+
+				RemovePathParticles();
 
 				return;
 			}
@@ -1284,12 +1328,23 @@ namespace Facepunch.RTS
 			}
 		}
 
+		[ClientRpc]
+		protected virtual void UpdatePathParticles()
+		{
+			CreatePathParticles();
+		}
+
 		protected virtual void OnTargetChanged()
 		{
 			if ( Weapon.IsValid() )
 			{
 				Weapon.Target = _target.Entity;
 				Weapon.Occupiable = Occupiable;
+			}
+
+			if ( IsSelected )
+			{
+				UpdatePathParticles( To.Single( Player ) );
 			}
 
 			SpinSpeed = null;
@@ -1318,7 +1373,12 @@ namespace Facepunch.RTS
 		{
 			if ( MoveStack.TryPeek( out var group ) )
 			{
+				Destination = group.GetDestination();
 				group.TryFinish( this );
+			}
+			else
+			{
+				Destination = Vector3.Zero;
 			}
 		}
 

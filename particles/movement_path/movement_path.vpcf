@@ -2,6 +2,7 @@
 {
 	_class = "CParticleSystemDefinition"
 	m_nBehaviorVersion = 10
+	m_bInfiniteBounds = true
 	m_controlPointConfigurations = 
 	[
 		{
