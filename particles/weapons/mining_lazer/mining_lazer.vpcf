@@ -1972,6 +1972,7 @@
 					m_vDomainMaxs = [ 0.0, 0.0 ]
 				}
 			}
+			m_bDisableZBuffering = true
 		},
 		{
 			_class = "C_OP_RenderRopes"
@@ -2317,6 +2318,7 @@
 			m_bSaturateColorPreAlphaBlend = false
 			m_bAdditive = true
 			m_hTexture = resource:"materials/particles/beam_hotwhite.vtex"
+			m_bDisableZBuffering = true
 		},
 		{
 			_class = "C_OP_RenderRopes"
@@ -2662,6 +2664,7 @@
 					m_Stops = [  ]
 				}
 			}
+			m_bDisableZBuffering = true
 		},
 		{
 			_class = "C_OP_RenderRopes"
@@ -2962,6 +2965,7 @@
 			m_bSaturateColorPreAlphaBlend = false
 			m_bAdditive = true
 			m_hTexture = resource:"materials/particles/beam_hotwhite.vtex"
+			m_bDisableZBuffering = true
 		},
 		{
 			_class = "C_OP_RenderRopes"
@@ -3308,6 +3312,7 @@
 			m_bAdditive = true
 			m_bOnlyRenderInEffectsBloomPass = true
 			m_hTexture = resource:"materials/particles/beam_hotwhite.vtex"
+			m_bDisableZBuffering = true
 		},
 	]
 	m_Children = 
