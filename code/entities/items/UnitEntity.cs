@@ -996,7 +996,7 @@ namespace Facepunch.RTS
 				_pathParticles = Particles.Create( "particles/movement_path/movement_path.vpcf" );
 				_pathParticles.SetEntity( 0, this );
 				_pathParticles.SetPosition( 1, Destination );
-				_pathParticles.SetPosition( 2, Player.TeamColor * 255f );
+				_pathParticles.SetPosition( 3, Player.TeamColor * 255f );
 			}
 		}
 
