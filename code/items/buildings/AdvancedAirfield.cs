@@ -12,7 +12,8 @@ namespace Facepunch.RTS.Buildings
 		public override string Model => "models/buildings/airfield/airfield_level2.vmdl";
 		public override HashSet<string> Queueables => new( base.Queueables )
 		{
-			"unit.apache"
+			"unit.apache",
+			"unit.hellfire"
 		};
 	}
 }

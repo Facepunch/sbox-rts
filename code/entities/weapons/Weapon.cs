@@ -129,7 +129,7 @@ namespace Facepunch.RTS
 
 			return new Ray {
 				Origin = Position,
-				Direction = Target.IsValid()? (Target.Position - Position).Normal : Rotation.Forward.Normal
+				Direction = Target.IsValid() ? (Target.Position - Position).Normal : Rotation.Forward.Normal
 			};
 		}
 

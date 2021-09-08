@@ -152,7 +152,7 @@ namespace Facepunch.RTS
 
 			var groundPosition = Position.WithZ( 0f );
 			var groundDestination = group.GetDestination().WithZ( 0f );
-			var tolerance = AgentRadius * 0.5f;
+			var tolerance = AgentRadius * 0.1f;
 
 			if ( groundPosition.Distance( groundDestination ) <= tolerance )
 				return true;
@@ -1113,10 +1113,9 @@ namespace Facepunch.RTS
 					var isTargetInRange = IsTargetInRange();
 					var isTargetValid = IsTargetValid();
 
-					if ( _target.Type == UnitTargetType.Attack )
+					if ( _target.Type == UnitTargetType.Attack && isTargetValid )
 					{
-						if ( isTargetValid )
-							ValidateAttackDistance();
+						ValidateAttackDistance();
 					}
 
 					if ( isTargetValid && isTargetInRange )
@@ -1351,7 +1350,7 @@ namespace Facepunch.RTS
 				Weapon.Occupiable = Occupiable;
 			}
 
-			CreatePathParticles();
+			CreatePathParticles( To.Single( Player ) );
 
 			SpinSpeed = null;
 		}

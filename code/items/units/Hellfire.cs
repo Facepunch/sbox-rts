@@ -5,16 +5,17 @@ using System.Collections.Generic;
 namespace Facepunch.RTS.Units
 {
 	[Library]
-	public class Apache : BaseUnit
+	public class Hellfire : BaseUnit
 	{
-		public override string Name => "Apache";
-		public override string UniqueId => "unit.apache";
-		public override string Entity => "unit_apache";
-		public override string Model => "models/vehicles/apache/apache.vmdl";
-		public override string Description => "An armored aircraft that occupies one ranged unit.";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/apache.png" );
+		public override string Name => "Hellfire";
+		public override string UniqueId => "unit.hellfire";
+		public override string Entity => "unit_aircraft";
+		public override string Weapon => "weapon_hellfire";
+		public override string Model => "models/vehicles/hellfire/hellfire.vmdl";
+		public override string Description => "An armored aircraft that rains fire on its foes.";
+		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/hellfire.png" );
 		public override float VerticalOffset => 600f;
-		public override float MaxHealth => 250f;
+		public override float MaxHealth => 300f;
 		public override bool UsePathfinder => false;
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
@@ -27,13 +28,6 @@ namespace Facepunch.RTS.Units
 		public override float MaxVerticalRange => 1000f;
 		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";
 		public override float LineOfSightRadius => 2000f;
-		public override OccupiableSettings Occupiable => new()
-		{
-			MaxOccupants = 1,
-			DamageScale = 0.2f,
-			AttackAttachments = new string[] { "muzzle" },
-			Enabled = true
-		};
 		public override string[] MoveSounds => new string[]
 		{
 			"brute.alright_move_out",
@@ -55,12 +49,12 @@ namespace Facepunch.RTS.Units
 		public override int BuildTime => 30;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 100,
-			[ResourceType.Metal] = 150
+			[ResourceType.Beer] = 150,
+			[ResourceType.Metal] = 300
 		};
 		public override HashSet<string> Dependencies => new()
 		{
-
+			"tech.pyrotechnics"
 		};
 		public override Dictionary<string, float> Resistances => new()
 		{
