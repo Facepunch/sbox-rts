@@ -76,6 +76,72 @@
 				]
 				default_root_bone_name = ""
 			},
+			{
+				_class = "PhysicsShapeList"
+				children = 
+				[
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "default"
+						collision_prop = "default"
+						origin = [ -1.43029, -6.890173, 47.748711 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 271.191467, 71.609406, 96.497421 ]
+					},
+				]
+			},
+			{
+				_class = "AttachmentList"
+				children = 
+				[
+					{
+						_class = "Attachment"
+						name = "muzzle1"
+						parent_bone = "front"
+						relative_origin = [ 135.921143, -75.040894, -13.614575 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle2"
+						parent_bone = "front"
+						relative_origin = [ 122.848328, -62.610973, -19.495815 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle3"
+						parent_bone = "front"
+						relative_origin = [ 120.018906, -62.61116, -34.597092 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle4"
+						parent_bone = "front"
+						relative_origin = [ 129.256119, -75.06385, -45.344742 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
+						name = "muzzle5"
+						parent_bone = "front"
+						relative_origin = [ 126.732117, -73.515556, -28.158169 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+				]
+			},
 		]
 		model_archetype = ""
 		primary_associated_entity = ""

@@ -21,9 +21,8 @@ namespace Facepunch.RTS
 
 		public override async void Attack()
 		{
-			base.Attack();
-
 			Recoil = 1f;
+			LastAttack = 0f;
 
 			PlaySound( "rocketlauncher.fire" );
 
@@ -42,7 +41,7 @@ namespace Facepunch.RTS
 
 				rocket.Initialize( transform.Value.Position, Target, Rand.Float( FireRate * 0.3f, FireRate * 0.6f ), OnMissileHit );
 
-				await GameTask.Delay( Rand.Int( 15, 40 ) );
+				await GameTask.Delay( Rand.Int( 75, 150 ) );
 
 				if ( !Target.IsValid() ) return;
 			}
@@ -96,7 +95,7 @@ namespace Facepunch.RTS
 
 		private void OnMissileHit( Projectile projectile, Entity target )
 		{
-			if ( target.IsValid() )
+			if ( target.IsValid() && Attacker.IsValid() )
 			{
 				DamageEntity( target, DamageFlags.Blast, 5f, GetDamage() / 6f );
 			}

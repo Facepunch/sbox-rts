@@ -11,6 +11,9 @@ namespace Gamelib.DayNight
 		public static float TimeOfDay { get; set; } = 9f;
 		public static float Speed { get; set; } = 0.05f;
 
+		private static RealTimeUntil NextUpdate { get; set; }
+		private static bool Initialized { get; set; }
+
 		public static TimeSection ToSection( float time )
 		{
 			if ( time > 5f && time <= 9f )
@@ -41,7 +44,12 @@ namespace Gamelib.DayNight
 			{
 				Section = currentSection;
 				OnSectionChanged?.Invoke( currentSection );
-				ChangeSectionForClient( To.Everyone, currentSection );
+			}
+
+			if ( NextUpdate )
+			{
+				ChangeSectionForClient( To.Everyone, Section );
+				NextUpdate = 1f;
 			}
 		}
 
@@ -49,7 +57,13 @@ namespace Gamelib.DayNight
 		public static void ChangeSectionForClient( TimeSection section )
 		{
 			Host.AssertClient();
-			OnSectionChanged?.Invoke( section );
+
+			if ( !Initialized || Section != section )
+			{
+				Section = section;
+				Initialized = true;
+				OnSectionChanged?.Invoke( section );
+			}
 		}
 	}
 }

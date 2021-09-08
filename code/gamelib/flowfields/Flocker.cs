@@ -38,9 +38,9 @@ namespace Gamelib.FlowFields
 
 		public Vector3 Seek( Vector3 target )
 		{
-			//var tolerance = Agent.AgentRadius * 0.5f;
+			var tolerance = Agent.AgentRadius * 0.5f;
 
-			if ( target.Distance( Position ) <= 1f )
+			if ( target.Distance( Position ) <= tolerance )
 				return Vector3.Zero;
 
 			var desired = target - Position;
