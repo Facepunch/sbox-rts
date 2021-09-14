@@ -1,5 +1,5 @@
 // 
-// Gamelib.FlowFields.Entities.FlowFieldBlocker : Sandbox.ModelEntity 
+// Gamelib.FlowFields.Entities.FlowFieldBlocker
 // 
 @SolidClass 
 metadata
@@ -18,7 +18,7 @@ metadata
 ]
 
 // 
-// Gamelib.FlowFields.Entities.FlowFieldGround : Sandbox.BaseTrigger 
+// Gamelib.FlowFields.Entities.FlowFieldGround
 // 
 @SolidClass 
 metadata
@@ -57,7 +57,7 @@ metadata
 ]
 
 // 
-// Gamelib.DayNight.DayNightAmbience : Sandbox.Entity 
+// Gamelib.DayNight.DayNightAmbience
 // 
 @PointClass iconsprite( "editor/snd_daynight.vmat" ) 
 metadata
@@ -77,7 +77,7 @@ metadata
 ]
 
 // 
-// Gamelib.DayNight.DayNightController : Sandbox.ModelEntity 
+// Gamelib.DayNight.DayNightController
 // 
 @PointClass iconsprite( "editor/daynight_controller.vmat" ) 
 metadata
@@ -108,7 +108,7 @@ metadata
 ]
 
 // 
-// Gamelib.DayNight.DayNightProp : Sandbox.ModelEntity 
+// Gamelib.DayNight.DayNightProp
 // 
 @PointClass model() 
 metadata
@@ -131,7 +131,7 @@ metadata
 ]
 
 // 
-// Gamelib.DayNight.DayNightSound : Sandbox.Entity 
+// Gamelib.DayNight.DayNightSound
 // 
 @PointClass iconsprite( "editor/daynight_sound.vmat" ) 
 metadata
@@ -151,7 +151,7 @@ metadata
 ]
 
 // 
-// Gamelib.DayNight.DayNightWindow : Sandbox.FuncBrush 
+// Gamelib.DayNight.DayNightWindow
 // 
 @SolidClass 
 metadata
@@ -181,7 +181,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.Gamemode : Sandbox.Game 
+// Facepunch.RTS.Gamemode
 // 
 @PointClass = rts : ""
 [
@@ -191,7 +191,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.BuildingBlocker : Sandbox.BaseTrigger 
+// Facepunch.RTS.BuildingBlocker
 // 
 @SolidClass 
 metadata
@@ -230,7 +230,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.AircraftEntity : Facepunch.RTS.UnitEntity 
+// Facepunch.RTS.AircraftEntity
 // 
 @PointClass = unit_aircraft : ""
 [
@@ -242,7 +242,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.ApacheEntity : Facepunch.RTS.AircraftEntity 
+// Facepunch.RTS.ApacheEntity
 // 
 @PointClass = unit_apache : ""
 [
@@ -254,7 +254,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.BuggyEntity : Facepunch.RTS.UnitEntity 
+// Facepunch.RTS.BuggyEntity
 // 
 @PointClass = unit_buggy : ""
 [
@@ -266,7 +266,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.DroneEntity : Facepunch.RTS.UnitEntity 
+// Facepunch.RTS.DroneEntity
 // 
 @PointClass = unit_drone : ""
 [
@@ -278,7 +278,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.ObstacleEntity : Sandbox.ModelEntity 
+// Facepunch.RTS.ObstacleEntity
 // 
 @PointClass model() 
 metadata
@@ -293,8 +293,8 @@ metadata
 	bodygroups(bodygroupchoices) [ group="Render Properties" ] : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	tooltipname(string) : "Tooltip Name" :  : ""
-	maxhealth(float) : "Max Health" : 0 : ""
+	tooltipname(string) : "Tooltip Name" : "Obstacle" : ""
+	maxhealth(float) : "Max Health" : 500 : ""
 	destroysound(string) : "Destroy Sound" : "rts.buildingexplode1" : ""
 	destroyeffect(string) : "Destroy Effect" : "particles/destruction_temp/destruction_temp.vpcf" : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
@@ -303,7 +303,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.RadarJammerEntity : Facepunch.RTS.BuildingEntity 
+// Facepunch.RTS.RadarJammerEntity
 // 
 @PointClass = building_radar_jammer : ""
 [
@@ -315,7 +315,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.TunnelEntity : Facepunch.RTS.BuildingEntity 
+// Facepunch.RTS.TunnelEntity
 // 
 @PointClass = building_tunnel : ""
 [
@@ -327,7 +327,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.BeerResource : Facepunch.RTS.ResourceEntity 
+// Facepunch.RTS.BeerResource
 // 
 @PointClass model() = resource_beer : ""
 [
@@ -343,7 +343,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.MetalResource : Facepunch.RTS.ResourceEntity 
+// Facepunch.RTS.MetalResource
 // 
 @PointClass model() = resource_metal : ""
 [
@@ -359,7 +359,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.PlasmaResource : Facepunch.RTS.ResourceEntity 
+// Facepunch.RTS.PlasmaResource
 // 
 @PointClass model() = resource_plasma : ""
 [
@@ -375,7 +375,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.StoneResource : Facepunch.RTS.ResourceEntity 
+// Facepunch.RTS.StoneResource
 // 
 @PointClass model() = resource_stone : ""
 [
@@ -391,7 +391,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.AttackDroneWeapon : Facepunch.RTS.Weapon 
+// Facepunch.RTS.AttackDroneWeapon
 // 
 @PointClass = weapon_attack_drone : ""
 [
@@ -403,7 +403,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.ElectricAttackDroneWeapon : Facepunch.RTS.AttackDroneWeapon 
+// Facepunch.RTS.ElectricAttackDroneWeapon
 // 
 @PointClass = weapon_electric_attack_drone : ""
 [
@@ -415,7 +415,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.ElectricSniper : Facepunch.RTS.Sniper 
+// Facepunch.RTS.ElectricSniper
 // 
 @PointClass = weapon_electric_sniper : ""
 [
@@ -427,7 +427,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.Flamethrower : Facepunch.RTS.Weapon 
+// Facepunch.RTS.Flamethrower
 // 
 @PointClass = weapon_flamethrower : ""
 [
@@ -439,7 +439,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.GrenadeLauncher : Facepunch.RTS.Weapon 
+// Facepunch.RTS.GrenadeLauncher
 // 
 @PointClass = weapon_grenade_launcher : ""
 [
@@ -451,7 +451,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.HellfireWeapon : Facepunch.RTS.Weapon 
+// Facepunch.RTS.HellfireWeapon
 // 
 @PointClass = weapon_hellfire : ""
 [
@@ -463,7 +463,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.HMG : Facepunch.RTS.Weapon 
+// Facepunch.RTS.HMG
 // 
 @PointClass = weapon_hmg : ""
 [
@@ -475,7 +475,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.Icethrower : Facepunch.RTS.Weapon 
+// Facepunch.RTS.Icethrower
 // 
 @PointClass = weapon_icethrower : ""
 [
@@ -487,7 +487,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.Pistol : Facepunch.RTS.Weapon 
+// Facepunch.RTS.Pistol
 // 
 @PointClass = weapon_pistol : ""
 [
@@ -499,7 +499,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.PlasmaAttackDroneWeapon : Facepunch.RTS.AttackDroneWeapon 
+// Facepunch.RTS.PlasmaAttackDroneWeapon
 // 
 @PointClass = weapon_plasma_attack_drone : ""
 [
@@ -511,7 +511,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.PlasmaHMG : Facepunch.RTS.HMG 
+// Facepunch.RTS.PlasmaHMG
 // 
 @PointClass = weapon_plasma_hmg : ""
 [
@@ -523,7 +523,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.PlasmaSMG : Facepunch.RTS.SMG 
+// Facepunch.RTS.PlasmaSMG
 // 
 @PointClass = weapon_plasma_smg : ""
 [
@@ -535,7 +535,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.PlasmaSniper : Facepunch.RTS.Sniper 
+// Facepunch.RTS.PlasmaSniper
 // 
 @PointClass = weapon_plasma_sniper : ""
 [
@@ -547,7 +547,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.RocketLauncher : Facepunch.RTS.Weapon 
+// Facepunch.RTS.RocketLauncher
 // 
 @PointClass = weapon_rocket_launcher : ""
 [
@@ -559,7 +559,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.SAMWeapon : Facepunch.RTS.Weapon 
+// Facepunch.RTS.SAMWeapon
 // 
 @PointClass = weapon_sam : ""
 [
@@ -571,7 +571,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.SMG : Facepunch.RTS.Weapon 
+// Facepunch.RTS.SMG
 // 
 @PointClass = weapon_smg : ""
 [
@@ -583,7 +583,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.Sniper : Facepunch.RTS.Weapon 
+// Facepunch.RTS.Sniper
 // 
 @PointClass = weapon_sniper : ""
 [
@@ -595,7 +595,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.SuicideDroneWeapon : Facepunch.RTS.Weapon 
+// Facepunch.RTS.SuicideDroneWeapon
 // 
 @PointClass = weapon_suicide_drone : ""
 [
@@ -607,7 +607,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.TankCannon : Facepunch.RTS.Weapon 
+// Facepunch.RTS.TankCannon
 // 
 @PointClass = weapon_tank_cannon : ""
 [
@@ -619,7 +619,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.TeslaCoilWeapon : Facepunch.RTS.Weapon 
+// Facepunch.RTS.TeslaCoilWeapon
 // 
 @PointClass = weapon_tesla_coil : ""
 [
@@ -631,7 +631,7 @@ metadata
 ]
 
 // 
-// Facepunch.RTS.TurretWeapon : Facepunch.RTS.Weapon 
+// Facepunch.RTS.TurretWeapon
 // 
 @PointClass = weapon_turret : ""
 [

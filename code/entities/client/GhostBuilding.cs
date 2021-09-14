@@ -32,7 +32,7 @@ namespace Facepunch.RTS
 		{
 			SetModel( building.Model );
 
-			RenderAlpha = 0.5f;
+			RenderColor = RenderColor.WithAlpha( 0.5f );
 
 			GlowActive = true;
 			GlowColor = Color.Green;

@@ -35,7 +35,6 @@ namespace Facepunch.RTS
 
 			PlaybackRate = master.PlaybackRate;
 			RenderColor = master.RenderColor;
-			RenderAlpha = master.RenderAlpha;
 			Rotation = master.Rotation;
 			Position = master.Position;
 			Master = master;
@@ -72,9 +71,9 @@ namespace Facepunch.RTS
 
 			if ( !IsFadingOut ) return;
 
-			RenderAlpha = RenderAlpha.LerpTo( 0f, Time.Delta * 2f );
+			RenderColor = RenderColor.WithAlpha( RenderColor.a.LerpTo( 0f, Time.Delta * 2f ) );
 
-			if ( RenderAlpha <= 0f )
+			if ( RenderColor.a <= 0f )
 			{
 				IsFadingOut = false;
 				Delete();

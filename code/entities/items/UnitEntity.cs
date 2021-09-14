@@ -1265,20 +1265,20 @@ namespace Facepunch.RTS
 		{
 			base.ClientTick();
 
-			if ( Hud.Style.Opacity != RenderAlpha )
+			if ( Hud.Style.Opacity != RenderColor.a )
 			{
-				Hud.Style.Opacity = RenderAlpha;
+				Hud.Style.Opacity = RenderColor.a;
 				Hud.Style.Dirty();
 			}
 
-			Hud.SetActive( RenderAlpha > 0f );
+			Hud.SetActive( RenderColor.a > 0f );
 
 			UpdatePathParticles();
 
 			if ( Occupiable.IsValid() )
 			{
 				Circle.Alpha = 0f;
-				RenderAlpha = 0f;
+				RenderColor = RenderColor.WithAlpha( 0f );
 
 				return;
 			}
@@ -1298,24 +1298,24 @@ namespace Facepunch.RTS
 				var isOnScreen = IsOnScreen();
 
 				Circle.Alpha = isOnScreen ? 1f : 0f;
-				RenderAlpha = isOnScreen ? 1f : 0f;
+				RenderColor = RenderColor.WithAlpha( isOnScreen ? 1f : 0f );
 				
 				return;
 			}
 
-			RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, Time.Delta * 2f );
+			RenderColor = RenderColor.WithAlpha( RenderColor.a.LerpTo( TargetAlpha, Time.Delta * 2f ) );
 
 			for ( var i = 0; i < Children.Count; i++ )
 			{
 				if ( Children[i] is ModelEntity child )
 				{
-					child.RenderAlpha = RenderAlpha;
+					child.RenderColor = child.RenderColor.WithAlpha( RenderColor.a );
 				}
 			}
 
 			if ( Circle.IsValid() )
 			{
-				Circle.Alpha = RenderAlpha;
+				Circle.Alpha = RenderColor.a;
 			}
 		}
 

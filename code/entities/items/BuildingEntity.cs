@@ -340,7 +340,7 @@ namespace Facepunch.RTS
 				TargetAlpha = 1f;
 			}
 
-			RenderAlpha = 0f;
+			RenderColor = RenderColor.WithAlpha( 0f );
 
 			base.ClientSpawn();
 		}
@@ -496,19 +496,19 @@ namespace Facepunch.RTS
 
 			if ( IsLocalTeamGroup )
 			{
-				RenderAlpha = targetAlpha;
+				RenderColor = RenderColor.WithAlpha( targetAlpha );
 				return;
 			}
 
-			RenderAlpha = RenderAlpha.LerpTo( targetAlpha, Time.Delta * 2f );
+			RenderColor = RenderColor.WithAlpha( RenderColor.a.LerpTo( targetAlpha, Time.Delta * 2f ) );
 
-			if ( Hud.Style.Opacity != RenderAlpha )
+			if ( Hud.Style.Opacity != RenderColor.a )
 			{
-				Hud.Style.Opacity = RenderAlpha;
+				Hud.Style.Opacity = RenderColor.a;
 				Hud.Style.Dirty();
 			}
 
-			Hud.SetActive( EnableDrawing && RenderAlpha > 0f );
+			Hud.SetActive( EnableDrawing && RenderColor.a > 0f );
 		}
 
 		protected override void CreateAbilities()

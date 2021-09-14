@@ -51,7 +51,7 @@ namespace Facepunch.RTS
 			ragdoll.TakeDecalsFrom( entity );
 			ragdoll.EnableHitboxes = true;
 			ragdoll.SurroundingBoundsMode = SurroundingBoundsType.Physics;
-			ragdoll.RenderColorAndAlpha = entity.RenderColorAndAlpha;
+			ragdoll.RenderColor = entity.RenderColor;
 
 			if ( ragdoll.PhysicsGroup == null )
 			{
@@ -72,7 +72,7 @@ namespace Facepunch.RTS
 
 				clothing.SetModel( clothes.GetModelName() );
 				clothing.SetParent( ragdoll, true );
-				clothing.RenderColorAndAlpha = clothes.RenderColorAndAlpha;
+				clothing.RenderColor = clothes.RenderColor;
 			}
 
 			if ( damageFlags.HasFlag( DamageFlags.Bullet ) ||
@@ -102,7 +102,7 @@ namespace Facepunch.RTS
 		[Event.Tick]
 		public void ClientTick()
 		{
-			RenderAlpha = RenderAlpha.LerpTo( TargetAlpha, Time.Delta * 8f );
+			RenderColor = RenderColor.WithAlpha( RenderColor.a.LerpTo( TargetAlpha, Time.Delta * 8f ) );
 
 			if ( FadeOutDuration > 0f )
 			{
@@ -114,7 +114,7 @@ namespace Facepunch.RTS
 					return;
 				}
 
-				RenderAlpha *= fraction;
+				RenderColor = RenderColor.WithAlpha( RenderColor.a * fraction );
 			}
 
 			for ( int i = 0; i < Children.Count; i++ )
@@ -123,7 +123,7 @@ namespace Facepunch.RTS
 
 				if ( child is ModelEntity model )
 				{
-					model.RenderAlpha = RenderAlpha;
+					model.RenderColor = model.RenderColor.WithAlpha( RenderColor.a );
 				}
 			}
 		}
