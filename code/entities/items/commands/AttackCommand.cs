@@ -19,7 +19,7 @@ namespace Facepunch.RTS.Commands
 			if ( agent is not UnitEntity unit )
 				return;
 
-			if ( !unit.IsUsingAbility() && unit.InVerticalRange( entity ) )
+			if ( !unit.IsUsingAbility() && unit.CanAttackTarget( Target ) )
 			{
 				unit.SetAttackTarget( Target, true );
 			}

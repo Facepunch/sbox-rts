@@ -142,6 +142,54 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public bool CanAttackTarget( IDamageable target )
+		{
+			if ( target is ISelectable selectable )
+				return CanAttackTarget( selectable );
+
+			var entity = target as Entity;
+
+			if ( !InVerticalRange( entity ) )
+				return false;
+
+			if ( Weapon.IsValid() )
+			{
+				if ( Weapon.TargetTeam == WeaponTargetTeam.Ally )
+					return false;
+			}
+
+			return target.CanBeAttacked();
+		}
+		
+		public bool CanAttackTarget( ISelectable target )
+		{
+			if ( target == this )
+				return false;
+
+			if ( !target.CanBeAttacked() )
+				return false;
+
+			if ( !InVerticalRange( target ) )
+				return false;
+
+			if ( !Weapon.IsValid() )
+				return false;
+
+			if ( Weapon.TargetType == WeaponTargetType.Building && target is not BuildingEntity )
+				return false;
+
+			if ( Weapon.TargetType == WeaponTargetType.Unit && target is not UnitEntity )
+				return false;
+
+			if ( !Weapon.CanTarget( target ) )
+				return false;
+
+			if ( Weapon.TargetTeam == WeaponTargetTeam.Ally )
+				return !IsEnemy( target );
+			else
+				return IsEnemy( target );
+		}
+
 		public bool IsAtDestination()
 		{
 			if ( !MoveStack.TryPeek( out var group ) || !group.IsValid() )
@@ -904,6 +952,13 @@ namespace Facepunch.RTS
 			return model.GetDestinations( Pathfinder );
 		}
 
+		public bool InVerticalRange( ISelectable other )
+		{
+			var entity = (other as Entity);
+			if ( !entity.IsValid() ) return false;
+			return InVerticalRange( entity );
+		}
+
 		public bool InVerticalRange( Entity other )
 		{
 			var selfPosition = Position;
@@ -1501,10 +1556,9 @@ namespace Facepunch.RTS
 
 			foreach ( var entity in entities )
 			{
-				if ( entity is ISelectable selectable && selectable.CanBeAttacked() )
+				if ( entity is ISelectable selectable && CanAttackTarget( selectable ) )
 				{
-					if ( IsEnemy( selectable ) && InVerticalRange( entity ) )
-						_targetBuffer.Add( selectable );
+					_targetBuffer.Add( selectable );
 				}
 			}
 

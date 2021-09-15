@@ -240,7 +240,7 @@ namespace Facepunch.RTS
 
 				var units = caller.ForEachSelected<UnitEntity>( unit =>
 				{
-					if ( unit.IsUsingAbility() || !unit.InVerticalRange( target ) )
+					if ( unit.IsUsingAbility() || !unit.CanAttackTarget( damageable ) )
 						return false;
 
 					return true;

@@ -26,6 +26,8 @@ namespace Facepunch.RTS.Buildings
 		public override HashSet<string> Queueables => new()
 		{
 			"unit.chinook",
+			"unit.medevac",
+			"tech.emergencyexit",
 			"upgrade.airfield"
 		};
 	}

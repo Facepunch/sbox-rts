@@ -367,6 +367,30 @@ namespace Facepunch.RTS
 			var difference = Position - EyePos;
 			EyeRot = Rotation.LookAt( difference, Vector3.Up );
 
+			if ( IsServer && Input.Released( InputButton.Reload ) )
+			{
+				// TODO: This is just for testing, delete later.
+				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
+				var bot = Rounds.Current.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
+
+				/*
+				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.attackdrone" );
+				worker.Position = trace.EndPos;
+				*/
+
+				var worker = Items.Create<UnitEntity>( bot, "unit.assault" );
+				worker.Position = trace.EndPos;
+
+				worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.assault" );
+				worker.Position = trace.EndPos;
+
+				/*
+				var building = Items.Create<BuildingEntity>( bot, "building.commandcentre" );
+				building.Position = trace.EndPos;
+				building.FinishConstruction();
+				*/
+			}
+
 			if ( IsServer && Input.Released( InputButton.Use ) )
 			{
 				// TODO: This is just for testing, delete later.
@@ -378,7 +402,7 @@ namespace Facepunch.RTS
 				worker.Position = trace.EndPos;
 				*/
 
-				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.hellfire" );
+				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.medevac" );
 				worker.Position = trace.EndPos;
 
 				/*

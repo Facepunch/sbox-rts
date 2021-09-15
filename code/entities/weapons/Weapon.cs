@@ -10,6 +10,8 @@ namespace Facepunch.RTS
 		[Net] public Entity Occupiable { get; set; }
 		[Net] public Entity Target { get; set; }
 		public virtual DamageFlags DamageType => DamageFlags.Bullet;
+		public virtual WeaponTargetType TargetType => WeaponTargetType.Any;
+		public virtual WeaponTargetTeam TargetTeam => WeaponTargetTeam.Enemy;
 		public virtual bool BoneMerge => true;
 		public virtual bool IsMelee => false;
 		public virtual int BaseDamage => 10;
@@ -75,6 +77,11 @@ namespace Facepunch.RTS
 				damage += unit.Modifiers.Damage;
 
 			return damage;
+		}
+
+		public virtual bool CanTarget( ISelectable selectable )
+		{
+			return true;
 		}
 
 		public virtual bool CanAttack()
