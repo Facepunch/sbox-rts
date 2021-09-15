@@ -23,8 +23,8 @@ namespace Facepunch.RTS
 		{
 			"tech.armageddon"
 		};
-		public virtual float MinDamage => 30f;
-		public virtual float MaxDamage => 100f;
+		public virtual float MinDamage => 300f;
+		public virtual float MaxDamage => 1000f;
 
 		private PointLightEntity Light { get; set; }
 		private Particles Effect { get; set; }

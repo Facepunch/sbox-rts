@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 		public override string Description => "Rain down fire upon your enemies, but be careful not to hit your own units!";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
-		public override float Cooldown => 80f;
+		public override float Cooldown => 60f;
 		public override float Duration => 10f;
 		public override float MaxDistance => 10000f;
 		public override float AreaOfEffectRadius => 500f;
@@ -24,8 +24,8 @@ namespace Facepunch.RTS
 			"tech.pyrotechnics"
 		};
 		public virtual float BlastRadius => 150f;
-		public virtual float MinDamage => 10f;
-		public virtual float MaxDamage => 30f;
+		public virtual float MinDamage => 40f;
+		public virtual float MaxDamage => 90f;
 
 		private List<Projectile> Rockets { get; set; } = new();
 		private Particles Dust { get; set; }
