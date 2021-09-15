@@ -56,14 +56,14 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
+			SelectionArea.SetClass( "hidden", !IsSelecting || !IsMultiSelect );
+
 			if ( !Hud.IsLocalPlaying() )
 			{
 				SpotLight.Brightness = 0f;
 				SpotLight.Enabled = false;
 				return;
 			}
-
-			SelectionArea.SetClass( "hidden", !IsSelecting || !IsMultiSelect );
 
 			var brightness = _spotLightBrightness;
 
