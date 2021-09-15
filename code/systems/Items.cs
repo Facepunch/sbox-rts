@@ -36,8 +36,7 @@ namespace Facepunch.RTS
 
 			var cameraPosition = selectable.Position;
 
-			player.Position = cameraPosition;
-			Player.LookAt( cameraPosition.ToCSV() );
+			player.LookAt( cameraPosition );
 		}
 
 		public static void FocusCameraOn( List<ISelectable> selectables )
@@ -55,8 +54,7 @@ namespace Facepunch.RTS
 
 			cameraPosition /= itemCount;
 
-			player.Position = cameraPosition;
-			Player.LookAt( cameraPosition.ToCSV() );
+			player.LookAt( cameraPosition );
 		}
 
 		[ClientRpc]

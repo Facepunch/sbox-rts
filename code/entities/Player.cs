@@ -17,7 +17,6 @@ namespace Facepunch.RTS
 		[Net, Local, OnChangedCallback] public List<Entity> Selection { get; set; }
 		[Net, Local] public uint MaxPopulation { get; set; }
 		[Net, Local] public int Population { get; private set; }
-		[Net, Local, Predicted] public float ZoomLevel { get; set; }
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
 		[Net] public Color TeamColor { get; set; }
@@ -25,6 +24,12 @@ namespace Facepunch.RTS
 		[Net] public List<int> Resources { get; private set; }
 		[Net] public int TeamGroup { get; set; }
 		public bool SkipAllWaiting { get; set;  }
+
+		public new RTSCamera Camera
+		{
+			get => base.Camera as RTSCamera;
+			set => base.Camera = value;
+		}
 
 		public HashSet<uint> InstantBuildCache { get; private set; }
 		public TimeSince LastCommandSound { get; set; }
@@ -36,23 +41,12 @@ namespace Facepunch.RTS
 			Camera = new RTSCamera();
 			Transmit = TransmitType.Always;
 			Resources = new List<int>();
-			ZoomLevel = 1f;
 			Selection = new List<Entity>();
 			Researching = new List<uint>();
 			Dependencies = new List<uint>();
 			InstantBuildCache = new HashSet<uint>();
 			MaxPopulation = 8;
 			LastCommandSound = 0;
-		}
-
-		[ServerCmd]
-		public static void LookAt( string csv )
-		{
-			if ( ConsoleSystem.Caller.Pawn is Player caller )
-			{
-				var position = csv.ToVector3();
-				caller.Position = position;
-			}
 		}
 
 		public IEnumerable<UnitEntity> GetUnits( BaseUnit unit)
@@ -311,61 +305,21 @@ namespace Facepunch.RTS
 			Selection.Clear();
 		}
 
+		[ClientRpc]
+		public void LookAt( Vector3 position )
+		{
+			Camera.LookAt = position.WithZ( 0f );
+		}
+
+		[ClientRpc]
 		public void LookAt( Entity other )
 		{
-			Position = other.Position.WithZ( 0f );
+			Camera.LookAt = other.Position.WithZ( 0f );
 		}
 
 		public override void Simulate( Client client )
 		{
 			if ( !Gamemode.Instance.IsValid() ) return;
-
-			ZoomLevel += Input.MouseWheel * Time.Delta * 10f;
-			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
-
-			var cameraConfig = Config.Current.Camera;
-			var velocity = Vector3.Zero;
-			var panSpeed = cameraConfig.PanSpeed - (cameraConfig.PanSpeed * ZoomLevel * 0.6f);
-
-			if ( Input.Down( InputButton.Forward ) )
-				velocity += EyeRot.Forward.WithZ(0f) * panSpeed * Time.Delta;
-
-			if ( Input.Down( InputButton.Back ) )
-				velocity += EyeRot.Backward.WithZ( 0f ) * panSpeed * Time.Delta;
-
-			if ( Input.Down( InputButton.Left ) )
-				velocity += EyeRot.Left * panSpeed * Time.Delta;
-
-			if ( Input.Down( InputButton.Right ) )
-				velocity += EyeRot.Right * panSpeed * Time.Delta;
-
-			var lookAtPosition = (Position + velocity);
-			var worldSize = Gamemode.Instance.WorldSize.Size.x;
-
-			lookAtPosition.x = lookAtPosition.x.Clamp( -worldSize, worldSize );
-			lookAtPosition.y = lookAtPosition.y.Clamp( -worldSize, worldSize );
-
-			Position = lookAtPosition;
-
-			Vector3 eyePos;
-
-			if ( cameraConfig.Ortho )
-			{
-				eyePos = Position + Vector3.Backward * cameraConfig.Backward;
-				eyePos += Vector3.Left * cameraConfig.Left;
-				eyePos += Vector3.Up * cameraConfig.Up;
-			}
-			else
-			{
-				eyePos = Position + Vector3.Backward * (cameraConfig.Backward - (cameraConfig.Backward * ZoomLevel * cameraConfig.ZoomScale));
-				eyePos += Vector3.Left * (cameraConfig.Left - (cameraConfig.Left * ZoomLevel * cameraConfig.ZoomScale));
-				eyePos += Vector3.Up * (cameraConfig.Up - (cameraConfig.Up * ZoomLevel * cameraConfig.ZoomScale));
-			}
-
-			EyePos = eyePos;
-
-			var difference = Position - EyePos;
-			EyeRot = Rotation.LookAt( difference, Vector3.Up );
 
 			if ( IsServer && Input.Released( InputButton.Reload ) )
 			{
@@ -419,12 +373,6 @@ namespace Facepunch.RTS
 				{
 					SelectedItem.Instance.Next();
 				}
-
-				Sound.Listener = new Transform()
-				{
-					Position = lookAtPosition,
-					Rotation = EyeRot
-				};
 			}
 
 			base.Simulate( client );

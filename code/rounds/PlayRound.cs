@@ -49,7 +49,7 @@ namespace Facepunch.RTS
 						player.SetResource( ResourceType.Plasma, 0 );
 
 						player.MakeSpectator( false );
-						player.LookAt( spawnpoint );
+						player.LookAt( spawnpoint.Position );
 
 						Fog.Show( player );
 						Fog.Clear( player );
