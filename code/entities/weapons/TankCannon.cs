@@ -13,11 +13,14 @@ namespace Facepunch.RTS
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash/muzzle_large/muzzleflash_large.vpcf";
 		public override string BulletTracer => null;
 		public override float RotationTolerance => 360f;
-		public override string SoundName => "rts.smg.shoot";
+		public override string SoundName => "rocketlauncher.fire";
+		public override DamageFlags DamageType => DamageFlags.Blast;
 		public override float Force => 5f;
 		public virtual float RotateSpeed => 10f;
 
 		public Vector3 TargetDirection { get; private set; }
+
+		protected Projectile Rocket { get; set; }
 
 		public override Transform? GetMuzzle()
 		{
@@ -29,12 +32,11 @@ namespace Facepunch.RTS
 			return Attacker.GetAttachment( "muzzle", true );
 		}
 
-		[ClientRpc]
-		public override void ShootEffects( Vector3 position )
+		public override void Attack()
 		{
-			var explosion = Particles.Create( "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf" );
-			explosion.SetPosition( 0, position );
-			base.ShootEffects( position );
+			base.Attack();
+
+			LaunchProjectile();
 		}
 
 		public override bool CanAttack()
@@ -45,6 +47,41 @@ namespace Facepunch.RTS
 				return false;
 
 			return base.CanAttack();
+		}
+
+		protected void LaunchProjectile()
+		{
+			var muzzle = GetMuzzle();
+
+			if ( muzzle.HasValue )
+			{
+				Rocket = new Projectile
+				{
+					BezierCurve = false,
+					FaceDirection = true,
+					HitSound = "rocket.explode1"
+				};
+
+				Rocket.SetModel( "models/weapons/rpg_rocket/rpg_rocket.vmdl" );
+				Rocket.Initialize( muzzle.Value.Position, Target, 0.4f, OnRocketHit );
+			}
+		}
+
+		protected override void OnDestroy()
+		{
+			if ( Rocket.IsValid() )
+			{
+				Rocket.Delete();
+				Rocket = null;
+			}
+
+			base.OnDestroy();
+		}
+
+		protected virtual void OnRocketHit( Projectile grenade, Entity entity )
+		{
+			if ( !entity.IsValid() ) return;
+			DamageEntity( entity, DamageType, Force, GetDamage() );
 		}
 
 		[Event.Tick.Server]

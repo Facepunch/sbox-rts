@@ -59,5 +59,9 @@ namespace Facepunch.RTS.Units
 			["resistance.bullet"] = 0.6f,
 			["resistance.fire"] = 0.2f,
 		};
+		public override HashSet<string> Queueables => new()
+		{
+			"upgrade.plasmatank"
+		};
 	}
 }

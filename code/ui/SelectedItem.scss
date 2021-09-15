@@ -96,19 +96,19 @@
 
             .desc {
                 margin-top: 8px;
-                font-size: 20px;
+                font-size: 18px;
                 color: white;
             }
 
             .health {
                 margin-top: 8px;
-                font-size: 20px;
+                font-size: 18px;
                 color: white;
             }
 
             .damage {
                 margin-top: 8px;
-                font-size: 20px;
+                font-size: 18px;
                 color: white;
 
                 &.hidden {
@@ -118,7 +118,7 @@
 
             .kills {
                 margin-top: 8px;
-                font-size: 20px;
+                font-size: 18px;
                 color: white;
 
                 &.hidden {
@@ -133,12 +133,13 @@
             itemoccupantlist {
                 background-color: rgba(255 106 0 0.05);
                 border-radius: 6px;
-                margin-top: 8px;
-                padding: 8px;
+                height: 60px;
+                margin-top: 12px;
+                padding: 4px;
 
                 itemoccupantbutton {
-                    width: 50px;
-                    height: 50px;
+                    width: 46px;
+                    height: 46px;
                     background-color: rgba(128 128 128 0.5);
                     border-radius: 4px;
                     margin-right: 4px;

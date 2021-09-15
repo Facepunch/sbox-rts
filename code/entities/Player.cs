@@ -402,7 +402,7 @@ namespace Facepunch.RTS
 				worker.Position = trace.EndPos;
 				*/
 
-				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.medevac" );
+				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.tank" );
 				worker.Position = trace.EndPos;
 
 				/*

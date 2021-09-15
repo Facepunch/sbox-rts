@@ -6,7 +6,7 @@ using System;
 namespace Facepunch.RTS
 {
 	[Library]
-	partial class Projectile : ModelEntity
+	public partial class Projectile : ModelEntity
 	{
 		private Particles Trail { get; set; }
 		public Vector3 EndPosition { get; private set; }
