@@ -44,7 +44,7 @@ namespace Facepunch.RTS
 			}
 
 			Viewer = null;
-			Pos = Pos.LerpTo( player.EyePos, Time.Delta * 4f );
+			Pos = Pos.LerpTo( player.EyePos, 0.066f );
 			Rot = player.EyeRot;
 		}
 	}
