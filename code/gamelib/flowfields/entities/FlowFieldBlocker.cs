@@ -8,7 +8,7 @@ namespace Gamelib.FlowFields.Entities
 	/// </summary>
 	[Library( "flowfield_blocker" )]
 	[Hammer.AutoApplyMaterial( "materials/rts/hammer/flowfield_blocker.vmat" )]
-	[Hammer.EntityTool( "FlowField Blocker", "FlowField" )]
+	[Hammer.EntityTool( "Blocker", "FlowField" )]
 	[Hammer.Solid]
 	public class FlowFieldBlocker : ModelEntity
 	{
