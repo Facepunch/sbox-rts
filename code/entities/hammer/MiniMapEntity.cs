@@ -16,6 +16,13 @@ namespace Facepunch.RTS
 		[Property, ResourceType( "png" )]
 		public string TexturePath { get; set; }
 
+		public override void Spawn()
+		{
+			Transmit = TransmitType.Always;
+
+			base.Spawn();
+		}
+
 		public override void ClientSpawn()
 		{
 			Instance = this;

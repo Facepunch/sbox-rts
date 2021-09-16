@@ -8,7 +8,7 @@ namespace Gamelib.DayNight
 	/// </summary>
 
 	[Library( "daynight_prop" )]
-	[Hammer.EntityTool( "Day Night Prop", "Day and Night" )]
+	[Hammer.EntityTool( "Material Prop", "Day and Night" )]
 	[Hammer.Model( Model = "", MaterialGroup = "default" )]
 	public class DayNightProp : ModelEntity
 	{

@@ -9,17 +9,17 @@ namespace Gamelib.DayNight
 	/// </summary>
 	/// 
 	[Library( "daynight_ambience" )]
-	[Hammer.EntityTool( "Day Night Ambience", "Day and Night" )]
+	[Hammer.EntityTool( "Ambience", "Day and Night" )]
 	[Hammer.EditorSprite("editor/snd_daynight.vmat")]
 	public partial class DayNightAmbience : Entity
 	{
-		[Property( FGDType = "sound", Title = "Dawn Ambient Sound" )]
+		[Property( Title = "Dawn Ambient Sound" ), FGDType( "sound" )]
 		public string DawnAmbience { get; set; }
-		[Property(	FGDType = "sound", Title = "Day Ambient Sound" )]
+		[Property( Title = "Day Ambient Sound" ), FGDType( "sound" )]
 		public string DayAmbience { get; set; }
-		[Property( FGDType = "sound", Title = "Dusk Ambient Sound" )]
+		[Property( Title = "Dusk Ambient Sound" ), FGDType( "sound" )]
 		public string DuskAmbience { get; set; }
-		[Property(	FGDType = "sound", Title = "Night Ambient Sound" )]
+		[Property( Title = "Night Ambient Sound" ), FGDType( "sound" )]
 		public string NightAmbience { get; set; }
 
 		public class Transition

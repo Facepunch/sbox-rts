@@ -8,7 +8,7 @@ namespace Gamelib.DayNight
 	/// </summary>
 
 	[Library( "daynight_sound" )]
-	[Hammer.EntityTool( "Day Night Sound", "Day and Night" )]
+	[Hammer.EntityTool( "Sound", "Day and Night" )]
 	[Hammer.EditorSprite("editor/daynight_sound.vmat")]
 	public partial class DayNightSound : Entity
 	{
