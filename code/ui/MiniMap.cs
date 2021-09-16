@@ -148,8 +148,8 @@ namespace Facepunch.RTS
 		{
 			SetClass( "hidden", !Hud.IsLocalPlaying() );
 
-			//if ( NextIconUpdate )
-			//{
+			if ( NextIconUpdate )
+			{
 				var iconCount = Icons.Count;
 
 				for ( var i = 0; i < iconCount; i++ )
@@ -159,7 +159,7 @@ namespace Facepunch.RTS
 				}
 
 				NextIconUpdate = iconCount / 200f;
-			//}
+			}
 		}
 
 		private void OnFogActiveChanged( bool isActive )
