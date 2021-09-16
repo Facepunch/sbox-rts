@@ -10,7 +10,7 @@ namespace Gamelib.FlowFields.Entities
 
 	[Library( "flowfield_ground" )]
 	[Hammer.AutoApplyMaterial("materials/rts/hammer/flowfield_ground.vmat")]
-	[Hammer.EntityTool( "FlowField Ground", "FlowField System" )]
+	[Hammer.EntityTool( "FlowField Ground", "FlowField" )]
 	[Hammer.Solid]
 	public class FlowFieldGround : BaseTrigger
 	{

@@ -8,9 +8,8 @@ namespace Gamelib.DayNight
 	/// </summary>
 
 	[Library( "daynight_window" )]
-	[Hammer.EntityTool( "Day Night Window Brush", "Day Night System" )]
+	[Hammer.EntityTool( "Day Night Window Brush", "Day and Night" )]
 	[Hammer.Solid]
-
 	public class DayNightWindow : FuncBrush
 	{
 		[Property( Title = "Enable Delay Time" )]

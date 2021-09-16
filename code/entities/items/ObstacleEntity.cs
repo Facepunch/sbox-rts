@@ -12,7 +12,7 @@ namespace Facepunch.RTS
 
 
 	[Library( "rts_obstacle") ]
-	[Hammer.EntityTool( "Obstacle", "RTS Entity" )]
+	[Hammer.EntityTool( "Obstacle", "RTS" )]
 	[Hammer.Model( Model = "models/rocks/rock_large_00.vmdl" )]
 	public partial class ObstacleEntity : ModelEntity, IDamageable, IFogCullable, IHudEntity
 	{

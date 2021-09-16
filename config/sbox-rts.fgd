@@ -6,7 +6,7 @@ metadata
 {
 	auto_apply_material = "materials/rts/hammer/flowfield_blocker.vmat"
 	entity_tool_name = "FlowField Blocker"
-	entity_tool_group = "FlowField System"
+	entity_tool_group = "FlowField"
 }
 = flowfield_blocker : "Blocks off areas that players should not be able to access."
 [
@@ -25,7 +25,7 @@ metadata
 {
 	auto_apply_material = "materials/rts/hammer/flowfield_ground.vmat"
 	entity_tool_name = "FlowField Ground"
-	entity_tool_group = "FlowField System"
+	entity_tool_group = "FlowField"
 }
 = flowfield_ground : "The main component needed for the flowfield to work, basically works as a nav mesh. Must be placed over all the playable space."
 [
@@ -63,9 +63,9 @@ metadata
 metadata
 {
 	entity_tool_name = "Day Night Ambience"
-	entity_tool_group = "Day Night System"
+	entity_tool_group = "Day and Night"
 }
-= daynight_ambience : "An audio controller for when a looping sound should play at each point in the day."
+= daynight_ambience : "An audio controller for when a looping sound should play at each point in the day"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -83,9 +83,9 @@ metadata
 metadata
 {
 	entity_tool_name = "Day Night Controller"
-	entity_tool_group = "Day Night System"
+	entity_tool_group = "Day and Night"
 }
-= daynight_controller : "A way to set the colour based on the time of day, it will smoothly blend between each colour when the time has changed. Also enables the day night cycle using a \"light_environment\"."
+= daynight_controller : "A way to set the colour based on the time of day, it will smoothly blend between each colour when the time has changed. Also enables the day night cycle using a \"light_environment\""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -114,9 +114,9 @@ metadata
 metadata
 {
 	entity_tool_name = "Day Night Prop"
-	entity_tool_group = "Day Night System"
+	entity_tool_group = "Day and Night"
 }
-= daynight_prop : "Sets the skin of a model depending on if it's day time or night time, example: A street lamp turning on and night time then turning off in the morning."
+= daynight_prop : "Sets the skin of a model depending on if it's day time or night time, example: A street lamp turning on and night time then turning off in the morning"
 [
 	model(studio) [report]: "World Model" : "" : "The model this entity should use."
 	skin(materialgroup) [ group="Render Properties" ] : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
@@ -137,7 +137,7 @@ metadata
 metadata
 {
 	entity_tool_name = "Day Night Sound"
-	entity_tool_group = "Day Night System"
+	entity_tool_group = "Day and Night"
 }
 = daynight_sound : "A way to play sounds during the day night cycle, this also allows you to play a looping sound between 2 time periods e.g. 5pm to 6pm. You can also set the sound to only place once."
 [
@@ -157,7 +157,7 @@ metadata
 metadata
 {
 	entity_tool_name = "Day Night Window Brush"
-	entity_tool_group = "Day Night System"
+	entity_tool_group = "Day and Night"
 }
 = daynight_window : "A brush entity that will enable and disable at random times during the morning and night time."
 [
@@ -232,11 +232,17 @@ metadata
 // 
 // Facepunch.RTS.MiniMapEntity
 // 
-@PointClass iconsprite( "editor/rts_minimap.vmat" ) = rts_minimap : "Provides configuration for the in-game minimap"
+@PointClass iconsprite( "editor/rts_minimap.vmat" ) 
+metadata
+{
+	entity_tool_name = "MiniMap Config"
+	entity_tool_group = "RTS"
+}
+= rts_minimap : "Provides configuration for the in-game minimap"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	texturepath(png) : "Texture Path" :  : ""
+	texturepath(resource:png) : "Texture Path" :  : ""
 	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 

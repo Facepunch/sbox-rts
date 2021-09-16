@@ -4,11 +4,11 @@ namespace Gamelib.DayNight
 {
 
 	/// <summary>
-	/// Sets the skin of a model depending on if it's day time or night time, example: A street lamp turning on and night time then turning off in the morning.
+	/// Sets the skin of a model depending on if it's day time or night time, example: A street lamp turning on and night time then turning off in the morning
 	/// </summary>
 
 	[Library( "daynight_prop" )]
-	[Hammer.EntityTool( "Day Night Prop", "Day Night System" )]
+	[Hammer.EntityTool( "Day Night Prop", "Day and Night" )]
 	[Hammer.Model( Model = "", MaterialGroup = "default" )]
 	public class DayNightProp : ModelEntity
 	{
