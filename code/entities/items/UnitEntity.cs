@@ -607,7 +607,7 @@ namespace Facepunch.RTS
 			else
 				Fog.AddCullable( this );
 
-			MiniMap.Instance.AddEntity( this );
+			MiniMap.Instance.AddEntity( this, "unit" );
 
 			base.ClientSpawn();
 		}

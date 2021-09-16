@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity, IDamageable, IFogCullable
+	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity, IDamageable, IFogCullable, IMapIconEntity
 	{
 		[Net, OnChangedCallback] public List<UnitEntity> Occupants { get; private set; }
 
@@ -28,6 +28,7 @@ namespace Facepunch.RTS
 		public float TargetAlpha { get; private set; }
 		public bool HasBeenSeen { get; set; }
 		public bool IsVisible { get; set; }
+		public Color IconColor => IsBlueprint ? Player.TeamColor.WithAlpha( 0.4f ) : Player.TeamColor;
 
 		public bool CanDepositResources
 		{
@@ -343,6 +344,9 @@ namespace Facepunch.RTS
 
 			RenderColor = RenderColor.WithAlpha( 0f );
 
+			var icon = MiniMap.Instance.AddEntity( this, "building" );
+			icon.SetSize( CollisionBounds * 0.9f );
+
 			base.ClientSpawn();
 		}
 
@@ -398,6 +402,11 @@ namespace Facepunch.RTS
 			DamageOccupants( info );
 
 			base.TakeDamage( info );
+		}
+
+		public virtual bool ShouldShowOnMap()
+		{
+			return IsLocalTeamGroup || IsVisible;
 		}
 
 		public virtual void DoImpactEffects( Vector3 position, Vector3 normal )
@@ -762,6 +771,8 @@ namespace Facepunch.RTS
 			}
 			else
 			{
+				MiniMap.Instance.RemoveEntity( this );
+
 				Fog.RemoveCullable( this );
 				Fog.RemoveViewer( this );
 			}

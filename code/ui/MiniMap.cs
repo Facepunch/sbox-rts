@@ -10,21 +10,45 @@ namespace Facepunch.RTS
 {
 	public class MiniMapImage : Image
 	{
+		public Vector3 PixelToWorld( float x, float y )
+		{
+			var size = Box.Rect.Size;
+			var fractionX = (x / size.x);
+			var fractionY = (y / size.y);
+			var worldSize = Gamemode.Instance.WorldSize.Size;
+			var largestSide = MathF.Max( worldSize.x, worldSize.y );
+			var positionX = (largestSide * fractionX) - (largestSide * 0.5f);
+			var positionY = (largestSide * fractionY) - (largestSide * 0.5f);
+
+			return new Vector3( -positionY, -positionX );
+		}
+
+		public Vector2 WorldToCoords( Vector3 position )
+		{
+			var worldSize = Gamemode.Instance.WorldSize.Size;
+			var largestSide = MathF.Max( worldSize.x, worldSize.y );
+			var offset = position + (worldSize * 0.5f);
+
+			return offset / largestSide;
+		}
+
+		public float UnitsToPixels( float units )
+		{
+			var worldSize = Gamemode.Instance.WorldSize.Size;
+			var largestSide = MathF.Max( worldSize.x, worldSize.y );
+			var mapSize = Parent.Box.Rect.Size.x;
+			var fraction = units / largestSide;
+
+			return mapSize * fraction;
+		}
+
 		protected override void OnClick( MousePanelEvent e )
 		{
 			base.OnClick( e );
 
 			if ( Local.Pawn is Player player )
 			{
-				var size = Box.Rect.Size;
-				var fractionX = (MousePosition.x / size.x);
-				var fractionY = (MousePosition.y / size.y);
-				var worldSize = Gamemode.Instance.WorldSize.Size;
-				var largestSide = MathF.Max( worldSize.x, worldSize.y );
-				var positionX = (largestSide * fractionX) - (largestSide * 0.5f);
-				var positionY = (largestSide * fractionY) - (largestSide * 0.5f);
-
-				player.LookAt( new Vector3( -positionY, -positionX ) );
+				player.LookAt( PixelToWorld( MousePosition.x, MousePosition.y ) );
 			}
 		}
 	}
@@ -32,6 +56,24 @@ namespace Facepunch.RTS
 	public class MiniMapIcon : Panel
 	{
 		public IMapIconEntity Item { get; set; }
+		public MiniMapImage Map { get; set; }
+
+		public void SetSize( BBox bounds )
+		{
+			var objectSize = Math.Max( bounds.Size.x, bounds.Size.y );
+			var iconSize = Map.UnitsToPixels( objectSize );
+
+			Style.Width = Length.Pixels( iconSize );
+			Style.Height = Length.Pixels( iconSize );
+			Style.Dirty();
+		}
+
+		public void SetSize( int width, int height )
+		{
+			Style.Width = Length.Pixels( width );
+			Style.Height = Length.Pixels( height );
+			Style.Dirty();
+		}
 
 		public void Update()
 		{
@@ -41,13 +83,11 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			var worldSize = Gamemode.Instance.WorldSize.Size;
-			var largestSide = MathF.Max( worldSize.x, worldSize.y );
-			var position = Item.Position + (worldSize * 0.5f);
-			var normalized = position / largestSide;
+			var coords = Map.WorldToCoords( Item.Position );
 
-			Style.Left = Length.Fraction( normalized.x );
-			Style.Top = Length.Fraction( normalized.y );
+			Style.BackgroundColor = Item.IconColor;
+			Style.Left = Length.Fraction( coords.x );
+			Style.Top = Length.Fraction( coords.y );
 			Style.Dirty();
 
 			SetClass( "hidden", false );
@@ -59,7 +99,7 @@ namespace Facepunch.RTS
 		public static MiniMap Instance { get; private set; }
 
 		public readonly Panel IconContainer;
-		public readonly Image Map;
+		public readonly MiniMapImage Map;
 		public readonly Panel Fog;
 
 		private List<MiniMapIcon> Icons;
@@ -99,15 +139,20 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public void AddEntity( IMapIconEntity item )
+		public MiniMapIcon AddEntity( IMapIconEntity item, string className )
 		{
 			var icon = IconContainer.AddChild<MiniMapIcon>( "icon" );
 
+			if ( !string.IsNullOrEmpty( className ) )
+				icon.AddClass( className );
+
+			icon.Map = Map;
 			icon.Item = item;
-			icon.Style.BackgroundColor = item.IconColor;
 			icon.Style.Dirty();
 
 			Icons.Add( icon );
+
+			return icon;
 		}
 
 		/*

@@ -1,6 +1,5 @@
 ﻿minimap {
     position: absolute;
-    width: 100%;
     left: 48px;
     bottom: 32px;
 
@@ -32,10 +31,16 @@
             .icon {
                 position: absolute;
                 transform: translateX(50%) translateY(50%);
-                background-color: cyan;
+                background-color: white;
                 border-radius: 50%;
                 width: 3px;
                 height: 3px;
+
+                &.building {
+                    border-radius: 0px;
+                    width: 16px;
+                    height: 16px;
+                }
 
                 &.hidden {
                     display: none;
