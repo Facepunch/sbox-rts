@@ -198,9 +198,9 @@ metadata
 {
 	auto_apply_material = "materials/rts/hammer/building_blocker.vmat"
 	entity_tool_name = "Building Blocker"
-	entity_tool_group = "FlowField System"
+	entity_tool_group = "RTS"
 }
-= rts_building_blocker : "Blocks the ability to build inside the volume, but still allows units to pass through."
+= rts_building_blocker : "Blocks the ability to build inside the volume, but still allows units to pass through"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -227,6 +227,17 @@ metadata
 	output OnEndTouch(void) : "Fired when an entity stops touching this trigger. Only entities that passed this trigger's filters will cause this output to fire."
 	output OnStartTouchAll(void) : "Fired when an entity starts touching this trigger while no other passing entities are touching it."
 	output OnEndTouchAll(void) : "Fired when all entities touching this trigger have stopped touching it."
+]
+
+// 
+// Facepunch.RTS.MiniMapEntity
+// 
+@PointClass iconsprite( "editor/rts_minimap.vmat" ) = rts_minimap : "Provides configuration for the in-game minimap"
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	texturepath(png) : "Texture Path" :  : ""
+	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 // 

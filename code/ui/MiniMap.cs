@@ -145,15 +145,11 @@ namespace Facepunch.RTS
 		{
 			StyleSheet.Load( "/ui/MiniMap.scss" );
 
-			Map = AddChild<MiniMapImage>( "map" );
-			Map.SetTexture( "textures/rts/minimap/rts_greenlands.png" );
-
-			RotatedContainer = Map.AddChild<Panel>( "container" );
-
-			Fog = RotatedContainer.AddChild<Panel>( "fog" );
-
 			RTS.Fog.OnActiveChanged += OnFogActiveChanged;
 
+			Map = AddChild<MiniMapImage>( "map" );
+			RotatedContainer = Map.AddChild<Panel>( "container" );
+			Fog = RotatedContainer.AddChild<Panel>( "fog" );
 			IconContainer = RotatedContainer.AddChild<Panel>( "icons" );
 			CameraBox = RotatedContainer.AddChild<Panel>( "camera" );
 
@@ -226,7 +222,15 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			SetClass( "hidden", !Hud.IsLocalPlaying() );
+			var isLocalPlaying = Hud.IsLocalPlaying();
+			SetClass( "hidden", !isLocalPlaying );
+
+			if ( !isLocalPlaying ) return;
+
+			var miniMapConfig = MiniMapEntity.Instance;
+
+			if ( miniMapConfig != null )
+				Map.SetTexture( miniMapConfig.TexturePath );
 
 			if ( NextIconUpdate )
 			{
