@@ -5,7 +5,7 @@
 metadata
 {
 	auto_apply_material = "materials/rts/hammer/flowfield_blocker.vmat"
-	entity_tool_name = "FlowField Blocker"
+	entity_tool_name = "Blocker"
 	entity_tool_group = "FlowField"
 }
 = flowfield_blocker : "Blocks off areas that players should not be able to access."
@@ -24,7 +24,7 @@ metadata
 metadata
 {
 	auto_apply_material = "materials/rts/hammer/flowfield_ground.vmat"
-	entity_tool_name = "FlowField Ground"
+	entity_tool_name = "Ground"
 	entity_tool_group = "FlowField"
 }
 = flowfield_ground : "The main component needed for the flowfield to work, basically works as a nav mesh. Must be placed over all the playable space."
@@ -62,7 +62,7 @@ metadata
 @PointClass iconsprite( "editor/snd_daynight.vmat" ) 
 metadata
 {
-	entity_tool_name = "Day Night Ambience"
+	entity_tool_name = "Ambience"
 	entity_tool_group = "Day and Night"
 }
 = daynight_ambience : "An audio controller for when a looping sound should play at each point in the day"
@@ -82,7 +82,7 @@ metadata
 @PointClass iconsprite( "editor/daynight_controller.vmat" ) 
 metadata
 {
-	entity_tool_name = "Day Night Controller"
+	entity_tool_name = "Controller"
 	entity_tool_group = "Day and Night"
 }
 = daynight_controller : "A way to set the colour based on the time of day, it will smoothly blend between each colour when the time has changed. Also enables the day night cycle using a \"light_environment\""
@@ -113,7 +113,7 @@ metadata
 @PointClass model() 
 metadata
 {
-	entity_tool_name = "Day Night Prop"
+	entity_tool_name = "Material Prop"
 	entity_tool_group = "Day and Night"
 }
 = daynight_prop : "Sets the skin of a model depending on if it's day time or night time, example: A street lamp turning on and night time then turning off in the morning"
@@ -136,7 +136,7 @@ metadata
 @PointClass iconsprite( "editor/daynight_sound.vmat" ) 
 metadata
 {
-	entity_tool_name = "Day Night Sound"
+	entity_tool_name = "Sound"
 	entity_tool_group = "Day and Night"
 }
 = daynight_sound : "A way to play sounds during the day night cycle, this also allows you to play a looping sound between 2 time periods e.g. 5pm to 6pm. You can also set the sound to only place once."
@@ -156,10 +156,10 @@ metadata
 @SolidClass 
 metadata
 {
-	entity_tool_name = "Day Night Window Brush"
+	entity_tool_name = "Window Brush"
 	entity_tool_group = "Day and Night"
 }
-= daynight_window : "A brush entity that will enable and disable at random times during the morning and night time."
+= daynight_window : "A brush entity that will enable and disable at random times during the morning and night time"
 [
 	rendercolor(color255) : "FX Color (R G B)" : "255 255 255" : "The FX color is used by the selected Render Mode."
 	renderamt(integer) [ group="Render Properties" ] : "FX Amount (0 - 255)" : 255 : "The FX amount is used by the selected Render Mode."
@@ -301,7 +301,7 @@ metadata
 metadata
 {
 	entity_tool_name = "Obstacle"
-	entity_tool_group = "RTS Entity"
+	entity_tool_group = "RTS"
 }
 = rts_obstacle : "An entity to block units from passing through, They must destroy the obstacle to pass."
 [
