@@ -1,0 +1,63 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "blendable.vfx"
+
+	F_MULTIBLEND 2 // 3 Layers
+
+	//---- Color ----
+	g_flModelTintAmount "1.000"
+	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
+
+	//---- Fade ----
+	g_flFadeExponent "1.000"
+
+	//---- Fog ----
+	g_bFogEnabled "1"
+
+	//---- Lighting ----
+	g_flDirectionalLightmapMinZ "0.050"
+	g_flDirectionalLightmapStrength "1.000"
+
+	//---- Material A ----
+	g_flTintColorA "[1.000000 1.000000 1.000000 0.000000]"
+	TextureAmbientOcclusionA "materials/default/default_ao.tga"
+	TextureBlendMaskA "textures/stone/stone_1a_rough.png"
+	TextureColorA "textures/stone/stone_wear_1a_color.png"
+	TextureMetalnessA "materials/default/default_metal.tga"
+	TextureNormalA "textures/stone/stone_wear_1a_normal.png"
+	TextureRoughnessA "textures/stone/stone_wear_1a_rough.png"
+	TextureTintMaskA "[1.000000 1.000000 1.000000 0.000000]"
+
+	//---- Material B ----
+	g_flBlendSoftnessB "0.500"
+	g_flTintColorB "[1.000000 1.000000 1.000000 0.000000]"
+	g_vTexCoordScale2 "[2.000 2.000]"
+	TextureAmbientOcclusionB "materials/default/default_ao.tga"
+	TextureBlendMaskB "textures/grass/grass_eclipse_1a_mask.png"
+	TextureColorB "textures/grass/grass_eclipse_1a_color.png"
+	TextureMetalnessB "materials/default/default_metal.tga"
+	TextureNormalB "textures/grass/grass_eclipse_1a_normal.png"
+	TextureRoughnessB "textures/grass/grass_eclipse_1a_rough.png"
+	TextureTintMaskB "materials/default/default.tga"
+
+	//---- Material C ----
+	g_flBlendSoftnessC "0.500"
+	g_flTintColorC "[1.000000 1.000000 1.000000 0.000000]"
+	g_vTexCoordScale3 "[1.000 1.000]"
+	TextureAmbientOcclusionC "materials/default/default_ao.tga"
+	TextureBlendMaskC "textures/stone/stone_1b_rough.png"
+	TextureColorC "textures/stone/stone_1b_color.png"
+	TextureMetalnessC "materials/default/default_metal.tga"
+	TextureNormalC "textures/stone/stone_1b_normal.png"
+	TextureRoughnessC "textures/stone/stone_1b_rough.png"
+	TextureTintMaskC "materials/default/default.tga"
+
+	//---- Texture Coordinates ----
+	g_nScaleTexCoordUByModelScaleAxis "0"
+	g_nScaleTexCoordVByModelScaleAxis "0"
+	g_vTexCoordOffset "[0.000 0.000]"
+	g_vTexCoordScale "[1.000 1.000]"
+	g_vTexCoordScrollSpeed "[0.000 0.000]"
+}

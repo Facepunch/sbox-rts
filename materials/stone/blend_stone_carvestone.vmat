@@ -1,0 +1,43 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "blend.vfx"
+
+	//---- Color ----
+	g_flModelTintAmount "1.000"
+	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
+
+	//---- Fade ----
+	g_flFadeExponent "1.000"
+
+	//---- Fog ----
+	g_bFogEnabled "1"
+
+	//---- Lighting ----
+	g_flDirectionalLightmapMinZ "0.050"
+	g_flDirectionalLightmapStrength "1.000"
+
+	//---- Mask ----
+	TextureMask "textures/stone/stone_1b_rough.png"
+
+	//---- Material A ----
+	g_flMetalnessA "0.000"
+	TextureColorA "textures/stone/stone_base_color.png"
+	TextureNormalA "textures/stone/stone_base_normal.png"
+	TextureRoughnessA "textures/stone/stone_base_rough.png"
+
+	//---- Material B ----
+	g_flMetalnessB "0.000"
+	g_vTexCoordScale2 "[1.000 1.000]"
+	TextureColorB "textures/stone/stone_1a_color.png"
+	TextureNormalB "textures/stone/stone_1a_normal.png"
+	TextureRoughnessB "textures/stone/stone_1a_rough.png"
+
+	//---- Texture Coordinates ----
+	g_nScaleTexCoordUByModelScaleAxis "0"
+	g_nScaleTexCoordVByModelScaleAxis "0"
+	g_vTexCoordOffset "[0.000 0.000]"
+	g_vTexCoordScale "[1.000 1.000]"
+	g_vTexCoordScrollSpeed "[0.000 0.000]"
+}
