@@ -27,6 +27,7 @@ namespace Facepunch.RTS
 
 		public bool IsLocalPlayers => false;
 		public bool HasBeenSeen { get; set; }
+		public bool IsVisible { get; set; }
 
 		private RealTimeUntil _nextGatherSound;
 

@@ -27,6 +27,7 @@ namespace Facepunch.RTS
 		public bool CanSetRallyPoint { get; private set; }
 		public float TargetAlpha { get; private set; }
 		public bool HasBeenSeen { get; set; }
+		public bool IsVisible { get; set; }
 
 		public bool CanDepositResources
 		{
@@ -480,6 +481,20 @@ namespace Facepunch.RTS
 
 		}
 
+		[Event.Frame]
+		protected virtual void ClientFrame()
+		{
+			if ( IsLocalTeamGroup ) return;
+
+			if ( Hud.Style.Opacity != RenderColor.a )
+			{
+				Hud.Style.Opacity = RenderColor.a;
+				Hud.Style.Dirty();
+			}
+
+			Hud.SetActive( EnableDrawing && RenderColor.a > 0f );
+		}
+
 		protected override void ClientTick()
 		{
 			base.ClientTick();
@@ -501,14 +516,6 @@ namespace Facepunch.RTS
 			}
 
 			RenderColor = RenderColor.WithAlpha( RenderColor.a.LerpTo( targetAlpha, Time.Delta * 2f ) );
-
-			if ( Hud.Style.Opacity != RenderColor.a )
-			{
-				Hud.Style.Opacity = RenderColor.a;
-				Hud.Style.Dirty();
-			}
-
-			Hud.SetActive( EnableDrawing && RenderColor.a > 0f );
 		}
 
 		protected override void CreateAbilities()

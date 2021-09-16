@@ -25,6 +25,7 @@ namespace Facepunch.RTS
 		public Vector3 LocalCenter { get; private set; }
 		public bool IsLocalPlayers => false;
 		public bool HasBeenSeen { get; set; }
+		public bool IsVisible { get; set; }
 
 		#region UI
 		public EntityHudBar HealthBar { get; private set; }

@@ -7,6 +7,7 @@ namespace Facepunch.RTS
 		public BuildingEntity Master { get; set; }
 		public bool HasBeenSeen { get; set; }
 		public bool IsFadingOut { get; set; }
+		public bool IsVisible { get; set; }
 		
 		private RealTimeSince CreationTime { get; set; }
 

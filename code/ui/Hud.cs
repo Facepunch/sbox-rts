@@ -75,7 +75,6 @@ namespace Facepunch.RTS
 			RootPanel.AddChild<CursorController>();
 			RootPanel.AddChild<EntityHud>();
 			RootPanel.AddChild<RoundInfo>();
-			RootPanel.AddChild<MiniMap>();
 
 			TopBar = RootPanel.Add.Panel( "topbar" );
 			TopBar.AddChild<ResourceList>();
@@ -83,6 +82,7 @@ namespace Facepunch.RTS
 
 			RootPanel.AddChild<SelectionGroups>();
 			RootPanel.AddChild<SelectedItem>();
+			RootPanel.AddChild<MiniMap>();
 			RootPanel.AddChild<IdleUtilityUnits>();
 			RootPanel.AddChild<ItemTooltip>();
 			RootPanel.AddChild<VoiceList>();

@@ -10,6 +10,7 @@ namespace Facepunch.RTS
 		public float FadeOutTime { get; private set; }
 		public float TargetAlpha { get; private set; }
 		public bool HasBeenSeen { get; set; }
+		public bool IsVisible { get; set; }
 
 		public override void Spawn()
 		{

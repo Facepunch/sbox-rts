@@ -26,7 +26,7 @@ namespace Facepunch.RTS
 		Attack
 	}
 
-	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IMoveAgent, IOccupiableEntity
+	public partial class UnitEntity : ItemEntity<BaseUnit>, IFogViewer, IFogCullable, IDamageable, IMoveAgent, IOccupiableEntity, IMapIconEntity
 	{
 		protected class TargetInfo
 		{
@@ -70,6 +70,7 @@ namespace Facepunch.RTS
 		public List<ModelEntity> Clothing => new();
 		public UnitCircle Circle { get; private set; }
 		public Pathfinder Pathfinder { get; private set; }
+		public Color IconColor => Player.TeamColor;
 		public bool HasBeenSeen { get; set; }
 		public float TargetAlpha { get; private set; }
 		public float AgentRadius { get; private set; }
@@ -78,6 +79,7 @@ namespace Facepunch.RTS
 		public Stack<MoveGroup> MoveStack { get; private set; }
 		public Vector3 TargetVelocity { get; private set; }
 		public float? SpinSpeed { get; private set; }
+		public bool IsVisible { get; set; }
 		public BaseRank Rank { get; private set; }
 
 		#region UI
@@ -488,6 +490,11 @@ namespace Facepunch.RTS
 			base.TakeDamage( info );
 		}
 
+		public virtual bool ShouldShowOnMap()
+		{
+			return IsLocalTeamGroup || IsVisible;
+		}
+
 		public virtual float GetVerticalSpeed()
 		{
 			return 20f;
@@ -599,6 +606,8 @@ namespace Facepunch.RTS
 				Fog.AddViewer( this );
 			else
 				Fog.AddCullable( this );
+
+			MiniMap.Instance.AddEntity( this );
 
 			base.ClientSpawn();
 		}
@@ -1136,6 +1145,8 @@ namespace Facepunch.RTS
 				Fog.RemoveViewer( this );
 				Fog.RemoveCullable( this );
 
+				MiniMap.Instance.RemoveEntity( this );
+
 				RemovePathParticles();
 
 				return;
@@ -1316,10 +1327,9 @@ namespace Facepunch.RTS
 			Modifiers = new UnitModifiers();
 		}
 
-		protected override void ClientTick()
+		[Event.Frame]
+		protected virtual void ClientFrame()
 		{
-			base.ClientTick();
-
 			if ( Hud.Style.Opacity != RenderColor.a )
 			{
 				Hud.Style.Opacity = RenderColor.a;
@@ -1327,6 +1337,11 @@ namespace Facepunch.RTS
 			}
 
 			Hud.SetActive( RenderColor.a > 0f );
+		}
+
+		protected override void ClientTick()
+		{
+			base.ClientTick();
 
 			UpdatePathParticles();
 
