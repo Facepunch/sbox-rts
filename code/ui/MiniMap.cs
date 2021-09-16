@@ -229,8 +229,10 @@ namespace Facepunch.RTS
 
 			var miniMapConfig = MiniMapEntity.Instance;
 
-			if ( miniMapConfig != null )
+			if ( miniMapConfig != null && Map.Texture == null )
+			{
 				Map.SetTexture( miniMapConfig.TexturePath );
+			}
 
 			if ( NextIconUpdate )
 			{

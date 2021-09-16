@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 	{
 		public static MiniMapEntity Instance { get; set; }
 
-		[Property, ResourceType( "png" )]
+		[Net, Property, ResourceType( "png" )]
 		public string TexturePath { get; set; }
 
 		public override void Spawn()
