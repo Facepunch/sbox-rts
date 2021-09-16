@@ -26,6 +26,7 @@ namespace Facepunch.RTS
 		public override void ClientSpawn()
 		{
 			Instance = this;
+
 			base.ClientSpawn();
 		}
 	}

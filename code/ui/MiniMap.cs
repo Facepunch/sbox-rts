@@ -231,7 +231,8 @@ namespace Facepunch.RTS
 
 			if ( miniMapConfig != null && Map.Texture == null )
 			{
-				Map.SetTexture( miniMapConfig.TexturePath );
+				var texture = miniMapConfig.TexturePath.Replace( ".jpg", ".png" );
+				Map.SetTexture( texture );
 			}
 
 			if ( NextIconUpdate )
