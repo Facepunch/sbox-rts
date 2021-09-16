@@ -10,6 +10,8 @@ namespace Facepunch.RTS
 {
 	public class MiniMapImage : Image
 	{
+		public bool IsMouseDown { get; private set; }
+
 		public Vector3 PixelToWorld( float x, float y )
 		{
 			var size = Box.Rect.Size;
@@ -28,8 +30,12 @@ namespace Facepunch.RTS
 			var worldSize = Gamemode.Instance.WorldSize.Size;
 			var largestSide = MathF.Max( worldSize.x, worldSize.y );
 			var offset = position + (worldSize * 0.5f);
+			var coords = (offset / largestSide);
 
-			return offset / largestSide;
+			coords.x = coords.x.Clamp( 0f, 1f );
+			coords.y = coords.y.Clamp( 0f, 1f );
+
+			return coords;
 		}
 
 		public float UnitsToPixels( float units )
@@ -40,6 +46,30 @@ namespace Facepunch.RTS
 			var fraction = units / largestSide;
 
 			return mapSize * fraction;
+		}
+
+		protected override void OnMouseMove( MousePanelEvent e )
+		{
+			if ( IsMouseDown && Local.Pawn is Player player )
+			{
+				player.LookAt( PixelToWorld( MousePosition.x, MousePosition.y ) );
+			}
+
+			base.OnMouseMove( e );
+		}
+
+		protected override void OnMouseUp( MousePanelEvent e )
+		{
+			IsMouseDown = false;
+
+			base.OnMouseUp( e );
+		}
+
+		protected override void OnMouseDown( MousePanelEvent e )
+		{
+			IsMouseDown = true;
+
+			base.OnMouseDown( e );
 		}
 
 		protected override void OnClick( MousePanelEvent e )
@@ -100,6 +130,8 @@ namespace Facepunch.RTS
 
 		public readonly Panel IconContainer;
 		public readonly MiniMapImage Map;
+		public readonly Panel RotatedContainer;
+		public readonly Panel CameraBox;
 		public readonly Panel Fog;
 
 		private List<MiniMapIcon> Icons;
@@ -116,11 +148,14 @@ namespace Facepunch.RTS
 			Map = AddChild<MiniMapImage>( "map" );
 			Map.SetTexture( "textures/rts/minimap/rts_greenlands.png" );
 
-			Fog = Map.AddChild<Panel>( "fog" );
+			RotatedContainer = Map.AddChild<Panel>( "container" );
+
+			Fog = RotatedContainer.AddChild<Panel>( "fog" );
 
 			RTS.Fog.OnActiveChanged += OnFogActiveChanged;
 
-			IconContainer = Map.AddChild<Panel>( "icons" );
+			IconContainer = RotatedContainer.AddChild<Panel>( "icons" );
+			CameraBox = RotatedContainer.AddChild<Panel>( "camera" );
 
 			Instance = this;
 			Icons = new();
@@ -205,6 +240,33 @@ namespace Facepunch.RTS
 
 				NextIconUpdate = iconCount / 200f;
 			}
+
+			var worldPlane = new Plane( Vector3.Zero, Vector3.Up );
+			var viewDirection = Screen.GetDirection( new Vector2( Screen.Width * 0.5f, Screen.Height * 0.5f ) );
+			var viewRay = new Ray( CurrentView.Position, viewDirection );
+			var viewHitPos = worldPlane.Trace( viewRay ).Value;
+			var viewCoords = Map.WorldToCoords( viewHitPos );
+			var boxSizeX = 0.1f;
+			var boxSizeY = 0.15f;
+
+			var selection = new Rect(
+				viewCoords.x - (boxSizeX / 2f),
+				viewCoords.y - (boxSizeY / 2f),
+				boxSizeX,
+				boxSizeY
+			);
+
+			if ( selection.left + selection.width > 1f )
+				selection.width = 1f - selection.left;
+
+			if ( selection.top + selection.height > 1f )
+				selection.height = 1f - selection.top;
+
+			CameraBox.Style.Left = Length.Fraction( selection.left.Clamp( 0f, 1f ) );
+			CameraBox.Style.Top = Length.Fraction( selection.top.Clamp( 0f, 1f ) );
+			CameraBox.Style.Width = Length.Fraction( selection.width.Clamp( 0f, 1f ) );
+			CameraBox.Style.Height = Length.Fraction( selection.height.Clamp( 0f, 1f ) );
+			CameraBox.Style.Dirty();
 		}
 
 		private void OnFogActiveChanged( bool isActive )
