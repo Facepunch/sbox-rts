@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 	[Library( "rts_minimap" )]
 	[Hammer.EntityTool( "MiniMap Config", "RTS" )]
 	[Hammer.EditorSprite( "editor/rts_minimap.vmat" )]
-	public class MiniMapEntity : Entity
+	public partial class MiniMapEntity : Entity
 	{
 		public static MiniMapEntity Instance { get; set; }
 
