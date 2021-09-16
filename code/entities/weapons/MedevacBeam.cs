@@ -73,7 +73,7 @@ namespace Facepunch.RTS
 				{
 					Beam = Particles.Create( "particles/weapons/healing_lazer/healing_lazer.vpcf" );
 					Beam.SetPosition( 0, muzzle.Value.Position );
-					SoundLoop = PlaySound( "flamethrower.loop" );
+					SoundLoop = PlaySound( "medevac.heal" );
 				}
 
 				Beam.SetPosition( 1, Target.WorldSpaceBounds.Center );
