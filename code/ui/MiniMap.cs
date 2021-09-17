@@ -283,7 +283,12 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public static void ReceiveAlert( Vector3 position, string className )
 		{
-			Instance.Alert( position, 3f, className );
+			var screenPosition = position.ToScreen();
+			var isOnScreen = screenPosition.x >= 0f && screenPosition.y >= 0f && screenPosition.x <= 1f && screenPosition.y <= 1f;
+
+			// Don't show alerts if we can already see the thing happening.
+			if ( !isOnScreen )
+				Instance.Alert( position, 3f, className );
 		}
 
 		[ClientRpc]
