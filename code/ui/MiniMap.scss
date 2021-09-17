@@ -57,6 +57,17 @@
                     }
                 }
             }
+
+            .ping {
+                sound-in: rts.thinclick;
+                position: absolute;
+                transform: translateX(50%) translateY(50%);
+                border: 1px rgba( 0 255 255 1 );
+                border-radius: 50%;
+                width: 32px;
+                height: 32px;
+                background-color: rgba( 0 200 200 0.01 );
+            }
         }
     }
 }

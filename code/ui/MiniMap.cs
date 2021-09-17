@@ -5,12 +5,14 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facepunch.RTS
 {
 	public class MiniMapImage : Image
 	{
 		public bool IsMouseDown { get; private set; }
+		public bool IsCtrlDown { get; private set; }
 
 		public Vector3 PixelToWorld( float x, float y )
 		{
@@ -50,7 +52,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseMove( MousePanelEvent e )
 		{
-			if ( IsMouseDown && Local.Pawn is Player player )
+			if ( IsMouseDown && !IsCtrlDown && Local.Pawn is Player player )
 			{
 				player.LookAt( PixelToWorld( MousePosition.x, MousePosition.y ) );
 			}
@@ -67,7 +69,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseDown( MousePanelEvent e )
 		{
-			IsMouseDown = true;
+			IsMouseDown = !IsCtrlDown;
 
 			base.OnMouseDown( e );
 		}
@@ -78,8 +80,22 @@ namespace Facepunch.RTS
 
 			if ( Local.Pawn is Player player )
 			{
-				player.LookAt( PixelToWorld( MousePosition.x, MousePosition.y ) );
+				var worldPosition = PixelToWorld( MousePosition.x, MousePosition.y );
+
+				if ( IsCtrlDown )
+				{
+					MiniMap.SendPing( worldPosition.ToCSV() );
+					return;
+				} 
+
+				player.LookAt( worldPosition );
 			}
+		}
+
+		[Event.BuildInput]
+		private void BuildInput( InputBuilder builder )
+		{
+			IsCtrlDown = builder.Down( InputButton.Duck );
 		}
 	}
 
@@ -124,7 +140,65 @@ namespace Facepunch.RTS
 		}
 	}
 
-	public class MiniMap : Panel
+	public class MiniMapPing : Panel
+	{
+		public MiniMapImage Map { get; set; }
+		public Vector3 Position { get; set; }
+		public Color Color { get; set; }
+		public float Duration { get; set; }
+		public RealTimeUntil KillTime { get; set; }
+
+		public void Start( MiniMapImage map, Vector3 position, float duration, Color color )
+		{
+			KillTime = duration;
+			Duration = duration;
+			Position = position;
+			Color = color;
+			Map = map;
+		}
+
+		public override void Tick()
+		{
+			var coords = Map.WorldToCoords( Position );
+			var opacity = 0f;
+			var halfDuration = Duration / 2f;
+			var width = 0f;
+			var height = 0f;
+
+			if ( KillTime > halfDuration )
+			{
+				var fraction = (1f / halfDuration) * (Duration - KillTime);
+				opacity = Easing.BounceOut( fraction );
+				width = Easing.BounceOut( fraction ) * 40f;
+				height = Easing.BounceOut( fraction ) * 40f;
+			}
+			else
+			{
+				var fraction = (1f / halfDuration) * KillTime;
+				opacity = Easing.BounceIn( fraction );
+				width = Easing.BounceIn( fraction ) * 40f;
+				height = Easing.BounceIn( fraction ) * 40f;
+			}
+
+			Style.BackgroundColor = (Color * 0.75f).WithAlpha( 0.1f );
+			Style.BorderColor = Color;
+			Style.Opacity = opacity;
+			Style.Left = Length.Fraction( coords.x );
+			Style.Top = Length.Fraction( coords.y );
+			Style.Width = Length.Pixels( width );
+			Style.Height = Length.Pixels( height );
+			Style.Dirty();
+
+			if ( KillTime && !IsDeleting )
+			{
+				Delete();
+			}
+
+			base.Tick();
+		}
+	}
+
+	public partial class MiniMap : Panel
 	{
 		public static MiniMap Instance { get; private set; }
 
@@ -140,6 +214,22 @@ namespace Facepunch.RTS
 		//public Texture ColorTexture;
 		//public Texture DepthTexture;
 		//public RealTimeUntil NextRender;
+
+		[ServerCmd]
+		public static void SendPing( string csv )
+		{
+			if ( ConsoleSystem.Caller.Pawn is Player player )
+			{
+				var teamMembers = player.GetAllTeamClients();
+				ReceivePing( To.Multiple( teamMembers ), csv.ToVector3(), player.TeamColor );
+			}
+		}
+
+		[ClientRpc]
+		public static void ReceivePing( Vector3 position, Color color )
+		{
+			Instance.Ping( position, 3f, color );
+		}
 
 		public MiniMap()
 		{
@@ -184,6 +274,12 @@ namespace Facepunch.RTS
 			Icons.Add( icon );
 
 			return icon;
+		}
+
+		public void Ping( Vector3 position, float duration, Color color )
+		{
+			var ping = RotatedContainer.AddChild<MiniMapPing>( "ping" );
+			ping.Start( Map, position, duration, color );
 		}
 
 		/*
