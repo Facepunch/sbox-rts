@@ -1420,7 +1420,10 @@ namespace Facepunch.RTS
 				Weapon.Occupiable = Occupiable;
 			}
 
-			CreatePathParticles( To.Single( Player ) );
+			if ( IsSelected )
+			{
+				CreatePathParticles( To.Single( Player ) );
+			}
 
 			SpinSpeed = null;
 		}
