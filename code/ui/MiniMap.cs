@@ -140,6 +140,61 @@ namespace Facepunch.RTS
 		}
 	}
 
+	public class MiniMapAlert : Panel
+	{
+		public MiniMapImage Map { get; set; }
+		public Vector3 Position { get; set; }
+		public float Duration { get; set; }
+		public RealTimeUntil KillTime { get; set; }
+
+		public void Start( string className, MiniMapImage map, Vector3 position, float duration )
+		{
+			AddClass( className );
+			KillTime = duration;
+			Duration = duration;
+			Position = position;
+			Map = map;
+		}
+
+		public override void Tick()
+		{
+			var coords = Map.WorldToCoords( Position );
+			var opacity = 0f;
+			var halfDuration = Duration / 2f;
+			var width = 0f;
+			var height = 0f;
+
+			if ( KillTime > halfDuration )
+			{
+				var fraction = (1f / halfDuration) * (Duration - KillTime);
+				opacity = Easing.BounceOut( fraction );
+				width = Easing.BounceOut( fraction ) * 40f;
+				height = Easing.BounceOut( fraction ) * 40f;
+			}
+			else
+			{
+				var fraction = (1f / halfDuration) * KillTime;
+				opacity = Easing.BounceIn( fraction );
+				width = Easing.BounceIn( fraction ) * 40f;
+				height = Easing.BounceIn( fraction ) * 40f;
+			}
+
+			Style.Opacity = opacity;
+			Style.Left = Length.Fraction( coords.x );
+			Style.Top = Length.Fraction( coords.y );
+			Style.Width = Length.Pixels( width );
+			Style.Height = Length.Pixels( height );
+			Style.Dirty();
+
+			if ( KillTime && !IsDeleting )
+			{
+				Delete();
+			}
+
+			base.Tick();
+		}
+	}
+
 	public class MiniMapPing : Panel
 	{
 		public MiniMapImage Map { get; set; }
@@ -226,6 +281,12 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
+		public static void ReceiveAlert( Vector3 position, string className )
+		{
+			Instance.Alert( position, 3f, className );
+		}
+
+		[ClientRpc]
 		public static void ReceivePing( Vector3 position, Color color )
 		{
 			Instance.Ping( position, 3f, color );
@@ -274,6 +335,12 @@ namespace Facepunch.RTS
 			Icons.Add( icon );
 
 			return icon;
+		}
+
+		public void Alert( Vector3 position, float duration, string className )
+		{
+			var alert = RotatedContainer.AddChild<MiniMapAlert>( "alert" );
+			alert.Start( className, Map, position, duration );
 		}
 
 		public void Ping( Vector3 position, float duration, Color color )

@@ -501,6 +501,8 @@ namespace Facepunch.RTS
 
 		public override void TakeDamage( DamageInfo info )
 		{
+			Player.WarnUnderAttack( this );
+
 			foreach ( var component in Components.Values )
 				info = component.TakeDamage( info );
 

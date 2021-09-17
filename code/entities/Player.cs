@@ -12,6 +12,12 @@ namespace Facepunch.RTS
 {
 	public partial class Player : Entity
 	{
+		private class AttackWarning
+		{
+			public RealTimeUntil ExpireTime;
+			public Vector3 Position;
+		}
+
 		[Net, Local, OnChangedCallback] public List<uint> Dependencies { get; set; }
 		[Net, Local, OnChangedCallback] public List<uint> Researching { get; set; }
 		[Net, Local, OnChangedCallback] public List<Entity> Selection { get; set; }
@@ -24,6 +30,9 @@ namespace Facepunch.RTS
 		[Net] public List<int> Resources { get; private set; }
 		[Net] public int TeamGroup { get; set; }
 		public bool SkipAllWaiting { get; set;  }
+
+		private List<AttackWarning> AttackWarnings { get; set; }
+		private TimeSince LastUnderAttack { get; set; }
 
 		public new RTSCamera Camera
 		{
@@ -44,6 +53,7 @@ namespace Facepunch.RTS
 			Selection = new List<Entity>();
 			Researching = new List<uint>();
 			Dependencies = new List<uint>();
+			AttackWarnings = new();
 			InstantBuildCache = new HashSet<uint>();
 			MaxPopulation = 8;
 			LastCommandSound = 0;
@@ -169,6 +179,34 @@ namespace Facepunch.RTS
 		public bool CanAfford( BaseItem item, out ResourceType missingResource )
 		{
 			return CanAfford( item.Costs, out missingResource );
+		}
+
+		public void WarnUnderAttack( ISelectable target )
+		{
+			if ( LastUnderAttack < 1f ) return;
+
+			LastUnderAttack = 0f;
+
+			AttackWarning warning;
+
+			for ( int i = 0; i < AttackWarnings.Count; i++ )
+			{
+				warning = AttackWarnings[i];
+
+				// Do we have another warning near this one?
+				if ( warning.Position.Distance( target.Position ) <= 5000f )
+					return;
+			}
+
+			warning = new AttackWarning()
+			{
+				Position = target.Position,
+				ExpireTime = 20f
+			};
+			
+			MiniMap.ReceiveAlert( To.Single( this ), target.Position, "underattack" );
+
+			AttackWarnings.Add( warning );
 		}
 
 		public IEnumerable<Player> GetAllTeamPlayers()
@@ -376,6 +414,18 @@ namespace Facepunch.RTS
 			}
 
 			base.Simulate( client );
+		}
+
+		[Event.Tick.Server]
+		private void ServerTick()
+		{
+			for ( int i = AttackWarnings.Count - 1; i >= 0; i-- )
+			{
+				var warning = AttackWarnings[i];
+
+				if ( warning.ExpireTime )
+					AttackWarnings.RemoveAt( i );
+			}
 		}
 
 		private void OnResearchingChanged()

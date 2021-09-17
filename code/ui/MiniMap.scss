@@ -68,6 +68,20 @@
                 height: 32px;
                 background-color: rgba( 0 200 200 0.01 );
             }
+
+            .alert {
+                position: absolute;
+                background-size: 100%;
+                transform: translateX(50%) translateY(50%);
+                border: 1px rgba( 0 255 255 1 );
+                width: 32px;
+                height: 32px;
+
+                &.underattack {
+                    sound-in: rts.underattack;
+                    background-image: url( /textures/rts/minimap/underattack.png );
+                }
+            }
         }
     }
 }
