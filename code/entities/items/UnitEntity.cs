@@ -57,6 +57,7 @@ namespace Facepunch.RTS
 
 		public Dictionary<ResourceType, int> Carrying { get; private set; }
 		[Net] public UnitTargetType TargetType { get; protected set; }
+		[Net] public Entity TargetEntity { get; protected set; }
 		[Net] public Entity Occupiable { get; private set; }
 		[Net] public float GatherProgress { get; private set; }
 		[Net] public bool IsGathering { get; private set; }
@@ -1056,11 +1057,11 @@ namespace Facepunch.RTS
 				_pathParticles = null;
 			}
 
-			if ( !Destination.IsNearZeroLength )
+			if ( !Destination.IsNearZeroLength && !Velocity.IsNearZeroLength )
 			{
 				_pathParticles = Particles.Create( "particles/movement_path/movement_path.vpcf" );
 				_pathParticles.SetEntity( 0, this );
-				_pathParticles.SetPosition( 1, Destination.WithZ( Position.z ) );
+				_pathParticles.SetPosition( 1, GetPathDestination().WithZ( Position.z ) );
 				_pathParticles.SetPosition( 3, Player.TeamColor * 255f );
 			}
 		}
@@ -1072,6 +1073,18 @@ namespace Facepunch.RTS
 				_pathParticles.Destroy( true );
 				_pathParticles = null;
 			}
+		}
+
+		protected virtual Vector3 GetPathDestination()
+		{
+			var destination = Destination;
+
+			if ( TargetEntity.IsValid() )
+			{
+				destination = TargetEntity.WorldSpaceBounds.Center;
+			}
+
+			return destination;
 		}
 
 		protected override void OnSelected()
@@ -1401,15 +1414,18 @@ namespace Facepunch.RTS
 
 		protected virtual void UpdatePathParticles()
 		{
-			if ( _pathParticles == null ) return;
-
-			if ( Destination.IsNearZeroLength )
+			if ( !IsSelected || Destination.IsNearZeroLength || Velocity.IsNearZeroLength )
 			{
 				RemovePathParticles();
 				return;
 			}
+			
+			if ( _pathParticles == null )
+			{
+				CreatePathParticles();
+			}
 
-			_pathParticles.SetPosition( 1, Destination.WithZ( Position.z ) );
+			_pathParticles.SetPosition( 1, GetPathDestination().WithZ( Position.z ) );
 		}
 
 		protected virtual void OnTargetChanged()
@@ -1425,6 +1441,7 @@ namespace Facepunch.RTS
 				CreatePathParticles( To.Single( Player ) );
 			}
 
+			TargetEntity = _target.Entity;
 			SpinSpeed = null;
 		}
 
