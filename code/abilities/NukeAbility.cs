@@ -88,7 +88,7 @@ namespace Facepunch.RTS
 
 			Sound.FromWorld( "nuke.explode", projectile.Position );
 
-			Effect = Particles.Create( "particles/weapons/explosion_nuke/nuke_base.vpcf" );
+			Effect = Particles.Create( "particles/explosion_nuke/nuke_base.vpcf" );
 			Effect.SetPosition( 0, origin );
 			Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius * 0.6f, 0f, 0f ) );
 			Effect.SetPosition( 2, origin + new Vector3( 0f, 0f, AreaOfEffectRadius ) );
