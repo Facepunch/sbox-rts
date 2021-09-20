@@ -77,6 +77,7 @@ namespace Facepunch.RTS
 			{
 				OnQueueItemCompleted( queueItem );
 				queueItem.Item.OnCreated( Player, this );
+				RefreshSelection( To.Single( Player ) );
 				return;
 			}
 
@@ -791,6 +792,7 @@ namespace Facepunch.RTS
 			RefreshSelection();
 		}
 
+		[ClientRpc]
 		private void RefreshSelection()
 		{
 			if ( !IsLocalPlayers || !IsSelected ) return;
