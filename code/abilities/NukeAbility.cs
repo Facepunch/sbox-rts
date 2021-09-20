@@ -59,6 +59,7 @@ namespace Facepunch.RTS
 
 			Missile.SetModel( "models/weapons/nuke/nuke.vmdl" );
 			Missile.Initialize( User.Position, TargetInfo.Origin, Duration * 0.8f, OnNukeHit );
+			Missile.RenderColor = User.Player.TeamColor;
 
 			Light = new PointLightEntity();
 			Light.SetParent( Missile, false );
