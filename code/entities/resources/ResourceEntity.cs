@@ -4,10 +4,11 @@ using Gamelib.FlowFields;
 using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public partial class ResourceEntity : ModelEntity, IFogCullable
+	public partial class ResourceEntity : ModelEntity, IFogCullable, IMapIconEntity
 	{
 		public virtual ResourceType Resource => ResourceType.Stone;
 		public virtual int DefaultStock => 250;
@@ -28,6 +29,9 @@ namespace Facepunch.RTS
 		public bool IsLocalPlayers => false;
 		public bool HasBeenSeen { get; set; }
 		public bool IsVisible { get; set; }
+		public bool HasMapIcon { get; private set; }
+
+		public Color IconColor => Resource.GetColor();
 
 		private RealTimeUntil _nextGatherSound;
 
@@ -70,6 +74,27 @@ namespace Facepunch.RTS
 			base.ClientSpawn();
 		}
 
+		[Event.Entity.PostSpawn]
+		private void OnPostSpawn()
+		{
+			if ( IsClient )
+			{
+				// We only want to add the resource to the map if there's no other nearby resources.
+				var others = Physics.GetEntitiesInSphere( Position, 1500f )
+					.OfType<ResourceEntity>()
+					.Where( e => e.Resource == Resource && e.HasMapIcon );
+
+				Log.Info( others.Count() );
+
+				if ( !others.Any() )
+				{
+					var icon = MiniMap.Instance.AddEntity( this, Resource.ToString().ToLower() );
+					icon.AddClass( "resource" );
+					HasMapIcon = true;
+				}
+			}
+		}
+
 		public override void Spawn()
 		{
 			base.Spawn();
@@ -87,6 +112,7 @@ namespace Facepunch.RTS
 
 			if ( IsClient )
 			{
+				MiniMap.Instance.RemoveEntity( this );
 				Fog.RemoveCullable( this );
 				return;
 			}
@@ -106,6 +132,11 @@ namespace Facepunch.RTS
 				ShowOutline();
 			else
 				HideOutline();
+		}
+
+		public bool ShouldShowOnMap()
+		{
+			return HasBeenSeen;
 		}
 	}
 }

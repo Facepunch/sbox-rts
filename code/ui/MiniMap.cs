@@ -6,6 +6,7 @@ using Sandbox.UI.Construct;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace Facepunch.RTS
 {
@@ -31,6 +32,17 @@ namespace Facepunch.RTS
 		{
 			var worldSize = Gamemode.Instance.WorldSize.Size;
 			var largestSide = MathF.Max( worldSize.x, worldSize.y );
+			var rotation = (MathF.PI / 180f) * -90f;
+
+			// We have to invert and rotate it by -90 degrees to fit within our coordinate system.
+			position.y = -position.y;
+
+			position = new Vector3(
+				position.x * MathF.Cos( rotation ) - position.y * MathF.Sin( rotation ),
+				position.x * MathF.Sin( rotation ) + position.y * MathF.Cos( rotation ),
+				position.z
+			);
+
 			var offset = position + (worldSize * 0.5f);
 			var coords = (offset / largestSide);
 
@@ -421,8 +433,8 @@ namespace Facepunch.RTS
 			var viewRay = new Ray( CurrentView.Position, viewDirection );
 			var viewHitPos = worldPlane.Trace( viewRay ).Value;
 			var viewCoords = Map.WorldToCoords( viewHitPos );
-			var boxSizeX = 0.1f;
-			var boxSizeY = 0.15f;
+			var boxSizeX = 0.15f;
+			var boxSizeY = 0.1f;
 
 			var selection = new Rect(
 				viewCoords.x - (boxSizeX / 2f),
