@@ -24,10 +24,10 @@ Layer0
 	g_flTintColorA "[1.000000 1.000000 1.000000 0.000000]"
 	TextureAmbientOcclusionA "materials/default/default_ao.tga"
 	TextureBlendMaskA "textures/stone/stone_1a_rough.png"
-	TextureColorA "textures/stone/stone_wear_1b_color.png"
+	TextureColorA "textures/stone/stone_wear_3a_color.png"
 	TextureMetalnessA "materials/default/default_metal.tga"
-	TextureNormalA "textures/stone/stone_wear_1b_normal.png"
-	TextureRoughnessA "textures/stone/stone_wear_1a_rough.png"
+	TextureNormalA "textures/stone/stone_wear_3a_normal.png"
+	TextureRoughnessA "textures/stone/stone_wear_3a_rough.png"
 	TextureTintMaskA "[1.000000 1.000000 1.000000 0.000000]"
 
 	//---- Material B ----
