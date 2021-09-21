@@ -10,6 +10,6 @@ namespace Facepunch.RTS
 		public override ResourceType Resource => ResourceType.Metal;
 		public override int DefaultStock => 300;
 		public override string Description => "You can mine this to gather Metal for your empire.";
-		public override string Name => "Metal Ore";
+		public override string ResourceName => "Metal Ore";
 	}
 }

@@ -16,6 +16,6 @@ namespace Facepunch.RTS
 			"gatherbeer3"
 		};
 		public override string Description => "You can find Beer for your empire in this cache.";
-		public override string Name => "Beer Cache";
+		public override string ResourceName => "Beer Cache";
 	}
 }

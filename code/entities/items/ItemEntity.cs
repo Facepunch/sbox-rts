@@ -10,6 +10,7 @@ using Facepunch.RTS.Units;
 using Facepunch.RTS.Upgrades;
 using Gamelib.Network;
 using System.IO;
+using Sandbox.Internal;
 
 namespace Facepunch.RTS
 {
@@ -32,6 +33,8 @@ namespace Facepunch.RTS
 		public Vector3 LocalCenter { get; protected set; }
 		public List<QueueItem> Queue { get; private set; }
 		public uint LastQueueId { get; private set; }
+
+		EntityTags ISelectable.Tags => Tags;
 
 		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );

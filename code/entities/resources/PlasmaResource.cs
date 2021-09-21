@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 		public override ResourceType Resource => ResourceType.Plasma;
 		public override int DefaultStock => 250;
 		public override string Description => "You can mine this to gather Plasma for your empire.";
-		public override string Name => "Plasma";
+		public override string ResourceName => "Plasma";
 		public Particles Effect { get; private set; }
 
 		public override void ClientSpawn()

@@ -144,7 +144,7 @@ namespace Facepunch.RTS
 			Name.Style.FontColor = entity.Resource.GetColor();
 			Name.Style.Dirty();
 
-			Name.Text = entity.Name;
+			Name.Text = entity.ResourceName;
 			Desc.Text = entity.Description;
 
 			foreach ( var kv in Costs.Values )

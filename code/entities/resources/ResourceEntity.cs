@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 		public virtual ResourceType Resource => ResourceType.Stone;
 		public virtual int DefaultStock => 250;
 		public virtual string Description => "";
-		public virtual string Name => "";
+		public virtual string ResourceName => "";
 		public virtual float GatherTime => 0.25f;
 		public virtual string[] GatherSounds => new string[]
 		{
@@ -71,28 +71,20 @@ namespace Facepunch.RTS
 		{
 			Fog.AddCullable( this );
 
-			base.ClientSpawn();
-		}
+			// We only want to add the resource to the map if there's no other nearby resources.
+			var others = Physics.GetEntitiesInSphere( Position, 1500f )
+				.OfType<ResourceEntity>()
+				.Where( e => e.Resource == Resource && e.HasMapIcon );
 
-		[Event.Entity.PostSpawn]
-		private void OnPostSpawn()
-		{
-			if ( IsClient )
+			if ( !others.Any() )
 			{
-				// We only want to add the resource to the map if there's no other nearby resources.
-				var others = Physics.GetEntitiesInSphere( Position, 1500f )
-					.OfType<ResourceEntity>()
-					.Where( e => e.Resource == Resource && e.HasMapIcon );
-
-				Log.Info( others.Count() );
-
-				if ( !others.Any() )
-				{
-					var icon = MiniMap.Instance.AddEntity( this, Resource.ToString().ToLower() );
-					icon.AddClass( "resource" );
-					HasMapIcon = true;
-				}
+				var icon = MiniMap.Instance.AddEntity( this, Resource.ToString().ToLower() );
+				icon.AddClass( "resource" );
 			}
+
+			HasMapIcon = true;
+
+			base.ClientSpawn();
 		}
 
 		public override void Spawn()

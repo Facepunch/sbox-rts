@@ -5,7 +5,7 @@ namespace Gamelib.Network
 {
 	public struct Globals<T> where T : Globals, new()
 	{
-		public string Name;
+		public string GlobalName;
 		public T Entity;
 
 		public T Value
@@ -13,7 +13,7 @@ namespace Gamelib.Network
 			get
 			{
 				if ( Entity.IsValid() ) return Entity;
-				Entity = Globals.Find<T>( Name );
+				Entity = Globals.Find<T>( GlobalName );
 				return Entity;
 			}
 		}
@@ -25,14 +25,14 @@ namespace Gamelib.Network
 		{
 			var handle = new Globals<T>()
 			{
-				Name = name
+				GlobalName = name
 			};
 
 			if ( Host.IsServer && !_cache.ContainsKey( name ) )
 			{
 				var entity = new T()
 				{
-					Name = name
+					GlobalName = name
 				};
 
 				handle.Entity = entity;
@@ -54,7 +54,7 @@ namespace Gamelib.Network
 
 		private static Dictionary<string, Globals> _cache = new();
 
-		[Net] public string Name { get; set; }
+		[Net] public string GlobalName { get; set; }
 
 		public Globals()
 		{
@@ -63,8 +63,8 @@ namespace Gamelib.Network
 
 		public override void ClientSpawn()
 		{
-			if ( !_cache.ContainsKey( Name ) )
-				_cache.Add( Name, this );
+			if ( !_cache.ContainsKey( GlobalName ) )
+				_cache.Add( GlobalName, this );
 
 			base.Spawn();
 		}
