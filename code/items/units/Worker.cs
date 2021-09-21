@@ -16,6 +16,7 @@ namespace Facepunch.RTS.Units
 			new ItemLabel( "Builder", Color.Yellow )
 		};
 		public override float MaxHealth => 75f;
+		public override bool CanConstruct => true;
 		public override string Description => "Gathers Stone, Metal and Beer for your empire and constructs buildings.";
 		public override string[] MoveSounds => new string[]
 		{

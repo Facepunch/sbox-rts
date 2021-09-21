@@ -18,6 +18,8 @@ namespace Facepunch.RTS
 		public float HideTime { get; private set; }
 		public bool IsShowing { get; private set; }
 		public object Target { get; private set; }
+		public CooldownLabel Cooldown { get; private set; }
+		public BuildTimeLabel BuildTime { get; private set; }
 		public PopulationLabel Population { get; private set; }
 		public ItemLabelValues ItemLabels { get; private set; }
 		public ItemResourceValues Costs { get; private set; }
@@ -49,6 +51,8 @@ namespace Facepunch.RTS
 			}
 
 			Population = AddChild<PopulationLabel>( "population" );
+			BuildTime = AddChild<BuildTimeLabel>( "buildtime" );
+			Cooldown = AddChild<CooldownLabel>( "cooldown" );
 		}
 
 		public void Show( float hideTime = 0f )
@@ -85,6 +89,10 @@ namespace Facepunch.RTS
 			Name.Text = ability.Name;
 			Desc.Text = ability.GetDescription();
 
+			Cooldown.SetVisible( ability.Cooldown > 0f );
+			Cooldown.Label.Text = $"{ability.Cooldown}s";
+
+			BuildTime.SetVisible( false );
 			ItemLabels.SetVisible( false );
 			Dependencies.SetVisible( showDependencies );
 
@@ -136,6 +144,8 @@ namespace Facepunch.RTS
 			Name.Text = entity.TooltipName;
 			Desc.Text = "A destructable obstacle.";
 
+			BuildTime.SetVisible( false );
+			Cooldown.SetVisible( false );
 			Dependencies.SetVisible( false );
 			ItemLabels.SetVisible( false );
 			Resistances.SetVisible( false );
@@ -165,6 +175,8 @@ namespace Facepunch.RTS
 				}
 			}
 
+			BuildTime.SetVisible( false );
+			Cooldown.SetVisible( false );
 			Dependencies.SetVisible( false );
 			ItemLabels.SetVisible( false );
 			Resistances.SetVisible( false );
@@ -184,6 +196,10 @@ namespace Facepunch.RTS
 
 			Dependencies.SetVisible( showDependencies );
 			Resistances.SetVisible( false );
+			Cooldown.SetVisible( false );
+
+			BuildTime.SetVisible( !hideCosts && !showDependencies );
+			BuildTime.Label.Text = $"{item.BuildTime}s";
 
 			if ( item.Labels.Count > 0 )
 			{

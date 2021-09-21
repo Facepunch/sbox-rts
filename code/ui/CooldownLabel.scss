@@ -1,21 +1,21 @@
-﻿dependencyvalue {
+﻿cooldownlabel {
     display: flex;
     align-items: center;
     justify-items: center;
 
     .icon {
-        background-color: white;
+        background-image: url( /textures/rts/icons/cooldown.png );
+        background-size: 100%;
         margin-right: 4px;
-        box-shadow: 0px 0px 10px 1px rgba(255,0,0,0.1);
         border-radius: 2px;
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
     }
 
     .label {
-        color: red;
-        font-size: 15px;
         font-weight: bold;
+        font-size: 15px;
+        color: white;
     }
 
     &.hidden {
