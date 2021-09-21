@@ -69,6 +69,11 @@ namespace Facepunch.RTS
 			return All.OfType<UnitEntity>().Where( i => i.Player == this );
 		}
 
+		public IEnumerable<UnitEntity> GetUnits<T>() where T : BaseUnit
+		{
+			return All.OfType<UnitEntity>().Where( i => i.Player == this && i.Item is T );
+		}
+
 		public IEnumerable<BuildingEntity> GetBuildingsProxiesIncluded( BaseBuilding building )
 		{
 			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item.IsProxyOf( building ) );
@@ -77,6 +82,11 @@ namespace Facepunch.RTS
 		public IEnumerable<BuildingEntity> GetBuildings( BaseBuilding building )
 		{
 			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item == building );
+		}
+
+		public IEnumerable<BuildingEntity> GetBuildings<T>() where T : BaseBuilding
+		{
+			return All.OfType<BuildingEntity>().Where( i => i.Player == this && i.Item is T );
 		}
 
 		public IEnumerable<BuildingEntity> GetBuildings()

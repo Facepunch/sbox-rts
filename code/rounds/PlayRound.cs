@@ -17,6 +17,8 @@ namespace Facepunch.RTS
 
 		public List<Player> Spectators = new();
 
+		private RealTimeUntil NextWinCheck { get; set; }
+
 		public override void OnPlayerJoin( Player player )
 		{
 			player.MakeSpectator( true );
@@ -24,7 +26,40 @@ namespace Facepunch.RTS
 
 			base.OnPlayerJoin( player );
 		}
-		
+
+		public override void OnSecond()
+		{
+			if ( NextWinCheck )
+			{
+				for ( int i = Players.Count - 1; i >= 0; i-- )
+				{
+					var player = Players[i];
+					var workers = player.GetUnits<Worker>();
+					var commandCentres = player.GetBuildings<CommandCentre>();
+
+					if ( !workers.Any() && !commandCentres.Any() )
+					{
+						player.MakeSpectator( true );
+						Spectators.Add( player );
+						Players.Remove( player );
+					}
+				}
+
+				var groups = Players.Select( p => p.TeamGroup ).Distinct();
+				var count = groups.Count();
+
+				if ( count == 1 )
+				{
+					GameSummary.Show( To.Everyone, groups.First() );
+					Rounds.Change( new StatsRound() );
+				}
+
+				NextWinCheck = 5f;
+			}
+
+			base.OnSecond();
+		}
+
 		protected override void OnStart()
 		{
 			if ( Host.IsServer )

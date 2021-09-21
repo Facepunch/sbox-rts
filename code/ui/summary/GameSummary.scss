@@ -1,0 +1,79 @@
+﻿gamesummary {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    right: 20%;
+    bottom: 20%;
+    pointer-events: auto;
+    border-radius: 16px;
+    backdrop-filter-blur: 8px;
+    background-color: rgba(0 0 0 0.5);
+    padding: 24px;
+    z-index: 4;
+
+    chatbox {
+        bottom: 32px;
+        width: 50%;
+        left: 50%;
+    }
+
+    .title {
+        font-size: 48px;
+        color: white;
+    }
+
+    .winners {
+        display: flex;
+        position: absolute;
+        flex-direction: column;
+        width: 40%;
+        left: 24px;
+        top: 96px;
+
+        .title {
+            font-size: 32px;
+            color: greenyellow;
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}
+
+gamesummarywinner {
+    background-color: rgba( 0 0 0 0.8 );
+    border-radius: 4px;
+    align-items: center;
+    margin-top: 8px;
+    padding: 12px;
+
+    .name {
+        font-size: 24px;
+        color: white;
+    }
+
+    .color {
+        background-color: white;
+        border-radius: 4px;
+        margin-right: 8px;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+
+        .group {
+            font-weight: bold;
+            text-shadow: 0px 0px 3px black;
+            font-size: 26px;
+            color: white;
+        }
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 8px;
+        border-radius: 4px;
+    }
+ }
