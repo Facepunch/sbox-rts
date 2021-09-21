@@ -15,7 +15,7 @@ namespace Facepunch.RTS.Units
 		public override List<ItemLabel> Labels => new()
 		{
 			new ItemLabel( "Support", Color.Green ),
-			new ItemLabel( "Transform", Color.Cyan)
+			new ItemLabel( "Transport", Color.Cyan)
 		};
 		public override string Description => "An aircraft that can evacuate two units and passively heal nearby targets.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/medevac.png" );

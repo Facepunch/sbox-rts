@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/apc/apc.vmdl";
 		public override List<ItemLabel> Labels => new()
 		{
-			new ItemLabel( "Transform", Color.Cyan )
+			new ItemLabel( "Transport", Color.Cyan )
 		};
 		public override string Description => "An armored vehicle for transporting units long distance.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/apc.png" );

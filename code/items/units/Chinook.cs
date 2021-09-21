@@ -13,7 +13,7 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/chinook/chinook.vmdl";
 		public override List<ItemLabel> Labels => new()
 		{
-			new ItemLabel( "Transform", Color.Cyan )
+			new ItemLabel( "Transport", Color.Cyan )
 		};
 		public override string Description => "An armored aircraft for transporting many units.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/chinook.png" );
