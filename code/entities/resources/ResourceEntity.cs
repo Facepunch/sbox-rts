@@ -71,19 +71,6 @@ namespace Facepunch.RTS
 		{
 			Fog.AddCullable( this );
 
-			// We only want to add the resource to the map if there's no other nearby resources.
-			var others = Physics.GetEntitiesInSphere( Position, 1500f )
-				.OfType<ResourceEntity>()
-				.Where( e => e.Resource == Resource && e.HasMapIcon );
-
-			if ( !others.Any() )
-			{
-				var icon = MiniMap.Instance.AddEntity( this, Resource.ToString().ToLower() );
-				icon.AddClass( "resource" );
-			}
-
-			HasMapIcon = true;
-
 			base.ClientSpawn();
 		}
 
@@ -115,6 +102,26 @@ namespace Facepunch.RTS
 			{
 				pathfinder.UpdateCollisions( Position, radius );
 			}
+		}
+		
+		[Event.Entity.PostSpawn]
+		private void ClientPostSpawn()
+		{
+			if ( IsServer ) return;
+
+			// We only want to add the resource to the map if there's no other nearby resources.
+			var others = All.OfType<ResourceEntity>()
+				.Where( e => e.Resource == Resource
+				&& e.Position.Distance( Position ) <= 1000f
+				&& e.HasMapIcon );
+
+			if ( !others.Any() )
+			{
+				var icon = MiniMap.Instance.AddEntity( this, Resource.ToString().ToLower() );
+				icon.AddClass( "resource" );
+			}
+
+			HasMapIcon = true;
 		}
 
 		[Event.Tick.Client]
