@@ -1,10 +1,9 @@
-﻿buildtimelabel {
+﻿iconwithlabel {
     display: flex;
     align-items: center;
     justify-items: center;
 
     .icon {
-        background-image: url( /textures/rts/icons/buildtime.png );
         background-size: 100%;
         margin-right: 4px;
         border-radius: 2px;

@@ -6,14 +6,14 @@ using System;
 
 namespace Facepunch.RTS
 {
-	public class CooldownLabel : Panel
+	public class IconWithLabel : Panel
 	{
 		public Panel Icon { get; set; }
 		public Label Label { get; set; }
 
-		public CooldownLabel()
+		public IconWithLabel()
 		{
-			StyleSheet.Load( "/ui/CooldownLabel.scss" );
+			StyleSheet.Load( "/ui/IconWithLabel.scss" );
 
 			Icon = Add.Panel( "icon" );
 			Label = Add.Label( "", "label" );

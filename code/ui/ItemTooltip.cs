@@ -18,8 +18,8 @@ namespace Facepunch.RTS
 		public float HideTime { get; private set; }
 		public bool IsShowing { get; private set; }
 		public object Target { get; private set; }
-		public CooldownLabel Cooldown { get; private set; }
-		public BuildTimeLabel BuildTime { get; private set; }
+		public IconWithLabel Cooldown { get; private set; }
+		public IconWithLabel BuildTime { get; private set; }
 		public PopulationLabel Population { get; private set; }
 		public ItemLabelValues ItemLabels { get; private set; }
 		public ItemResourceValues Costs { get; private set; }
@@ -51,8 +51,8 @@ namespace Facepunch.RTS
 			}
 
 			Population = AddChild<PopulationLabel>( "population" );
-			BuildTime = AddChild<BuildTimeLabel>( "buildtime" );
-			Cooldown = AddChild<CooldownLabel>( "cooldown" );
+			BuildTime = AddChild<IconWithLabel>( "buildtime" );
+			Cooldown = AddChild<IconWithLabel>( "cooldown" );
 		}
 
 		public void Show( float hideTime = 0f )

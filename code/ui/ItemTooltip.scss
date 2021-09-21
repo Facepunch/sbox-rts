@@ -43,10 +43,18 @@
 
     .buildtime {
         margin-top: 4px;
+
+        .icon {
+            background-image: url( /textures/rts/icons/buildtime.png );
+        }
     }
 
     .cooldown {
         margin-top: 4px;
+
+        .icon {
+            background-image: url( /textures/rts/icons/cooldown.png );
+        }
     }
 
     .population {

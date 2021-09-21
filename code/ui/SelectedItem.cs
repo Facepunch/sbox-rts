@@ -547,9 +547,9 @@ namespace Facepunch.RTS
 	{
 		public Label Name { get; private set; }
 		public Label Desc { get; private set; }
-		public Label Health { get; private set; }
-		public Label Kills { get; private set; }
-		public Label Damage { get; private set; }
+		public IconWithLabel Health { get; private set; }
+		public IconWithLabel Kills { get; private set; }
+		public IconWithLabel Damage { get; private set; }
 		public ISelectable Selectable { get; private set; }
 		public ItemQueueList QueueList { get; private set; }
 		public ItemLabelValues ItemLabels { get; private set; }
@@ -562,9 +562,9 @@ namespace Facepunch.RTS
 			Name = Add.Label( "", "name" );
 			Desc = Add.Label( "", "desc" );
 			ItemLabels = AddChild<ItemLabelValues>( "itemlabels" );
-			Health = Add.Label( "", "health" );
-			Damage = Add.Label( "", "damage" );
-			Kills = Add.Label( "", "kills" );
+			Health = AddChild<IconWithLabel>( "health" );
+			Damage = AddChild<IconWithLabel>( "damage" );
+			Kills = AddChild<IconWithLabel>( "kills" );
 			Resistances = AddChild<ResistanceValues>( "resistances" );
 			QueueList = AddChild<ItemQueueList>();
 			OccupantList = AddChild<ItemOccupantList>();
@@ -589,15 +589,15 @@ namespace Facepunch.RTS
 		{
 			if ( Selectable == null ) return;
 
-			Kills.SetClass( "hidden", true );
-			Damage.SetClass( "hidden", true );
+			Kills.SetVisible( false );
+			Damage.SetVisible( false );
 
 			if ( Selectable is UnitEntity unit )
 			{
 				if ( unit.Weapon.IsValid() )
 				{
-					Kills.Text = $"Kills: {unit.Kills}";
-					Kills.SetClass( "hidden", false );
+					Kills.Label.Text = $"{unit.Kills}";
+					Kills.SetVisible( true );
 
 					var baseDamage = unit.Weapon.BaseDamage;
 					var fullDamage = unit.Weapon.GetDamage();
@@ -608,16 +608,16 @@ namespace Facepunch.RTS
 						var perSecond = unit.Weapon.GetDamagePerSecond();
 
 						if ( difference > 0 )
-							Damage.Text = $"Damage: {baseDamage}+{difference} ({perSecond} DPS)";
+							Damage.Label.Text = $"{baseDamage}+{difference} ({perSecond} DPS)";
 						else
-							Damage.Text = $"Damage: {baseDamage} ({perSecond} DPS)";
+							Damage.Label.Text = $"{baseDamage} ({perSecond} DPS)";
 
 						Damage.SetClass( "hidden", false );
 					}
 				}
 			}
 
-			Health.Text = $"{Selectable.Health.CeilToInt()} HP";
+			Health.Label.Text = $"{Selectable.Health.CeilToInt()} / {Selectable.MaxHealth.CeilToInt()}";
 
 			base.Tick();
 		}
