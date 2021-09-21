@@ -9,10 +9,11 @@ namespace Facepunch.RTS.Units
 	{
 		public override string Name => "Rocketman";
 		public override string UniqueId => "unit.rocketman";
-		public override string Description => "A slow Terry armed with a rocket launcher. Can attack aircraft.";
+		public override string Description => "A slow Terry armed with a rocket launcher.";
 		public override float Speed => 350f;
 		public override float MaxVerticalRange => 650f;
 		public override float MaxHealth => 125f;
+
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 20;
 		public override OccupantSettings Occupant => new()

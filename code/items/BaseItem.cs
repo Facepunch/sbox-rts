@@ -12,6 +12,7 @@ namespace Facepunch.RTS
 		public virtual string Entity => "";
 		public virtual string UniqueId => "";
 		public virtual string Description => "";
+		public virtual List<ItemLabel> Labels => new();
 		public virtual HashSet<string> Queueables => new();
 		public virtual Color Color => Color.White;
 		public virtual Texture Icon => null;

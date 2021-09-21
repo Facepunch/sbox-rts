@@ -10,7 +10,11 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Worker";
 		public override string UniqueId => "unit.worker";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
-		public override bool CanConstruct => true;
+		public override List<ItemLabel> Labels => new()
+		{
+			new ItemLabel( "Gatherer", Color.Orange ),
+			new ItemLabel( "Builder", Color.Yellow )
+		};
 		public override float MaxHealth => 75f;
 		public override string Description => "Gathers Stone, Metal and Beer for your empire and constructs buildings.";
 		public override string[] MoveSounds => new string[]

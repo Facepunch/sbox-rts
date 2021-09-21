@@ -8,7 +8,11 @@ namespace Facepunch.RTS.Units
 	{
 		public override string Name => "Grenadier";
 		public override string UniqueId => "unit.grenadier";
-		public override string Description => "Launches various grenades at your enemies. Can attack aircraft.";
+		public override string Description => "Launches various grenades at your enemies.";
+		public override List<ItemLabel> Labels => new()
+		{
+			new ItemLabel( "Attacks Aircraft" )
+		};
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override float MaxVerticalRange => 650f;
 		public override int BuildTime => 20;

@@ -12,6 +12,10 @@ namespace Facepunch.RTS.Units
 		public override string Description => "A special Terry that can heal nearby units.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/naked.png" );
 		public override int BuildTime => 25;
+		public override List<ItemLabel> Labels => new()
+		{
+			new ItemLabel( "Support", Color.Green )
+		};
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = false

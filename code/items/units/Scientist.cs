@@ -12,6 +12,10 @@ namespace Facepunch.RTS.Units
 		public override string Description => "Extracts plasma for advanced technology, constructions and units.";
 		public override Texture Icon => Texture.Load( "textures/rts/icons/scientist.png" );
 		public override int BuildTime => 10;
+		public override List<ItemLabel> Labels => new()
+		{
+			new ItemLabel( "Gatherer", Color.Orange )
+		};
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = false

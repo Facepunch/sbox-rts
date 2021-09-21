@@ -1,0 +1,11 @@
+﻿itemlabelvalues {
+    display: flex;
+
+    itemlabelvalue {
+        margin-right: 4px;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

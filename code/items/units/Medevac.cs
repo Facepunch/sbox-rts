@@ -12,6 +12,11 @@ namespace Facepunch.RTS.Units
 		public override string Entity => "unit_aircraft";
 		public override string Weapon => "weapon_medevac";
 		public override string Model => "models/vehicles/medevac/medevac.vmdl";
+		public override List<ItemLabel> Labels => new()
+		{
+			new ItemLabel( "Support", Color.Green ),
+			new ItemLabel( "Transform", Color.Cyan)
+		};
 		public override string Description => "An aircraft that can evacuate two units and passively heal nearby targets.";
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/medevac.png" );
 		public override float VerticalOffset => 600f;

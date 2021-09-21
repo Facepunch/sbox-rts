@@ -102,13 +102,13 @@
 
             .health {
                 margin-top: 8px;
-                font-size: 18px;
+                font-size: 15px;
                 color: white;
             }
 
             .damage {
                 margin-top: 8px;
-                font-size: 18px;
+                font-size: 15px;
                 color: white;
 
                 &.hidden {
@@ -118,12 +118,16 @@
 
             .kills {
                 margin-top: 8px;
-                font-size: 18px;
+                font-size: 15px;
                 color: white;
 
                 &.hidden {
                     display: none;
                 }
+            }
+
+            .itemlabels {
+                margin-top: 8px;
             }
 
             .resistances {

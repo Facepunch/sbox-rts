@@ -9,9 +9,13 @@ namespace Facepunch.RTS.Units
 	{
 		public override string Name => "Assault";
 		public override string UniqueId => "unit.assault";
-		public override string Description => "A more agile Terry equipped with an assault rifle. Can attack aircraft.";
+		public override string Description => "A more agile Terry equipped with an assault rifle.";
 		public override float Speed => 350f;
 		public override float MaxVerticalRange => 650f;
+		public override List<ItemLabel> Labels => new()
+		{
+			new ItemLabel( "Attacks Aircraft" )
+		};
 		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
 		public override int BuildTime => 15;
 		public override OccupantSettings Occupant => new()

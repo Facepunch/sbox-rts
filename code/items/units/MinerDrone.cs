@@ -10,6 +10,10 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Miner Drone";
 		public override string UniqueId => "unit.minerdrone";
 		public override string Entity => "unit_drone";
+		public override List<ItemLabel> Labels => new()
+		{
+			new ItemLabel( "Gatherer", Color.Orange )
+		};
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/drone_worker.png" );
 		public override string Description => "Gathers Stone and Metal for your empire.";
 		public override string Model => "models/vehicles/drones/worker/drone_worker.vmdl";

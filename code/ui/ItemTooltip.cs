@@ -19,6 +19,7 @@ namespace Facepunch.RTS
 		public bool IsShowing { get; private set; }
 		public object Target { get; private set; }
 		public PopulationLabel Population { get; private set; }
+		public ItemLabelValues ItemLabels { get; private set; }
 		public ItemResourceValues Costs { get; private set; }
 		public DependencyList Dependencies { get; private set; }
 		public ResistanceValues Resistances { get; private set; }
@@ -32,6 +33,7 @@ namespace Facepunch.RTS
 
 			Instance = this;
 
+			ItemLabels = AddChild<ItemLabelValues>( "itemlabels" );
 			Costs = AddChild<ItemResourceValues>( "costs" );
 			Dependencies = AddChild<DependencyList>( "dependencies" );
 			Resistances = AddChild<ResistanceValues>( "resistances" );
@@ -83,6 +85,7 @@ namespace Facepunch.RTS
 			Name.Text = ability.Name;
 			Desc.Text = ability.GetDescription();
 
+			ItemLabels.SetVisible( false );
 			Dependencies.SetVisible( showDependencies );
 
 			if ( !showDependencies )
@@ -134,6 +137,7 @@ namespace Facepunch.RTS
 			Desc.Text = "A destructable obstacle.";
 
 			Dependencies.SetVisible( false );
+			ItemLabels.SetVisible( false );
 			Resistances.SetVisible( false );
 			Population.SetVisible( false );
 			Costs.SetVisible( false );
@@ -162,6 +166,7 @@ namespace Facepunch.RTS
 			}
 
 			Dependencies.SetVisible( false );
+			ItemLabels.SetVisible( false );
 			Resistances.SetVisible( false );
 			Population.SetVisible( false );
 			Costs.SetVisible( true );
@@ -179,6 +184,21 @@ namespace Facepunch.RTS
 
 			Dependencies.SetVisible( showDependencies );
 			Resistances.SetVisible( false );
+
+			if ( item.Labels.Count > 0 )
+			{
+				ItemLabels.SetVisible( true );
+				ItemLabels.Clear();
+
+				foreach ( var label in item.Labels )
+				{
+					ItemLabels.AddItemLabel( label );
+				}
+			}
+			else
+			{
+				ItemLabels.SetVisible( false );
+			}
 
 			if ( !showDependencies )
 			{

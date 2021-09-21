@@ -552,6 +552,7 @@ namespace Facepunch.RTS
 		public Label Damage { get; private set; }
 		public ISelectable Selectable { get; private set; }
 		public ItemQueueList QueueList { get; private set; }
+		public ItemLabelValues ItemLabels { get; private set; }
 		public ResistanceValues Resistances { get; private set; }
 		public ItemOccupantList OccupantList { get; private set; }
 
@@ -560,6 +561,7 @@ namespace Facepunch.RTS
 		{
 			Name = Add.Label( "", "name" );
 			Desc = Add.Label( "", "desc" );
+			ItemLabels = AddChild<ItemLabelValues>( "itemlabels" );
 			Health = Add.Label( "", "health" );
 			Damage = Add.Label( "", "damage" );
 			Kills = Add.Label( "", "kills" );
@@ -633,7 +635,22 @@ namespace Facepunch.RTS
 			QueueList.Update( entity );
 			OccupantList.Update( entity );
 
-			var resistances = entity.Item.Resistances;
+			if ( data.Labels.Count > 0 )
+			{
+				ItemLabels.SetVisible( true );
+				ItemLabels.Clear();
+
+				foreach ( var label in data.Labels )
+				{
+					ItemLabels.AddItemLabel( label );
+				}
+			}
+			else
+			{
+				ItemLabels.SetVisible( false );
+			}
+
+			var resistances = data.Resistances;
 
 			Resistances.SetVisible( resistances.Count > 0 );
 
@@ -663,6 +680,21 @@ namespace Facepunch.RTS
 
 			QueueList.Update( null );
 			OccupantList.Update( entity );
+
+			if ( data.Labels.Count > 0 )
+			{
+				ItemLabels.SetVisible( true );
+				ItemLabels.Clear();
+
+				foreach ( var label in data.Labels )
+				{
+					ItemLabels.AddItemLabel( label );
+				}
+			}
+			else
+			{
+				ItemLabels.SetVisible( false );
+			}
 
 			var resistances = entity.Resistances;
 

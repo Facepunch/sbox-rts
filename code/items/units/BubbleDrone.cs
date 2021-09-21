@@ -10,6 +10,10 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Bubble Drone";
 		public override string UniqueId => "unit.bubbledrone";
 		public override string Entity => "unit_drone";
+		public override List<ItemLabel> Labels => new()
+		{
+			new ItemLabel( "Support", Color.Green )
+		};
 		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/drone_shield.png" );
 		public override string Description => "Can deploy a deployable dome shield to protect units inside.";
 		public override string Model => "models/vehicles/drones/shield/drone_shield.vmdl";

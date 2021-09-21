@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<AssemblyName>sbox-rts</AssemblyName>
+		<PackageId>sbox-rts</PackageId>
+		<LangVersion>preview</LangVersion>
+		<NoWarn>1701;1702;1591;</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Update="**\*.scss" DependentUpon="%(Filename).cs" />
+		<None Update="**\*.css" DependentUpon="%(Filename).cs" />
+		<None Update="**\*.sass" DependentUpon="%(Filename).cs" />
+		<None Update="**\*.html" DependentUpon="%(Filename).cs" />
+		<None Update="**\*.htm" DependentUpon="%(Filename).cs" />
+	</ItemGroup>
+
+  <PropertyGroup>
+	<OutputPath>../.intermediate/</OutputPath>
+	<DocumentationFile>../.intermediate/netstandard2.0/sbox-rts.xml</DocumentationFile>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Analyzer Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.Generator.dll"/>
+		<Reference Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.System.dll"/>
+		<Reference Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.Engine.dll"/>
+		<Reference Include="H:/Facepunch/sbox/game/bin/managed/Sandbox.Game.dll"/>
+	</ItemGroup>
+
+  <ItemGroup>
+<ProjectReference Include="H:\Facepunch\sbox\game\Addons\base\code\base.csproj" />
+  </ItemGroup>
+
+</Project>
