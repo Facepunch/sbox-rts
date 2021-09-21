@@ -123,6 +123,11 @@
 		},
 		{
 			_class = "C_OP_PinParticleToCP"
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_PositionLock"
+			m_bLockRot = true
 		},
 		{
 			_class = "C_OP_EndCapTimedDecay"
