@@ -42,6 +42,17 @@
 							offset_angles = [ 0.0, 0.0, 0.0 ]
 						}
 					},
+					{
+						_class = "GenericGameData"
+						game_class = "particle"
+						game_keys = 
+						{
+							name = resource:"particles/buildings/fusion_reactor/smoke_stack_chimney.vpcf"
+							attachment_point = "smoke_stake_1"
+							attachment_type = "point_follow"
+							attachment_offset = [ 0.0, 0.0, 0.0 ]
+						}
+					},
 				]
 			},
 			{
@@ -56,6 +67,21 @@
 						origin = [ -0.12323, -0.09407, 130.842636 ]
 						angles = [ 0.0, 0.0, 0.0 ]
 						dimensions = [ 390.439941, 258.790375, 262.685272 ]
+					},
+				]
+			},
+			{
+				_class = "AttachmentList"
+				children = 
+				[
+					{
+						_class = "Attachment"
+						name = "smoke_stake_1"
+						parent_bone = ""
+						relative_origin = [ -98.262177, 0.0, 331.386353 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
 					},
 				]
 			},
