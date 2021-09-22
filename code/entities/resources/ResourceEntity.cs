@@ -35,6 +35,11 @@ namespace Facepunch.RTS
 
 		private RealTimeUntil _nextGatherSound;
 
+		public ResourceEntity()
+		{
+			Transmit = TransmitType.Always;
+		}
+
 		public void OnVisibilityChanged( bool isVisible )
 		{
 			if ( isVisible )
@@ -79,7 +84,6 @@ namespace Facepunch.RTS
 			base.Spawn();
 
 			SetupPhysicsFromModel( PhysicsMotionType.Static );
-			Transmit = TransmitType.Always;
 
 			// Let's make sure there is stock.
 			if ( Stock == 0 ) Stock = DefaultStock;
