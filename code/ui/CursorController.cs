@@ -2,6 +2,7 @@
 using Facepunch.RTS;
 using Gamelib.DayNight;
 using Gamelib.Extensions;
+using Gamelib.UI;
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -293,6 +294,12 @@ namespace Facepunch.RTS
 			else
 			{
 				var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
+				var hovered = UIUtility.GetHoveredPanel();
+
+				if ( hovered != null )
+				{
+					return;
+				}
 
 				if ( trace.Entity is ResourceEntity resource && resource.HasBeenSeen )
 				{
