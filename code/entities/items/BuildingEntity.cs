@@ -330,6 +330,21 @@ namespace Facepunch.RTS
 			return entity;
 		}
 
+		public override void ShowTooltip()
+		{
+			if ( Item.Occupiable != null && Item.Occupiable.Enabled )
+			{
+				var shiftName = Input.GetKeyWithBinding( "iv_sprint" );
+				var rightClick = Input.GetKeyWithBinding( "iv_attack2" );
+
+				GenericTooltip.Instance.Update( "Occupiable", $"Hold {shiftName} and {rightClick} to instruct units to enter this building.", "occupiable" );
+				GenericTooltip.Instance.Hover( this );
+				GenericTooltip.Instance.Show( 0.5f );
+			}
+
+			base.ShowTooltip();
+		}
+
 		public override void ClientSpawn()
 		{
 			if ( !IsLocalTeamGroup )

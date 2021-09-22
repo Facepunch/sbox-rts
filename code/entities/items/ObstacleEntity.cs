@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 	[Library( "rts_obstacle") ]
 	[Hammer.EntityTool( "Obstacle", "RTS" )]
 	[Hammer.Model( Model = "models/rocks/rock_large_00.vmdl" )]
-	public partial class ObstacleEntity : ModelEntity, IDamageable, IFogCullable, IHudEntity
+	public partial class ObstacleEntity : ModelEntity, IDamageable, IFogCullable, IHudEntity, ITooltipEntity
 	{
 		[Property, Net] public string TooltipName { get; set; } = "Obstacle";
 		[Property, Net] public float MaxHealth { get; set; } = 500;
@@ -61,6 +61,16 @@ namespace Facepunch.RTS
 			foreach ( var pathfinder in PathManager.All )
 			{
 				pathfinder.UpdateCollisions( Position, radius );
+			}
+		}
+
+		public virtual void ShowTooltip()
+		{
+			if ( HasBeenSeen )
+			{
+				ItemTooltip.Instance.Update( this );
+				ItemTooltip.Instance.Hover( this );
+				ItemTooltip.Instance.Show( 0.5f );
 			}
 		}
 

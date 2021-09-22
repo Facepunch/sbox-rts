@@ -293,25 +293,14 @@ namespace Facepunch.RTS
 			}
 			else
 			{
-				var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
 				var hovered = UIUtility.GetHoveredPanel();
+				if ( hovered != null ) return;
 
-				if ( hovered != null )
-				{
-					return;
-				}
+				var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
 
-				if ( trace.Entity is ResourceEntity resource && resource.HasBeenSeen )
+				if ( trace.Entity is ITooltipEntity target )
 				{
-					ItemTooltip.Instance.Update( resource );
-					ItemTooltip.Instance.Hover( trace.Entity );
-					ItemTooltip.Instance.Show( 0.5f );
-				}
-				else if ( trace.Entity is ObstacleEntity obstacle && obstacle.HasBeenSeen )
-				{
-					ItemTooltip.Instance.Update( obstacle );
-					ItemTooltip.Instance.Hover( trace.Entity );
-					ItemTooltip.Instance.Show( 0.5f );
+					target.ShowTooltip();
 				}
 			}
 		}

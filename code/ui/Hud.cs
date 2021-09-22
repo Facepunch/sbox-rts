@@ -85,6 +85,7 @@ namespace Facepunch.RTS
 			RootPanel.AddChild<MiniMap>();
 			RootPanel.AddChild<IdleUtilityUnits>();
 			RootPanel.AddChild<ItemTooltip>();
+			RootPanel.AddChild<GenericTooltip>();
 			RootPanel.AddChild<VoiceList>();
 
 			ChatBox = RootPanel.AddChild<ChatBox>();

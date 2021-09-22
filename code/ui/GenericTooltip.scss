@@ -1,0 +1,31 @@
+﻿generictooltip {
+    position: absolute;
+    background-color: rgba(0 0 0 0.7);
+    pointer-events: none;
+    flex-direction: column;
+    backdrop-filter-blur: 8px;
+    border-radius: 8px;
+    pixel-snap: 0;
+    display: flex;
+    padding: 16px;
+    color: white;
+    transform: translateX(-50%) translateY(-100%);
+    left: 0px;
+    top: 0px;
+
+    .name {
+        font-size: 20px;
+        font-weight: bold;
+        text-shadow: 0px 0px 4px black;
+    }
+
+    .desc {
+        font-size: 16px;
+        max-width: 400px;
+        margin-top: 4px;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

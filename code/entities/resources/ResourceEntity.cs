@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
-	public partial class ResourceEntity : ModelEntity, IFogCullable, IMapIconEntity
+	public partial class ResourceEntity : ModelEntity, IFogCullable, IMapIconEntity, ITooltipEntity
 	{
 		public virtual ResourceType Resource => ResourceType.Stone;
 		public virtual int DefaultStock => 250;
@@ -71,7 +71,17 @@ namespace Facepunch.RTS
 		{
 			GlowActive = false;
 		}
-		
+
+		public virtual void ShowTooltip()
+		{
+			if ( HasBeenSeen )
+			{
+				ItemTooltip.Instance.Update( this );
+				ItemTooltip.Instance.Hover( this );
+				ItemTooltip.Instance.Show( 0.5f );
+			}
+		}
+
 		public override void ClientSpawn()
 		{
 			Fog.AddCullable( this );

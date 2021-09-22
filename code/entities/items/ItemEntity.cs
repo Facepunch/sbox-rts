@@ -14,7 +14,7 @@ using Sandbox.Internal;
 
 namespace Facepunch.RTS
 {
-	public abstract partial class ItemEntity<T> : AnimEntity, ISelectable, IHudEntity where T : BaseItem
+	public abstract partial class ItemEntity<T> : AnimEntity, ISelectable, IHudEntity, ITooltipEntity where T : BaseItem
 	{
 		public virtual bool CanMultiSelect => false;
 		public virtual bool HasSelectionGlow => true;
@@ -294,6 +294,11 @@ namespace Facepunch.RTS
 		public virtual int GetAttackPriority()
 		{
 			return 0;
+		}
+
+		public virtual void ShowTooltip()
+		{
+
 		}
 
 		public virtual void StartAbility( BaseAbility ability, AbilityTargetInfo info )
