@@ -2,20 +2,13 @@
 
 Layer0
 {
-	shader "complex.vfx"
+	shader "blendable.vfx"
 
-	//---- PBR ----
-	F_SPECULAR 1
-
-	//---- Ambient Occlusion ----
-	g_flAmbientOcclusionDirectDiffuse "0.000"
-	g_flAmbientOcclusionDirectSpecular "0.000"
-	TextureAmbientOcclusion "materials/default/default_ao.tga"
+	F_MULTIBLEND 2 // 3 Layers
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
 	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
-	TextureColor "textures/stone/hs/stone_hs_01a_color.png"
 
 	//---- Fade ----
 	g_flFadeExponent "1.000"
@@ -27,14 +20,39 @@ Layer0
 	g_flDirectionalLightmapMinZ "0.050"
 	g_flDirectionalLightmapStrength "1.000"
 
-	//---- Metalness ----
-	g_flMetalness "0.000"
+	//---- Material A ----
+	g_flTintColorA "[1.000000 1.000000 1.000000 0.000000]"
+	TextureAmbientOcclusionA "materials/default/default_ao.tga"
+	TextureBlendMaskA "textures/stone/stone_1a_rough.png"
+	TextureColorA "textures/stone/hs/stone_hs_01a_color.png"
+	TextureMetalnessA "materials/default/default_metal.tga"
+	TextureNormalA "textures/stone/hs/stone_hs_01a_normal.png"
+	TextureRoughnessA "textures/stone/hs/stone_hs_01a_rough.png"
+	TextureTintMaskA "materials/default/default.tga"
 
-	//---- Normal ----
-	TextureNormal "textures/stone/hs/stone_hs_01a_normal.png"
+	//---- Material B ----
+	g_flBlendSoftnessB "0.500"
+	g_flTintColorB "[1.000000 1.000000 1.000000 0.000000]"
+	g_vTexCoordScale2 "[1.000 1.000]"
+	TextureAmbientOcclusionB "materials/default/default_ao.tga"
+	TextureBlendMaskB "textures/grass/grass_eclipse_1b_mask.png"
+	TextureColorB "textures/grass/grass_eclipse_1a_color.png"
+	TextureMetalnessB "materials/default/default_metal.tga"
+	TextureNormalB "textures/grass/grass_eclipse_1a_normal.png"
+	TextureRoughnessB "textures/grass/grass_eclipse_1a_rough.png"
+	TextureTintMaskB "materials/default/default.tga"
 
-	//---- Roughness ----
-	TextureRoughness "textures/stone/hs/stone_hs_01a_rough.png"
+	//---- Material C ----
+	g_flBlendSoftnessC "0.500"
+	g_flTintColorC "[1.000000 1.000000 1.000000 0.000000]"
+	g_vTexCoordScale3 "[1.000 1.000]"
+	TextureAmbientOcclusionC "materials/default/default_ao.tga"
+	TextureBlendMaskC "textures/stone/stone_1b_rough.png"
+	TextureColorC "textures/stone/stone_1b_color.png"
+	TextureMetalnessC "materials/default/default_metal.tga"
+	TextureNormalC "textures/stone/stone_1b_normal.png"
+	TextureRoughnessC "textures/stone/stone_1b_rough.png"
+	TextureTintMaskC "materials/default/default.tga"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
