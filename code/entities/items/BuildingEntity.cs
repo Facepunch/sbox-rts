@@ -336,10 +336,11 @@ namespace Facepunch.RTS
 			{
 				var shiftName = Input.GetKeyWithBinding( "iv_sprint" );
 				var rightClick = Input.GetKeyWithBinding( "iv_attack2" );
+				var tooltip = GenericTooltip.Instance;
 
-				GenericTooltip.Instance.Update( "Occupiable", $"Hold {shiftName} and {rightClick} to instruct units to enter this building.", "occupiable" );
-				GenericTooltip.Instance.Hover( this );
-				GenericTooltip.Instance.Show( 0.5f );
+				tooltip.Update( "Occupiable", $"Hold {shiftName} and {rightClick} to instruct units to enter this building.", "occupiable" );
+				tooltip.Hover( this );
+				tooltip.Show( 0.5f );
 			}
 
 			base.ShowTooltip();
