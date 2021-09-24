@@ -2,7 +2,9 @@
 
 Layer0
 {
-	shader "blend.vfx"
+	shader "blendable.vfx"
+
+	F_MULTIBLEND 1 // 2 Layers
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
@@ -18,21 +20,27 @@ Layer0
 	g_flDirectionalLightmapMinZ "0.050"
 	g_flDirectionalLightmapStrength "1.000"
 
-	//---- Mask ----
-	TextureMask "materials/blend_temp/blend_temp_grid_blend.png"
-
 	//---- Material A ----
-	g_flMetalnessA "0.000"
+	g_flTintColorA "[1.000000 1.000000 1.000000 0.000000]"
+	TextureAmbientOcclusionA "materials/default/default_ao.tga"
+	TextureBlendMaskA "materials/blend_temp/blend_temp_grid_blend.png"
 	TextureColorA "materials/blend_temp/blend_temp_grid_cliff.png"
+	TextureMetalnessA "materials/default/default_metal.tga"
 	TextureNormalA "materials/blend_temp/blend_temp_grid_normal.png"
 	TextureRoughnessA "materials/blend_temp/blend_temp_grid_rough.png"
+	TextureTintMaskA "materials/default/default.tga"
 
 	//---- Material B ----
-	g_flMetalnessB "0.000"
+	g_flBlendSoftnessB "0.500"
+	g_flTintColorB "[1.000000 1.000000 1.000000 0.000000]"
 	g_vTexCoordScale2 "[1.000 1.000]"
+	TextureAmbientOcclusionB "materials/default/default_ao.tga"
+	TextureBlendMaskB "materials/blend_temp/blend_temp_grid_blend.png"
 	TextureColorB "materials/blend_temp/blend_temp_grid_stone_light.png"
+	TextureMetalnessB "materials/default/default_metal.tga"
 	TextureNormalB "materials/blend_temp/blend_temp_grid_normal.png"
 	TextureRoughnessB "materials/blend_temp/blend_temp_grid_blend.png"
+	TextureTintMaskB "materials/default/default.tga"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
