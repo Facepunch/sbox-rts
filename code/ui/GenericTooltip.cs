@@ -6,6 +6,7 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Facepunch.RTS
 {
@@ -67,6 +68,11 @@ namespace Facepunch.RTS
 				AddClass( className );
 				CurrentClass = className;
 			}
+
+			description = Regex.Replace( description, "(\\+iv_[a-zA-Z0-9]+)", ( match ) =>
+			{
+				return Input.GetKeyWithBinding( match.Value );
+			} );
 
 			Name.Text = name;
 			Desc.Text = description;

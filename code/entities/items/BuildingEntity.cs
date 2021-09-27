@@ -332,15 +332,30 @@ namespace Facepunch.RTS
 
 		public override void ShowTooltip()
 		{
-			if ( Item.Occupiable != null && Item.Occupiable.Enabled )
+			if ( IsLocalPlayers && CanOccupyUnits )
 			{
-				var shiftName = Input.GetKeyWithBinding( "iv_sprint" );
-				var rightClick = Input.GetKeyWithBinding( "iv_attack2" );
-				var tooltip = GenericTooltip.Instance;
+				var selected = Player.GetSelected<UnitEntity>();
+				var canAnyEnter = false;
 
-				tooltip.Update( "Occupiable", $"Hold {shiftName} and {rightClick} to instruct units to enter this building.", "occupiable" );
-				tooltip.Hover( this );
-				tooltip.Show( 0.5f );
+				for ( int i = 0; i < selected.Count; i++ )
+				{
+					var unit = selected[i];
+
+					if ( unit.CanOccupy( this ) )
+					{
+						canAnyEnter = true;
+						break;
+					}
+				}
+
+				if ( canAnyEnter )
+				{
+					var tooltip = GenericTooltip.Instance;
+
+					tooltip.Update( Item.Name, "+iv_sprint++iv_attack2 to occupy this building.", "occupiable" );
+					tooltip.Hover( this );
+					tooltip.Show( 0.5f );
+				}
 			}
 
 			base.ShowTooltip();
