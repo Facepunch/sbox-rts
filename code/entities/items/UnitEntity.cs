@@ -50,7 +50,7 @@ namespace Facepunch.RTS
 		public override bool HasSelectionGlow => false;
 
 		public Dictionary<string, float> Resistances { get; set; }
-		[Net, OnChangedCallback] private List<float> ResistanceList { get; set; }
+		[Net, Change] private List<float> ResistanceList { get; set; }
 		[Net] public List<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
 		public IOccupiableItem OccupiableItem => Item;
@@ -65,7 +65,7 @@ namespace Facepunch.RTS
 		[Net] public float LineOfSightRadius { get; private set; }
 		[Net] public Vector3 Destination { get; private set; }
 		[Net] public TimeSince LastDamageTime { get; private set; }
-		[Net, OnChangedCallback] public int Kills { get; set; }
+		[Net, Change] public int Kills { get; set; }
 		[Net] public UnitModifiers Modifiers { get; protected set; }
 		public override bool CanMultiSelect => true;
 		public List<ModelEntity> Clothing => new();

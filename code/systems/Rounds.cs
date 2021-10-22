@@ -5,7 +5,7 @@ namespace Facepunch.RTS
 {
 	internal partial class RoundGlobals : Globals
 	{
-		[Net, OnChangedCallback] public BaseRound Round { get; set; }
+		[Net, Change] public BaseRound Round { get; set; }
 		public BaseRound LastRound { get; private set; }
 
 		private void OnRoundChanged()

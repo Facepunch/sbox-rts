@@ -469,8 +469,7 @@ namespace Facepunch.RTS
 			}
 			else
 			{
-				Fog.Style.Background = default;
-				Fog.Style.Dirty();
+				Fog.Style.BackgroundImage = null;
 			}
 		}
 	}

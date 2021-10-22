@@ -22,15 +22,17 @@ namespace Facepunch.RTS
 		{
 			if ( resistance.Icon != null )
 			{
-				Icon.Style.Background = new PanelBackground
-				{
-					SizeX = Length.Percent( 100f ),
-					SizeY = Length.Percent( 100f ),
-					Texture = resistance.Icon
-				};
-
-				Icon.Style.Dirty();
+				Icon.Style.BackgroundImage = resistance.Icon;
+				Icon.Style.BackgroundSizeX = Length.Percent( 100f );
+				Icon.Style.BackgroundSizeY = Length.Percent( 100f );
 			}
+			else
+			{
+				Icon.Style.BackgroundImage = null;
+				Icon.Style.BackgroundSizeX = null;
+				Icon.Style.BackgroundSizeY = null;
+			}
+
 
 			Update( value );
 		}

@@ -113,8 +113,8 @@ namespace Facepunch.RTS
 				colors.Remove( other.TeamColor );
 			}
 
-			var client = player.GetClientOwner();
-			var clientEntity = (Entity)player.GetClientOwner();
+			var client = player.Client;
+			var clientEntity = (Entity)player.Client;
 
 			player.TeamColor = Rand.FromList( colors );
 			player.TeamGroup = clientEntity.NetworkIdent;

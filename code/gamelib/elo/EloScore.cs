@@ -13,7 +13,7 @@ namespace Gamelib.Elo
 		Win = 1
 	}
 
-	public partial class EloScore : NetworkComponent
+	public partial class EloScore : BaseNetworkable
 	{
 		[Net] public int Rating { get; set; }
 		[Net] public int Delta { get; set; }

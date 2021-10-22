@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS
 {
-	public partial class ItemModifiers : NetworkComponent
+	public partial class ItemModifiers : BaseNetworkable
 	{
 
 	}

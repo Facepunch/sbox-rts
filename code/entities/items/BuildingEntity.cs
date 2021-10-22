@@ -10,14 +10,14 @@ namespace Facepunch.RTS
 {
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity, IDamageable, IFogCullable, IMapIconEntity
 	{
-		[Net, OnChangedCallback] public List<UnitEntity> Occupants { get; private set; }
+		[Net, Change] public List<UnitEntity> Occupants { get; private set; }
 
 		public IOccupiableItem OccupiableItem => Item;
 
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
-		[Net, OnChangedCallback] public bool IsUnderConstruction { get; private set; }
+		[Net, Change] public bool IsUnderConstruction { get; private set; }
 		public HashSet<Entity> TouchingEntities { get; private set; }
-		[Net, OnChangedCallback] public Vector3 RallyPosition { get; set; }
+		[Net, Change] public Vector3 RallyPosition { get; set; }
 		public IMoveCommand RallyCommand { get; set; }
 		[Net] public float LineOfSightRadius { get; private set; }
 		[Net] public bool IsBlueprint { get; private set; }

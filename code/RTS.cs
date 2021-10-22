@@ -106,7 +106,7 @@ namespace Facepunch.RTS
 
 		public void UpdateRating( Player player )
 		{
-			var client = player.GetClientOwner();
+			var client = player.Client;
 			Ratings[client.SteamId] = player.Elo.Rating;
 		}
 

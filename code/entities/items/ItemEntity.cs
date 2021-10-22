@@ -23,7 +23,7 @@ namespace Facepunch.RTS
 		public Dictionary<string, IStatus> Statuses { get; private set; }
 		public Dictionary<string, ItemComponent> Components { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
-		[Net, OnChangedCallback] public uint ItemNetworkId { get; private set; }
+		[Net, Change] public uint ItemNetworkId { get; private set; }
 		[Net] public List<uint> Upgrades { get; private set; }
 		[Net] public Player Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }

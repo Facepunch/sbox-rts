@@ -18,9 +18,9 @@ namespace Facepunch.RTS
 			public Vector3 Position;
 		}
 
-		[Net, Local, OnChangedCallback] public List<uint> Dependencies { get; set; }
-		[Net, Local, OnChangedCallback] public List<uint> Researching { get; set; }
-		[Net, Local, OnChangedCallback] public List<Entity> Selection { get; set; }
+		[Net, Local, Change] public List<uint> Dependencies { get; set; }
+		[Net, Local, Change] public List<uint> Researching { get; set; }
+		[Net, Local, Change] public List<Entity> Selection { get; set; }
 		[Net, Local] public uint MaxPopulation { get; set; }
 		[Net, Local] public int Population { get; private set; }
 		[Net] public bool IsSpectator { get; private set;  }
@@ -42,7 +42,6 @@ namespace Facepunch.RTS
 
 		public HashSet<uint> InstantBuildCache { get; private set; }
 		public TimeSince LastCommandSound { get; set; }
-		public Client Client => GetClientOwner();
 
 		public Player()
 		{
@@ -229,7 +228,7 @@ namespace Facepunch.RTS
 		{
 			return All.OfType<Player>()
 				.Where( p => p.TeamGroup == TeamGroup )
-				.Select( p => p.GetClientOwner() );
+				.Select( p => p.Client );
 		}
 
 		public void GiveResources( Dictionary<ResourceType, int> resources, int multiplier = 1 )
@@ -373,7 +372,7 @@ namespace Facepunch.RTS
 			{
 				// TODO: This is just for testing, delete later.
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
-				var bot = Rounds.Current.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
+				var bot = Rounds.Current.Players.Where( player => player.Client != client ).FirstOrDefault();
 
 				/*
 				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.attackdrone" );
@@ -397,7 +396,7 @@ namespace Facepunch.RTS
 			{
 				// TODO: This is just for testing, delete later.
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
-				var bot = Rounds.Current.Players.Where( player => player.GetClientOwner() != client ).FirstOrDefault();
+				var bot = Rounds.Current.Players.Where( player => player.Client != client ).FirstOrDefault();
 
 				/*
 				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.attackdrone" );

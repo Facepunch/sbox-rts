@@ -24,7 +24,7 @@ namespace Facepunch.RTS
 
 		public void Update( Player player )
 		{
-			var client = player.GetClientOwner();
+			var client = player.Client;
 
 			Avatar.SetTexture( $"avatar:{client.SteamId}" );
 

@@ -21,18 +21,19 @@ namespace Facepunch.RTS
 
 		public void Update( BaseItem dependency )
 		{
-			var icon = dependency.Icon; ;
+			var icon = dependency.Icon;
 
 			if ( icon != null )
 			{
-				Icon.Style.Background = new PanelBackground
-				{
-					SizeX = Length.Percent( 100f ),
-					SizeY = Length.Percent( 100f ),
-					Texture = icon
-				};
-
-				Icon.Style.Dirty();
+				Style.BackgroundImage = icon;
+				Style.BackgroundSizeX = Length.Percent( 100f );
+				Style.BackgroundSizeY = Length.Percent( 100f );
+			}
+			else
+			{
+				Style.BackgroundImage = null;
+				Style.BackgroundSizeX = null;
+				Style.BackgroundSizeY = null;
 			}
 
 			Label.Text = dependency.Name;

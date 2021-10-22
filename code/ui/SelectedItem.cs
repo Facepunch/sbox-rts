@@ -60,16 +60,18 @@ namespace Facepunch.RTS
 			Selectable = selectable;
 			Ability = ability;
 
+
 			if ( ability.Icon != null )
 			{
-				Style.Background = new PanelBackground
-				{
-					SizeX = Length.Percent( 100f ),
-					SizeY = Length.Percent( 100f ),
-					Texture = ability.Icon
-				};
-
-				Style.Dirty();
+				Style.BackgroundImage = ability.Icon;
+				Style.BackgroundSizeX = Length.Percent( 100f );
+				Style.BackgroundSizeY = Length.Percent( 100f );
+			}
+			else
+			{
+				Style.BackgroundImage = null;
+				Style.BackgroundSizeX = null;
+				Style.BackgroundSizeY = null;
 			}
 		}
 
@@ -126,14 +128,15 @@ namespace Facepunch.RTS
 
 			if ( item.Icon != null )
 			{
-				Style.Background = new PanelBackground
-				{
-					SizeX = Length.Percent( 100f ),
-					SizeY = Length.Percent( 100f ),
-					Texture = item.Icon
-				};
-
-				Style.Dirty();
+				Style.BackgroundImage = item.Icon;
+				Style.BackgroundSizeX = Length.Percent( 100f );
+				Style.BackgroundSizeY = Length.Percent( 100f );
+			}
+			else
+			{
+				Style.BackgroundImage = null;
+				Style.BackgroundSizeX = null;
+				Style.BackgroundSizeY = null;
 			}
 		}
 	}
@@ -213,7 +216,9 @@ namespace Facepunch.RTS
 
 		public void Update( IOccupiableEntity occupiable = null, UnitEntity unit = null )
 		{
-			Style.Background = null;
+			Style.BackgroundImage = null;
+			Style.BackgroundSizeX = null;
+			Style.BackgroundSizeY = null;
 
 			Occupiable = occupiable;
 			Unit = unit;
@@ -224,12 +229,9 @@ namespace Facepunch.RTS
 
 				if ( item.Icon != null )
 				{
-					Style.Background = new PanelBackground
-					{
-						SizeX = Length.Percent( 100f ),
-						SizeY = Length.Percent( 100f ),
-						Texture = item.Icon
-					};
+					Style.BackgroundImage = item.Icon;
+					Style.BackgroundSizeX = Length.Percent( 100f );
+					Style.BackgroundSizeY = Length.Percent( 100f );
 				}
 
 				Health.SetClass( "hidden", false );
@@ -351,6 +353,10 @@ namespace Facepunch.RTS
 			QueueItem = queueItem;
 			Building = building;
 
+			Style.BackgroundImage = null;
+			Style.BackgroundSizeX = null;
+			Style.BackgroundSizeY = null;
+
 			if ( QueueItem != null )
 			{
 				var item = QueueItem.Item;
@@ -359,14 +365,9 @@ namespace Facepunch.RTS
 
 				if ( item.Icon != null )
 				{
-					Style.Background = new PanelBackground
-					{
-						SizeX = Length.Percent( 100f ),
-						SizeY = Length.Percent( 100f ),
-						Texture = item.Icon
-					};
-
-					Style.Dirty();
+					Style.BackgroundImage = item.Icon;
+					Style.BackgroundSizeX = Length.Percent( 100f );
+					Style.BackgroundSizeY = Length.Percent( 100f );
 				}	 
 			}
 		}
@@ -780,19 +781,18 @@ namespace Facepunch.RTS
 			else if ( selectable is BuildingEntity building )
 				Item = building.Item;
 
-			Style.Background = null;
-
 			if ( Item.Icon != null )
 			{
-				Style.Background = new PanelBackground
-				{
-					SizeX = Length.Percent( 100f ),
-					SizeY = Length.Percent( 100f ),
-					Texture = Item.Icon
-				};
+				Style.BackgroundImage = Item.Icon;
+				Style.BackgroundSizeX = Length.Percent( 100f );
+				Style.BackgroundSizeY = Length.Percent( 100f );
 			}
-
-			Style.Dirty();
+			else
+			{
+				Style.BackgroundImage = null;
+				Style.BackgroundSizeX = null;
+				Style.BackgroundSizeY = null;
+			}
 		}
 	}
 
