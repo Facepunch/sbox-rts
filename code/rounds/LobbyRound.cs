@@ -120,7 +120,7 @@ namespace Facepunch.RTS
 			player.TeamGroup = clientEntity.NetworkIdent;
 
 			// This is a temporary hack.
-			var delta = client.SteamId - 90071996842377216;
+			var delta = client.PlayerId - 90071996842377216;
 			var isBot = (delta >= 0 && delta <= 64);
 
 			player.IsReady = isBot;

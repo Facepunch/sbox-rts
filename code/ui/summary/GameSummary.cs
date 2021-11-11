@@ -26,7 +26,7 @@ namespace Facepunch.RTS
 		{
 			var client = player.Client;
 
-			Avatar.SetTexture( $"avatar:{client.SteamId}" );
+			Avatar.SetTexture( $"avatar:{client.PlayerId}" );
 
 			TeamGroup.Text = player.TeamGroup.ToString();
 			Name.Text = client.Name;

@@ -48,16 +48,16 @@ namespace Facepunch.RTS
 			var panSpeed = cameraConfig.PanSpeed - (cameraConfig.PanSpeed * ZoomLevel * 0.6f);
 
 			if ( Input.Down( InputButton.Forward ) )
-				velocity += Rot.Forward.WithZ( 0f ) * panSpeed;
+				velocity += Rotation.Forward.WithZ( 0f ) * panSpeed;
 
 			if ( Input.Down( InputButton.Back ) )
-				velocity += Rot.Backward.WithZ( 0f ) * panSpeed;
+				velocity += Rotation.Backward.WithZ( 0f ) * panSpeed;
 
 			if ( Input.Down( InputButton.Left ) )
-				velocity += Rot.Left * panSpeed;
+				velocity += Rotation.Left * panSpeed;
 
 			if ( Input.Down( InputButton.Right ) )
-				velocity += Rot.Right * panSpeed;
+				velocity += Rotation.Right * panSpeed;
 
 			var lookAtPosition = (LookAt + velocity * Time.Delta);
 			var worldSize = Gamemode.Instance.WorldSize.Size.x;
@@ -82,15 +82,15 @@ namespace Facepunch.RTS
 				eyePos += Vector3.Up * (cameraConfig.Up - (cameraConfig.Up * ZoomLevel * cameraConfig.ZoomScale));
 			}
 
-			Pos = Pos.LerpTo( eyePos, Time.Delta * 4f );
+			Position = Position.LerpTo( eyePos, Time.Delta * 4f );
 			var difference = LookAt - eyePos;
-			Rot = Rotation.Slerp( Rot, Rotation.LookAt( difference, Vector3.Up ), Time.Delta * 8f );
+			Rotation = Rotation.Slerp( Rotation, Rotation.LookAt( difference, Vector3.Up ), Time.Delta * 8f );
 
 
 			Sound.Listener = new Transform()
 			{
 				Position = lookAtPosition,
-				Rotation = Rot
+				Rotation = Rotation
 			};
 
 			Viewer = null;

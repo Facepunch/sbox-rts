@@ -18,7 +18,7 @@ namespace Facepunch.RTS
 		[Net] public float ServerTime { get; private set; }
 		public BBox WorldSize { get; private set; } = new BBox( Vector3.One * -5000f, Vector3.One * 5000f );
 
-		public Dictionary<ulong, int> Ratings { get; private set; }
+		public Dictionary<long, int> Ratings { get; private set; }
 
 		[ServerCmd("rts_kill")]
 		public static void KillSelected()
@@ -107,7 +107,7 @@ namespace Facepunch.RTS
 		public void UpdateRating( Player player )
 		{
 			var client = player.Client;
-			Ratings[client.SteamId] = player.Elo.Rating;
+			Ratings[client.PlayerId] = player.Elo.Rating;
 		}
 
 		public override void DoPlayerNoclip( Client client )
@@ -136,7 +136,7 @@ namespace Facepunch.RTS
 		{
 			var player = new Player();
 
-			if ( Ratings.TryGetValue( client.SteamId, out var rating ) )
+			if ( Ratings.TryGetValue( client.PlayerId, out var rating ) )
 				player.Elo.Rating = rating;
 
 			client.Pawn = player;
@@ -200,7 +200,7 @@ namespace Facepunch.RTS
 
 		private void LoadRatings()
 		{
-			Ratings = FileSystem.Mounted.ReadJsonOrDefault<Dictionary<ulong, int>>( "data/rts/ratings.json" ) ?? new();
+			Ratings = FileSystem.Mounted.ReadJsonOrDefault<Dictionary<long, int>>( "data/rts/ratings.json" ) ?? new();
 		}
 
 		/*
