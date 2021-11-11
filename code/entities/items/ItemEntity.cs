@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 
 		public Dictionary<string, BaseAbility> Abilities { get; private set; }
 		public Dictionary<string, IStatus> Statuses { get; private set; }
-		public Dictionary<string, ItemComponent> Components { get; private set; }
+		public Dictionary<string, ItemComponent> ItemComponents { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, Change] public uint ItemNetworkId { get; private set; }
 		[Net] public List<uint> Upgrades { get; private set; }
@@ -58,7 +58,7 @@ namespace Facepunch.RTS
 			Transmit = TransmitType.Always;
 			Upgrades = new List<uint>();
 			Statuses = new();
-			Components = new();
+			ItemComponents = new();
 			Queue = new List<QueueItem>();
 		}
 
@@ -171,14 +171,14 @@ namespace Facepunch.RTS
 		public bool HasComponent<C>() where C : ItemComponent
 		{
 			var componentName = Library.GetAttribute( typeof( C ) ).Name;
-			return Components.ContainsKey( componentName );
+			return ItemComponents.ContainsKey( componentName );
 		}
 
 		public C GetComponent<C>() where C : ItemComponent
 		{
 			var componentName = Library.GetAttribute( typeof( C ) ).Name;
 
-			if ( Components.TryGetValue( componentName, out var component ) )
+			if ( ItemComponents.TryGetValue( componentName, out var component ) )
 				return (component as C);
 
 			return null;
@@ -188,9 +188,9 @@ namespace Facepunch.RTS
 		{
 			var componentName = Library.GetAttribute( typeof( C ) ).Name;
 
-			if ( Components.ContainsKey( componentName ) )
+			if ( ItemComponents.ContainsKey( componentName ) )
 			{
-				Components.Remove( componentName );
+				ItemComponents.Remove( componentName );
 			}
 		}
 
@@ -201,7 +201,7 @@ namespace Facepunch.RTS
 
 			var componentName = Library.GetAttribute( typeof( C ) ).Name;
 			component = Library.Create<C>( componentName );
-			Components.Add( componentName, component );
+			ItemComponents.Add( componentName, component );
 
 			return component;
 ;		}
@@ -512,7 +512,7 @@ namespace Facepunch.RTS
 		{
 			Player.WarnUnderAttack( this );
 
-			foreach ( var component in Components.Values )
+			foreach ( var component in ItemComponents.Values )
 				info = component.TakeDamage( info );
 
 			base.TakeDamage( info );
