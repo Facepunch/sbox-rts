@@ -10,7 +10,7 @@ namespace Gamelib.DayNight
 	[Library( "daynight_window" )]
 	[Hammer.EntityTool( "Window Brush", "Day and Night" )]
 	[Hammer.Solid]
-	public class DayNightWindow : FuncBrush
+	public class DayNightWindow : BrushEntity
 	{
 		[Property( Title = "Enable Delay Time" )]
 		public float EnableDelay { get; set; } = 3f;
