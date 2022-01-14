@@ -1,20 +1,15 @@
 {
-	"name": "RTS",
-	"version": "1.0",
-	"sharedassets": "*.*",
-
-	"depends": 
-	[
-		"base",
-		"rust"
-	],
-	
-	"gamemodes":
-	[
-		{
-			"name": "rts",
-			"title": "RTS",
-			"description": "A competitive real-time strategy game with support for up to 4 players."
-		}
-	]
+  "SharedAssets": "*.*",
+  "Title": "RTS",
+  "Type": "game",
+  "Org": "facepunch",
+  "Ident": "rts",
+  "FullIdent": "facepunch.rts",
+  "Schema": 1,
+  "NeedsUpgrade": false,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "HasCode": true,
+  "CodePath": "code",
+  "RootNamespace": "Facepunch.RTS"
 }
