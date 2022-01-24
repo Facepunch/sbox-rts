@@ -14,7 +14,7 @@ namespace Facepunch.RTS.Units
 		{
 			new ItemLabel( "Support", Color.Green )
 		};
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/drone_shield.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/drone_shield.png" );
 		public override string Description => "Can deploy a deployable dome shield to protect units inside.";
 		public override string Model => "models/vehicles/drones/shield/drone_shield.vmdl";
 		public override HashSet<string> Tags => new() { "drone" };

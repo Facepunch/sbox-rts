@@ -16,7 +16,7 @@ namespace Facepunch.RTS.Units
 			new ItemLabel( "Transport", Color.Cyan )
 		};
 		public override string Description => "An armored aircraft for transporting many units.";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/chinook.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/chinook.png" );
 		public override float VerticalOffset => 600f;
 		public override float MaxHealth => 250f;
 		public override bool UsePathfinder => false;

@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 		public override string Name => "Airstrike";
 		public override string Description => "Rain down fire upon your enemies, but be careful not to hit your own units!";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
-		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
 		public override float Cooldown => 60f;
 		public override float Duration => 10f;
 		public override float MaxDistance => 10000f;

@@ -8,7 +8,7 @@ namespace Facepunch.RTS
 		public override string Name => "Demolish";
 		public override string Description => "Demolish this building to free up space.";
 		public override AbilityTargetType TargetType => AbilityTargetType.Self;
-		public override Texture Icon => Texture.Load(  "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted,  "textures/rts/icons/heal.png" );
 		public override float Cooldown => 0f;
 
 		public override void OnFinished()

@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	{
 		public override string Name => "Electric Resistance";
 		public override string UniqueId => "resistance.electric";
-		public override Texture Icon => Texture.Load( "textures/rts/resistances/electric.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/resistances/electric.png" );
 		public override DamageFlags Flags => DamageFlags.Shock;
 	}
 }

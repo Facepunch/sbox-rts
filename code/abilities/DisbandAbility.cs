@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 		public override string Name => "Disband";
 		public override string Description => "Delete this unit and free up population to create new ones.";
 		public override AbilityTargetType TargetType => AbilityTargetType.Self;
-		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
 		public override float Cooldown => 0f;
 
 		public override bool IsAvailable()

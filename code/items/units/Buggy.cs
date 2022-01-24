@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.buggy";
 		public override string Model => "models/vehicles/buggy/buggy.vmdl";
 		public override string Description => "A fast vehicle that occupies one ranged unit.";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/buggy.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/buggy.png" );
 		public override float MaxHealth => 150f;
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;

@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Emergency Exit";
 		public override string UniqueId => "tech.emergencyexit";
 		public override string Description => "Increases the speed of Medevac aircraft by 30%.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/wheels.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.terryfactory";
 		public override string Description => "Unlocks new technologies and units.";
 		public override string ChangeItemTo => "building.terryfactory2";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/terryfactory.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/terryfactory.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
