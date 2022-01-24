@@ -269,6 +269,7 @@ namespace Facepunch.RTS
 	{
 		public static MiniMap Instance { get; private set; }
 
+		public readonly Panel MapRoot;
 		public readonly Panel IconContainer;
 		public readonly MiniMapImage Map;
 		public readonly Panel RotatedContainer;
@@ -315,8 +316,9 @@ namespace Facepunch.RTS
 
 			RTS.Fog.OnActiveChanged += OnFogActiveChanged;
 
-			Map = AddChild<MiniMapImage>( "map" );
-			RotatedContainer = Map.AddChild<Panel>( "container" );
+			MapRoot = Add.Panel( "root" );
+			Map = MapRoot.AddChild<MiniMapImage>( "map" );
+			RotatedContainer = MapRoot.AddChild<Panel>( "container" );
 			Fog = RotatedContainer.AddChild<Panel>( "fog" );
 			IconContainer = RotatedContainer.AddChild<Panel>( "icons" );
 			CameraBox = RotatedContainer.AddChild<Panel>( "camera" );

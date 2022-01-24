@@ -1,14 +1,10 @@
 {
-  "SharedAssets": "*.*",
   "Title": "RTS",
   "Type": "game",
   "Org": "facepunch",
   "Ident": "rts",
-  "FullIdent": "facepunch.rts",
   "Schema": 1,
-  "NeedsUpgrade": false,
   "HasAssets": true,
-  "AssetsPath": "",
   "HasCode": true,
   "CodePath": "code",
   "RootNamespace": "Facepunch.RTS"

@@ -51,12 +51,14 @@ namespace Facepunch.RTS
 
 		public void AddSelectable( ISelectable selectable )
 		{
-			var icon = Container.Add.Image( null, "icon" );
+			var item = Container.Add.Panel( "item" );
+
+			var icon = item.Add.Image( null, "icon" );
 			icon.Texture = selectable.GetBaseItem().Icon;
 
 			List.Add( new SelectableAndImage()
 			{
-				Health = icon.Add.Panel( "health" ),
+				Health = item.Add.Panel( "health" ),
 				Icon = icon,
 				Selectable = selectable
 			} );
