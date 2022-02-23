@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 		public override string Name => "Radar Scan";
 		public override string Description => "Reveal an area for a short period of time to gain intel.";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/heal.png" );
 		public override float Cooldown => 60f;
 		public override float Duration => 8f;
 		public override float MaxDistance => 30000f;

@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		public override string Name => "Nuke";
 		public override string Description => "Now I am become Death, the destroyer of worlds.";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/heal.png" );
 		public override float Cooldown => 180f;
 		public override float Duration => 20f;
 		public override float MaxDistance => 10000f;

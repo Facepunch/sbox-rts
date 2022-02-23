@@ -64,19 +64,19 @@
                     }
 
                     &.stone {
-                        background-image: url( /textures/rts/icons/stone.png );
+                        background-image: url( /ui/icons/stone.png );
                     }
 
                     &.metal {
-                        background-image: url( /textures/rts/icons/metal.png );
+                        background-image: url( /ui/icons/metal.png );
                     }
 
                     &.beer {
-                        background-image: url( /textures/rts/icons/beer.png );
+                        background-image: url( /ui/icons/beer.png );
                     }
 
                     &.plasma {
-                        background-image: url( /textures/rts/icons/plasma.png );
+                        background-image: url( /ui/icons/plasma.png );
                     }
 
                     &.hidden {
@@ -105,7 +105,7 @@
 
                 &.underattack {
                     sound-in: rts.underattack;
-                    background-image: url( /textures/rts/minimap/underattack.png );
+                    background-image: url( /ui/minimap/underattack.png );
                 }
             }
         }

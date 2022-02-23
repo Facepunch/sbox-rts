@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Brewing";
 		public override string UniqueId => "tech.brewing";
 		public override string Description => "Unlocks a revolutionary new way of generating beer.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/brewing.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/brewing.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

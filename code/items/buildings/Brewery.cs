@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Brewery";
 		public override string UniqueId => "building.brewery";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/brewery.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/brewery.png" );
 		public override string Description => "Assign up to 4 workers to generate Beer over time.";
 		public override float MaxHealth => 400f;
 		public override int BuildTime => 30;

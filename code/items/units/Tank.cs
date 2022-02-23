@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.tank";
 		public override string Model => "models/vehicles/tank/tank.vmdl";
 		public override string Description => "Fires projectiles that go bang when they hit.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/tank.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/vehicles/tank.png" );
 		public override bool RagdollOnDeath => false;
 		public override float MaxHealth => 250f;
 		public override string DeathParticles => "particles/weapons/explosion_ground_large/explosion_ground_large.vpcf";

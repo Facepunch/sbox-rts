@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 		public override string Name => "Dome Shield";
 		public override string Description => "Deploy a shield around this unit that absords damage to all units within it.";
 		public override AbilityTargetType TargetType => AbilityTargetType.Self;
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/heal.png" );
 		public override float Cooldown => 120f;
 		public override float AreaOfEffectRadius => 300f;
 		public override Dictionary<ResourceType, int> Costs => new()

@@ -13,7 +13,7 @@ namespace Facepunch.RTS.Units
 		public override string Weapon => "weapon_hellfire";
 		public override string Model => "models/vehicles/hellfire/hellfire.vmdl";
 		public override string Description => "An armored aircraft that rains fire on its foes.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/hellfire.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/vehicles/hellfire.png" );
 		public override float VerticalOffset => 600f;
 		public override float MaxHealth => 300f;
 		public override bool UsePathfinder => false;

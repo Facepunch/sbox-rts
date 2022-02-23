@@ -49,16 +49,16 @@ namespace Facepunch.RTS
 		public static Texture GetIcon( this ResourceType type )
 		{
 			if ( type == ResourceType.Stone )
-				return Texture.Load( FileSystem.Mounted, "textures/rts/icons/stone.png" );
+				return Texture.Load( FileSystem.Mounted, "ui/icons/stone.png" );
 
 			if ( type == ResourceType.Metal )
-				return Texture.Load( FileSystem.Mounted, "textures/rts/icons/metal.png" );
+				return Texture.Load( FileSystem.Mounted, "ui/icons/metal.png" );
 
 			if ( type == ResourceType.Plasma )
-				return Texture.Load( FileSystem.Mounted, "textures/rts/icons/plasma.png" );
+				return Texture.Load( FileSystem.Mounted, "ui/icons/plasma.png" );
 
 			if ( type == ResourceType.Beer )
-				return Texture.Load( FileSystem.Mounted, "textures/rts/icons/beer.png" );
+				return Texture.Load( FileSystem.Mounted, "ui/icons/beer.png" );
 
 			return null;
 		}

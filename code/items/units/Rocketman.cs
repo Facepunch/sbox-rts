@@ -14,7 +14,7 @@ namespace Facepunch.RTS.Units
 		public override float MaxVerticalRange => 650f;
 		public override float MaxHealth => 125f;
 
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/assault.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/assault.png" );
 		public override int BuildTime => 20;
 		public override OccupantSettings Occupant => new()
 		{

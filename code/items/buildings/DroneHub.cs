@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "Drone Hub";
 		public override string UniqueId => "building.dronehub";
 		public override string Description => "Allows you to train various types of drones.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/dronehub.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/dronehub.png" );
 		public override int BuildTime => 30;
 		public override float MaxHealth => 800f;
 		public override Dictionary<ResourceType, int> Costs => new()

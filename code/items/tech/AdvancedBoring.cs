@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Advanced Boring";
 		public override string UniqueId => "tech.advancedboring";
 		public override string Description => "Unlocks upgrades for resource drills.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/wheels.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/wheels.png" );
 		public override bool AlwaysShowInList => false;
 		public override int BuildTime => 80;
 		public override Dictionary<ResourceType, int> Costs => new()

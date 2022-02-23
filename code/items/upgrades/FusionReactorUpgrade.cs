@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.fusionreactor";
 		public override string Description => "Upgrade to produce Plasma at twice the rate.";
 		public override string ChangeItemTo => "building.advancedfusionreactor";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/fusionreactor.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/fusionreactor.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

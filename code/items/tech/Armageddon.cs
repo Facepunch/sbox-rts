@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Armageddon";
 		public override string UniqueId => "tech.armageddon";
 		public override string Description => "Unlock the ultimate weapons of war and annihiliate your enemies.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/wheels.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/wheels.png" );
 		public override int BuildTime => 120;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

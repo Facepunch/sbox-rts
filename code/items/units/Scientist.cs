@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Scientist";
 		public override string UniqueId => "unit.scientist";
 		public override string Description => "Extracts plasma for advanced technology, constructions and units.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/scientist.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/scientist.png" );
 		public override int BuildTime => 10;
 		public override List<ItemLabel> Labels => new()
 		{

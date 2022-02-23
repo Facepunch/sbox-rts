@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.commandcentre2";
 		public override string Description => "Unlocks new abilities and structures.";
 		public override string ChangeItemTo => "building.commandcentre3";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/headquarters.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/headquarters.png" );
 		public override int BuildTime => 120;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

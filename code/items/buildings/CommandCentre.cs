@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Command Centre";
 		public override string UniqueId => "building.commandcentre";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/headquarters.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/headquarters.png" );
 		public override string Description => "This is the heart of your empire. Protect it at all costs.";
 		public override bool CanDepositResources => true;
 		public override float MaxHealth => 2000f;

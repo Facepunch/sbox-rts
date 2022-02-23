@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 		public override string Name => "Heal";
 		public override string Description => "Heal friendly units in range.";
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/heal.png" );
 		public override float Cooldown => 30f;
 		public override float MaxDistance => 750f;
 		public override float AreaOfEffectRadius => 300f;

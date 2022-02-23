@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.electricattackdrone";
 		public override string Description => "Upgrade to a weapon that deals Electric damage.";
 		public override string ChangeWeaponTo => "weapon_electric_attack_drone";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/stonedrill.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/stonedrill.png" );
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

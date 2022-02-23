@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Trading Centre";
 		public override string UniqueId => "building.tradingcentre";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/tradingcentre.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/tradingcentre.png" );
 		public override string Description => "You can trade resources from this building.";
 		public override float MaxHealth => 1000f;
 		public override float MinLineOfSight => 500f;

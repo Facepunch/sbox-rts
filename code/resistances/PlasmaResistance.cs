@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	{
 		public override string Name => "Plasma Resistance";
 		public override string UniqueId => "resistance.plasma";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/resistances/plasma.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/resistances/plasma.png" );
 		public override DamageFlags Flags => DamageFlags.Plasma;
 	}
 }

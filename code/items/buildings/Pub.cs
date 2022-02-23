@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Pub";
 		public override string UniqueId => "building.pub";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/pub.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/pub.png" );
 		public override string Description => "Increases the maximum population of your empire.";
 		public override uint PopulationBoost => 6;
 		public override int BuildTime => 20;

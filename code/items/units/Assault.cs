@@ -16,7 +16,7 @@ namespace Facepunch.RTS.Units
 		{
 			new ItemLabel( "Attacks Aircraft" )
 		};
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/assault.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/assault.png" );
 		public override int BuildTime => 15;
 		public override OccupantSettings Occupant => new()
 		{

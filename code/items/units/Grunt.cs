@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Grunt";
 		public override string UniqueId => "unit.grunt";
 		public override string Description => "A basic dispensable Terry armed with only a pistol.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/assault.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/assault.png" );
 		public override int BuildTime => 10;
 		public override float MaxHealth => 75f;
 		public override OccupantSettings Occupant => new()

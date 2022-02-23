@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.vehiclefactory";
 		public override string Description => "Unlocks new technologies and units.";
 		public override string ChangeItemTo => "building.vehiclefactory2";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehiclefactory.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/vehiclefactory.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

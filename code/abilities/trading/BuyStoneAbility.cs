@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	public class BuyStoneAbility : BaseTradeAbility
 	{
 		public override string Name => "Buy Stone";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/heal.png" );
 		public override ResourceType Resource => ResourceType.Stone;
 		public override int Amount => 100;
 		public override Dictionary<ResourceType, int> Costs => new()

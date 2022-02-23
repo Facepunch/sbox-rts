@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		public override string Name => "Frenzy";
 		public override string Description => "Weapon go brrr!";
 		public override AbilityTargetType TargetType => AbilityTargetType.Self;
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/heal.png" );
 		public override float Cooldown => 60f;
 		public override HashSet<string> Dependencies => new()
 		{

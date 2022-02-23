@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Boring";
 		public override string UniqueId => "tech.boring";
 		public override string Description => "Unlock the secrets of the underground.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/wheels.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/wheels.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

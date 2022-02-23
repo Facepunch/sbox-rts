@@ -15,7 +15,7 @@ namespace Facepunch.RTS.Units
 			new ItemLabel( "Transport", Color.Cyan )
 		};
 		public override string Description => "An armored vehicle for transporting units long distance.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/apc.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/vehicles/apc.png" );
 		public override bool UseRenderColor => true;
 		public override bool UseModelPhysics => true;
 		public override float MaxHealth => 250f;

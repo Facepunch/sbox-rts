@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Attack Drone";
 		public override string UniqueId => "unit.attackdrone";
 		public override string Entity => "unit_drone";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/drone_attack.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/vehicles/drone_attack.png" );
 		public override string Description => "A fast but weak combat drone to deliver pain from the sky.";
 		public override string Model => "models/vehicles/drones/attack/drone_attack.vmdl";
 		public override string Weapon => "weapon_attack_drone";

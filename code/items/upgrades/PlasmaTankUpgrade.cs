@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.plasmatank";
 		public override string Description => "Upgrade to a cannon that deals Plasma splash damage.";
 		public override string ChangeWeaponTo => "weapon_plasma_tank_cannon";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/stonedrill.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/stonedrill.png" );
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

@@ -16,7 +16,7 @@ namespace Facepunch.RTS
 			StyleSheet.Load( "/ui/MouseCursor.scss" );
 
 			Cursor = Add.Image( "", "cursor" );
-			Cursor.SetTexture( "textures/rts/cursor/normal.png" );
+			Cursor.SetTexture( "ui/cursor/normal.png" );
 
 			Instance = this;
 		}

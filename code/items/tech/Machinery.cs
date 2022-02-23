@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Machinery";
 		public override string UniqueId => "tech.machinery";
 		public override string Description => "Unlocks the ability to build machines.";
-		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/wheels.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/wheels.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
