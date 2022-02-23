@@ -386,11 +386,11 @@ namespace Facepunch.RTS
 				worker.Position = trace.EndPosition;
 				*/
 
-				var worker = Items.Create<UnitEntity>( bot, "unit.assault" );
-				worker.Position = trace.EndPosition;
+				//var worker = Items.Create<UnitEntity>( bot, "unit.assault" );
+				//worker.Position = trace.EndPosition;
 
-				worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.assault" );
-				worker.Position = trace.EndPosition;
+				//worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.assault" );
+				//worker.Position = trace.EndPosition;
 
 				/*
 				var building = Items.Create<BuildingEntity>( bot, "building.commandcentre" );
@@ -410,8 +410,8 @@ namespace Facepunch.RTS
 				worker.Position = trace.EndPosition;
 				*/
 
-				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.tank" );
-				worker.Position = trace.EndPosition;
+				//var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.tank" );
+				//worker.Position = trace.EndPosition;
 
 				/*
 				var building = Items.Create<BuildingEntity>( bot, "building.commandcentre" );
