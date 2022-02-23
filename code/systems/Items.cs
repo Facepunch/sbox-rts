@@ -140,13 +140,13 @@ namespace Facepunch.RTS
 
 					if ( valid )
 					{
-						ResourceHint.Send( caller, 2f, trace.EndPos, item.Costs, Color.Red );
+						ResourceHint.Send( caller, 2f, trace.EndPosition, item.Costs, Color.Red );
 
 						caller.TakeResources( item );
 
 						var building = Create( caller, item );
 
-						building.Position = trace.EndPos;
+						building.Position = trace.EndPosition;
 						building.Item.PlayPlaceSound( caller );
 
 						if ( !caller.SkipAllWaiting )
@@ -745,7 +745,7 @@ namespace Facepunch.RTS
 			var trace = Ghost.GetPlacementTrace( Local.Client, cursorOrigin, cursorAim );
 			var valid = Ghost.IsPlacementValid( trace );
 
-			Ghost.Position = trace.EndPos;
+			Ghost.Position = trace.EndPosition;
 
 			if ( valid )
 				Ghost.ShowValid();

@@ -23,8 +23,8 @@ namespace Facepunch.RTS
 
 			vertexBuffer.AddQuad( a, b, c, d );
 
-			Render.Set( "Opacity", Alpha );
-			Render.Set( "Color", Color );
+			Render.Attributes.Set( "Opacity", Alpha );
+			Render.Attributes.Set( "Color", Color );
 
 			vertexBuffer.Draw( CircleMaterial );
 		}

@@ -90,7 +90,7 @@ namespace Facepunch.RTS
 			if ( Target.IsValid() )
 			{
 				TargetDirection = TargetDirection.LerpTo( (Target.Position - Attacker.Position).Normal, Time.Delta * RotateSpeed );
-				Attacker.SetAnimVector( "target", Attacker.Transform.NormalToLocal( TargetDirection ) );
+				Attacker.SetAnimParameter( "target", Attacker.Transform.NormalToLocal( TargetDirection ) );
 			}
 		}
 	}

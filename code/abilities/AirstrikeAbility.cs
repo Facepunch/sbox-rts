@@ -91,7 +91,7 @@ namespace Facepunch.RTS
 
 		private void OnRocketHit( Projectile rocket, Entity target )
 		{
-			var entities = Physics.GetEntitiesInSphere( rocket.Position, BlastRadius );
+			var entities = Entity.FindInSphere( rocket.Position, BlastRadius );
 
 			foreach ( var entity in entities )
 			{

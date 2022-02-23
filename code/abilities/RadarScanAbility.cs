@@ -50,7 +50,7 @@ namespace Facepunch.RTS
 
 		public override bool IsLocationValid( Vector3 position )
 		{
-			return !Physics.GetEntitiesInSphere( position, AreaOfEffectRadius )
+			return !Entity.FindInSphere( position, AreaOfEffectRadius )
 				.Where( IsRadarJammer )
 				.Any();
 		}

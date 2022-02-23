@@ -32,7 +32,7 @@ namespace Facepunch.RTS
 			var pulse = Particles.Create( "particles/tesla_coil/tesla_ring.vpcf" );
 			pulse.SetPosition( 0, origin );
 
-			var targets = Physics.GetEntitiesInSphere( Attacker.Position, building.Item.AttackRadius )
+			var targets = Entity.FindInSphere( Attacker.Position, building.Item.AttackRadius )
 				.OfType<ISelectable>()
 				.Where( v => building.IsEnemy( v ) )
 				.ToList();

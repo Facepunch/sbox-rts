@@ -22,8 +22,8 @@ namespace Facepunch.RTS
 
 			vertexBuffer.AddQuad( a, b, c, d );
 
-			Render.Set( "TintColor", Color );
-			Render.Set( "Translucency", Alpha );
+			Render.Attributes.Set( "TintColor", Color );
+			Render.Attributes.Set( "Translucency", Alpha );
 
 			if ( Material != null )
 			{

@@ -657,9 +657,9 @@ namespace Facepunch.RTS
 		{
 			if ( HasSelectionGlow )
 			{
-				GlowActive = true;
-				GlowState = GlowStates.GlowStateOn;
-				GlowColor = Player.TeamColor.WithAlpha( 0.5f );
+				//GlowActive = true;
+				//GlowState = GlowStates.GlowStateOn;
+				//GlowColor = Player.TeamColor.WithAlpha( 0.5f );
 			}
 		}
 
@@ -667,7 +667,7 @@ namespace Facepunch.RTS
 		{
 			if ( HasSelectionGlow )
 			{
-				GlowActive = false;
+				//GlowActive = false;
 			}
 		}
 

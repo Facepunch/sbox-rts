@@ -5,6 +5,8 @@
   "Ident": "rts",
   "Schema": 1,
   "HasAssets": true,
+  "AssetsPath": null,
+  "ResourcePaths": null,
   "HasCode": true,
   "CodePath": "code",
   "RootNamespace": "Facepunch.RTS"

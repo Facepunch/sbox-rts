@@ -211,7 +211,7 @@ namespace Facepunch.RTS
 					}
 					else
 					{
-						Items.MoveToLocation( trace.EndPos.ToCSV(), isHoldingShift );
+						Items.MoveToLocation( trace.EndPosition.ToCSV(), isHoldingShift );
 					}
 				}
 			}

@@ -62,14 +62,14 @@ namespace Facepunch.RTS
 
 		public void ShowOutline()
 		{
-			GlowColor = Resource.GetColor() * 0.1f;
-			GlowState = GlowStates.GlowStateOn;
-			GlowActive = true;
+			//GlowColor = Resource.GetColor() * 0.1f;
+			//GlowState = GlowStates.GlowStateOn;
+			//GlowActive = true;
 		}
 
 		public void HideOutline()
 		{
-			GlowActive = false;
+			//GlowActive = false;
 		}
 
 		public virtual void ShowTooltip()

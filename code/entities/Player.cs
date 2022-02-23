@@ -34,10 +34,17 @@ namespace Facepunch.RTS
 		private List<AttackWarning> AttackWarnings { get; set; }
 		private TimeSince LastUnderAttack { get; set; }
 
-		public new RTSCamera Camera
+		public RTSCamera Camera
 		{
-			get => base.Camera as RTSCamera;
-			set => base.Camera = value;
+			get => Components.Get<RTSCamera>();
+			set
+			{
+				var current = Camera;
+				if ( current == value ) return;
+
+				Components.RemoveAny<RTSCamera>();
+				Components.Add( value );
+			}
 		}
 
 		public HashSet<uint> InstantBuildCache { get; private set; }
@@ -376,18 +383,18 @@ namespace Facepunch.RTS
 
 				/*
 				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.attackdrone" );
-				worker.Position = trace.EndPos;
+				worker.Position = trace.EndPosition;
 				*/
 
 				var worker = Items.Create<UnitEntity>( bot, "unit.assault" );
-				worker.Position = trace.EndPos;
+				worker.Position = trace.EndPosition;
 
 				worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.assault" );
-				worker.Position = trace.EndPos;
+				worker.Position = trace.EndPosition;
 
 				/*
 				var building = Items.Create<BuildingEntity>( bot, "building.commandcentre" );
-				building.Position = trace.EndPos;
+				building.Position = trace.EndPosition;
 				building.FinishConstruction();
 				*/
 			}
@@ -400,15 +407,15 @@ namespace Facepunch.RTS
 
 				/*
 				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.attackdrone" );
-				worker.Position = trace.EndPos;
+				worker.Position = trace.EndPosition;
 				*/
 
 				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.tank" );
-				worker.Position = trace.EndPos;
+				worker.Position = trace.EndPosition;
 
 				/*
 				var building = Items.Create<BuildingEntity>( bot, "building.commandcentre" );
-				building.Position = trace.EndPos;
+				building.Position = trace.EndPosition;
 				building.FinishConstruction();
 				*/
 			}

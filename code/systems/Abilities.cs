@@ -192,18 +192,18 @@ namespace Facepunch.RTS
 					.WorldOnly()
 					.Run();
 
-				TargetCircle.Position = trace.EndPos;
+				TargetCircle.Position = trace.EndPosition;
 
-				if ( ability.User.Position.Distance( trace.EndPos ) < ability.MaxDistance )
+				if ( ability.User.Position.Distance( trace.EndPosition ) < ability.MaxDistance )
 				{
-					if ( ability.IsLocationValid( trace.EndPos ) )
+					if ( ability.IsLocationValid( trace.EndPosition ) )
 					{
 						TargetCircle.TargetColor = Color.Green;
 
 						if ( Input.Down( InputButton.Attack1 ) )
 						{
 							StopSelectingTarget();
-							UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPos.ToCSV() );
+							UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPosition.ToCSV() );
 							return;
 						}
 					}
@@ -244,7 +244,7 @@ namespace Facepunch.RTS
 				}
 				else
 				{
-					TargetCircle.Position = trace.EndPos;
+					TargetCircle.Position = trace.EndPosition;
 					TargetCircle.TargetColor = Color.Red;
 					TargetCircle.TargetSize = MathF.Max( ability.AreaOfEffectRadius * 0.8f, 100f );
 				}

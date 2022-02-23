@@ -78,7 +78,7 @@ namespace Facepunch.RTS
 		private void OpenHatch( bool shouldOpen )
 		{
 			if ( User is BuildingEntity building )
-				building.SetAnimBool( "open", shouldOpen );
+				building.SetAnimParameter( "open", shouldOpen );
 		}
 
 		private void OnNukeHit( Projectile projectile, Entity target )
@@ -93,7 +93,7 @@ namespace Facepunch.RTS
 			Effect.SetPosition( 1, new Vector3( AreaOfEffectRadius * 0.6f, 0f, 0f ) );
 			Effect.SetPosition( 2, origin + new Vector3( 0f, 0f, AreaOfEffectRadius ) );
 
-			var entities = Physics.GetEntitiesInSphere( targetInfo.Origin, AreaOfEffectRadius * 0.8f );
+			var entities = Entity.FindInSphere( targetInfo.Origin, AreaOfEffectRadius * 0.8f );
 
 			foreach ( var entity in entities )
 			{

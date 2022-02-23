@@ -25,7 +25,7 @@ namespace Gamelib.FlowFields
 				.WorldOnly()
 				.Run();
 
-			height = trace.EndPos.z;
+			height = trace.EndPosition.z;
 			_heightCache[ceiled] = height;
 			return height;
 		}

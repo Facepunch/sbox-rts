@@ -74,7 +74,7 @@ namespace Facepunch.RTS
 				IsUnderConstruction = true;
 				IsBlueprint = true;
 				EnableTouch = true;
-				GlowColor = Color.Red;
+				//GlowColor = Color.Red;
 				Health = 1f;
 			}
 		}
@@ -133,7 +133,7 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
+			//GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
 
 			if ( IsBlueprint )
 			{
@@ -856,7 +856,7 @@ namespace Facepunch.RTS
 		{
 			if ( !NextFindTarget ) return;
 
-			var closestTarget = Physics.GetEntitiesInSphere( Position, Item.AttackRadius )
+			var closestTarget = Entity.FindInSphere( Position, Item.AttackRadius )
 				.OfType<UnitEntity>()
 				.Where( ( a ) => IsEnemy( a ) && InVerticalRange( a ) )
 				.OrderByDescending( a => a.GetAttackPriority() )
@@ -910,7 +910,7 @@ namespace Facepunch.RTS
 		{
 			if ( IsLocalPlayers )
 			{
-				GlowActive = IsUnderConstruction;
+				//GlowActive = IsUnderConstruction;
 			}
 		}
 	}

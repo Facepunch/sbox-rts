@@ -26,8 +26,8 @@ namespace Facepunch.RTS
 
 			vb.AddQuad( a, b, c, d );
 
-			Render.Set( "Opacity", alpha );
-			Render.Set( "Color", color );
+			Render.Attributes.Set( "Opacity", alpha );
+			Render.Attributes.Set( "Color", color );
 
 			vb.Draw( CircleMaterial );
 		}

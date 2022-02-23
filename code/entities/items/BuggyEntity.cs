@@ -37,7 +37,7 @@ namespace Facepunch.RTS
 				if ( target.IsValid() )
 				{
 					TargetDirection = TargetDirection.LerpTo( (target.Position - Position).Normal, Time.Delta * 10f );
-					SetAnimVector( "target", Transform.NormalToLocal( TargetDirection ) );
+					SetAnimParameter( "target", Transform.NormalToLocal( TargetDirection ) );
 				}
 			}
 

@@ -507,7 +507,7 @@ namespace Facepunch.RTS
 				.WorldOnly()
 				.Run();
 
-			return trace.EndPos.z + Item.VerticalOffset;
+			return trace.EndPosition.z + Item.VerticalOffset;
 		}
 
 		private void OnResistanceListChanged()
@@ -638,7 +638,7 @@ namespace Facepunch.RTS
 			var randomSize = Rand.Float( 50f, 100f );
 			var trace = Trace.Ray( position, position + Vector3.Down * 100f ).Ignore( this ).Run();
 
-			Decals.Place( decalMaterial, trace.Entity, trace.Bone, trace.EndPos, new Vector3( randomSize, randomSize, 4f ), decalRotation );
+			Decals.Place( decalMaterial, trace.Entity, trace.Bone, trace.EndPosition, new Vector3( randomSize, randomSize, 4f ), decalRotation );
 			*/
 		}
 
@@ -1254,7 +1254,7 @@ namespace Facepunch.RTS
 			Scale = item.ModelScale;
 			Health = item.MaxHealth;
 			MaxHealth = item.MaxHealth;
-			EyePos = Position + Vector3.Up * 64;
+			EyePosition = Position + Vector3.Up * 64;
 			LineOfSightRadius = item.LineOfSightRadius;
 			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
@@ -1520,7 +1520,7 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			var entities = Physics.GetEntitiesInSphere( _gather.Position, 2000f );
+			var entities = Entity.FindInSphere( _gather.Position, 2000f );
 
 			foreach ( var entity in entities )
 			{
@@ -1585,7 +1585,7 @@ namespace Facepunch.RTS
 				searchPosition = occupiable.Position;
 			}
 
-			var entities = Physics.GetEntitiesInSphere( searchPosition.WithZ( 0f ), searchRadius * 1.2f );
+			var entities = Entity.FindInSphere( searchPosition.WithZ( 0f ), searchRadius * 1.2f );
 
 			_targetBuffer.Clear();
 
@@ -1763,7 +1763,7 @@ namespace Facepunch.RTS
 		private void UpdateFlockBuffer()
 		{
 			var bufferIndex = 0;
-			var neighbours = Physics.GetEntitiesInSphere( Position, AgentRadius * 0.35f );
+			var neighbours = Entity.FindInSphere( Position, AgentRadius * 0.35f );
 
 			foreach ( var neighbour in neighbours )
 			{

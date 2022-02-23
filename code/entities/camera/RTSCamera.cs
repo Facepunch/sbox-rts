@@ -3,7 +3,7 @@ using System;
 
 namespace Facepunch.RTS
 {
-	public partial class RTSCamera : Camera
+	public partial class RTSCamera : CameraMode
 	{
 		public float ZoomLevel { get; set; }
 		public Vector3 LookAt { get; set; }

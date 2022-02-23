@@ -7,4 +7,5 @@ sbox-pool.csproj
 .intermediate
 *bakeresourcecache*
 tools_*_*.bin
-code/sbox-rts.csproj
+*.csproj
+.vs

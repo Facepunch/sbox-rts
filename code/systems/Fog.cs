@@ -412,11 +412,11 @@ namespace Facepunch.RTS
 
 		private static void CheckParticleVisibility( Vector3n position, float range )
 		{
-			var sceneObjects = SceneWorld.Current.SceneObjects;
+			var sceneObjects = Map.Scene.SceneObjects;
 
-			for ( int i = 0; i < sceneObjects.Count; i++ )
+			foreach ( var sceneObject in sceneObjects )
 			{
-				if ( sceneObjects[i] is not SceneParticleObject container )
+				if ( sceneObject is not SceneParticles container )
 					continue;
 
 				if ( container.RenderParticles )
@@ -431,11 +431,11 @@ namespace Facepunch.RTS
 
 		private static void CullParticles()
 		{
-			var sceneObjects = SceneWorld.Current.SceneObjects;
+			var sceneObjects = Map.Scene.SceneObjects;
 
-			for ( int i = 0; i < sceneObjects.Count; i++ )
+			foreach ( var sceneObject in sceneObjects )
 			{
-				if ( sceneObjects[i] is not SceneParticleObject container )
+				if ( sceneObject is not SceneParticles container )
 					continue;
 
 				container.RenderParticles = false;

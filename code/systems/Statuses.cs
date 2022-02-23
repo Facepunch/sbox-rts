@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 		{
 			Host.AssertServer();
 
-			var entities = Physics.GetEntitiesInSphere( position, radius ).OfType<ISelectable>();
+			var entities = Entity.FindInSphere( position, radius ).OfType<ISelectable>();
 
 			if ( filter != null )
 			{

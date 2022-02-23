@@ -415,7 +415,7 @@ namespace Gamelib.FlowFields
 
 		private void SetupSize( int numberOfChunks, int chunkGridSize, int nodeSize, int collisionSize )
 		{
-			var physicsBody = PhysicsWorld.AddBody();
+			var physicsBody = new PhysicsBody( Map.Physics );
 			var collisionExtents = Vector3.One * collisionSize * 0.5f;
 			var nodeExtents = Vector3.One * nodeSize * 0.5f;
 

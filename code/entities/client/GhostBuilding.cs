@@ -34,9 +34,11 @@ namespace Facepunch.RTS
 
 			RenderColor = RenderColor.WithAlpha( 0.5f );
 
+			/*
 			GlowActive = true;
 			GlowColor = Color.Green;
 			GlowState = GlowStates.GlowStateOn;
+			*/
 
 			EnableTouch = true;
 			CollisionGroup = CollisionGroup.Trigger;
@@ -72,7 +74,7 @@ namespace Facepunch.RTS
 				BoundsEntity.Color = Color.Green;
 
 			RenderColor = Color.White;
-			GlowColor = Color.Green;
+			//GlowColor = Color.Green;
 		}
 
 		public void ShowInvalid()
@@ -81,7 +83,7 @@ namespace Facepunch.RTS
 				BoundsEntity.Color = Color.Red;
 
 			RenderColor = Color.Red;
-			GlowColor = Color.Red;
+			//GlowColor = Color.Red;
 		}
 
 		public TraceResult GetPlacementTrace( Client client, Vector3 cursorOrigin, Vector3 cursorAim )
@@ -111,9 +113,9 @@ namespace Facepunch.RTS
 
 			if ( IsTouchingBlocker ) return false;
 
-			var position = trace.EndPos;
+			var position = trace.EndPosition;
 			var bounds = CollisionBounds * 1.5f;
-			var entities = Physics.GetEntitiesInBox( bounds + position )
+			var entities = Entity.FindInBox( bounds + position )
 				.Where( e => IsBlockingEntity( e ) );
 
 			/*
