@@ -15,26 +15,26 @@ namespace Facepunch.RTS
 		{
 			StyleSheet.Load( "/ui/DependencyValue.scss" );
 
-			//Icon = Add.Panel( "icon" );
+			Icon = Add.Panel( "icon" );
 			Label = Add.Label( "", "label" );
 		}
 
 		public void Update( BaseItem dependency )
 		{
-			//var icon = dependency.Icon;
+			var icon = dependency.Icon;
 
-			//if ( icon != null )
-			//{
-			//	Style.BackgroundImage = icon;
-			//	Style.BackgroundSizeX = Length.Percent( 100f );
-			//	Style.BackgroundSizeY = Length.Percent( 100f );
-			//}
-			//else
-			//{
-			//	Style.BackgroundImage = null;
-			//	Style.BackgroundSizeX = null;
-			//	Style.BackgroundSizeY = null;
-			//}
+			if ( icon != null )
+			{
+				Icon.Style.BackgroundImage = icon;
+				Icon.Style.BackgroundSizeX = Length.Percent( 100f );
+				Icon.Style.BackgroundSizeY = Length.Percent( 100f );
+			}
+			else
+			{
+				Icon.Style.BackgroundImage = null;
+				Icon.Style.BackgroundSizeX = null;
+				Icon.Style.BackgroundSizeY = null;
+			}
 
 			Label.Text = dependency.Name;
 		}
