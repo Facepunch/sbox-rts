@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		public override string Description => "Fire an accurate and high damage shot at a target.";
 		public override AbilityTargetType TargetType => AbilityTargetType.Unit;
 		public override AbilityTargetTeam TargetTeam => AbilityTargetTeam.Enemy;
-		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
 		public override float Cooldown => 60f;
 		public override float MaxDistance => 1200f;
 

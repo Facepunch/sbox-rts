@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Remote Drones";
 		public override string UniqueId => "tech.remotedrones";
 		public override string Description => "Unlocks the frightening capabilities of remotely controlled drones.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/wheels.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	{
 		public override string Name => "Freeze Resistance";
 		public override string UniqueId => "resistance.freeze";
-		public override Texture Icon => Texture.Load( "textures/rts/resistances/fire.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/resistances/fire.png" );
 		public override DamageFlags Flags => DamageFlags.BlastWaterSurface;
 	}
 }

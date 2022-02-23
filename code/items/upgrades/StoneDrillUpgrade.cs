@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Upgrades
 		public override string UniqueId => "upgrade.stonedrill";
 		public override string Description => "Upgrade to produce Stone at twice the rate.";
 		public override string ChangeItemTo => "building.advancedstonedrill";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/stonedrill.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/stonedrill.png" );
 		public override int BuildTime => 10;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

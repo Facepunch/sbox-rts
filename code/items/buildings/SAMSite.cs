@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "SAM Site";
 		public override string UniqueId => "building.samsite";
 		public override string Description => "Base defense structure that automatically fires upon enemy aircraft.";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/samsite.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/samsite.png" );
 		public override int BuildTime => 30;
 		public override float MaxHealth => 300f;
 		public override float AttackRadius => 1000f;

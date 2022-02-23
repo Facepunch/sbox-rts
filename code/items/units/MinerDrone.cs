@@ -14,7 +14,7 @@ namespace Facepunch.RTS.Units
 		{
 			new ItemLabel( "Gatherer", Color.Orange )
 		};
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/drone_worker.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/drone_worker.png" );
 		public override string Description => "Gathers Stone and Metal for your empire.";
 		public override string Model => "models/vehicles/drones/worker/drone_worker.vmdl";
 		public override HashSet<string> Tags => new() { "drone" };

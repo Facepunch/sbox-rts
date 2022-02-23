@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "Launch Pad";
 		public override string UniqueId => "building.launchpad";
 		public override string Description => "A structure capable of launching a nuclear weapon.";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/nukelaunch.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/nukelaunch.png" );
 		public override int BuildTime => 70;
 		public override float MaxHealth => 800f;
 		public override Dictionary<ResourceType, int> Costs => new()

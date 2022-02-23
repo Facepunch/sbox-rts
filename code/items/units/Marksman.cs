@@ -14,7 +14,7 @@ namespace Facepunch.RTS.Units
 		public override float MaxHealth => 125f;
 		public override float AttackRadius => 1200f;
 		public override float LineOfSightRadius => 1200f;
-		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/assault.png" );
 		public override int BuildTime => 30;
 		public override OccupantSettings Occupant => new()
 		{

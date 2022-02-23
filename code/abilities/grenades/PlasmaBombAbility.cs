@@ -8,7 +8,7 @@ namespace Facepunch.RTS
 	{
 		public override string Name => "Plasma Bomb";
 		public override string Description => "A grenade that deals area of effect plasma damage.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/heal.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/heal.png" );
 		public override float Cooldown => 60f;
 		public override float MaxDistance => 750f;
 		public override float Duration => 1f;

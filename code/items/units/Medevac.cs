@@ -18,7 +18,7 @@ namespace Facepunch.RTS.Units
 			new ItemLabel( "Transport", Color.Cyan)
 		};
 		public override string Description => "An aircraft that can evacuate two units and passively heal nearby targets.";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/vehicles/medevac.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/vehicles/medevac.png" );
 		public override float VerticalOffset => 600f;
 		public override float MaxHealth => 300f;
 		public override bool UsePathfinder => false;

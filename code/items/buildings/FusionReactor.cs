@@ -8,7 +8,7 @@ namespace Facepunch.RTS.Buildings
 	{
 		public override string Name => "Fusion Reactor";
 		public override string UniqueId => "building.fusionreactor";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/fusionreactor.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/fusionreactor.png" );
 		public override string Description => "Assign up to 4 scientists to generate Plasma over time.";
 		public override float MaxHealth => 600f;
 		public override int BuildTime => 30;

@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Pyrotechnics";
 		public override string UniqueId => "tech.pyrotechnics";
 		public override string Description => "Learn how to use fire and explosions to your advantage.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/wheels.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

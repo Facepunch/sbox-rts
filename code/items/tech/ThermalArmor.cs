@@ -10,7 +10,7 @@ namespace Facepunch.RTS.Tech
 		public override string Name => "Thermal Armor";
 		public override string UniqueId => "tech.thermalarmor";
 		public override string Description => "Increases the fire resistance of all units by 10%.";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/wheels.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/wheels.png" );
 		public override int BuildTime => 60;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

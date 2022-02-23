@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Units
 	{
 		public override string Name => "Worker";
 		public override string UniqueId => "unit.worker";
-		public override Texture Icon => Texture.Load( "textures/rts/icons/worker.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/worker.png" );
 		public override List<ItemLabel> Labels => new()
 		{
 			new ItemLabel( "Gatherer", Color.Orange ),

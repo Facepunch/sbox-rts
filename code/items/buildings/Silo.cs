@@ -9,7 +9,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Name => "Silo";
 		public override string UniqueId => "building.silo";
 		public override string Description => "Acts as a deposit point for resources.";
-		public override Texture Icon => Texture.Load( "textures/rts/tempicons/silo.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/tempicons/silo.png" );
 		public override bool CanDepositResources => true;
 		public override float MaxHealth => 300f;
 		public override int BuildTime => 20;

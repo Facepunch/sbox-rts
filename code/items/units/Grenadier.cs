@@ -13,7 +13,7 @@ namespace Facepunch.RTS.Units
 		{
 			new ItemLabel( "Attacks Aircraft" )
 		};
-		public override Texture Icon => Texture.Load( "textures/rts/icons/assault.png" );
+		public override Texture Icon => Texture.Load( FileSystem.Mounted, "textures/rts/icons/assault.png" );
 		public override float MaxVerticalRange => 650f;
 		public override int BuildTime => 20;
 		public override HashSet<string> Abilities => new()
