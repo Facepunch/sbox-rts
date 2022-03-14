@@ -757,9 +757,7 @@ namespace Facepunch.RTS
 			if ( IsLocalPlayers && Item.Generator != null )
 				GeneratorBar = Hud.AddChild<EntityHudBar>( "generator" );
 
-			if ( IsLocalPlayers )
-				OccupantsHud = Hud.AddChild<EntityHudIconList>();
-
+			OccupantsHud = Hud.AddChild<EntityHudIconList>();
 			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
 
 			base.AddHudComponents();

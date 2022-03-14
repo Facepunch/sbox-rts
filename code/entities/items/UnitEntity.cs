@@ -51,7 +51,7 @@ namespace Facepunch.RTS
 
 		public Dictionary<string, float> Resistances { get; set; }
 		[Net, Change] private List<float> ResistanceList { get; set; }
-		[Net] public List<UnitEntity> Occupants { get; private set; }
+		[Net, Change] public List<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
 		public IOccupiableItem OccupiableItem => Item;
 
@@ -84,6 +84,7 @@ namespace Facepunch.RTS
 		public BaseRank Rank { get; private set; }
 
 		#region UI
+		public EntityHudIconList OccupantsHud { get; private set; }
 		public EntityHudBar HealthBar { get; private set; }
 		public EntityHudBar GatherBar { get; private set; }
 		public EntityHudIcon RankIcon { get; private set; }
@@ -465,6 +466,8 @@ namespace Facepunch.RTS
 			{
 				RankIcon.SetClass( "hidden", true );
 			}
+
+			OccupantsHud?.SetActive( Occupants.Count > 0 );
 
 			base.UpdateHudComponents();
 		}
@@ -1075,6 +1078,19 @@ namespace Facepunch.RTS
 			}
 		}
 
+		protected virtual void OnOccupantsChanged()
+		{
+			if ( OccupantsHud == null ) return;
+
+			OccupantsHud.DeleteChildren( true );
+
+			foreach ( var occupant in Occupants )
+			{
+				var icon = OccupantsHud.AddChild<EntityHudIcon>();
+				icon.Texture = occupant.Item.Icon;
+			}
+		}
+
 		protected virtual Vector3 GetPathDestination()
 		{
 			var destination = Destination;
@@ -1451,9 +1467,10 @@ namespace Facepunch.RTS
 			HealthBar = Hud.AddChild<EntityHudBar>( "health" );
 
 			if ( IsLocalPlayers )
-			{
 				GatherBar = Hud.AddChild<EntityHudBar>( "gather" );
-			}
+
+			if ( Item.Occupiable.Enabled )
+				OccupantsHud = Hud.AddChild<EntityHudIconList>();
 
 			base.AddHudComponents();
 		}
