@@ -13,6 +13,7 @@ namespace Facepunch.RTS.Buildings
 		public virtual int MaxConstructed => 0;
 		public virtual bool CanDepositResources => false;
 		public virtual bool CanSetRallyPoint => true;
+		public virtual float OccupantGrantsLineOfSight => 0f;
 		public virtual Dictionary<string, float> Resistances => new();
 		public virtual string[] ActsAsProxyFor => Array.Empty<string>();
 		public virtual string[] PlaceSounds => new string[]

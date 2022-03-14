@@ -639,6 +639,8 @@ namespace Facepunch.RTS
 
 		protected virtual void OnOccupantsChanged()
 		{
+			UpdateLineOfSight();
+
 			if ( OccupantsHud == null ) return;
 
 			OccupantsHud.DeleteChildren( true );
@@ -655,6 +657,16 @@ namespace Facepunch.RTS
 			if ( Weapon.IsValid() )
 			{
 				Weapon.Target = Target;
+			}
+		}
+
+		protected virtual void UpdateLineOfSight()
+		{
+			LineOfSightRadius = Item.MinLineOfSight + CollisionBounds.Size.Length;
+
+			if ( Item.Occupiable.Enabled && Occupants.Count > 0 )
+			{
+				LineOfSightRadius += Item.Occupiable.OccupantGrantsLineOfSight;
 			}
 		}
 
@@ -708,7 +720,8 @@ namespace Facepunch.RTS
 			else
 				NextGenerateResources = 0;
 
-			LineOfSightRadius = item.MinLineOfSight + CollisionBounds.Size.Length;
+			UpdateLineOfSight();
+
 			LocalCenter = CollisionBounds.Center;
 			MaxHealth = item.MaxHealth;
 

@@ -13,7 +13,8 @@ namespace Facepunch.RTS.Buildings
 		public override int BuildTime => 30;
 		public override float MaxHealth => 600f;
 		public override float AttackRadius => 0f;
-		public override float MinLineOfSight => 500f;
+		public override float MinLineOfSight => 700f;
+		public override float OccupantGrantsLineOfSight => 700f;
 		public override OccupiableSettings Occupiable => new()
 		{
 			AttackAttachments = new string[] { "window1", "window2", "window3", "window4", "window5", "window6" },
