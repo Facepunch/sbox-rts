@@ -18,8 +18,8 @@ namespace Facepunch.RTS.Buildings
 		public override bool CanDemolish => true;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 1000,
-			[ResourceType.Metal] = 500
+			[ResourceType.Stone] = 600,
+			[ResourceType.Metal] = 300
 		};
 		public override string Model => "models/buildings/headquarters/headquarters.vmdl";
 		public override HashSet<string> Queueables => new()
