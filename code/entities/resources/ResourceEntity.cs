@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 		public virtual float StockScale => 1.5f;
 		public virtual string Description => "";
 		public virtual string ResourceName => "";
-		public virtual float GatherTime => 0.25f;
+		public virtual float GatherTime => 0.5f;
 		public virtual string[] GatherSounds => new string[]
 		{
 			"minerock1",
