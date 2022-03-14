@@ -11,11 +11,11 @@ namespace Facepunch.RTS.Upgrades
 		public override string Description => "Unlocks new abilities and structures.";
 		public override string ChangeItemTo => "building.commandcentre3";
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/headquarters.png" );
-		public override int BuildTime => 120;
+		public override int BuildTime => 80;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Stone] = 500,
-			[ResourceType.Metal] = 500,
+			[ResourceType.Stone] = 400,
+			[ResourceType.Metal] = 400,
 			[ResourceType.Plasma] = 100
 		};
 		public override HashSet<string> Dependencies => new()
