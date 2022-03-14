@@ -7,8 +7,8 @@ namespace Facepunch.RTS
 	[Library("weapon_hellfire")]
 	public partial class HellfireWeapon : Weapon
 	{
-		public override float FireRate => 3f;
-		public override int BaseDamage => 30;
+		public override float FireRate => 2f;
+		public override int BaseDamage => 50;
 		public override bool BoneMerge => false;
 		public override string MuzzleFlash => null;
 		public override string BulletTracer => null;

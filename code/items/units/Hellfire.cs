@@ -49,8 +49,8 @@ namespace Facepunch.RTS.Units
 		public override int BuildTime => 30;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150,
-			[ResourceType.Metal] = 300
+			[ResourceType.Beer] = 125,
+			[ResourceType.Metal] = 200
 		};
 		public override HashSet<string> Dependencies => new()
 		{
