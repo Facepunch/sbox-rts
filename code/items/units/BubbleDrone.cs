@@ -52,7 +52,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Abilities => new()
 		{
-			"ability_dome_shield"
+			"ability_dome_shield",
+			"ability_heal"
 		};
 		public override HashSet<string> Dependencies => new()
 		{

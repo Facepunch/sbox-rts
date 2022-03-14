@@ -5,7 +5,7 @@ namespace Facepunch.RTS
 	[Library( "weapon_plasma_attack_drone" )]
 	public partial class PlasmaAttackDroneWeapon : AttackDroneWeapon
 	{
-		public override int BaseDamage => 5;
+		public override int BaseDamage => 4;
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash_plasma/muzzle_flash_plasma.vpcf";
 		public override string BulletTracer => "particles/weapons/muzzle_flash_plasma/bullet_trace.vpcf";
 		public override DamageFlags DamageType => DamageFlags.Plasma;

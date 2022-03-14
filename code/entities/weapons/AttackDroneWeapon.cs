@@ -6,7 +6,7 @@ namespace Facepunch.RTS
 	public partial class AttackDroneWeapon : Weapon
 	{
 		public override float FireRate => 0.1f;
-		public override int BaseDamage => 4;
+		public override int BaseDamage => 3;
 		public override bool BoneMerge => false;
 		public override string SoundName => "rts.smg.shoot";
 		public override float Force => 5f;

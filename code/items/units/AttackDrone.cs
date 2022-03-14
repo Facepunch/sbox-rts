@@ -52,7 +52,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override HashSet<string> Abilities => new()
 		{
-			"ability_dome_shield"
+
 		};
 		public override HashSet<string> Queueables => new()
 		{
