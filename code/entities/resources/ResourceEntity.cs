@@ -12,6 +12,7 @@ namespace Facepunch.RTS
 	{
 		public virtual ResourceType Resource => ResourceType.Stone;
 		public virtual int DefaultStock => 250;
+		public virtual float StockScale => 1.5f;
 		public virtual string Description => "";
 		public virtual string ResourceName => "";
 		public virtual float GatherTime => 0.25f;
@@ -96,7 +97,10 @@ namespace Facepunch.RTS
 			SetupPhysicsFromModel( PhysicsMotionType.Static );
 
 			// Let's make sure there is stock.
-			if ( Stock == 0 ) Stock = DefaultStock;
+			if ( Stock == 0 )
+				Stock = DefaultStock;
+
+			Stock = (Stock * StockScale).CeilToInt();
 		}
 
 		protected override void OnDestroy()
