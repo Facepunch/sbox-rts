@@ -12,6 +12,7 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/assault.png" );
 		public override int BuildTime => 10;
 		public override float MaxHealth => 75f;
+		public virtual float Speed => 375f;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true
@@ -22,7 +23,7 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 60
+			[ResourceType.Beer] = 50
 		};
 		public override string[] AttackSounds => new string[]
 		{
