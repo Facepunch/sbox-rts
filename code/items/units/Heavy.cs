@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Units
 		public override string Description => "A slow moving but hard hitting heavy machine gunner.";
 		public override float ModelScale => 1.15f;
 		public override float Speed => 250f;
-		public override float MaxHealth => 150f;
+		public override float MaxHealth => 175f;
 		public override Texture Icon => Texture.Load( "ui/icons/assault.png" );
 		public override int BuildTime => 20;
 		public override OccupantSettings Occupant => new()
