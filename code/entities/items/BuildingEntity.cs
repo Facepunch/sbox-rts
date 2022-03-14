@@ -666,7 +666,9 @@ namespace Facepunch.RTS
 
 			if ( Item.Occupiable.Enabled && Occupants.Count > 0 )
 			{
-				LineOfSightRadius += Item.Occupiable.OccupantGrantsLineOfSight;
+				var lineOfSightPerOccupant = ((Item.Occupiable.MaxLineOfSightAdd - Item.Occupiable.MinLineOfSightAdd) / Item.Occupiable.MaxOccupants) * Occupants.Count;
+				var addedLineOfSight = Item.Occupiable.MinLineOfSightAdd + lineOfSightPerOccupant;
+				LineOfSightRadius += addedLineOfSight;
 			}
 		}
 
