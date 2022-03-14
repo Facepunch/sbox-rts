@@ -13,9 +13,9 @@ namespace Facepunch.RTS.Units
 		public override string Model => "models/vehicles/apache/apache.vmdl";
 		public override List<ItemLabel> Labels => new()
 		{
-			new ItemLabel( "Requires Occupant", Color.Magenta )
+			new ItemLabel( "Requires Ranged Occupant", Color.Magenta )
 		};
-		public override string Description => "An armored aircraft that occupies one ranged unit.";
+		public override string Description => "An armored aircraft that requires one ranged unit to attack.";
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/vehicles/apache.png" );
 		public override float VerticalOffset => 600f;
 		public override float MaxHealth => 250f;

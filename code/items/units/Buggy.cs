@@ -10,11 +10,11 @@ namespace Facepunch.RTS.Units
 		public override string Name => "Buggy";
 		public override string UniqueId => "unit.buggy";
 		public override string Model => "models/vehicles/buggy/buggy.vmdl";
-		public override string Description => "A fast vehicle that occupies one ranged unit.";
+		public override string Description => "A fast vehicle that requires one ranged unit to attack.";
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/vehicles/buggy.png" );
 		public override List<ItemLabel> Labels => new()
 		{
-			new ItemLabel( "Requires Occupant", Color.Magenta )
+			new ItemLabel( "Requires Ranged Occupant", Color.Magenta )
 		};
 		public override float MaxHealth => 150f;
 		public override bool UseModelPhysics => true;
