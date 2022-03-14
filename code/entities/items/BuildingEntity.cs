@@ -513,12 +513,12 @@ namespace Facepunch.RTS
 
 		protected virtual void OnOccupied( UnitEntity unit )
 		{
-			
+			UpdateLineOfSight();
 		}
 
 		protected virtual void OnEvicted( UnitEntity unit )
 		{
-
+			UpdateLineOfSight();
 		}
 
 		[Event.Frame]
@@ -639,8 +639,6 @@ namespace Facepunch.RTS
 
 		protected virtual void OnOccupantsChanged()
 		{
-			UpdateLineOfSight();
-
 			if ( OccupantsHud == null ) return;
 
 			OccupantsHud.DeleteChildren( true );
