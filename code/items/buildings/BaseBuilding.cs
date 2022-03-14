@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facepunch.RTS.Buildings
 {
@@ -9,6 +10,7 @@ namespace Facepunch.RTS.Buildings
 		public override Color Color => new( 0.8f, 0.8f, 0.8f );
 		public virtual ResourceGenerator Generator => null;
 		public virtual OccupiableSettings Occupiable => new();
+		public virtual int MaxConstructed => 0;
 		public virtual bool CanDepositResources => false;
 		public virtual bool CanSetRallyPoint => true;
 		public virtual Dictionary<string, float> Resistances => new();
@@ -72,6 +74,12 @@ namespace Facepunch.RTS.Buildings
 
 		public override bool IsAvailable( Player player, ISelectable target )
 		{
+			if ( MaxConstructed > 0 )
+			{
+				var buildingCount = player.GetBuildings( this ).Count();
+				return buildingCount < MaxConstructed;
+			}
+
 			return true;
 		}
 
