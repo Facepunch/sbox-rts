@@ -4,6 +4,7 @@ using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Gamelib.FlowFields.Entities;
 using Sandbox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -183,8 +184,19 @@ namespace Facepunch.RTS
 		{
 			while ( true )
 			{
-				await Task.Delay( 100 );
-				Fog.Update();
+				try
+				{
+					await Task.Delay( 100 );
+					Fog.Update();
+				}
+				catch ( TaskCanceledException )
+				{
+					break;
+				}
+				catch ( Exception e )
+				{
+					Log.Error( e );
+				}
 			}
 		}
 
