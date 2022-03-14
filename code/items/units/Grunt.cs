@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Units
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/assault.png" );
 		public override int BuildTime => 10;
 		public override float MaxHealth => 75f;
-		public virtual float Speed => 375f;
+		public override float Speed => 375f;
 		public override OccupantSettings Occupant => new()
 		{
 			CanAttack = true
