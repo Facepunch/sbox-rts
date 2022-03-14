@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Buildings
 		public override string Description => "Useful for seeing across large distances and can hold one unit.";
 		public override int BuildTime => 20;
 		public override float MaxHealth => 400f;
-		public override float MinLineOfSight => 1000f;
+		public override float MinLineOfSight => 2000f;
 		public override OccupiableSettings Occupiable => new()
 		{
 			AttackAttachments = new string[] { "muzzle" },
