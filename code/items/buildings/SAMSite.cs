@@ -12,9 +12,10 @@ namespace Facepunch.RTS.Buildings
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/tempicons/samsite.png" );
 		public override int BuildTime => 30;
 		public override float MaxHealth => 300f;
-		public override float AttackRadius => 1000f;
+		public override float AttackRadius => 1300f;
 		public override float MaxVerticalRange => 1000f;
 		public override float MinVerticalRange => 300f;
+		public override float MinLineOfSight => 1300f;
 		public override string Weapon => "weapon_sam";
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
