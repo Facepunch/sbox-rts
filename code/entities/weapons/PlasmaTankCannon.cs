@@ -7,8 +7,8 @@ namespace Facepunch.RTS
 	[Library("weapon_plasma_tank_cannon")]
 	public partial class PlasmaTankCannon : TankCannon, IBallisticsWeapon
 	{
-		public override float FireRate => 3.5f;
-		public override int BaseDamage => 35;
+		public override float FireRate => 3f;
+		public override int BaseDamage => 40;
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash_plasma/muzzle_large/muzzleflash_large.vpcf";
 		public override string BulletTracer => "particles/weapons/muzzle_flash_plasma/bullet_trace.vpcf";
 		public override DamageFlags DamageType => DamageFlags.Blast | DamageFlags.Plasma;

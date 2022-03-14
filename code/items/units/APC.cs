@@ -28,7 +28,7 @@ namespace Facepunch.RTS.Units
 		public override float LineOfSightRadius => 1500f;
 		public override OccupiableSettings Occupiable => new()
 		{
-			MaxOccupants = 4,
+			MaxOccupants = 6,
 			DamageScale = 0.2f,
 			Enabled = true
 		};
@@ -49,7 +49,7 @@ namespace Facepunch.RTS.Units
 			"brute.tell_me_what_to_do2",
 			"brute.yes_boss"
 		};
-		public override float Speed => 500f;
+		public override float Speed => 600f;
 		public override int BuildTime => 25;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{

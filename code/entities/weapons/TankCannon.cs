@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	[Library("weapon_tank_cannon")]
 	public partial class TankCannon : Weapon, IBallisticsWeapon
 	{
-		public override float FireRate => 3f;
+		public override float FireRate => 2f;
 		public override int BaseDamage => 30;
 		public override bool BoneMerge => false;
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash/muzzle_large/muzzleflash_large.vpcf";

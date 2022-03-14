@@ -16,7 +16,7 @@ namespace Facepunch.RTS.Units
 		{
 			new ItemLabel( "Requires Ranged Occupant", Color.Magenta )
 		};
-		public override float MaxHealth => 150f;
+		public override float MaxHealth => 175f;
 		public override bool UseModelPhysics => true;
 		public override bool UseRenderColor => true;
 		public override float RotateToTargetSpeed => 10f;
@@ -53,7 +53,7 @@ namespace Facepunch.RTS.Units
 			"brute.tell_me_what_to_do2",
 			"brute.yes_boss"
 		};
-		public override float Speed => 400f;
+		public override float Speed => 650f;
 		public override int BuildTime => 20;
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
