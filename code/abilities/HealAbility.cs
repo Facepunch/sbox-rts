@@ -12,8 +12,8 @@ namespace Facepunch.RTS
 		public override AbilityTargetType TargetType => AbilityTargetType.None;
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/heal.png" );
 		public override float Cooldown => 30f;
-		public override float MaxDistance => 750f;
-		public override float AreaOfEffectRadius => 300f;
+		public override float MaxDistance => 800f;
+		public override float AreaOfEffectRadius => 400f;
 
 		public override void OnFinished()
 		{
@@ -22,8 +22,8 @@ namespace Facepunch.RTS
 				Statuses.Apply<HealingStatus>( TargetInfo.Origin, AreaOfEffectRadius, new HealingData()
 				{
 					Interval = 0.1f,
-					Duration = 5f,
-					Amount = 0.5f
+					Duration = 8f,
+					Amount = 1f
 				}, CanHealUnit );
 			}
 

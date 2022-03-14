@@ -11,7 +11,7 @@ namespace Facepunch.RTS.Units
 		public override string UniqueId => "unit.medic";
 		public override string Description => "A special Terry that can heal nearby units.";
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/icons/naked.png" );
-		public override int BuildTime => 25;
+		public override int BuildTime => 30;
 		public override List<ItemLabel> Labels => new()
 		{
 			new ItemLabel( "Support", Color.Green )
