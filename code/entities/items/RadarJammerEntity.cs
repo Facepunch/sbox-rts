@@ -9,6 +9,8 @@ namespace Facepunch.RTS
 	[Library( "building_radar_jammer" )]
 	public partial class RadarJammerEntity : BuildingEntity
 	{
+		public static float EffectiveRange => 1500f;
+
 		private RangeEntity _range;
 
 		protected override void OnSelected()
@@ -42,7 +44,7 @@ namespace Facepunch.RTS
 			_range.SetParent( this );
 			_range.Position = Position;
 			_range.Color = Color.Cyan;
-			_range.Size = 1000f;
+			_range.Size = EffectiveRange;
 		}
 
 		private void DeleteRangeEntity()
