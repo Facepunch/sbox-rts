@@ -20,8 +20,8 @@ namespace Facepunch.RTS.Units
 		};
 		public override Dictionary<ResourceType, int> Costs => new()
 		{
-			[ResourceType.Beer] = 150,
-			[ResourceType.Metal] = 50
+			[ResourceType.Beer] = 125,
+			[ResourceType.Metal] = 25
 		};
 		public override string[] AttackSounds => new string[]
 		{

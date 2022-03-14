@@ -6,7 +6,7 @@ namespace Facepunch.RTS
 	partial class Icethrower : Weapon
 	{
 		public override float FireRate => 0.1f;
-		public override int BaseDamage => 2;
+		public override int BaseDamage => 3;
 		public override int HoldType => 2;
 		public override string SoundName => null;
 		public override float Force => 2f;
