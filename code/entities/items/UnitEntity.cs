@@ -2015,7 +2015,13 @@ namespace Facepunch.RTS
 				}
 			}
 
-			building.Health += (building.MaxHealth / building.Item.BuildTime * Time.Delta);
+			var numberOfConstructors = building.GetActiveConstructorCount();
+			if ( numberOfConstructors < 1 ) return;
+
+			var buildTime = building.Item.BuildTime * (3f / (numberOfConstructors + 2f));
+			var buildDelta = (building.MaxHealth / buildTime) / numberOfConstructors;
+
+			building.Health += buildDelta * Time.Delta;
 			building.Health = building.Health.Clamp( 0f, building.Item.MaxHealth );
 
 			SpinSpeed = (building.MaxHealth / building.Health) * 200f;

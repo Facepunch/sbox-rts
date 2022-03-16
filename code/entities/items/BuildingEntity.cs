@@ -120,6 +120,14 @@ namespace Facepunch.RTS
 			}
 		}
 
+		public int GetActiveConstructorCount()
+		{
+			return FindInSphere( Position, GetDiameterXY( 2f ) )
+				.OfType<UnitEntity>()
+				.Where( u => u.TargetType == UnitTargetType.Construct && u.TargetEntity == this )
+				.Count();
+		}
+
 		public void MakeVisible( bool isVisible ) { }
 
 		public void CancelConstruction()
