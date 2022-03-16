@@ -11,6 +11,7 @@ using Facepunch.RTS.Upgrades;
 using Gamelib.Network;
 using System.IO;
 using Sandbox.Internal;
+using Sandbox.Component;
 
 namespace Facepunch.RTS
 {
@@ -657,9 +658,9 @@ namespace Facepunch.RTS
 		{
 			if ( HasSelectionGlow )
 			{
-				//GlowActive = true;
-				//GlowState = GlowStates.GlowStateOn;
-				//GlowColor = Player.TeamColor.WithAlpha( 0.5f );
+				var glow = Components.GetOrCreate<Glow>();
+				glow.Active = true;
+				glow.Color = Player.TeamColor.WithAlpha( 0.5f );
 			}
 		}
 
@@ -667,7 +668,8 @@ namespace Facepunch.RTS
 		{
 			if ( HasSelectionGlow )
 			{
-				//GlowActive = false;
+				var glow = Components.GetOrCreate<Glow>();
+				glow.Active = false;
 			}
 		}
 
