@@ -1190,6 +1190,7 @@ namespace Facepunch.RTS
 			_idleLoopSound.Stop();
 
 			ClearMoveStack();
+			EvictAll();
 		}
 
 		protected override void ServerTick()
