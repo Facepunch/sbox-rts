@@ -985,7 +985,7 @@ namespace Facepunch.RTS
 				maxVerticalRange = occupiable.GetMaxVerticalRange();
 			}
 
-			var distance = Math.Abs(selfPosition.z - other.Position.z);
+			var distance = Math.Abs( selfPosition.z - other.Position.z );
 			return (distance >= minVerticalRange && distance <= maxVerticalRange);
 		}
 

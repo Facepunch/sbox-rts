@@ -405,10 +405,8 @@ namespace Facepunch.RTS
 				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
 				var bot = Rounds.Current.Players.Where( player => player.Client != client ).FirstOrDefault();
 
-				/*
-				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.attackdrone" );
+				var worker = Items.Create<UnitEntity>( bot, "unit.worker" );
 				worker.Position = trace.EndPosition;
-				*/
 
 				//var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.tank" );
 				//worker.Position = trace.EndPosition;

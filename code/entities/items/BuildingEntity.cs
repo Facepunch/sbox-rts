@@ -195,9 +195,13 @@ namespace Facepunch.RTS
 			return Health < MaxHealth;
 		}
 
-		public bool InVerticalRange( ISelectable other )
+		public bool InVerticalRange( Entity other )
 		{
-			return (other.Position.z <= Item.MaxVerticalRange);
+			var selfPosition = Position;
+			var minVerticalRange = Item.MinVerticalRange;
+			var maxVerticalRange = Item.MaxVerticalRange;
+			var distance = Math.Abs( selfPosition.z - other.Position.z );
+			return (distance >= minVerticalRange && distance <= maxVerticalRange);
 		}
 
 		public bool OccupyUnit( UnitEntity unit )
@@ -875,7 +879,7 @@ namespace Facepunch.RTS
 		{
 			if ( !NextFindTarget ) return;
 
-			var closestTarget = Entity.FindInSphere( Position, Item.AttackRadius )
+			var closestTarget = FindInSphere( Position, Item.AttackRadius )
 				.OfType<UnitEntity>()
 				.Where( ( a ) => IsEnemy( a ) && InVerticalRange( a ) )
 				.OrderByDescending( a => a.GetAttackPriority() )
