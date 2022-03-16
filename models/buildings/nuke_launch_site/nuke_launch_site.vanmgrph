@@ -15,9 +15,9 @@
 				}
 				m_previewButton = "ANIMPARAM_BUTTON_NONE"
 				m_bNetwork = true
-				m_bUseMostRecentValue = false
+				m_bUseMostRecentValue = true
 				m_bAutoReset = false
-				m_bPredicted = true
+				m_bPredicted = false
 				m_bDefaultValue = false
 			},
 		]
@@ -48,6 +48,7 @@
 		[
 			{
 				_class = "CAnimGraphGeneralSettings"
+				m_iGridSnap = 16
 			},
 			{
 				_class = "CAnimGraphNetworkSettings"
@@ -133,7 +134,7 @@
 			{
 				_class = "CRootAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ 504.0, -101.0 ]
+				m_vecPosition = [ 496.0, -96.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1489906011

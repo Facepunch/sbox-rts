@@ -28,11 +28,6 @@ namespace Facepunch.RTS
 
 		private Sound _launchSound;
 
-		public Projectile()
-		{
-			Transmit = TransmitType.Always;
-		}
-
 		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Projectile, Entity> callback = null )
 		{
 			StartPosition = start;
@@ -41,6 +36,7 @@ namespace Facepunch.RTS
 			TravelDuration = duration;
 			TimeUntilHit = duration;
 			Callback = callback;
+			Transmit = TransmitType.Always;
 
 			if ( !string.IsNullOrEmpty( TrailEffect ) )
 			{
@@ -77,7 +73,7 @@ namespace Facepunch.RTS
 		}
 
 		[Event.Tick.Server]
-		private void ServerTick()
+		protected virtual void ServerTick()
 		{
 			var endPos = Target.IsValid() ? Target.Position : EndPosition;
 			var distance = StartPosition.Distance( endPos );

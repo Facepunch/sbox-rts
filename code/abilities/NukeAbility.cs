@@ -33,10 +33,9 @@ namespace Facepunch.RTS
 
 		public override void OnStarted()
 		{
-			Reset();
-
 			if ( Host.IsServer )
 			{
+				Reset();
 				Launch();
 			}
 
@@ -77,8 +76,8 @@ namespace Facepunch.RTS
 
 		private void OpenHatch( bool shouldOpen )
 		{
-			if ( User is BuildingEntity building )
-				building.SetAnimParameter( "open", shouldOpen );
+			if ( User is not BuildingEntity building ) return;
+			building.SetAnimParameter( "open", shouldOpen );
 		}
 
 		private void OnNukeHit( Projectile projectile, Entity target )
@@ -122,10 +121,7 @@ namespace Facepunch.RTS
 
 		private void Reset()
 		{
-			if ( Host.IsServer )
-			{
-				OpenHatch( false );
-			}
+			OpenHatch( false );
 
 			if ( Missile.IsValid() )
 			{
