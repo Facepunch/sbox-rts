@@ -440,6 +440,16 @@ namespace Facepunch.RTS
 				if ( warning.ExpireTime )
 					AttackWarnings.RemoveAt( i );
 			}
+
+			for ( var i = Selection.Count - 1; i >= 0; i-- )
+			{
+				var entity = Selection[i];
+
+				if ( !entity.IsValid() )
+				{
+					Selection.RemoveAt( i );
+				}
+			}
 		}
 
 		private void OnResearchingChanged()
