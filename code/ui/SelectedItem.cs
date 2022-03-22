@@ -447,7 +447,7 @@ namespace Facepunch.RTS
 			Buttons.Clear();
 
 			// Don't show commands for enemy selectables.
-			if ( selectable.IsLocalPlayers )
+			if ( selectable != null && selectable.IsLocalPlayers )
 			{
 				if ( selectable is UnitEntity unit )
 					UpdateCommands( unit.Item.Queueables, unit.Abilities );
