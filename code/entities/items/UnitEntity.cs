@@ -1431,7 +1431,7 @@ namespace Facepunch.RTS
 
 		protected virtual void UpdatePathParticles()
 		{
-			if ( !IsSelected || Destination.IsNearZeroLength || Velocity.IsNearZeroLength )
+			if ( !IsLocalPlayers || !IsSelected || Destination.IsNearZeroLength || Velocity.IsNearZeroLength )
 			{
 				RemovePathParticles();
 				return;
