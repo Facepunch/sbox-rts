@@ -60,7 +60,6 @@ namespace Facepunch.RTS
 			Selectable = selectable;
 			Ability = ability;
 
-
 			if ( ability.Icon != null )
 			{
 				Style.BackgroundImage = ability.Icon;

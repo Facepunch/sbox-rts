@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Gamelib.Extensions;
 using Sandbox;
 
@@ -117,24 +118,29 @@ namespace Facepunch.RTS
 			if ( Entity.FindByIndex( entityId ) is not ISelectable selectable )
 				return;
 
-			var ability = selectable.GetAbility( abilityId );
-			if ( ability == null ) return;
-
-			if ( ability.TargetType != AbilityTargetType.Self )
+			if ( selectable.Player != caller )
 				return;
 
-			if ( selectable.Player == caller )
+			var selectablesOfType = caller.GetAllSelected().Where( s => s.ItemId == selectable.ItemId );
+
+			foreach ( var item in selectablesOfType )
 			{
+				var ability = item.GetAbility( abilityId );
+				if ( ability == null ) continue;
+
+				if ( ability.TargetType != AbilityTargetType.Self )
+					continue;
+
 				if ( ability.CanUse() == RequirementError.Success )
 				{
-					ResourceHint.Send( caller, 2f, selectable.Position, ability.Costs, Color.Red );
+					ResourceHint.Send( caller, 2f, item.Position, ability.Costs, Color.Red );
 
 					caller.TakeResources( ability );
 
-					selectable.StartAbility( ability, new AbilityTargetInfo()
+					item.StartAbility( ability, new AbilityTargetInfo()
 					{
-						Target = selectable,
-						Origin = selectable.Position
+						Target = item,
+						Origin = item.Position
 					} );
 				}
 			}
