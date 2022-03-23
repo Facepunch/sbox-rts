@@ -13,6 +13,7 @@ namespace Facepunch.RTS
 	public class MiniMapImage : Image
 	{
 		public bool IsMouseDown { get; private set; }
+		public bool IsShiftDown { get; private set; }
 		public bool IsCtrlDown { get; private set; }
 
 		public Vector3 PixelToWorld( float x, float y )
@@ -86,6 +87,17 @@ namespace Facepunch.RTS
 			base.OnMouseDown( e );
 		}
 
+		protected override void OnRightClick( MousePanelEvent e )
+		{
+			base.OnRightClick( e );
+
+			if ( Local.Pawn is Player player )
+			{
+				var worldPosition = PixelToWorld( MousePosition.x, MousePosition.y );
+				Items.MoveToLocation( worldPosition.ToCSV(), IsShiftDown );
+			}
+		}
+
 		protected override void OnClick( MousePanelEvent e )
 		{
 			base.OnClick( e );
@@ -107,6 +119,7 @@ namespace Facepunch.RTS
 		[Event.BuildInput]
 		private void BuildInput( InputBuilder builder )
 		{
+			IsShiftDown = builder.Down( InputButton.Run );
 			IsCtrlDown = builder.Down( InputButton.Duck );
 		}
 	}
