@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gamelib.FlowFields.Entities
 {
@@ -8,7 +9,7 @@ namespace Gamelib.FlowFields.Entities
 	/// </summary>
 	[Library( "flowfield_blocker" )]
 	[Hammer.AutoApplyMaterial( "materials/rts/hammer/flowfield_blocker.vmat" )]
-	[Hammer.EntityTool( "Blocker", "FlowField" )]
+	[Display( Name = "Blocker", GroupName = "FlowFields" )]
 	[Hammer.Solid]
 	public class FlowFieldBlocker : ModelEntity
 	{

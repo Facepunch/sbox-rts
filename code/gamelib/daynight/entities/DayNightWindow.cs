@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Gamelib.DayNight
@@ -8,7 +9,7 @@ namespace Gamelib.DayNight
 	/// </summary>
 
 	[Library( "daynight_window" )]
-	[Hammer.EntityTool( "Window Brush", "Day and Night" )]
+	[Display( Name = "Window Brush", GroupName = "Day and Night" )]
 	[Hammer.Solid]
 	public class DayNightWindow : BrushEntity
 	{

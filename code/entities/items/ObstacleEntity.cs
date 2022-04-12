@@ -1,18 +1,16 @@
 ﻿using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Sandbox;
+using System.ComponentModel.DataAnnotations;
 
 namespace Facepunch.RTS
 {
-
 	/// <summary>
 	/// An entity to block units from passing through, They must destroy the obstacle to pass.
 	/// </summary>
 	/// 
-
-
 	[Library( "rts_obstacle") ]
-	[Hammer.EntityTool( "Obstacle", "RTS" )]
+	[Display( Name = "Obstacle", GroupName = "RTS" )]
 	[Hammer.Model( Model = "models/rocks/rock_large_00.vmdl" )]
 	public partial class ObstacleEntity : ModelEntity, IDamageable, IFogCullable, IHudEntity, ITooltipEntity
 	{

@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gamelib.DayNight
 {
@@ -8,7 +9,7 @@ namespace Gamelib.DayNight
 	/// </summary>
 
 	[Library( "daynight_prop" )]
-	[Hammer.EntityTool( "Material Prop", "Day and Night" )]
+	[Display( Name = "Material Prop", GroupName = "Day and Night" )]
 	[Hammer.Model( Model = "", MaterialGroup = "default" )]
 	public class DayNightProp : ModelEntity
 	{

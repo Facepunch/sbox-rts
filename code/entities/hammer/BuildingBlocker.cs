@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.ComponentModel.DataAnnotations;
 
 namespace Facepunch.RTS
 {
@@ -8,7 +9,7 @@ namespace Facepunch.RTS
 	/// </summary>
 	[Library( "rts_building_blocker" )]
 	[Hammer.AutoApplyMaterial( "materials/rts/hammer/building_blocker.vmat" )]
-	[Hammer.EntityTool( "Building Blocker", "RTS" )]
+	[Display( Name = "Building Blocker", GroupName = "RTS" )]
 	[Hammer.Solid]
 	public class BuildingBlocker : BaseTrigger
 	{
