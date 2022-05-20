@@ -79,7 +79,7 @@ namespace Facepunch.RTS
 			if ( !Hud.IsLocalPlaying() )
 				return;
 
-			if ( builder.Pressed( InputButton.Attack1 ) )
+			if ( builder.Pressed( InputButton.PrimaryAttack ) )
 			{
 				StartSelection = Mouse.Position;
 				IsMultiSelect = false;
@@ -140,7 +140,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( builder.Released( InputButton.Attack2 ) )
+			if ( builder.Released( InputButton.SecondaryAttack ) )
 			{
 				var isHoldingShift = Input.Down( InputButton.Run );
 
@@ -216,7 +216,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( builder.Down( InputButton.Attack1 ) && IsSelecting )
+			if ( builder.Down( InputButton.PrimaryAttack ) && IsSelecting )
 			{
 				var position = Mouse.Position;
 				var selection = new Rect(

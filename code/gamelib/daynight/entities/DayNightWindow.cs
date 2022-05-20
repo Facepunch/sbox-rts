@@ -1,16 +1,16 @@
 ﻿using Sandbox;
-using System.ComponentModel.DataAnnotations;
+using SandboxEditor;
 using System.Threading.Tasks;
 
 namespace Gamelib.DayNight
 {
 	/// <summary>
-	/// A brush entity that will enable and disable at random times during the morning and night time
+	/// A brush entity that will enable and disable at random times during the morning and night time.
 	/// </summary>
-
 	[Library( "daynight_window" )]
-	[Display( Name = "Window Brush", GroupName = "Day and Night" )]
-	[Hammer.Solid]
+	[Title( "Day and Night Brush" )]
+	[Solid]
+	[HammerEntity]
 	public class DayNightWindow : BrushEntity
 	{
 		[Property( Title = "Enable Delay Time" )]

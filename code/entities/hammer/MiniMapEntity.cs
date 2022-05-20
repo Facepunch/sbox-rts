@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using SandboxEditor;
 using Sandbox;
 
 namespace Facepunch.RTS
@@ -8,8 +8,8 @@ namespace Facepunch.RTS
 	/// Provides configuration for the in-game minimap
 	/// </summary>
 	[Library( "rts_minimap" )]
-	[Display( Name = "MiniMap Config", GroupName = "RTS" )]
-	[Hammer.EditorSprite( "editor/rts_minimap.vmat" )]
+	[Title( "MiniMap Config" )]
+	[EditorSprite( "editor/rts_minimap.vmat" )]
 	public partial class MiniMapEntity : Entity
 	{
 		public static MiniMapEntity Instance { get; set; }

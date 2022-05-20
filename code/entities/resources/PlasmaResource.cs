@@ -1,10 +1,12 @@
 ﻿using Sandbox;
 using System;
+using SandboxEditor;
 
 namespace Facepunch.RTS
 {
 	[Library( "resource_plasma" )]
-	[Hammer.Model( Model = "models/rocks/rock_large_00.vmdl", MaterialGroup = "Plasma" )]
+	[Model( Model = "models/rocks/rock_large_00.vmdl", MaterialGroup = "Plasma" )]
+	[HammerEntity]
 	public class PlasmaResource : ResourceEntity
 	{
 		public override ResourceType Resource => ResourceType.Plasma;

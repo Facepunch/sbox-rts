@@ -25,7 +25,7 @@ namespace Facepunch.RTS
 			return Instance;
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void SetNextTeamGroup()
 		{
 			if ( ConsoleSystem.Caller.Pawn is Player player )
@@ -39,7 +39,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void SetReadyStatus( bool isReady )
 		{
 			if ( ConsoleSystem.Caller.Pawn is Player player )

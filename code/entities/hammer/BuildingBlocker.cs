@@ -1,5 +1,5 @@
 ﻿using Sandbox;
-using System.ComponentModel.DataAnnotations;
+using SandboxEditor;
 
 namespace Facepunch.RTS
 {
@@ -8,9 +8,9 @@ namespace Facepunch.RTS
 	/// Blocks the ability to build inside the volume, but still allows units to pass through
 	/// </summary>
 	[Library( "rts_building_blocker" )]
-	[Hammer.AutoApplyMaterial( "materials/rts/hammer/building_blocker.vmat" )]
-	[Display( Name = "Building Blocker", GroupName = "RTS" )]
-	[Hammer.Solid]
+	[AutoApplyMaterial( "materials/rts/hammer/building_blocker.vmat" )]
+	[Title( "Building Blocker" )]
+	[Solid]
 	public class BuildingBlocker : BaseTrigger
 	{
 		public override void Spawn()

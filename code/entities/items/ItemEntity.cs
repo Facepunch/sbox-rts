@@ -4,18 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamelib.Extensions;
 using Gamelib.FlowFields.Grid;
-using Facepunch.RTS;
 using Facepunch.RTS.Tech;
-using Facepunch.RTS.Units;
 using Facepunch.RTS.Upgrades;
-using Gamelib.Network;
 using System.IO;
-using Sandbox.Internal;
 using Sandbox.Component;
 
 namespace Facepunch.RTS
 {
-	public abstract partial class ItemEntity<T> : AnimEntity, ISelectable, IHudEntity, ITooltipEntity where T : BaseItem
+	public abstract partial class ItemEntity<T> : AnimatedEntity, ISelectable, IHudEntity, ITooltipEntity where T : BaseItem
 	{
 		public virtual bool CanMultiSelect => false;
 		public virtual bool HasSelectionGlow => true;
@@ -35,7 +31,7 @@ namespace Facepunch.RTS
 		public List<QueueItem> Queue { get; private set; }
 		public uint LastQueueId { get; private set; }
 
-		EntityTags ISelectable.Tags => Tags;
+		Sandbox.Internal.EntityTags ISelectable.Tags => Tags;
 
 		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );
@@ -171,13 +167,13 @@ namespace Facepunch.RTS
 
 		public bool HasComponent<C>() where C : ItemComponent
 		{
-			var componentName = Library.GetAttribute( typeof( C ) ).Name;
+			var componentName = TypeLibrary.GetDescription<C>().ClassName;
 			return ItemComponents.ContainsKey( componentName );
 		}
 
 		public C GetComponent<C>() where C : ItemComponent
 		{
-			var componentName = Library.GetAttribute( typeof( C ) ).Name;
+			var componentName = TypeLibrary.GetDescription<C>().ClassName;
 
 			if ( ItemComponents.TryGetValue( componentName, out var component ) )
 				return (component as C);
@@ -187,7 +183,7 @@ namespace Facepunch.RTS
 
 		public void RemoveComponent<C>() where C : ItemComponent
 		{
-			var componentName = Library.GetAttribute( typeof( C ) ).Name;
+			var componentName = TypeLibrary.GetDescription<C>().ClassName;
 
 			if ( ItemComponents.ContainsKey( componentName ) )
 			{
@@ -200,8 +196,8 @@ namespace Facepunch.RTS
 			var component = GetComponent<C>();
 			if ( component != null ) return component;
 
-			var componentName = Library.GetAttribute( typeof( C ) ).Name;
-			component = Library.Create<C>( componentName );
+			var componentName = TypeLibrary.GetDescription<C>().ClassName;
+			component = TypeLibrary.Create<C>( componentName );
 			ItemComponents.Add( componentName, component );
 
 			return component;
@@ -222,7 +218,7 @@ namespace Facepunch.RTS
 
 		public bool HasStatus<S>() where S : IStatus
 		{
-			var id = Library.GetAttribute( typeof( S ) ).Name;
+			var id = TypeLibrary.GetDescription<S>().ClassName;
 			return HasStatus( id );
 		}
 
@@ -235,7 +231,7 @@ namespace Facepunch.RTS
 
 			data.Serialize( writer );
 
-			var id = Library.GetAttribute( typeof( S ) ).Name;
+			var id = TypeLibrary.GetDescription<S>().ClassName;
 
 			ClientApplyStatus( To.Everyone, id, stream.GetBuffer() );
 

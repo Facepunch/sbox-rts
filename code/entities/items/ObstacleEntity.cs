@@ -1,7 +1,7 @@
 ﻿using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Sandbox;
-using System.ComponentModel.DataAnnotations;
+using SandboxEditor;
 
 namespace Facepunch.RTS
 {
@@ -10,8 +10,8 @@ namespace Facepunch.RTS
 	/// </summary>
 	/// 
 	[Library( "rts_obstacle") ]
-	[Display( Name = "Obstacle", GroupName = "RTS" )]
-	[Hammer.Model( Model = "models/rocks/rock_large_00.vmdl" )]
+	[Title( "Obstacle" )]
+	[Model( Model = "models/rocks/rock_large_00.vmdl" )]
 	public partial class ObstacleEntity : ModelEntity, IDamageable, IFogCullable, IHudEntity, ITooltipEntity
 	{
 		[Property, Net] public string TooltipName { get; set; } = "Obstacle";

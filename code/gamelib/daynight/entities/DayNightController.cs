@@ -1,6 +1,5 @@
 ﻿using Sandbox;
-using System;
-using System.ComponentModel.DataAnnotations;
+using SandboxEditor;
 using System.Linq;
 
 namespace Gamelib.DayNight
@@ -62,8 +61,8 @@ namespace Gamelib.DayNight
 	/// A way to set the colour based on the time of day, it will smoothly blend between each colour when the time has changed. Also enables the day night cycle using a "light_environment"
 	/// </summary>
 	[Library( "daynight_controller" )]
-	[Display( Name = "Controller", GroupName = "Day and Night" )]
-	[Hammer.EditorSprite("editor/daynight_controller.vmat")]
+	[Title( "Day and Night Controller" )]
+	[EditorSprite("editor/daynight_controller.vmat")]
 	public partial class DayNightController : ModelEntity
 	{
 		[Property( "DawnColor", Title = "Dawn Color" )]

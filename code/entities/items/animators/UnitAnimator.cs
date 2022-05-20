@@ -16,7 +16,7 @@ namespace Facepunch.RTS
 			Attacking = false;
 		}
 
-		public virtual void Apply( AnimEntity entity )
+		public virtual void Apply( AnimatedEntity entity )
 		{
 			
 		}

@@ -6,7 +6,7 @@ namespace Facepunch.RTS
 {
 	public partial class FogRenderer : RenderEntity
 	{
-		[ServerVar( "rts_fog", Saved = true )]
+		[ConVar.Server( "rts_fog", Saved = true )]
 		public static bool Enabled { get; set; } = true;
 
 		public Material FogMaterial = Material.Load( "materials/rts/fog.vmat" );

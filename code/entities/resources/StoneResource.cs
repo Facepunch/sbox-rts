@@ -1,10 +1,12 @@
 ﻿using Sandbox;
 using System;
+using SandboxEditor;
 
 namespace Facepunch.RTS
 {
 	[Library( "resource_stone" )]
-	[Hammer.Model( Model = "models/rocks/rock_large_00.vmdl", MaterialGroup = "Rock" )]
+	[Model( Model = "models/rocks/rock_large_00.vmdl", MaterialGroup = "Rock" )]
+	[HammerEntity]
 	public partial class StoneResource : ResourceEntity
 	{
 		public override ResourceType Resource => ResourceType.Stone;

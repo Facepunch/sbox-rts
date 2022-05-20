@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 using System;
-using System.ComponentModel.DataAnnotations;
+using SandboxEditor;
 
 namespace Gamelib.FlowFields.Entities
 {
@@ -10,9 +10,9 @@ namespace Gamelib.FlowFields.Entities
 	/// </summary>
 
 	[Library( "flowfield_ground" )]
-	[Hammer.AutoApplyMaterial("materials/rts/hammer/flowfield_ground.vmat")]
-	[Display( Name = "Ground", GroupName = "FlowFields" )]
-	[Hammer.Solid]
+	[AutoApplyMaterial("materials/rts/hammer/flowfield_ground.vmat")]
+	[Title( "Flow Field Ground" )]
+	[Solid]
 	public class FlowFieldGround : BaseTrigger
 	{
 		public static event Action OnUpdated;

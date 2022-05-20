@@ -34,9 +34,9 @@ namespace Facepunch.RTS
 
 			var list = new List<BaseRank>();
 
-			foreach ( var type in Library.GetAll<BaseRank>() )
+			foreach ( var type in TypeLibrary.GetTypes<BaseRank>() )
 			{
-				var rank = Library.Create<BaseRank>( type );
+				var rank = TypeLibrary.Create<BaseRank>( type );
 				list.Add( rank );
 			}
 

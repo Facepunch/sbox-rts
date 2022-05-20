@@ -2,7 +2,7 @@
 
 namespace Facepunch.RTS
 {
-	public partial class HistoryBuilding : AnimEntity, IFogCullable
+	public partial class HistoryBuilding : AnimatedEntity, IFogCullable
 	{
 		public BuildingEntity Master { get; set; }
 		public bool HasBeenSeen { get; set; }

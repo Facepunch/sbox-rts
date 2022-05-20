@@ -19,7 +19,7 @@ namespace Gamelib.FlowFields
 		private readonly List<int> _chunkBuffer = new();
 		private readonly Queue<FlowField> _flowFields = new();
 
-		[ServerVar( "ff_debug", Saved = true )]
+		[ConVar.Server( "ff_debug", Saved = true )]
 		public static bool Debug { get; set; }
 
 		private GridDefinition _numberOfChunks = new( 10, 10 );
@@ -200,8 +200,8 @@ namespace Gamelib.FlowFields
 
 			var transform = _physicsBody.Transform;
 			transform.Position = (position + _centerOffset).WithZ( _nodeExtents.z + _heightMap[worldIndex] );
-			DebugOverlay.Box( duration, transform.Position, -_collisionExtents, _collisionExtents, Color.Red, false );
-			DebugOverlay.Box( duration, transform.Position, -_nodeExtents, _nodeExtents, color.HasValue ? color.Value : Color.White, false );
+			DebugOverlay.Box( transform.Position, -_collisionExtents, _collisionExtents, Color.Red, duration, false );
+			DebugOverlay.Box( transform.Position, -_nodeExtents, _nodeExtents, color.HasValue ? color.Value : Color.White, duration, false );
 		}
 
 		public void DrawBox( int worldIndex, Color? color = null, float duration = 1f )

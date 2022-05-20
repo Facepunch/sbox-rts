@@ -77,7 +77,7 @@ namespace Facepunch.RTS
 			if ( string.IsNullOrEmpty( item.Entity ) )
 				building = new BuildingEntity();
 			else
-				building = Library.Create<BuildingEntity>( item.Entity );
+				building = TypeLibrary.Create<BuildingEntity>( item.Entity );
 
 			building.Assign( player, item );
 
@@ -91,7 +91,7 @@ namespace Facepunch.RTS
 			if ( string.IsNullOrEmpty( item.Entity ) )
 				unit = new UnitEntity();
 			else
-				unit = Library.Create<UnitEntity>( item.Entity );
+				unit = TypeLibrary.Create<UnitEntity>( item.Entity );
 
 			unit.Assign( player, item );
 
@@ -107,14 +107,14 @@ namespace Facepunch.RTS
 			if ( string.IsNullOrEmpty( item.Entity ) )
 				output = new T();
 			else
-				output = Library.Create<T>( item.Entity );
+				output = TypeLibrary.Create<T>( item.Entity );
 
 			output.Assign( player, itemId );
 
 			return output;
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void StartBuilding( int workerId, uint itemId, string cursorOrigin, string cursorAim, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -171,7 +171,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void Queue( int entityId, uint itemId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -193,7 +193,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void Unqueue( int entityId, uint queueId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -217,7 +217,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void Attack( int id, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -256,7 +256,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void Evict( int occupiableId, int unitId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -279,7 +279,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void Occupy( int occupiableId, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -320,7 +320,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void RepairOrDeposit( int id, bool shouldQueue )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -395,7 +395,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void Gather( int id, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -442,7 +442,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void Construct( int id, bool shouldQueue )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -491,7 +491,7 @@ namespace Facepunch.RTS
 			}
 		}
 		
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void MoveToLocation( string csv, bool shouldQueue = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -582,7 +582,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void RefineSelection( string itemId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -604,7 +604,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void CancelAction( int id )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -623,7 +623,7 @@ namespace Facepunch.RTS
 			}
 		}
 		
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void Select( string csv = null, bool isAdditive = false )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -752,13 +752,13 @@ namespace Facepunch.RTS
 			else
 				Ghost.ShowInvalid();
 
-			if ( valid && Input.Down( InputButton.Attack1 ) )
+			if ( valid && Input.Down( InputButton.PrimaryAttack ) )
 			{
 				var isHoldingShift = Input.Down( InputButton.Run );
 				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorOrigin.ToCSV(), cursorAim.ToCSV(), isHoldingShift );
 				Ghost.Delete();
 			}
-			else if ( Input.Down( InputButton.Attack2 ) )
+			else if ( Input.Down( InputButton.SecondaryAttack ) )
 			{
 				Ghost.Delete();
 			}
@@ -785,10 +785,13 @@ namespace Facepunch.RTS
 
 			var list = new List<BaseItem>();
 
-			foreach ( var type in Library.GetAll<BaseItem>() )
+			foreach ( var type in TypeLibrary.GetTypes<BaseItem>() )
 			{
-				var item = Library.Create<BaseItem>( type );
-				list.Add( item );
+				if ( !type.IsAbstract && !type.ContainsGenericParameters )
+				{
+					var item = TypeLibrary.Create<BaseItem>( type );
+					list.Add( item );
+				}
 			}
 
 			// Sort alphabetically, this should result in the same index for client and server.

@@ -756,7 +756,7 @@ namespace Facepunch.RTS
 
 			if ( !string.IsNullOrEmpty( item.Weapon ) )
 			{
-				Weapon = Library.Create<Weapon>( item.Weapon );
+				Weapon = TypeLibrary.Create<Weapon>( item.Weapon );
 				Weapon.Attacker = this;
 
 				var attachment = GetAttachment( "weapon", true );

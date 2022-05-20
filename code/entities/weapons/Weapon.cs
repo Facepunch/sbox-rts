@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
-	public partial class Weapon : AnimEntity
+	public partial class Weapon : AnimatedEntity
 	{
-		[Net] public AnimEntity Attacker { get; set; }
+		[Net] public AnimatedEntity Attacker { get; set; }
 		[Net] public Entity Occupiable { get; set; }
 		[Net] public Entity Target { get; set; }
 		public virtual DamageFlags DamageType => DamageFlags.Bullet;

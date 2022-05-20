@@ -8,7 +8,7 @@ namespace Facepunch.RTS
 	{
 		public static IStatus Create( string id )
 		{
-			return Library.Create<IStatus>( id );
+			return TypeLibrary.Create<IStatus>( id );
 		}
 
 		public static void Apply<S>( Vector3 position, float radius, StatusData data, Func<ISelectable, bool> filter = null ) where S : IStatus

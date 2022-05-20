@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 using System;
-using System.ComponentModel.DataAnnotations;
+using SandboxEditor;
 
 namespace Gamelib.DayNight
 {
@@ -9,8 +9,8 @@ namespace Gamelib.DayNight
 	/// </summary>
 	/// 
 	[Library( "daynight_ambience" )]
-	[Display( Name = "Ambience", GroupName = "Day and Night" )]
-	[Hammer.EditorSprite("editor/snd_daynight.vmat")]
+	[Title( "Day and Night Ambience" )]
+	[EditorSprite("editor/snd_daynight.vmat")]
 	public partial class DayNightAmbience : Entity
 	{
 		[Property( Title = "Dawn Ambient Sound" ), FGDType( "sound" )]

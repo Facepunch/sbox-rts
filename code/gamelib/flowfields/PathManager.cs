@@ -7,14 +7,14 @@ namespace Gamelib.FlowFields
 {
     public static class PathManager
     {
-		[ServerCmd( "ff_update_collisions" )]
+		[ConCmd.Server( "ff_update_collisions" )]
 		private static void UpdateCollisions()
 		{
 			foreach ( var pathfinder in All )
 				_ = pathfinder.UpdateCollisions();
 		}
 
-		[ServerCmd( "ff_show_chunks" )]
+		[ConCmd.Server( "ff_show_chunks" )]
 		private static void ShowChunks()
 		{
 			var pathfinder = _default;
@@ -33,7 +33,7 @@ namespace Gamelib.FlowFields
 			}
 		}
 
-		[ServerCmd( "ff_show_portals" )]
+		[ConCmd.Server( "ff_show_portals" )]
 		private static void ShowPortals( int nodeSize, int collisionSize )
 		{
 			var pathfinder = GetPathfinder( nodeSize, collisionSize );
@@ -44,11 +44,11 @@ namespace Gamelib.FlowFields
 				var portal = portals[i];
 				var position = portal.GetVector( pathfinder );
 
-				DebugOverlay.Sphere( position, 64f, Color.Green, true, 5f );
+				DebugOverlay.Sphere( position, 64f, Color.Green, 5f, true );
 			}
 		}
 
-		[ServerCmd( "ff_show_gateway_nodes" )]
+		[ConCmd.Server( "ff_show_gateway_nodes" )]
 		private static void ShowGatewayNodes( int nodeSize, int collisionSize )
 		{
 			var pathfinder = GetPathfinder( nodeSize, collisionSize );
@@ -70,7 +70,7 @@ namespace Gamelib.FlowFields
 			}
 		}
 		
-		[ServerCmd( "ff_show_collisions" )]
+		[ConCmd.Server( "ff_show_collisions" )]
 		private static void ShowCollisions( int nodeSize, int collisionSize )
 		{
 			var pathfinder = GetPathfinder( nodeSize, collisionSize );

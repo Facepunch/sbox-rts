@@ -30,7 +30,7 @@ namespace Facepunch.RTS
 				new AnimationHoldType( "Idle_RPG", "Attack_RPG", "Walk_RPG", "Run_RPG" )
 		};
 
-		public override void Apply( AnimEntity entity )
+		public override void Apply( AnimatedEntity entity )
 		{
 			if ( !Attacking )
 			{

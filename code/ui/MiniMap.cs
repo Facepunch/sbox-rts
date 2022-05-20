@@ -296,7 +296,7 @@ namespace Facepunch.RTS
 		//public Texture DepthTexture;
 		//public RealTimeUntil NextRender;
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void SendPing( string csv )
 		{
 			if ( ConsoleSystem.Caller.Pawn is Player player )

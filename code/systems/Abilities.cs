@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 			return (SelectingTargetFor != null);
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void UseOnTarget( int entityId, string abilityId, int targetId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -62,7 +62,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void UseAtLocation( int entityId, string abilityId, string origin )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -107,7 +107,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd]
+		[ConCmd.Server]
 		public static void UseOnSelf( int entityId, string abilityId )
 		{
 			var caller = ConsoleSystem.Caller.Pawn as Player;
@@ -148,7 +148,7 @@ namespace Facepunch.RTS
 
 		public static BaseAbility Create( string id )
 		{
-			return Library.Create<BaseAbility>( id );
+			return TypeLibrary.Create<BaseAbility>( id );
 		}
 
 		public static void SelectTarget( BaseAbility ability )
@@ -206,7 +206,7 @@ namespace Facepunch.RTS
 					{
 						TargetCircle.TargetColor = Color.Green;
 
-						if ( Input.Down( InputButton.Attack1 ) )
+						if ( Input.Down( InputButton.PrimaryAttack ) )
 						{
 							StopSelectingTarget();
 							UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPosition.ToCSV() );
@@ -234,7 +234,7 @@ namespace Facepunch.RTS
 
 					if ( ability.IsTargetValid( target ) )
 					{
-						if ( Input.Down( InputButton.Attack1 ) )
+						if ( Input.Down( InputButton.PrimaryAttack ) )
 						{
 							StopSelectingTarget();
 							UseOnTarget( ability.User.NetworkIdent, ability.UniqueId, target.NetworkIdent );
@@ -256,7 +256,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( Input.Down( InputButton.Attack2 ) )
+			if ( Input.Down( InputButton.SecondaryAttack ) )
 			{
 				StopSelectingTarget();
 			}

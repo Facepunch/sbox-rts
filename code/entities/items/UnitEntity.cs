@@ -1325,7 +1325,7 @@ namespace Facepunch.RTS
 				Weapon = null;
 			}
 
-			Weapon = Library.Create<Weapon>( name );
+			Weapon = TypeLibrary.Create<Weapon>( name );
 			Weapon.Attacker = this;
 			Weapon.EnableDrawOverWorld = true;
 

@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 
 		public Dictionary<long, int> Ratings { get; private set; }
 
-		[ServerCmd("rts_kill")]
+		[ConCmd.Server("rts_kill")]
 		public static void KillSelected()
 		{
 			if ( ConsoleSystem.Caller.Pawn is Player caller )
@@ -34,7 +34,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd( "rts_doitnow" )]
+		[ConCmd.Server( "rts_doitnow" )]
 		public static void SkipAllWaiting()
 		{
 			if ( ConsoleSystem.Caller.Pawn is Player caller )
@@ -43,7 +43,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd( "rts_learnit" )]
+		[ConCmd.Server( "rts_learnit" )]
 		public static void LearnTechnology( string technology )
 		{
 			if ( ConsoleSystem.Caller.Pawn is Player caller )
@@ -55,7 +55,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[ServerCmd( "rts_richboy" )]
+		[ConCmd.Server( "rts_richboy" )]
 		public static void GiveAllResources()
 		{
 			if ( ConsoleSystem.Caller.Pawn is Player caller )
