@@ -2,8 +2,7 @@
 
 namespace Facepunch.RTS.Upgrades
 {
-	[Library]
-	public class BaseWeaponUpgrade : BaseUpgrade
+	public abstract class BaseWeaponUpgrade : BaseUpgrade
 	{
 		public override void OnCreated( Player player, ISelectable target )
 		{

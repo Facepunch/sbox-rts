@@ -1,10 +1,7 @@
 ﻿using Gamelib.Extensions;
-using Gamelib.FlowFields.Entities;
-using Gamelib.FlowFields.Grid;
 using Sandbox;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Vector3n = System.Numerics.Vector3;
 

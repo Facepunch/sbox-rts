@@ -28,7 +28,8 @@ namespace Facepunch.RTS
 			Effect.SetEntity( 0, this );
 			Effect.SetPosition( 1, new Vector3( radius, radius, radius ) );
 
-			CollisionGroup = CollisionGroup.Trigger;
+			Tags.Add( "domeshield" );
+
 			EnableSolidCollisions = false;
 			EnableTouch = true;
 

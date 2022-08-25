@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Sandbox.Texture;
 
 namespace Facepunch.RTS
 {
@@ -102,6 +103,11 @@ namespace Facepunch.RTS
 
 			FlowFieldGround.OnUpdated += OnGroundUpdated;
 
+			if ( IsClient )
+			{
+				_ = StartFogUpdater();
+			}
+
 			Instance = this;
 		}
 
@@ -152,24 +158,36 @@ namespace Facepunch.RTS
 		{
 			if ( IsServer )
 			{
-				var units = Items.List.OfType<BaseUnit>();
-
-				PathManager.SetBounds( WorldSize );
-
-				foreach ( var unit in units )
-				{
-					var collisionSize = unit.CollisionSize;
-					var nodeSize = unit.NodeSize;
-
-					PathManager.Create( nodeSize, collisionSize );
-				}
-
-				Rounds.Change( new LobbyRound() );
+				_ = InitializePathManager();
 			}
-			else
+		}
+
+		private async Task InitializePathManager()
+		{
+			PathManager.SetBounds( WorldSize );
+
+			var combinations = new HashSet<Tuple<int, int>>();
+			var units = Items.List.OfType<BaseUnit>();
+
+			foreach ( var unit in units )
 			{
-				_ = StartFogUpdater();
+				var collisionSize = unit.CollisionSize;
+				var nodeSize = unit.NodeSize;
+
+				combinations.Add( new Tuple<int, int>( nodeSize, collisionSize ) );
 			}
+
+			foreach ( var combination in combinations )
+			{
+				var collisionSize = combination.Item2;
+				var nodeSize = combination.Item1;
+
+				Log.Info( $"Have Path Manager Combination {collisionSize} {nodeSize}" );
+
+				await GameTask.RunInThreadAsync( () => PathManager.Create( nodeSize, collisionSize ) );
+			}
+
+			Rounds.Change( new LobbyRound() );
 		}
 
 		private void OnGroundUpdated()

@@ -111,9 +111,7 @@ namespace Facepunch.RTS
 			ResistanceList = new List<float>();
 			Resistances = new();
 
-			// Don't collide with anything but static shit.
 			EnableDrawOverWorld = true;
-			CollisionGroup = CollisionGroup.Debris;
 			Occupants = new List<UnitEntity>();
 			MoveStack = new();
 
@@ -1273,7 +1271,6 @@ namespace Facepunch.RTS
 			MaxHealth = item.MaxHealth;
 			EyePosition = Position + Vector3.Up * 64;
 			LineOfSightRadius = item.LineOfSightRadius;
-			CollisionGroup = CollisionGroup.Player;
 			EnableHitboxes = true;
 
 			if ( oldItem  != null )

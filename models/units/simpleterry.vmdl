@@ -540,6 +540,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -589,6 +590,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -643,6 +645,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -697,6 +700,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -713,10 +717,11 @@
 						hidden = false
 						anim_markup_ordered = false
 						disable_compression = false
-						source_filename = "models/citizen/animations/Citizen@IdlePoseDefault.fbx"
+						source_filename = "models/citizen/animations/citizen@idlepose_default.fbx"
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -745,6 +750,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -797,6 +803,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -835,6 +842,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = 40.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -855,6 +863,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -912,6 +921,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -969,6 +979,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 								]
@@ -1018,6 +1029,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1056,6 +1068,7 @@
 										start_frame = -1
 										end_frame = 4
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1076,6 +1089,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1133,6 +1147,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1190,6 +1205,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 								]
@@ -1239,6 +1255,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1277,6 +1294,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1297,6 +1315,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1354,6 +1373,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1411,6 +1431,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 								]
@@ -1460,6 +1481,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1498,6 +1520,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1518,6 +1541,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1575,6 +1599,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1632,6 +1657,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 								]
@@ -1681,6 +1707,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1719,6 +1746,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1739,6 +1767,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1796,6 +1825,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 									{
@@ -1853,6 +1883,7 @@
 										start_frame = -1
 										end_frame = -1
 										framerate = -1.0
+										take = 0
 										reverse = false
 									},
 								]
@@ -3724,6 +3755,7 @@
 					},
 					{
 						_class = "LODGroup"
+						disabled = true
 						switch_threshold = 5.0
 						meshes = 
 						[
@@ -3736,6 +3768,7 @@
 					},
 					{
 						_class = "LODGroup"
+						disabled = true
 						switch_threshold = 20.0
 						meshes = 
 						[
@@ -3748,6 +3781,7 @@
 					},
 					{
 						_class = "LODGroup"
+						disabled = true
 						switch_threshold = 40.0
 						meshes = 
 						[
@@ -4061,7 +4095,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "pelvis"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 5.0
 								point0 = [ 1.0, 0.0, -2.5 ]
 								point1 = [ 1.0, 0.0, 2.5 ]
@@ -4070,7 +4104,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "spine_0"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 7.0
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 4.0, 0.0, 0.0 ]
@@ -4080,7 +4114,7 @@
 								disabled = true
 								parent_bone = "spine_1"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 7.0
 								center = [ -0.5, 0.0, 0.0 ]
 							},
@@ -4088,7 +4122,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "spine_2"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 7.0
 								point0 = [ 1.0, 0.0, 0.0 ]
 								point1 = [ -2.0, 0.0, 0.0 ]
@@ -4098,7 +4132,7 @@
 								disabled = true
 								parent_bone = "neck_0"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.0
 								point0 = [ 1.0, 0.0, -4.0 ]
 								point1 = [ 1.0, 0.0, 4.0 ]
@@ -4107,7 +4141,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "head"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 6.5
 								point0 = [ 3.0, 1.0, 0.0 ]
 								point1 = [ 9.0, 0.25, 0.0 ]
@@ -4124,7 +4158,7 @@
 								disabled = true
 								parent_bone = "clavicle_L"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 1.55458
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 6.21832, 0.0, 0.0 ]
@@ -4133,7 +4167,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "arm_upper_L"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.4
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 10.0, 0.0, 0.0 ]
@@ -4142,7 +4176,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "arm_lower_L"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.0
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 7.5, -0.2, 0.2 ]
@@ -4151,7 +4185,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "hand_L"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 3.0
 								point0 = [ 2.0, 0.0, 0.4 ]
 								point1 = [ 7.0, 0.0, 2.5 ]
@@ -4161,7 +4195,7 @@
 								disabled = true
 								parent_bone = "clavicle_R"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 1.554579
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 6.21831, 0.0, 0.0 ]
@@ -4170,7 +4204,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "arm_upper_R"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.4
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 10.0, 0.0, 0.0 ]
@@ -4179,7 +4213,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "arm_lower_R"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.0
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 7.5, -0.2, -0.2 ]
@@ -4188,7 +4222,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "hand_R"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 3.0
 								point0 = [ 2.0, 0.0, -0.4 ]
 								point1 = [ 7.0, 0.0, -2.5 ]
@@ -4204,7 +4238,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "leg_upper_L"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 3.0
 								point0 = [ 3.0, 0.0, 0.0 ]
 								point1 = [ 14.0, 0.0, 0.0 ]
@@ -4213,7 +4247,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "leg_lower_L"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.5
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 12.5155, 0.0, 0.0 ]
@@ -4222,7 +4256,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "ankle_L"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.5
 								point0 = [ 1.5, -1.5, 0.0 ]
 								point1 = [ 4.5, 0.5, 0.0 ]
@@ -4231,7 +4265,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "leg_upper_R"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 3.0
 								point0 = [ 3.0, 0.0, 0.0 ]
 								point1 = [ 14.0, 0.0, 0.0 ]
@@ -4240,7 +4274,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "leg_lower_R"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.5
 								point0 = [ 0.0, 0.0, 0.0 ]
 								point1 = [ 12.5155, 0.0, 0.0 ]
@@ -4249,7 +4283,7 @@
 								_class = "PhysicsShapeCapsule"
 								parent_bone = "ankle_R"
 								surface_prop = "flesh"
-								collision_prop = "default"
+								collision_tags = "solid"
 								radius = 2.5
 								point0 = [ 1.5, -1.5, 0.0 ]
 								point1 = [ 4.5, 0.5, 0.0 ]
@@ -4588,5 +4622,6 @@
 		model_archetype = ""
 		primary_associated_entity = ""
 		anim_graph_name = ""
+		base_model_name = ""
 	}
 }

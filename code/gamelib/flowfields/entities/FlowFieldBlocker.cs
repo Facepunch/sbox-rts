@@ -17,8 +17,9 @@ namespace Gamelib.FlowFields.Entities
 		{
 			base.Spawn();
 
-			SetInteractsAs( CollisionLayer.PLAYER_CLIP );
-			SetupPhysicsFromModel( PhysicsMotionType.Static, true );
+			SetupPhysicsFromModel( PhysicsMotionType.Keyframed, true );
+
+			Tags.Add( "playerclip" );
 
 			Transmit = TransmitType.Never;
 		}

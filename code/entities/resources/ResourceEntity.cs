@@ -94,7 +94,7 @@ namespace Facepunch.RTS
 		{
 			base.Spawn();
 
-			SetupPhysicsFromModel( PhysicsMotionType.Static );
+			SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 
 			// Let's make sure there is stock.
 			if ( Stock == 0 )

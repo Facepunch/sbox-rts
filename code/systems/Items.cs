@@ -806,7 +806,7 @@ namespace Facepunch.RTS
 
 				item.NetworkId = (uint)(i + 1);
 
-				Log.Info( $"Adding {item.UniqueId} to the available items (id = {item.NetworkId})" );
+				Log.Info( $"Adding {item.UniqueId} ({item}) to the available items (id = {item.NetworkId})" );
 			}
 		}
 	}

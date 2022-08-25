@@ -138,7 +138,6 @@ namespace Gamelib.FlowFields
 			var trace = Trace.Sweep( _physicsBody, transform, transform )
 				.EntitiesOnly()
 				.WithoutTags( "ff_ignore" )
-				.HitLayer( CollisionLayer.PLAYER_CLIP, true )
 				.Run();
 
 			return trace;
@@ -420,7 +419,9 @@ namespace Gamelib.FlowFields
 			var nodeExtents = Vector3.One * nodeSize * 0.5f;
 
 			physicsBody.CollisionEnabled = false;
-			physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, collisionExtents );
+
+			var shape = physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, collisionExtents );
+			shape.AddTag( "pathfinder" );
 
 			_numberOfChunks = new GridDefinition( numberOfChunks, numberOfChunks );
 			_collisionExtents = collisionExtents;

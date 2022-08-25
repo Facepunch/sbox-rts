@@ -41,10 +41,9 @@ namespace Facepunch.RTS
 			ragdoll.Position = entity.Position;
 			ragdoll.Rotation = entity.Rotation;
 			ragdoll.Scale = entity.Scale;
-			ragdoll.MoveType = MoveType.Physics;
+			ragdoll.PhysicsEnabled = true;
 			ragdoll.UsePhysicsCollision = true;
 			ragdoll.EnableAllCollisions = true;
-			ragdoll.CollisionGroup = CollisionGroup.Debris;
 			ragdoll.SetModel( modelName );
 			ragdoll.CopyBonesFrom( entity );
 			ragdoll.CopyBodyGroups( entity );
@@ -60,9 +59,7 @@ namespace Facepunch.RTS
 			}
 
 			ragdoll.PhysicsGroup.Velocity = velocity;
-			ragdoll.SetInteractsAs( CollisionLayer.Debris );
-			ragdoll.SetInteractsWith( CollisionLayer.WORLD_GEOMETRY );
-			ragdoll.SetInteractsExclude( CollisionLayer.Player | CollisionLayer.Debris );
+			ragdoll.Tags.Add( "ragdoll" );
 
 			foreach ( var child in entity.Children )
 			{

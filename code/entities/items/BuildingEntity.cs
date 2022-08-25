@@ -718,7 +718,7 @@ namespace Facepunch.RTS
 			if ( !string.IsNullOrEmpty( item.Model ) )
 			{
 				SetModel( item.Model );
-				SetupPhysicsFromModel( PhysicsMotionType.Static );
+				SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 			}
 
 			if ( GeneratorSound.HasValue )

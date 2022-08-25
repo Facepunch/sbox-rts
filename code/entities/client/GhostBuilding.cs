@@ -41,8 +41,9 @@ namespace Facepunch.RTS
 			*/
 
 			EnableTouch = true;
-			CollisionGroup = CollisionGroup.Trigger;
 			EnableSolidCollisions = false;
+
+			Tags.Add( "ghostbuilding" );
 
 			SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 

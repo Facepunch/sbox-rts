@@ -90,7 +90,7 @@ namespace Facepunch.RTS
 
 		public override void Spawn()
 		{
-			SetupPhysicsFromModel( PhysicsMotionType.Static );
+			SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 
 			LocalCenter = CollisionBounds.Center;
 			Health = MaxHealth;
