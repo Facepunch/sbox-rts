@@ -182,8 +182,6 @@ namespace Facepunch.RTS
 				var collisionSize = combination.Item2;
 				var nodeSize = combination.Item1;
 
-				Log.Info( $"Have Path Manager Combination {collisionSize} {nodeSize}" );
-
 				await GameTask.RunInThreadAsync( () => PathManager.Create( nodeSize, collisionSize ) );
 			}
 
