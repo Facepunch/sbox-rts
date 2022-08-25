@@ -1,9 +1,5 @@
 ﻿using Sandbox;
 using Sandbox.UI;
-using System;
-using System.IO;
-using System.IO.Compression;
-using System.Text.Json;
 
 namespace Gamelib.UI
 {
@@ -15,9 +11,9 @@ namespace Gamelib.UI
 
 			if ( root.PseudoClass.HasFlag( PseudoClass.Hover ) )
 			{
-				if ( !string.IsNullOrEmpty( root.ComputedStyle.PointerEvents ) )
+				if ( root.ComputedStyle.PointerEvents.HasValue )
 				{
-					if ( root.ComputedStyle.PointerEvents != "visible" && root.ComputedStyle.PointerEvents != "none" )
+					if ( root.ComputedStyle.PointerEvents == PointerEvents.All )
 						return root;
 				}
 			}

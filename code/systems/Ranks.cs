@@ -36,8 +36,11 @@ namespace Facepunch.RTS
 
 			foreach ( var type in TypeLibrary.GetTypes<BaseRank>() )
 			{
-				var rank = TypeLibrary.Create<BaseRank>( type );
-				list.Add( rank );
+				if ( !type.IsAbstract && !type.ContainsGenericParameters )
+				{
+					var rank = TypeLibrary.Create<BaseRank>( type );
+					list.Add( rank );
+				}
 			}
 
 			for ( var i = 0; i < list.Count; i++ )

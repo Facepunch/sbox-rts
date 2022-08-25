@@ -57,8 +57,11 @@ namespace Facepunch.RTS
 
 			foreach ( var type in TypeLibrary.GetTypes<BaseResistance>() )
 			{
-				var resistance = TypeLibrary.Create<BaseResistance>( type );
-				list.Add( resistance );
+				if ( !type.IsAbstract && !type.ContainsGenericParameters )
+				{
+					var resistance = TypeLibrary.Create<BaseResistance>( type );
+					list.Add( resistance );
+				}
 			}
 
 			// Sort alphabetically, this should result in the same index for client and server.

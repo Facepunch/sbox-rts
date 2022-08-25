@@ -2,6 +2,7 @@
 	background-color: rgba( #333, 0 );
 	transition: background-color 0.2s ease-in;
 	transform-origin: 50% 50%;
+	pointer-events: none;
 
 	&.devcamera {
 		display: none;

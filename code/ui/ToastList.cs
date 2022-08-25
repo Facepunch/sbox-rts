@@ -50,6 +50,7 @@ namespace Facepunch.RTS
 		{
 			var item = AddChild<ToastItem>();
 			item.Update( text, icon );
+			Sound.FromScreen( "toast.show" );
 		}
 	}
 }
