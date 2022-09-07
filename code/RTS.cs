@@ -1,6 +1,5 @@
 ﻿using Facepunch.RTS.Tech;
 using Facepunch.RTS.Units;
-using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Gamelib.FlowFields.Entities;
 using Sandbox;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Sandbox.Texture;
 
 namespace Facepunch.RTS
 {
@@ -183,6 +181,7 @@ namespace Facepunch.RTS
 				var nodeSize = combination.Item1;
 
 				await GameTask.RunInThreadAsync( () => PathManager.Create( nodeSize, collisionSize ) );
+				await GameTask.Delay( 50 );
 			}
 
 			Rounds.Change( new LobbyRound() );
@@ -230,22 +229,5 @@ namespace Facepunch.RTS
 		{
 			Ratings = FileSystem.Mounted.ReadJsonOrDefault<Dictionary<long, int>>( "data/rts/ratings.json" ) ?? new();
 		}
-
-		/*
-		private void CheckMinimumPlayers()
-		{
-			if ( Client.All.Count >= 2 )
-			{
-				if ( Rounds.Current is LobbyRound || Rounds.Current == null )
-				{
-					Rounds.Change( new PlayRound() );
-				}
-			}
-			else if ( Rounds.Current is not LobbyRound )
-			{
-				Rounds.Change( new LobbyRound() );
-			}
-		}
-		*/
 	}
 }

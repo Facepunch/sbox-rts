@@ -1,5 +1,6 @@
 using Gamelib.Maths;
 using Sandbox;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace Gamelib.FlowFields
 		[ConCmd.Server( "ff_show_chunks" )]
 		private static void ShowChunks()
 		{
-			var pathfinder = _default;
+			var pathfinder = Default;
 			var chunks = pathfinder.Chunks;
 			var numberOfChunks = pathfinder.Chunks.Length;
 
@@ -93,45 +94,41 @@ namespace Gamelib.FlowFields
 			}
 		}
 
-		private static Dictionary<int, Pathfinder> _pathfinders = new();
-		private static Pathfinder _smallest;
-		private static Pathfinder _largest;
-		private static Pathfinder _default;
-		private static BBox? _bounds;
+		private static Dictionary<int, Pathfinder> Pathfinders { get; set; } = new();
 
 		public static List<Pathfinder> All { get; private set; } = new();
-		public static Pathfinder Smallest => _smallest;
-		public static Pathfinder Largest => _largest;
-		public static Pathfinder Default => _default;
-		public static BBox? Bounds => _bounds;
+		public static Pathfinder Smallest { get; private set; }
+		public static Pathfinder Largest { get; private set; }
+		public static Pathfinder Default { get; private set; }
+		public static BBox? Bounds { get; private set; }
 
 		public static Pathfinder GetPathfinder( int nodeSize, int collisionSize )
 		{
 			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
 
-			if ( _pathfinders.TryGetValue( hash, out var pathfinder ) )
+			if ( Pathfinders.TryGetValue( hash, out var pathfinder ) )
 			{
 				return pathfinder;
 			}
 
-			return _default;
+			return Default;
 		}
 
 		public static void SetBounds( BBox bounds )
 		{
-			_bounds = bounds;
+			Bounds = bounds;
 		}
 
-		public static void Create( int nodeSize = 50, int collisionSize = 100 )
+		public static async Task Create( int nodeSize = 50, int collisionSize = 100 )
 		{
-			if ( !_bounds.HasValue )
-				throw new System.Exception( "[PathManager::Create] Unable to create a Pathfinder without a world bounds value set!" );
+			if ( !Bounds.HasValue )
+				throw new Exception( "[PathManager::Create] Unable to create a Pathfinder without a world bounds value set!" );
 
 			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
 
-			if ( !_pathfinders.ContainsKey( hash ) )
+			if ( !Pathfinders.ContainsKey( hash ) )
 			{
-				Register( new Pathfinder( _bounds.Value, nodeSize, collisionSize ), nodeSize, collisionSize );
+				await Register( new Pathfinder( Bounds.Value, nodeSize, collisionSize ), nodeSize, collisionSize );
 			}
 		}
 
@@ -141,24 +138,24 @@ namespace Gamelib.FlowFields
 				All[i].Update();
 		}
 
-		private static void Register( Pathfinder pathfinder, int nodeSize, int collisionSize )
+		private static async Task Register( Pathfinder pathfinder, int nodeSize, int collisionSize )
 		{
 			var hash = MathUtility.HashNumbers( (short)nodeSize, (short)collisionSize );
 
-			_ = pathfinder.Initialize();
+			Pathfinders[hash] = pathfinder;
 
-			_pathfinders[hash] = pathfinder;
+			if ( Largest == null || collisionSize > Largest.CollisionSize )
+				Largest = pathfinder;
 
-			if ( _largest == null || collisionSize > _largest.CollisionSize )
-				_largest = pathfinder;
+			if ( Smallest == null || collisionSize < Smallest.CollisionSize )
+				Smallest = pathfinder;
 
-			if ( _smallest == null || collisionSize < _smallest.CollisionSize )
-				_smallest = pathfinder;
-
-			if ( _default == null )
-				_default = pathfinder;
+			if ( Default == null )
+				Default = pathfinder;
 
 			All.Add( pathfinder );
+
+			await pathfinder.Initialize();
 		}
     }
 }

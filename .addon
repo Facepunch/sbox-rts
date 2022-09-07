@@ -15,11 +15,12 @@
   "RootNamespace": "Facepunch.RTS",
   "Metadata": {
     "MapList": [
-      "facepunch.rts_greenlands"
+      "facepunch.rts_greenlands",
+      "facepunch.rts_eclipse"
     ],
     "MinPlayers": 1,
     "MaxPlayers": 4,
-    "MapSelect": "Official",
+    "MapSelect": "Tagged",
     "Collision": {
       "Defaults": {
         "solid": "Collide",
@@ -64,6 +65,11 @@
           "r": "Ignore"
         }
       ]
-    }
+    },
+    "GameNetworkType": "Multiplayer",
+    "RankType": "None",
+    "PerMapRanking": false,
+    "LeaderboardType": "None",
+    "GameCategory": "None"
   }
 }
