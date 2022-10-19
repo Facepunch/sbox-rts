@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	{
 		[Net, Change] public BaseRound Round { get; set; }
 
-		private void OnRoundChanged( BaseRound newRound, BaseRound oldRound )
+		private void OnRoundChanged( BaseRound oldRound, BaseRound newRound )
 		{
 			oldRound?.Finish();
 			newRound?.Start();
