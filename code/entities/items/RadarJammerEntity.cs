@@ -11,11 +11,11 @@ namespace Facepunch.RTS
 	{
 		public static float EffectiveRange => 1500f;
 
-		private RangeEntity _range;
+		private RangeEntity Range;
 
 		protected override void OnSelected()
 		{
-			if ( IsLocalPlayers && !_range.IsValid() )
+			if ( IsLocalPlayers && !Range.IsValid() )
 			{
 				CreateRangeEntity();
 			}
@@ -40,19 +40,19 @@ namespace Facepunch.RTS
 
 		private void CreateRangeEntity()
 		{
-			_range = new();
-			_range.SetParent( this );
-			_range.Position = Position;
-			_range.Color = Color.Cyan;
-			_range.Size = EffectiveRange;
+			Range = new();
+			Range.SetParent( this );
+			Range.Position = Position;
+			Range.Color = Color.Cyan;
+			Range.Size = EffectiveRange;
 		}
 
 		private void DeleteRangeEntity()
 		{
-			if ( _range.IsValid() )
+			if ( Range.IsValid() )
 			{
-				_range.Delete();
-				_range = null;
+				Range.Delete();
+				Range = null;
 			}
 		}
 	}

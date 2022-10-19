@@ -740,8 +740,11 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			var cursorOrigin = Input.Cursor.Origin;
-			var cursorAim = Input.Cursor.Direction;
+			if ( Local.Pawn is not Player player )
+				return;
+
+			var cursorOrigin = player.CursorOrigin;
+			var cursorAim = player.CursorDirection;
 			var trace = Ghost.GetPlacementTrace( Local.Client, cursorOrigin, cursorAim );
 			var valid = Ghost.IsPlacementValid( trace );
 

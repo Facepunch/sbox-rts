@@ -28,7 +28,7 @@ namespace Gamelib.Network
 				GlobalName = name
 			};
 
-			if ( Host.IsServer && !_cache.ContainsKey( name ) )
+			if ( Host.IsServer && !Cache.ContainsKey( name ) )
 			{
 				var entity = new T()
 				{
@@ -36,7 +36,7 @@ namespace Gamelib.Network
 				};
 
 				handle.Entity = entity;
-				_cache.Add( name, entity );
+				Cache.Add( name, entity );
 			}
 
 			return handle;
@@ -44,7 +44,7 @@ namespace Gamelib.Network
 
 		public static T Find<T>( string name ) where T : Globals
 		{
-			if ( _cache.TryGetValue( name, out var entity ) )
+			if ( Cache.TryGetValue( name, out var entity ) )
 			{
 				return (entity as T);
 			}
@@ -52,7 +52,7 @@ namespace Gamelib.Network
 			return null;
 		}
 
-		private static Dictionary<string, Globals> _cache = new();
+		private static Dictionary<string, Globals> Cache = new();
 
 		[Net] public string GlobalName { get; set; }
 
@@ -63,8 +63,8 @@ namespace Gamelib.Network
 
 		public override void ClientSpawn()
 		{
-			if ( !_cache.ContainsKey( GlobalName ) )
-				_cache.Add( GlobalName, this );
+			if ( !Cache.ContainsKey( GlobalName ) )
+				Cache.Add( GlobalName, this );
 
 			base.Spawn();
 		}

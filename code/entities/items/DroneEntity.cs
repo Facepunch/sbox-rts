@@ -16,8 +16,8 @@ namespace Facepunch.RTS
 		protected SuicideStage CurrentSuicideStage { get; set; }
 		protected ISelectable SuicideTarget { get; set; }
 
-		private Particles _miningLaser;
-		private Sound _miningSound;
+		private Particles MiningLaser;
+		private Sound MiningSound;
 
 		public void Suicide( ISelectable target )
 		{
@@ -105,22 +105,22 @@ namespace Facepunch.RTS
 
 			base.ServerTick();
 
-			if ( IsGathering && _gather.Entity.IsValid() )
+			if ( IsGathering && InternalGatherInfo.Entity.IsValid() )
 			{
-				if ( _miningLaser == null )
+				if ( MiningLaser == null )
 				{
-					_miningLaser = Particles.Create( "particles/weapons/mining_lazer/mining_lazer.vpcf" );
-					_miningLaser.SetEntityAttachment( 0, this, "muzzle" );
-					_miningSound = PlaySound( "rts.drone.mininglaser" );
+					MiningLaser = Particles.Create( "particles/weapons/mining_lazer/mining_lazer.vpcf" );
+					MiningLaser.SetEntityAttachment( 0, this, "muzzle" );
+					MiningSound = PlaySound( "rts.drone.mininglaser" );
 				}
 
-				_miningLaser.SetPosition( 1, _gather.Entity.WorldSpaceBounds.Center );
+				MiningLaser.SetPosition( 1, InternalGatherInfo.Entity.WorldSpaceBounds.Center );
 			}
 			else
 			{
-				_miningSound.Stop();
-				_miningLaser?.Destroy( true );
-				_miningLaser = null;
+				MiningSound.Stop();
+				MiningLaser?.Destroy( true );
+				MiningLaser = null;
 			}
 		}
 
@@ -130,9 +130,9 @@ namespace Facepunch.RTS
 
 			if ( IsServer )
 			{
-				_miningSound.Stop();
-				_miningLaser?.Destroy( true );
-				_miningLaser = null;
+				MiningSound.Stop();
+				MiningLaser?.Destroy( true );
+				MiningLaser = null;
 			}
 		}
 	}

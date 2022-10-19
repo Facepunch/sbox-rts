@@ -2,6 +2,7 @@
 using Facepunch.RTS.Units;
 using Gamelib.FlowFields;
 using Sandbox;
+using Sandbox.Component;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Facepunch.RTS
 {
 	public partial class BuildingEntity : ItemEntity<BaseBuilding>, IFogViewer, IOccupiableEntity, IDamageable, IFogCullable, IMapIconEntity
 	{
-		[Net, Change] public List<UnitEntity> Occupants { get; private set; }
+		[Net, Change] public IList<UnitEntity> Occupants { get; private set; }
 
 		public IOccupiableItem OccupiableItem => Item;
 
@@ -58,8 +59,8 @@ namespace Facepunch.RTS
 		public EntityHudBar HealthBar { get; private set; }
 		#endregion
 
-		private HistoryBuilding _historyBuilding;
-		private Particles _rallyMarker;
+		private HistoryBuilding HistoryBuilding;
+		private Particles RallyMarker;
 
 		public BuildingEntity() : base()
 		{
@@ -74,8 +75,13 @@ namespace Facepunch.RTS
 				IsUnderConstruction = true;
 				IsBlueprint = true;
 				EnableTouch = true;
-				//GlowColor = Color.Red;
 				Health = 1f;
+			}
+			else
+			{
+				var glow = Components.GetOrCreate<Glow>();
+				glow.Enabled = true;
+				glow.Color = Color.Red;
 			}
 		}
 
@@ -97,10 +103,10 @@ namespace Facepunch.RTS
 
 			if ( HasBeenSeen && !isVisible )
 			{
-				if ( !_historyBuilding.IsValid() )
+				if ( !HistoryBuilding.IsValid() )
 				{
-					_historyBuilding = new HistoryBuilding();
-					_historyBuilding.Copy( this );
+					HistoryBuilding = new HistoryBuilding();
+					HistoryBuilding.Copy( this );
 				}
 
 				EnableDrawing = true;
@@ -108,10 +114,10 @@ namespace Facepunch.RTS
 			}
 			else
 			{
-				if ( isVisible && _historyBuilding.IsValid() )
+				if ( isVisible && HistoryBuilding.IsValid() )
 				{
-					_historyBuilding.Delete();
-					_historyBuilding = null;
+					HistoryBuilding.Delete();
+					HistoryBuilding = null;
 				}
 				else
 				{
@@ -140,8 +146,6 @@ namespace Facepunch.RTS
 		public void UpdateConstruction()
 		{
 			Host.AssertServer();
-
-			//GlowColor = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
 
 			if ( IsBlueprint )
 			{
@@ -559,6 +563,9 @@ namespace Facepunch.RTS
 					targetAlpha = MathF.Min( 0.5f + (0.5f / Item.MaxHealth) * Health, targetAlpha );
 				else
 					targetAlpha = 0f;
+
+				var glow = Components.GetOrCreate<Glow>();
+				glow.Color = Color.Lerp( Color.Red, Color.Green, Health / Item.MaxHealth );
 			}
 
 			if ( IsLocalTeamGroup )
@@ -904,8 +911,8 @@ namespace Facepunch.RTS
 
 		private void HideRallyMarker()
 		{
-			_rallyMarker?.Destroy();
-			_rallyMarker = null;
+			RallyMarker?.Destroy();
+			RallyMarker = null;
 		}
 
 		private void ShowRallyMarker()
@@ -915,9 +922,9 @@ namespace Facepunch.RTS
 
 			HideRallyMarker();
 
-			_rallyMarker = Particles.Create( "particles/flag_marker/flag_marker.vpcf" );
-			_rallyMarker.SetPosition( 0, RallyPosition );
-			_rallyMarker.SetPosition( 1, Player.TeamColor * 255f );
+			RallyMarker = Particles.Create( "particles/flag_marker/flag_marker.vpcf" );
+			RallyMarker.SetPosition( 0, RallyPosition );
+			RallyMarker.SetPosition( 1, Player.TeamColor * 255f );
 		}
 
 		[ClientRpc]
@@ -933,7 +940,8 @@ namespace Facepunch.RTS
 		{
 			if ( IsLocalPlayers )
 			{
-				//GlowActive = IsUnderConstruction;
+				var glow = Components.GetOrCreate<Glow>();
+				glow.Enabled = IsUnderConstruction;
 			}
 		}
 	}

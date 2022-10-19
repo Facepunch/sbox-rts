@@ -89,13 +89,6 @@ namespace Facepunch.RTS
 
 			if ( IsServer )
 			{
-				// TODO: Remove this. Temporarily add and remove some tags to add them to the string pool.
-				// This is because the client will throw an exception when using tags with traces and no
-				// entity exists yet with those tags.
-
-				Tags.Add( "blueprint" );
-				Tags.Remove( "blueprint" );
-
 				Global.TickRate = 20;
 			}
 

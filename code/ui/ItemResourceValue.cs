@@ -19,16 +19,16 @@ namespace Facepunch.RTS
 
 			set
 			{
-				_lerpToStartValue = value;
-				_lerpToEndValue = value;
+				LerpToStartValue = value;
+				LerpToEndValue = value;
 				Label.Text = value.ToString();
 			}
 		}
 
-		private int _lerpToEndValue;
-		private int _lerpToStartValue;
-		private float _lerpToDuration;
-		private RealTimeUntil _lerpToEndTime;
+		private int LerpToEndValue;
+		private int LerpToStartValue;
+		private float LerpToDuration;
+		private RealTimeUntil LerpToEndTime;
 
 		public ItemResourceValue()
 		{
@@ -40,10 +40,10 @@ namespace Facepunch.RTS
 
 		public void LerpTo( int value, float duration )
 		{
-			_lerpToStartValue = NumericValue;
-			_lerpToEndValue = value;
-			_lerpToEndTime = duration;
-			_lerpToDuration = duration;
+			LerpToStartValue = NumericValue;
+			LerpToEndValue = value;
+			LerpToEndTime = duration;
+			LerpToDuration = duration;
 		}
 
 		public void Update( ResourceType type, int value )
@@ -85,21 +85,21 @@ namespace Facepunch.RTS
 
 		private void UpdateLerp()
 		{
-			if ( _lerpToStartValue == _lerpToEndValue )
+			if ( LerpToStartValue == LerpToEndValue )
 			{
 				SetClass( "lerping", false );
 				return;
 			}
 
-			var fraction = Easing.EaseInOut( ((_lerpToDuration - _lerpToEndTime) / _lerpToDuration).Clamp( 0f, 1f ) );
+			var fraction = Easing.EaseInOut( ((LerpToDuration - LerpToEndTime) / LerpToDuration).Clamp( 0f, 1f ) );
 
 			if ( fraction == 1f )
 			{
-				NumericValue = _lerpToEndValue;
+				NumericValue = LerpToEndValue;
 				return;
 			}
 
-			Label.Text = MathF.Ceiling( _lerpToStartValue + ((_lerpToEndValue - _lerpToStartValue) * fraction) ).ToString();
+			Label.Text = MathF.Ceiling( LerpToStartValue + ((LerpToEndValue - LerpToStartValue) * fraction) ).ToString();
 
 			SetClass( "lerping", true );
 		}

@@ -6,16 +6,11 @@ namespace Facepunch.RTS
 	internal partial class RoundGlobals : Globals
 	{
 		[Net, Change] public BaseRound Round { get; set; }
-		public BaseRound LastRound { get; private set; }
 
-		private void OnRoundChanged()
+		private void OnRoundChanged( BaseRound newRound, BaseRound oldRound )
 		{
-			if ( LastRound != Round )
-			{
-				LastRound?.Finish();
-				LastRound = Round;
-				LastRound.Start();
-			}
+			oldRound?.Finish();
+			newRound?.Start();
 		}
 
 		[Event.Tick]

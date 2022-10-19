@@ -34,7 +34,7 @@ namespace Facepunch.RTS
 
 		public Color IconColor => Resource.GetColor();
 
-		private RealTimeUntil _nextGatherSound;
+		private RealTimeUntil NextGatherSound;
 
 		public ResourceEntity()
 		{
@@ -53,12 +53,12 @@ namespace Facepunch.RTS
 
 		public void PlayGatherSound()
 		{
-			if ( !_nextGatherSound ) return;
+			if ( !NextGatherSound ) return;
 
 			if ( GatherSounds.Length > 0 )
 				PlaySound( Rand.FromArray( GatherSounds ) );
 
-			_nextGatherSound = 0.5f;
+			NextGatherSound = 0.5f;
 		}
 
 		public void ShowOutline()

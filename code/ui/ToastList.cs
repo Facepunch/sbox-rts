@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 		public Label Text { get; set; }
 		public Image Icon { get; set; }
 
-		private float _endTime;
+		private float EndTime;
 
 		public ToastItem()
 		{
@@ -26,12 +26,12 @@ namespace Facepunch.RTS
 
 			Icon.SetClass( "hidden", icon == null );
 
-			_endTime = Time.Now + 3f;
+			EndTime = Time.Now + 3f;
 		}
 
 		public override void Tick()
 		{
-			if ( !IsDeleting && Time.Now >= _endTime )
+			if ( !IsDeleting && Time.Now >= EndTime )
 				Delete();
 		}
 	}
