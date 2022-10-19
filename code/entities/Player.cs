@@ -364,13 +364,13 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public void LookAt( Vector3 position )
 		{
-			Camera.LookAt = position.WithZ( 0f );
+			RTSCamera.LookAt = position.WithZ( 0f );
 		}
 
 		[ClientRpc]
 		public void LookAt( Entity other )
 		{
-			Camera.LookAt = other.Position.WithZ( 0f );
+			RTSCamera.LookAt = other.Position.WithZ( 0f );
 		}
 
 		public override void BuildInput()

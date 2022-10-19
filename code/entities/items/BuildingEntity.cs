@@ -16,7 +16,7 @@ namespace Facepunch.RTS
 		public IOccupiableItem OccupiableItem => Item;
 
 		[Net, Local] public RealTimeUntil NextGenerateResources { get; private set; }
-		[Net, Change] public bool IsUnderConstruction { get; private set; }
+		[Net, Change( nameof( OnIsUnderConstructionChanged ) )] public bool IsUnderConstruction { get; set; }
 		public HashSet<Entity> TouchingEntities { get; private set; }
 		[Net, Change] public Vector3 RallyPosition { get; set; }
 		public IMoveCommand RallyCommand { get; set; }
@@ -76,12 +76,6 @@ namespace Facepunch.RTS
 				IsBlueprint = true;
 				EnableTouch = true;
 				Health = 1f;
-			}
-			else
-			{
-				var glow = Components.GetOrCreate<Glow>();
-				glow.Enabled = true;
-				glow.Color = Color.Red;
 			}
 		}
 
@@ -379,6 +373,13 @@ namespace Facepunch.RTS
 
 		public override void ClientSpawn()
 		{
+			if ( IsUnderConstruction )
+			{
+				var glow = Components.GetOrCreate<Glow>();
+				glow.Enabled = true;
+				glow.Color = Color.Red;
+			}
+
 			if ( !IsLocalTeamGroup )
 			{
 				Fog.AddCullable( this );
@@ -525,6 +526,15 @@ namespace Facepunch.RTS
 			OccupantsHud?.SetActive( Occupants.Count > 0 );
 
 			base.UpdateHudComponents();
+		}
+
+		protected virtual void OnIsUnderConstructionChanged( bool newValue )
+		{
+			if ( IsLocalPlayers )
+			{
+				var glow = Components.GetOrCreate<Glow>();
+				glow.Enabled = newValue;
+			}
 		}
 
 		protected virtual void OnOccupied( UnitEntity unit )
@@ -933,15 +943,6 @@ namespace Facepunch.RTS
 			if ( IsLocalTeamGroup )
 			{
 				Fog.AddViewer( this );
-			}
-		}
-
-		private void OnIsUnderConstructionChanged()
-		{
-			if ( IsLocalPlayers )
-			{
-				var glow = Components.GetOrCreate<Glow>();
-				glow.Enabled = IsUnderConstruction;
 			}
 		}
 	}

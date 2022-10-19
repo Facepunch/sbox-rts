@@ -1261,9 +1261,17 @@ namespace Facepunch.RTS
 
 			RemoveClothing();
 
+			var allClothing = ResourceLibrary.GetAll<Clothing>();
+
 			foreach ( var clothes in item.Clothing )
 			{
-				AttachClothing( clothes );
+				var modelName = allClothing
+					.Where( c => c.ResourceName.ToLower() == clothes.ToLower() )
+					.Select( c => c.Model )
+					.FirstOrDefault();
+
+				if ( !string.IsNullOrEmpty( modelName ) )
+					AttachClothing( modelName );
 			}
 
 			Scale = item.ModelScale;

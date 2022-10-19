@@ -5,8 +5,10 @@ namespace Facepunch.RTS
 {
 	public partial class RTSCamera : CameraMode
 	{
-		public float ZoomLevel { get; set; }
-		public Vector3 LookAt { get; set; }
+		public static Vector3 LookAt { get; set; }
+		public static float ZoomLevel { get; set; }
+		private static Vector3 InternalPosition { get; set; }
+		private static Rotation InternalRotation { get; set; }
 
 		public override void Activated()
 		{
@@ -23,7 +25,7 @@ namespace Facepunch.RTS
 
 		public override void Update()
 		{
-			if ( Local.Pawn is not Player player ) return;
+			if ( Local.Pawn is not Player ) return;
 
 			var cameraConfig = Config.Current.Camera;
 
@@ -82,10 +84,12 @@ namespace Facepunch.RTS
 				eyePos += Vector3.Up * (cameraConfig.Up - (cameraConfig.Up * ZoomLevel * cameraConfig.ZoomScale));
 			}
 
-			Position = Position.LerpTo( eyePos, Time.Delta * 4f );
+			InternalPosition = InternalPosition.LerpTo( eyePos, Time.Delta * 4f );
 			var difference = LookAt - eyePos;
-			Rotation = Rotation.Slerp( Rotation, Rotation.LookAt( difference, Vector3.Up ), Time.Delta * 8f );
+			InternalRotation = Rotation.Slerp( InternalRotation, Rotation.LookAt( difference, Vector3.Up ), Time.Delta * 8f );
 
+			Position = InternalPosition;
+			Rotation = InternalRotation;
 
 			Sound.Listener = new Transform()
 			{

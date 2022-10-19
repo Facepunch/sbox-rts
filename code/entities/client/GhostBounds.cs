@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Runtime.InteropServices;
 
 namespace Facepunch.RTS
 {
@@ -12,7 +13,9 @@ namespace Facepunch.RTS
 		{
 			if ( !EnableDrawing ) return;
 
-			var vertexBuffer = Render.GetDynamicVB( true );
+			var vertexBuffer = new VertexBuffer();
+			vertexBuffer.Init( true );
+
 			var boundsSize = RenderBounds.Size / 2f;
 
 			var a = new Vertex( new Vector3( -boundsSize.x, -boundsSize.y, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 0, 1, 0, 0 ) );
@@ -22,12 +25,14 @@ namespace Facepunch.RTS
 
 			vertexBuffer.AddQuad( a, b, c, d );
 
-			Render.Attributes.Set( "TintColor", Color );
-			Render.Attributes.Set( "Translucency", Alpha );
+			var attributes = new RenderAttributes();
+
+			attributes.Set( "TintColor", Color );
+			attributes.Set( "Translucency", Alpha );
 
 			if ( Material != null )
 			{
-				vertexBuffer.Draw( Material );
+				vertexBuffer.Draw( Material, attributes );
 			}
 		}
 	}
