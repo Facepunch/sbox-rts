@@ -23,7 +23,8 @@ namespace Facepunch.RTS
 
 		public override void Update()
 		{
-			if ( Local.Pawn is not Player player ) return;
+			if ( Local.Pawn is not Player )
+				return;
 
 			var cameraConfig = Config.Current.Camera;
 
@@ -85,7 +86,6 @@ namespace Facepunch.RTS
 			Position = Position.LerpTo( eyePos, Time.Delta * 4f );
 			var difference = LookAt - eyePos;
 			Rotation = Rotation.Slerp( Rotation, Rotation.LookAt( difference, Vector3.Up ), Time.Delta * 8f );
-
 
 			Sound.Listener = new Transform()
 			{

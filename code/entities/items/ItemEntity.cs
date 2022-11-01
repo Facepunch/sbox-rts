@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 		public Dictionary<string, ItemComponent> ItemComponents { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, Change] public uint ItemNetworkId { get; private set; }
-		[Net] public List<uint> Upgrades { get; private set; }
+		[Net] public IList<uint> Upgrades { get; private set; }
 		[Net] public Player Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }
 		public EntityHudAnchor Hud { get; private set; }
@@ -38,15 +38,15 @@ namespace Facepunch.RTS
 		public bool IsLocalPlayers => Player.IsValid() && Local.Pawn == Player;
 		public bool IsLocalTeamGroup => Player.IsValid() && (Local.Pawn as Player).TeamGroup == Player.TeamGroup;
 
-		private T _itemCache;
+		private T ItemCache;
 
 		public T Item
 		{
 			get
 			{
-				if ( _itemCache == null )
-					_itemCache = Items.Find<T>( ItemNetworkId );
-				return _itemCache;
+				if ( ItemCache == null )
+					ItemCache = Items.Find<T>( ItemNetworkId );
+				return ItemCache;
 			}
 		}
 
@@ -431,7 +431,7 @@ namespace Facepunch.RTS
 			return EntityExtension.GetDiameterXY( this, scalar, smallestSide );
 		}
 
-		public void ClearItemCache() => _itemCache = null;
+		public void ClearItemCache() => ItemCache = null;
 
 		public void Assign( Player player, string itemId )
 		{
@@ -632,7 +632,7 @@ namespace Facepunch.RTS
 
 		protected override void OnTagAdded( string tag )
 		{
-			if ( IsLocalPlayers && tag == "selected" )
+			if ( IsLocalPlayers && tag.ToLower() == "selected" )
 			{
 				OnSelected();
 			}
@@ -642,7 +642,7 @@ namespace Facepunch.RTS
 
 		protected override void OnTagRemoved( string tag )
 		{
-			if ( IsLocalPlayers && tag == "selected" )
+			if ( IsLocalPlayers && tag.ToLower() == "selected" )
 			{
 				OnDeselected();
 			}
@@ -655,7 +655,7 @@ namespace Facepunch.RTS
 			if ( HasSelectionGlow )
 			{
 				var glow = Components.GetOrCreate<Glow>();
-				glow.Active = true;
+				glow.Enabled = true;
 				glow.Color = Player.TeamColor.WithAlpha( 0.5f );
 			}
 		}
@@ -665,7 +665,7 @@ namespace Facepunch.RTS
 			if ( HasSelectionGlow )
 			{
 				var glow = Components.GetOrCreate<Glow>();
-				glow.Active = false;
+				glow.Enabled = false;
 			}
 		}
 

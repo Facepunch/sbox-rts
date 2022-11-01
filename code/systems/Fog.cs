@@ -54,7 +54,7 @@ namespace Facepunch.RTS
 					for ( int y = 0; y < Resolution; y++ )
 					{
 						var index = ((x * Resolution) + y);
-						Data[index + 0] = _unseenAlpha;
+						Data[index + 0] = UnseenAlpha;
 					}
 				}
 			}
@@ -69,7 +69,7 @@ namespace Facepunch.RTS
 				if ( i <= 0 || i > Resolution * Resolution )
 					return false;
 
-				return (Data[i] <= _seenAlpha);
+				return (Data[i] <= SeenAlpha);
 			}
 
 			public void PunchHole( Vector3n location, float range )
@@ -179,15 +179,15 @@ namespace Facepunch.RTS
 
 		public static readonly FogBounds Bounds = new();
 		public static FogRenderer Renderer { get; private set; }
-		public static FogTextureBuilder TextureBuilder => _textureBuilder;
+		public static FogTextureBuilder TextureBuilder => InternalTextureBuilder;
 		public static bool IsActive { get; private set; }
 
-		private static readonly List<FogCullable> _cullables = new();
-		private static readonly List<FogViewer> _viewers = new();
+		private static readonly List<FogCullable> Cullables = new();
+		private static readonly List<FogViewer> Viewers = new();
 
-		private static byte _unseenAlpha = 240;
-		private static byte _seenAlpha = 200;
-		private static FogTextureBuilder _textureBuilder;
+		private static byte UnseenAlpha = 240;
+		private static byte SeenAlpha = 200;
+		private static FogTextureBuilder InternalTextureBuilder;
 
 		public static void Initialize( BBox size, byte seenAlpha = 200, byte unseenAlpha = 240 )
 		{
@@ -201,8 +201,8 @@ namespace Facepunch.RTS
 
 			Bounds.SetFrom( size );
 
-			_unseenAlpha = unseenAlpha;
-			_seenAlpha = seenAlpha;
+			UnseenAlpha = unseenAlpha;
+			SeenAlpha = seenAlpha;
 
 			UpdateTextureSize();
 			Clear();
@@ -265,7 +265,7 @@ namespace Facepunch.RTS
 
 		public static void AddCullable( IFogCullable cullable )
 		{
-			_cullables.Add( new FogCullable()
+			Cullables.Add( new FogCullable()
 			{
 				IsVisible = false,
 				Object = cullable
@@ -276,11 +276,11 @@ namespace Facepunch.RTS
 
 		public static void RemoveCullable( IFogCullable cullable )
 		{
-			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			for ( var i = Cullables.Count - 1; i >= 0; i-- )
 			{
-				if ( _cullables[i].Object == cullable )
+				if ( Cullables[i].Object == cullable )
 				{
-					_cullables.RemoveAt( i );
+					Cullables.RemoveAt( i );
 					break;
 				}
 			}
@@ -288,7 +288,7 @@ namespace Facepunch.RTS
 
 		public static void AddViewer( IFogViewer viewer )
 		{
-			_viewers.Add( new FogViewer()
+			Viewers.Add( new FogViewer()
 			{
 				LastPosition = viewer.Position,
 				Object = viewer
@@ -299,14 +299,14 @@ namespace Facepunch.RTS
 		{
 			FogViewer data;
 
-			for ( var i = _viewers.Count - 1; i >= 0; i-- )
+			for ( var i = Viewers.Count - 1; i >= 0; i-- )
 			{
-				data = _viewers[i];
+				data = Viewers[i];
 
 				if ( data.Object == viewer )
 				{
-					_textureBuilder.FillRegion( data.LastPosition, data.Object.LineOfSightRadius, _seenAlpha );
-					_viewers.RemoveAt( i );
+					InternalTextureBuilder.FillRegion( data.LastPosition, data.Object.LineOfSightRadius, SeenAlpha );
+					Viewers.RemoveAt( i );
 					break;
 				}
 			}
@@ -314,29 +314,29 @@ namespace Facepunch.RTS
 
 		public static bool IsAreaSeen( Vector3n location )
 		{
-			return _textureBuilder.IsAreaSeen( location );
+			return InternalTextureBuilder.IsAreaSeen( location );
 		}
 
 		[ClientRpc]
 		public static void Clear()
 		{
-			_textureBuilder.Clear();
+			InternalTextureBuilder.Clear();
 		}
 
 		[ClientRpc]
 		public static void MakeVisible( Vector3n position, float range )
 		{
-			_textureBuilder.PunchHole( position, range );
-			_textureBuilder.FillRegion( position, range, _seenAlpha );
+			InternalTextureBuilder.PunchHole( position, range );
+			InternalTextureBuilder.FillRegion( position, range, SeenAlpha );
 
 			FogCullable cullable;
 
 			// We multiply by 12.5% to cater for the render range.
 			var renderRange = range * 1.125f;
 
-			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			for ( var i = Cullables.Count - 1; i >= 0; i-- )
 			{
-				cullable = _cullables[i];
+				cullable = Cullables[i];
 
 				if ( cullable.IsVisible ) continue;
 
@@ -349,22 +349,22 @@ namespace Facepunch.RTS
 
 		private static void UpdateTextureSize()
 		{
-			if ( _textureBuilder != null )
+			if ( InternalTextureBuilder != null )
 			{
-				_textureBuilder.Destroy();
-				_textureBuilder = null;
+				InternalTextureBuilder.Destroy();
+				InternalTextureBuilder = null;
 			}
 
-			_textureBuilder = new FogTextureBuilder
+			InternalTextureBuilder = new FogTextureBuilder
 			{
 				Resolution = Math.Max( ((float)(Bounds.Size / 30f)).CeilToInt(), 128 )
 			};
 
-			_textureBuilder.HalfResolution = _textureBuilder.Resolution / 2;
-			_textureBuilder.PixelScale = (_textureBuilder.Resolution / Bounds.Size);
-			_textureBuilder.Texture = Texture.Create( _textureBuilder.Resolution, _textureBuilder.Resolution, ImageFormat.A8 ).Finish();
-			_textureBuilder.Origin = Bounds.Origin;
-			_textureBuilder.Data = new byte[_textureBuilder.Resolution * _textureBuilder.Resolution];
+			InternalTextureBuilder.HalfResolution = InternalTextureBuilder.Resolution / 2;
+			InternalTextureBuilder.PixelScale = (InternalTextureBuilder.Resolution / Bounds.Size);
+			InternalTextureBuilder.Texture = Texture.Create( InternalTextureBuilder.Resolution, InternalTextureBuilder.Resolution, ImageFormat.A8 ).Finish();
+			InternalTextureBuilder.Origin = Bounds.Origin;
+			InternalTextureBuilder.Data = new byte[InternalTextureBuilder.Resolution * InternalTextureBuilder.Resolution];
 
 			if ( Renderer == null )
 			{
@@ -372,21 +372,21 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			_textureBuilder.Apply( Renderer );
+			InternalTextureBuilder.Apply( Renderer );
 		}
 
 		private static void AddRange( Vector3n position, float range )
 		{
 			FogCullable cullable;
 
-			_textureBuilder.PunchHole( position, range );
+			InternalTextureBuilder.PunchHole( position, range );
 
 			// We multiply by 12.5% to cater for the render range.
 			var renderRange = range * 1.125f;
 
-			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			for ( var i = Cullables.Count - 1; i >= 0; i-- )
 			{
-				cullable = _cullables[i];
+				cullable = Cullables[i];
 
 				if ( cullable.IsVisible ) continue;
 
@@ -451,9 +451,9 @@ namespace Facepunch.RTS
 
 			FogCullable cullable;
 
-			for ( var i = _cullables.Count - 1; i >= 0; i-- )
+			for ( var i = Cullables.Count - 1; i >= 0; i-- )
 			{
-				cullable = _cullables[i];
+				cullable = Cullables[i];
 				cullable.Object.MakeVisible( false );
 				cullable.Object.IsVisible = false;
 				cullable.WasVisible = cullable.IsVisible;
@@ -463,16 +463,16 @@ namespace Facepunch.RTS
 			CullParticles();
 
 			// Our first pass will create the seen history map.
-			for ( var i = 0; i < _viewers.Count; i++ )
+			for ( var i = 0; i < Viewers.Count; i++ )
 			{
-				var viewer = _viewers[i];
-				_textureBuilder.FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, _seenAlpha );
+				var viewer = Viewers[i];
+				InternalTextureBuilder.FillRegion( viewer.LastPosition, viewer.Object.LineOfSightRadius, SeenAlpha );
 			}
 
 			// Our second pass will show what is currently visible.
-			for ( var i = 0; i < _viewers.Count; i++ )
+			for ( var i = 0; i < Viewers.Count; i++ )
 			{
-				var viewer = _viewers[i];
+				var viewer = Viewers[i];
 				var position = viewer.Object.Position;
 				var range = viewer.Object.LineOfSightRadius;
 
@@ -481,7 +481,7 @@ namespace Facepunch.RTS
 				viewer.LastPosition = position;
 			}
 
-			_textureBuilder.Update();
+			InternalTextureBuilder.Update();
 		}
 	}
 }

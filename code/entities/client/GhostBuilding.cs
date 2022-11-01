@@ -4,6 +4,7 @@ using Sandbox;
 using System.Linq;
 using Gamelib.FlowFields.Entities;
 using Facepunch.RTS;
+using Sandbox.Component;
 
 namespace Facepunch.RTS
 {
@@ -34,11 +35,9 @@ namespace Facepunch.RTS
 
 			RenderColor = RenderColor.WithAlpha( 0.5f );
 
-			/*
-			GlowActive = true;
-			GlowColor = Color.Green;
-			GlowState = GlowStates.GlowStateOn;
-			*/
+			var glow = Components.GetOrCreate<Glow>();
+			glow.Enabled = true;
+			glow.Color = Color.Green;
 
 			EnableTouch = true;
 			EnableSolidCollisions = false;
@@ -74,8 +73,11 @@ namespace Facepunch.RTS
 			if ( BoundsEntity.IsValid() )
 				BoundsEntity.Color = Color.Green;
 
-			RenderColor = Color.White;
-			//GlowColor = Color.Green;
+			RenderColor = Color.White.WithAlpha( 0.5f );
+
+			var glow = Components.GetOrCreate<Glow>();
+			glow.Enabled = true;
+			glow.Color = Color.Green;
 		}
 
 		public void ShowInvalid()
@@ -83,8 +85,11 @@ namespace Facepunch.RTS
 			if ( BoundsEntity.IsValid() )
 				BoundsEntity.Color = Color.Red;
 
-			RenderColor = Color.Red;
-			//GlowColor = Color.Red;
+			RenderColor = Color.Red.WithAlpha( 0.5f );
+
+			var glow = Components.GetOrCreate<Glow>();
+			glow.Enabled = true;
+			glow.Color = Color.Red;
 		}
 
 		public TraceResult GetPlacementTrace( Client client, Vector3 cursorOrigin, Vector3 cursorAim )

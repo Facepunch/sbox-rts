@@ -6,7 +6,6 @@ using System.Linq;
 using Facepunch.RTS.Units;
 using System;
 using Gamelib.Extensions;
-using Gamelib.FlowFields.Entities;
 
 namespace Facepunch.RTS
 {
@@ -18,18 +17,21 @@ namespace Facepunch.RTS
 			public Vector3 Position;
 		}
 
-		[Net, Local, Change] public List<uint> Dependencies { get; set; }
-		[Net, Local, Change] public List<uint> Researching { get; set; }
-		[Net, Local, Change] public List<Entity> Selection { get; set; }
+		[Net, Local, Change] public IList<uint> Dependencies { get; set; }
+		[Net, Local, Change] public IList<uint> Researching { get; set; }
+		[Net, Local, Change] public IList<Entity> Selection { get; set; }
 		[Net, Local] public uint MaxPopulation { get; set; }
 		[Net, Local] public int Population { get; private set; }
 		[Net] public bool IsSpectator { get; private set;  }
 		[Net] public EloScore Elo { get; private set; }
 		[Net] public Color TeamColor { get; set; }
 		[Net] public bool IsReady { get; set; }
-		[Net] public List<int> Resources { get; private set; }
+		[Net] public IList<int> Resources { get; private set; }
 		[Net] public int TeamGroup { get; set; }
 		public bool SkipAllWaiting { get; set;  }
+
+		[ClientInput] public Vector3 CursorDirection { get; set; }
+		[ClientInput] public Vector3 CursorOrigin { get; set; }
 
 		private List<AttackWarning> AttackWarnings { get; set; }
 		private TimeSince LastUnderAttack { get; set; }
@@ -371,14 +373,26 @@ namespace Facepunch.RTS
 			Camera.LookAt = other.Position.WithZ( 0f );
 		}
 
+		public override void BuildInput()
+		{
+			CursorDirection = Mouse.Visible ? Screen.GetDirection( Mouse.Position ) : CurrentView.Rotation.Forward;
+			CursorOrigin = CurrentView.Position;
+
+			base.BuildInput();
+		}
+
 		public override void Simulate( Client client )
 		{
-			if ( !Gamemode.Instance.IsValid() ) return;
+			if ( !Gamemode.Instance.IsValid() )
+				return;
+
+			if ( client.Pawn is not Player player )
+				return;
 
 			if ( IsServer && Input.Released( InputButton.Reload ) )
 			{
 				// TODO: This is just for testing, delete later.
-				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
+				var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection ).Run();
 				var bot = Rounds.Current.Players.Where( player => player.Client != client ).FirstOrDefault();
 
 				/*
@@ -402,7 +416,7 @@ namespace Facepunch.RTS
 			if ( IsServer && Input.Released( InputButton.Use ) )
 			{
 				// TODO: This is just for testing, delete later.
-				var trace = TraceExtension.RayDirection( Input.Cursor.Origin, Input.Cursor.Direction ).Run();
+				var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection ).Run();
 				var bot = Rounds.Current.Players.Where( player => player.Client != client ).FirstOrDefault();
 
 				var worker = Items.Create<UnitEntity>( bot, "unit.worker" );

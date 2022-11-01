@@ -50,7 +50,7 @@ namespace Facepunch.RTS
 		public override bool HasSelectionGlow => false;
 
 		public Dictionary<string, float> Resistances { get; set; }
-		[Net, Change] private List<float> ResistanceList { get; set; }
+		[Net, Change] private IList<float> ResistanceList { get; set; }
 		[Net, Change] public List<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
 		public IOccupiableItem OccupiableItem => Item;
@@ -90,14 +90,14 @@ namespace Facepunch.RTS
 		public EntityHudIcon RankIcon { get; private set; }
 		#endregion
 
-		protected readonly GatherInfo _gather = new();
-		protected readonly TargetInfo _target = new();
-		protected IMoveAgent[] _flockBuffer = new IMoveAgent[8];
-		protected List<ISelectable> _targetBuffer = new();
-		protected Particles _pathParticles;
-		protected RealTimeUntil _nextRepairTime;
-		protected RealTimeUntil _nextFindTarget;
-		protected Sound _idleLoopSound;
+		protected readonly GatherInfo InternalGatherInfo = new();
+		protected readonly TargetInfo InternalTargetInfo = new();
+		protected IMoveAgent[] BlockBuffer = new IMoveAgent[8];
+		protected List<ISelectable> TargetBuffer = new();
+		protected Particles PathParticles;
+		protected RealTimeUntil NextRepairTime;
+		protected RealTimeUntil NextFindTarget;
+		protected Sound IdleLoopSound;
 
 		public UnitEntity() : base()
 		{
@@ -210,7 +210,7 @@ namespace Facepunch.RTS
 			return group.IsDestination( this, Position, false );
 		}
 
-		public Entity GetTargetEntity() => _target.Entity;
+		public Entity GetTargetEntity() => InternalTargetInfo.Entity;
 
 		public IList<UnitEntity> GetOccupantsList() => (Occupants as IList<UnitEntity>);
 
@@ -235,9 +235,9 @@ namespace Facepunch.RTS
 
 		public bool IsTargetValid()
 		{
-			if ( !_target.HasEntity() ) return false;
+			if ( !InternalTargetInfo.HasEntity() ) return false;
 
-			if ( _target.Entity is UnitEntity unit )
+			if ( InternalTargetInfo.Entity is UnitEntity unit )
 			{
 				return !unit.Occupiable.IsValid();
 			}
@@ -318,10 +318,10 @@ namespace Facepunch.RTS
 
 		public bool IsTargetInRange()
 		{
-			if ( !_target.HasEntity() ) return false;
+			if ( !InternalTargetInfo.HasEntity() ) return false;
 
-			var target = _target.Entity;
-			var radius = _target.Radius;
+			var target = InternalTargetInfo.Entity;
+			var radius = InternalTargetInfo.Radius;
 
 			if ( Occupiable is IOccupiableEntity occupiable )
 			{
@@ -333,7 +333,7 @@ namespace Facepunch.RTS
 				return occupiable.IsInRange( target, attackRadius );
 			}
 
-			if ( _target.Type == UnitTargetType.Attack )
+			if ( InternalTargetInfo.Type == UnitTargetType.Attack )
 			{
 				var minAttackDistance = Item.MinAttackDistance;
 
@@ -356,7 +356,7 @@ namespace Facepunch.RTS
 		public void Kill( DamageInfo damageInfo = default )
 		{
 			if ( Item.RagdollOnDeath )
-				BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, GetHitboxBone( damageInfo.HitboxIndex ) );
+				BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, damageInfo.BoneIndex );
 
 			CreateDeathParticles();
 			LifeState = LifeState.Dead;
@@ -684,10 +684,10 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Entity = target;
-			_target.Follow = autoFollow;
-			_target.Radius = Item.AttackRadius;
-			_target.Type = UnitTargetType.Attack;
+			InternalTargetInfo.Entity = target;
+			InternalTargetInfo.Follow = autoFollow;
+			InternalTargetInfo.Radius = Item.AttackRadius;
+			InternalTargetInfo.Type = UnitTargetType.Attack;
 
 			OnTargetChanged();
 		}
@@ -696,7 +696,7 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Type = UnitTargetType.Move;
+			InternalTargetInfo.Type = UnitTargetType.Move;
 
 			OnTargetChanged();
 		}
@@ -705,7 +705,7 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Type = UnitTargetType.Move;
+			InternalTargetInfo.Type = UnitTargetType.Move;
 
 			OnTargetChanged();
 		}
@@ -790,9 +790,9 @@ namespace Facepunch.RTS
 
 			ResetTarget();
 
-			_target.Entity = modelEntity;
-			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
-			_target.Type = UnitTargetType.Occupy;
+			InternalTargetInfo.Entity = modelEntity;
+			InternalTargetInfo.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
+			InternalTargetInfo.Type = UnitTargetType.Occupy;
 
 			OnTargetChanged();
 
@@ -803,9 +803,9 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Entity = building;
-			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
-			_target.Type = UnitTargetType.Deposit;
+			InternalTargetInfo.Entity = building;
+			InternalTargetInfo.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
+			InternalTargetInfo.Type = UnitTargetType.Deposit;
 
 			OnTargetChanged();
 
@@ -816,13 +816,13 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Entity = resource;
-			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
-			_target.Type = UnitTargetType.Gather;
+			InternalTargetInfo.Entity = resource;
+			InternalTargetInfo.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
+			InternalTargetInfo.Type = UnitTargetType.Gather;
 
-			_gather.Type = resource.Resource;
-			_gather.Entity = resource;
-			_gather.Position = resource.Position;
+			InternalGatherInfo.Type = resource.Resource;
+			InternalGatherInfo.Entity = resource;
+			InternalGatherInfo.Position = resource.Position;
 
 			OnTargetChanged();
 
@@ -833,9 +833,9 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Entity = building;
-			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
-			_target.Type = UnitTargetType.Repair;
+			InternalTargetInfo.Entity = building;
+			InternalTargetInfo.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
+			InternalTargetInfo.Type = UnitTargetType.Repair;
 
 			OnTargetChanged();
 
@@ -846,9 +846,9 @@ namespace Facepunch.RTS
 		{
 			ResetTarget();
 
-			_target.Entity = building;
-			_target.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
-			_target.Type = UnitTargetType.Construct;
+			InternalTargetInfo.Entity = building;
+			InternalTargetInfo.Radius = Pathfinder.NodeSize + Pathfinder.CollisionSize * 2;
+			InternalTargetInfo.Type = UnitTargetType.Construct;
 
 			OnTargetChanged();
 
@@ -857,10 +857,10 @@ namespace Facepunch.RTS
 
 		public void ClearTarget()
 		{
-			_target.Entity = null;
-			_target.Position = null;
-			_target.Follow = false;
-			_target.Type = UnitTargetType.None;
+			InternalTargetInfo.Entity = null;
+			InternalTargetInfo.Position = null;
+			InternalTargetInfo.Follow = false;
+			InternalTargetInfo.Type = UnitTargetType.None;
 
 			IsGathering = false;
 
@@ -920,8 +920,8 @@ namespace Facepunch.RTS
 		{
 			if ( MoveStack.TryPeek( out var current ) && current == group )
 			{
-				_target.Position = null;
-				_target.Follow = false;
+				InternalTargetInfo.Position = null;
+				InternalTargetInfo.Follow = false;
 
 				IsGathering = false;
 
@@ -1052,27 +1052,27 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		protected void CreatePathParticles()
 		{
-			if ( _pathParticles != null )
+			if ( PathParticles != null )
 			{
-				_pathParticles.Destroy( true );
-				_pathParticles = null;
+				PathParticles.Destroy( true );
+				PathParticles = null;
 			}
 
 			if ( !Destination.IsNearZeroLength && !Velocity.IsNearZeroLength )
 			{
-				_pathParticles = Particles.Create( "particles/movement_path/movement_path.vpcf" );
-				_pathParticles.SetEntity( 0, this );
-				_pathParticles.SetPosition( 1, GetPathDestination().WithZ( Position.z ) );
-				_pathParticles.SetPosition( 3, Player.TeamColor * 255f );
+				PathParticles = Particles.Create( "particles/movement_path/movement_path.vpcf" );
+				PathParticles.SetEntity( 0, this );
+				PathParticles.SetPosition( 1, GetPathDestination().WithZ( Position.z ) );
+				PathParticles.SetPosition( 3, Player.TeamColor * 255f );
 			}
 		}
 
 		protected void RemovePathParticles()
 		{
-			if ( _pathParticles != null )
+			if ( PathParticles != null )
 			{
-				_pathParticles.Destroy( true );
-				_pathParticles = null;
+				PathParticles.Destroy( true );
+				PathParticles = null;
 			}
 		}
 
@@ -1185,7 +1185,7 @@ namespace Facepunch.RTS
 			if ( Player.IsValid() )
 				Player.TakePopulation( Item.Population );
 
-			_idleLoopSound.Stop();
+			IdleLoopSound.Stop();
 
 			ClearMoveStack();
 			EvictAll();
@@ -1207,7 +1207,7 @@ namespace Facepunch.RTS
 					var isTargetInRange = IsTargetInRange();
 					var isTargetValid = IsTargetValid();
 
-					if ( _target.Type == UnitTargetType.Attack && isTargetValid )
+					if ( InternalTargetInfo.Type == UnitTargetType.Attack && isTargetValid )
 					{
 						ValidateAttackDistance();
 					}
@@ -1242,7 +1242,7 @@ namespace Facepunch.RTS
 			TryFinishMoveGroup();
 
 			// Network the current target type.
-			TargetType = _target.Type;
+			TargetType = InternalTargetInfo.Type;
 
 			animator?.Apply( this );
 		}
@@ -1261,9 +1261,17 @@ namespace Facepunch.RTS
 
 			RemoveClothing();
 
+			var allClothing = ResourceLibrary.GetAll<Clothing>();
+
 			foreach ( var clothes in item.Clothing )
 			{
-				AttachClothing( clothes );
+				var modelName = allClothing
+					.Where( c => c.ResourceName.ToLower() == clothes.ToLower() )
+					.Select( c => c.Model )
+					.FirstOrDefault();
+
+				if ( !string.IsNullOrEmpty( modelName ) )
+					AttachClothing( modelName );
 			}
 
 			Scale = item.ModelScale;
@@ -1297,10 +1305,10 @@ namespace Facepunch.RTS
 			LocalCenter = CollisionBounds.Center;
 			AgentRadius = GetDiameterXY( Item.AgentRadiusScale );
 
-			_idleLoopSound.Stop();
+			IdleLoopSound.Stop();
 
 			if ( !string.IsNullOrEmpty( item.IdleLoopSound ) )
-				_idleLoopSound = PlaySound( item.IdleLoopSound );
+				IdleLoopSound = PlaySound( item.IdleLoopSound );
 
 			if ( Weapon.IsValid() ) Weapon.Delete();
 
@@ -1342,8 +1350,8 @@ namespace Facepunch.RTS
 
 		protected virtual void OnMoveStackEmpty()
 		{
-			if ( _target.Type == UnitTargetType.Gather
-				|| _target.Type == UnitTargetType.Deposit )
+			if ( InternalTargetInfo.Type == UnitTargetType.Gather
+				|| InternalTargetInfo.Type == UnitTargetType.Deposit )
 			{
 				FindTargetResource();
 			}
@@ -1434,19 +1442,19 @@ namespace Facepunch.RTS
 				return;
 			}
 			
-			if ( _pathParticles == null )
+			if ( PathParticles == null )
 			{
 				CreatePathParticles();
 			}
 
-			_pathParticles.SetPosition( 1, GetPathDestination().WithZ( Position.z ) );
+			PathParticles.SetPosition( 1, GetPathDestination().WithZ( Position.z ) );
 		}
 
 		protected virtual void OnTargetChanged()
 		{
 			if ( Weapon.IsValid() )
 			{
-				Weapon.Target = _target.Entity;
+				Weapon.Target = InternalTargetInfo.Entity;
 				Weapon.Occupiable = Occupiable;
 			}
 
@@ -1455,7 +1463,7 @@ namespace Facepunch.RTS
 				CreatePathParticles( To.Single( Player ) );
 			}
 
-			TargetEntity = _target.Entity;
+			TargetEntity = InternalTargetInfo.Entity;
 			SpinSpeed = null;
 		}
 
@@ -1499,10 +1507,10 @@ namespace Facepunch.RTS
 
 		private void ResetTarget()
 		{
-			_target.Entity = null;
-			_target.Position = null;
-			_target.Follow = false;
-			_target.Type = UnitTargetType.None;
+			InternalTargetInfo.Entity = null;
+			InternalTargetInfo.Position = null;
+			InternalTargetInfo.Follow = false;
+			InternalTargetInfo.Type = UnitTargetType.None;
 
 			IsGathering = false;
 		}
@@ -1523,23 +1531,23 @@ namespace Facepunch.RTS
 			}
 
 			// If our last resource entity is valid just use that.
-			if ( _gather.Entity.IsValid() )
+			if ( InternalGatherInfo.Entity.IsValid() )
 			{
 				command = new GatherCommand
 				{
-					Target = _gather.Entity
+					Target = InternalGatherInfo.Entity
 				};
 
-				PushMoveGroup( GetDestinations( _gather.Entity ), command );
+				PushMoveGroup( GetDestinations( InternalGatherInfo.Entity ), command );
 
 				return;
 			}
 
-			var entities = Entity.FindInSphere( _gather.Position, 2000f );
+			var entities = Entity.FindInSphere( InternalGatherInfo.Position, 2000f );
 
 			foreach ( var entity in entities )
 			{
-				if ( entity is ResourceEntity resource && resource.Resource == _gather.Type )
+				if ( entity is ResourceEntity resource && resource.Resource == InternalGatherInfo.Type )
 				{
 					command = new GatherCommand
 					{
@@ -1602,22 +1610,22 @@ namespace Facepunch.RTS
 
 			var entities = Entity.FindInSphere( searchPosition.WithZ( 0f ), searchRadius * 1.2f );
 
-			_targetBuffer.Clear();
+			TargetBuffer.Clear();
 
 			foreach ( var entity in entities )
 			{
 				if ( entity is ISelectable selectable && CanAttackTarget( selectable ) )
 				{
-					_targetBuffer.Add( selectable );
+					TargetBuffer.Add( selectable );
 				}
 			}
 
-			_targetBuffer.OrderByDescending( s => s.GetAttackPriority() )
+			TargetBuffer.OrderByDescending( s => s.GetAttackPriority() )
 				.ThenBy( s => s.Position.Distance( searchPosition ) );
 
-			if ( _targetBuffer.Count > 0 )
+			if ( TargetBuffer.Count > 0 )
 			{
-				SetAttackTarget( _targetBuffer[0], false );
+				SetAttackTarget( TargetBuffer[0], false );
 			}
 		}
 
@@ -1626,13 +1634,13 @@ namespace Facepunch.RTS
 			if ( IsMoveGroupValid() || !Weapon.IsValid() )
 				return;
 
-			if ( _target.Follow )
+			if ( InternalTargetInfo.Follow )
 				return;
 
-			if ( _nextFindTarget )
+			if ( NextFindTarget )
 			{
 				FindTargetEnemy();
-				_nextFindTarget = 1f;
+				NextFindTarget = 1f;
 			}
 		}
 
@@ -1643,7 +1651,7 @@ namespace Facepunch.RTS
 
 			if ( occupiable.CanOccupantsAttack() && IsTargetValid() )
 			{
-				if ( IsTargetInRange() && _target.Type == UnitTargetType.Attack )
+				if ( IsTargetInRange() && InternalTargetInfo.Type == UnitTargetType.Attack )
 				{
 					if ( Weapon.IsValid() && Weapon.CanAttack() )
 					{
@@ -1660,15 +1668,15 @@ namespace Facepunch.RTS
 			var lookAtDistance = 0f;
 
 			if ( !SpinSpeed.HasValue )
-				lookAtDistance = LookAtEntity( _target.Entity, Time.Delta * Item.RotateToTargetSpeed );
+				lookAtDistance = LookAtEntity( InternalTargetInfo.Entity, Time.Delta * Item.RotateToTargetSpeed );
 			else
 				Rotation = Rotation.FromYaw( Rotation.Yaw() + SpinSpeed.Value * Time.Delta );
 
 			if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
 			{
-				if ( _target.Type == UnitTargetType.Occupy )
+				if ( InternalTargetInfo.Type == UnitTargetType.Occupy )
 				{
-					if ( _target.Entity is IOccupiableEntity occupiable && occupiable.Player == Player )
+					if ( InternalTargetInfo.Entity is IOccupiableEntity occupiable && occupiable.Player == Player )
 					{
 						if ( occupiable.CanOccupyUnits )
 						{
@@ -1678,9 +1686,9 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == UnitTargetType.Construct )
+				if ( InternalTargetInfo.Type == UnitTargetType.Construct )
 				{
-					if ( _target.Entity is BuildingEntity building && building.Player == Player )
+					if ( InternalTargetInfo.Entity is BuildingEntity building && building.Player == Player )
 					{
 						if ( building.IsUnderConstruction )
 							TickConstruct( building );
@@ -1689,9 +1697,9 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == UnitTargetType.Repair )
+				if ( InternalTargetInfo.Type == UnitTargetType.Repair )
 				{
-					if ( _target.Entity is BuildingEntity building && building.Player == Player )
+					if ( InternalTargetInfo.Entity is BuildingEntity building && building.Player == Player )
 					{
 						if ( !building.IsUnderConstruction && building.IsDamaged() )
 						{
@@ -1701,9 +1709,9 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == UnitTargetType.Deposit )
+				if ( InternalTargetInfo.Type == UnitTargetType.Deposit )
 				{
-					if ( _target.Entity is BuildingEntity building && building.Player == Player )
+					if ( InternalTargetInfo.Entity is BuildingEntity building && building.Player == Player )
 					{
 						if ( building.CanDepositResources )
 						{
@@ -1713,9 +1721,9 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == UnitTargetType.Gather )
+				if ( InternalTargetInfo.Type == UnitTargetType.Gather )
 				{
-					if ( _target.Entity is ResourceEntity resource )
+					if ( InternalTargetInfo.Entity is ResourceEntity resource )
 					{
 						if ( SpinSpeed.HasValue || lookAtDistance.AlmostEqual( 0f, 0.1f ) )
 						{
@@ -1725,7 +1733,7 @@ namespace Facepunch.RTS
 					}
 				}
 
-				if ( _target.Type == UnitTargetType.Attack )
+				if ( InternalTargetInfo.Type == UnitTargetType.Attack )
 				{
 					if ( Weapon.IsValid() && Weapon.CanAttack() )
 					{
@@ -1741,10 +1749,10 @@ namespace Facepunch.RTS
 
 		private bool ValidateAttackDistance()
 		{
-			if ( !_target.HasEntity() ) return false;
+			if ( !InternalTargetInfo.HasEntity() ) return false;
 
 			var minAttackDistance = Item.MinAttackDistance;
-			var target = _target.Entity;
+			var target = InternalTargetInfo.Entity;
 
 			if ( minAttackDistance == 0f ) return true;
 
@@ -1784,27 +1792,27 @@ namespace Facepunch.RTS
 			{
 				if ( neighbour is UnitEntity unit && ShouldOtherUnitFlock( unit ) )
 				{
-					_flockBuffer[bufferIndex] = unit;
+					BlockBuffer[bufferIndex] = unit;
 
 					bufferIndex++;
 
-					if ( bufferIndex >= _flockBuffer.Length )
+					if ( bufferIndex >= BlockBuffer.Length )
 						break;
 				}
 			}
 
 			if ( bufferIndex < 8 )
 			{
-				Array.Clear( _flockBuffer, bufferIndex, _flockBuffer.Length - bufferIndex );
+				Array.Clear( BlockBuffer, bufferIndex, BlockBuffer.Length - bufferIndex );
 			}
 		}
 
 		private void UpdateFollowPosition( bool isTargetValid )
 		{
-			if ( !isTargetValid || !_target.Follow )
+			if ( !isTargetValid || !InternalTargetInfo.Follow )
 				return;
 
-			_target.Position = _target.Entity.Position;
+			InternalTargetInfo.Position = InternalTargetInfo.Entity.Position;
 		}
 
 		private void TickMoveToTarget( bool isTargetValid, UnitAnimator animator )
@@ -1835,9 +1843,9 @@ namespace Facepunch.RTS
 					}
 				}
 			}
-			else if ( _target.Position.HasValue )
+			else if ( InternalTargetInfo.Position.HasValue )
 			{
-				var straightDirection = (_target.Position.Value - Position).Normal.WithZ( 0f );
+				var straightDirection = (InternalTargetInfo.Position.Value - Position).Normal.WithZ( 0f );
 
 				if ( Pathfinder.IsAvailable( Position + (straightDirection * Pathfinder.NodeSize) ) )
 					nodeDirection = straightDirection;
@@ -1851,7 +1859,7 @@ namespace Facepunch.RTS
 			}
 
 			var flocker = new Flocker();
-			flocker.Setup( this, _flockBuffer, Position, movementSpeed );
+			flocker.Setup( this, BlockBuffer, Position, movementSpeed );
 			flocker.Flock( Position + direction * Math.Max( AgentRadius, Pathfinder.NodeSize ) );
 			var steerDirection = flocker.Force.WithZ( 0f );
 
@@ -1957,7 +1965,7 @@ namespace Facepunch.RTS
 
 			SpinSpeed = (building.MaxHealth / building.Health) * 200f;
 
-			if ( !_nextRepairTime ) return;
+			if ( !NextRepairTime ) return;
 
 			Player.TakeResources( repairCosts );
 
@@ -1976,7 +1984,7 @@ namespace Facepunch.RTS
 				building.UpdateRepair();
 			}
 
-			_nextRepairTime = 1f;
+			NextRepairTime = 1f;
 		}
 
 		private void TickConstruct( BuildingEntity building )
@@ -2037,10 +2045,10 @@ namespace Facepunch.RTS
 
 		private void TickGather( ResourceEntity resource )
 		{
-			if ( _gather.LastGather < resource.GatherTime )
+			if ( InternalGatherInfo.LastGather < resource.GatherTime )
 				return;
 
-			_gather.LastGather = 0;
+			InternalGatherInfo.LastGather = 0;
 			IsGathering = true;
 
 			TakeFrom( resource );

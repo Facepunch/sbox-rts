@@ -26,7 +26,7 @@ namespace Facepunch.RTS
 		public bool BezierCurve { get; set; } = true;
 		public bool Debug { get; set; } = false;
 
-		private Sound _launchSound;
+		private Sound InternalLaunchSound;
 
 		public void Initialize( Vector3 start, Vector3 end, float duration, Action<Projectile, Entity> callback = null )
 		{
@@ -49,7 +49,7 @@ namespace Facepunch.RTS
 			}
 
 			if ( !string.IsNullOrEmpty( LaunchSound ) )
-				_launchSound = PlaySound( LaunchSound );
+				InternalLaunchSound = PlaySound( LaunchSound );
 		}
 
 		public void Initialize( Vector3 start, Entity target, float duration, Action<Projectile, Entity> callback = null )
@@ -67,7 +67,7 @@ namespace Facepunch.RTS
 
 		private void RemoveEffects()
 		{
-			_launchSound.Stop();
+			InternalLaunchSound.Stop();
 			Trail?.Destroy();
 			Trail = null;
 		}

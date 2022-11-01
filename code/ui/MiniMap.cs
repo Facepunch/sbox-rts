@@ -117,10 +117,10 @@ namespace Facepunch.RTS
 		}
 
 		[Event.BuildInput]
-		private void BuildInput( InputBuilder builder )
+		private void BuildInput()
 		{
-			IsShiftDown = builder.Down( InputButton.Run );
-			IsCtrlDown = builder.Down( InputButton.Duck );
+			IsShiftDown = Input.Down( InputButton.Run );
+			IsCtrlDown = Input.Down( InputButton.Duck );
 		}
 	}
 
@@ -458,16 +458,16 @@ namespace Facepunch.RTS
 				boxSizeY
 			);
 
-			if ( selection.left + selection.width > 1f )
-				selection.width = 1f - selection.left;
+			if ( selection.Left + selection.Width > 1f )
+				selection.Width = 1f - selection.Left;
 
-			if ( selection.top + selection.height > 1f )
-				selection.height = 1f - selection.top;
+			if ( selection.Top + selection.Height > 1f )
+				selection.Height = 1f - selection.Top;
 
-			CameraBox.Style.Left = Length.Fraction( selection.left.Clamp( 0f, 1f ) );
-			CameraBox.Style.Top = Length.Fraction( selection.top.Clamp( 0f, 1f ) );
-			CameraBox.Style.Width = Length.Fraction( selection.width.Clamp( 0f, 1f ) );
-			CameraBox.Style.Height = Length.Fraction( selection.height.Clamp( 0f, 1f ) );
+			CameraBox.Style.Left = Length.Fraction( selection.Left.Clamp( 0f, 1f ) );
+			CameraBox.Style.Top = Length.Fraction( selection.Top.Clamp( 0f, 1f ) );
+			CameraBox.Style.Width = Length.Fraction( selection.Width.Clamp( 0f, 1f ) );
+			CameraBox.Style.Height = Length.Fraction( selection.Height.Clamp( 0f, 1f ) );
 			CameraBox.Style.Dirty();
 		}
 

@@ -89,13 +89,6 @@ namespace Facepunch.RTS
 
 			if ( IsServer )
 			{
-				// TODO: Remove this. Temporarily add and remove some tags to add them to the string pool.
-				// This is because the client will throw an exception when using tags with traces and no
-				// entity exists yet with those tags.
-
-				Tags.Add( "blueprint" );
-				Tags.Remove( "blueprint" );
-
 				Global.TickRate = 20;
 			}
 
@@ -156,11 +149,17 @@ namespace Facepunch.RTS
 		{
 			if ( IsServer )
 			{
-				_ = InitializePathManager();
+				InitializePathManager();
 			}
 		}
 
-		private async Task InitializePathManager()
+		private async void InitializePathManager()
+		{
+			await GameTask.RunInThreadAsync( SetupPathCombinations );
+			Rounds.Change( new LobbyRound() );
+		}
+
+		private async Task SetupPathCombinations()
 		{
 			PathManager.SetBounds( WorldSize );
 
@@ -180,11 +179,8 @@ namespace Facepunch.RTS
 				var collisionSize = combination.Item2;
 				var nodeSize = combination.Item1;
 
-				await GameTask.RunInThreadAsync( () => PathManager.Create( nodeSize, collisionSize ) );
-				await GameTask.Delay( 50 );
+				await PathManager.Create( nodeSize, collisionSize );
 			}
-
-			Rounds.Change( new LobbyRound() );
 		}
 
 		private void OnGroundUpdated()

@@ -20,9 +20,9 @@ namespace Facepunch.RTS
 		public bool IsSelecting { get; private set; }
 		public bool IsMultiSelect { get; private set; }
 
-		private RealTimeSince _lastSlotPressTime;
-		private bool _lookAtSelection;
-		private int _slotPressed;
+		private RealTimeSince LastSlotPressTime;
+		private bool LookAtSelection;
+		private int SlotPressed;
 
 		public CursorController()
 		{
@@ -68,7 +68,7 @@ namespace Facepunch.RTS
 		}
 
 		[Event.BuildInput]
-		private void BuildInput( InputBuilder builder )
+		private void BuildInput()
 		{
 			if ( Items.IsGhostValid() || Abilities.IsSelectingTarget() )
 				return;
@@ -79,7 +79,7 @@ namespace Facepunch.RTS
 			if ( !Hud.IsLocalPlaying() )
 				return;
 
-			if ( builder.Pressed( InputButton.PrimaryAttack ) )
+			if ( Input.Pressed( InputButton.PrimaryAttack ) )
 			{
 				StartSelection = Mouse.Position;
 				IsMultiSelect = false;
@@ -88,32 +88,32 @@ namespace Facepunch.RTS
 
 			for ( var i = 1; i <= 9; i++ )
 			{
-				if ( builder.Pressed( SlotByIndex( i ) ) )
+				if ( Input.Pressed( SlotByIndex( i ) ) )
 				{
-					if ( builder.Down( InputButton.Duck ) )
+					if ( Input.Down( InputButton.Duck ) )
 					{
 						SelectionGroups.Update( i, player.GetSelected<ISelectable>() );
 						break;
 					}
 
-					if ( _slotPressed == i && _lastSlotPressTime < 0.2 )
+					if ( SlotPressed == i && LastSlotPressTime < 0.2 )
 					{
-						_lookAtSelection = true;
+						LookAtSelection = true;
 					}
 					else
 					{
-						_lastSlotPressTime = 0;
-						_lookAtSelection = false;
-						_slotPressed = i;
+						LastSlotPressTime = 0;
+						LookAtSelection = false;
+						SlotPressed = i;
 					}
 
 					break;
 				}
 			}
 
-			if ( _slotPressed > 0 && _lastSlotPressTime > 0.2)
+			if ( SlotPressed > 0 && LastSlotPressTime > 0.2)
 			{
-				var selectables = SelectionGroups.GetInSlot( _slotPressed );
+				var selectables = SelectionGroups.GetInSlot( SlotPressed );
 
 				if ( selectables.Count > 0 )
 				{
@@ -121,16 +121,16 @@ namespace Facepunch.RTS
 
 					Items.Select( list, false );
 
-					if ( _lookAtSelection )
+					if ( LookAtSelection )
 					{
 						Items.FocusCameraOn( selectables );
 					}
 				}
 
-				_slotPressed = -1;
+				SlotPressed = -1;
 			}
 
-			if ( builder.Released( InputButton.Jump ) )
+			if ( Input.Released( InputButton.Jump ) )
 			{
 				var selectables = player.GetAllSelected();
 
@@ -140,13 +140,13 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( builder.Released( InputButton.SecondaryAttack ) )
+			if ( Input.Released( InputButton.SecondaryAttack ) )
 			{
 				var isHoldingShift = Input.Down( InputButton.Run );
 
 				if ( player.Selection.Count > 0 )
 				{
-					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction )
+					var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection )
 						.WithAnyTags( "blueprint" )
 						.Radius( 5f )
 						.Run();
@@ -161,7 +161,7 @@ namespace Facepunch.RTS
 						}
 					}
 
-					trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction )
+					trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection )
 						.WithoutTags( "blueprint" )
 						.Radius( 5f )
 						.Run();
@@ -178,7 +178,7 @@ namespace Facepunch.RTS
 							return;
 						}
 
-						if ( builder.Down( InputButton.Run ) )
+						if ( Input.Down( InputButton.Run ) )
 						{
 							if ( selectable is IOccupiableEntity occupiable && occupiable.CanOccupyUnits )
 							{
@@ -216,7 +216,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( builder.Down( InputButton.PrimaryAttack ) && IsSelecting )
+			if ( Input.Down( InputButton.PrimaryAttack ) && IsSelecting )
 			{
 				var position = Mouse.Position;
 				var selection = new Rect(
@@ -226,13 +226,13 @@ namespace Facepunch.RTS
 					Math.Abs( StartSelection.y - position.y )
 				);
 
-				SelectionArea.Style.Left = Length.Pixels( selection.left * ScaleFromScreen );
-				SelectionArea.Style.Top = Length.Pixels( selection.top * ScaleFromScreen );
-				SelectionArea.Style.Width = Length.Pixels( selection.width * ScaleFromScreen );
-				SelectionArea.Style.Height = Length.Pixels( selection.height * ScaleFromScreen );
+				SelectionArea.Style.Left = Length.Pixels( selection.Left * ScaleFromScreen );
+				SelectionArea.Style.Top = Length.Pixels( selection.Top * ScaleFromScreen );
+				SelectionArea.Style.Width = Length.Pixels( selection.Width * ScaleFromScreen );
+				SelectionArea.Style.Height = Length.Pixels( selection.Height * ScaleFromScreen );
 				SelectionArea.Style.Dirty();
 
-				IsMultiSelect = (selection.width > 1f || selection.height > 1f);
+				IsMultiSelect = (selection.Width > 1f || selection.Height > 1f);
 				SelectionRect = selection;
 			}
 			else if ( IsSelecting )
@@ -268,7 +268,7 @@ namespace Facepunch.RTS
 				}
 				else
 				{
-					var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
+					var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection ).EntitiesOnly().Run();
 
 					if ( trace.Entity is ISelectable selectable )
 					{
@@ -296,7 +296,7 @@ namespace Facepunch.RTS
 				var hovered = UIUtility.GetHoveredPanel();
 				if ( hovered != null ) return;
 
-				var trace = TraceExtension.RayDirection( builder.Cursor.Origin, builder.Cursor.Direction ).EntitiesOnly().Run();
+				var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection ).EntitiesOnly().Run();
 
 				if ( trace.Entity is ITooltipEntity target )
 				{

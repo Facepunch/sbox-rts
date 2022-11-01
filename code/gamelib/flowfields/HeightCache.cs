@@ -1,22 +1,18 @@
 ﻿using Gamelib.Maths;
 using Sandbox;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gamelib.FlowFields
 {
     public static class HeightCache
 	{
-		private static Dictionary<Vector2i, float> _heightCache = new();
+		private static Dictionary<Vector2i, float> Cache = new();
 
 		public static float GetHeight( Vector3 position )
 		{
 			var ceiled = new Vector2i( position );
 
-			if ( _heightCache.TryGetValue( ceiled, out float height) )
+			if ( Cache.TryGetValue( ceiled, out float height) )
 			{
 				return height;
 			}
@@ -26,7 +22,7 @@ namespace Gamelib.FlowFields
 				.Run();
 
 			height = trace.EndPosition.z;
-			_heightCache[ceiled] = height;
+			Cache[ceiled] = height;
 			return height;
 		}
 	}
