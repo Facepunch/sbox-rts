@@ -11,7 +11,7 @@ namespace Facepunch.RTS
 		public override int BaseDamage => 40;
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash_plasma/muzzle_large/muzzleflash_large.vpcf";
 		public override string BulletTracer => "particles/weapons/muzzle_flash_plasma/bullet_trace.vpcf";
-		public override DamageFlags DamageType => DamageFlags.Blast | DamageFlags.Plasma;
+		public override string DamageType => "plasma";
 
 		protected override void OnRocketHit( Projectile grenade, Entity entity )
 		{

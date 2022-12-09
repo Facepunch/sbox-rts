@@ -8,6 +8,6 @@ namespace Facepunch.RTS
 		public override string Name => "Explosive Resistance";
 		public override string UniqueId => "resistance.explosive";
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/resistances/explosive.png" );
-		public override DamageFlags Flags => DamageFlags.Blast;
+		public override string DamageType => "blast";
 	}
 }

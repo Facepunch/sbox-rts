@@ -28,11 +28,12 @@ namespace Facepunch.RTS
 				{
 					Damage = 70f,
 					Attacker = unit,
-					Flags = DamageFlags.Bullet,
 					Weapon = unit.Weapon,
 					Force = direction * 100f * 5f,
 					Position = position
 				};
+
+				damageInfo = damageInfo.WithTag( "bullet" );
 
 				target.TakeDamage( damageInfo );
 			}

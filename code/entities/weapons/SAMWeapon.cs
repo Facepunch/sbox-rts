@@ -97,7 +97,7 @@ namespace Facepunch.RTS
 		{
 			if ( target.IsValid() && Attacker.IsValid() )
 			{
-				DamageEntity( target, DamageFlags.Blast, 5f, GetDamage() / 6f );
+				DamageEntity( target, "blast", 5f, GetDamage() / 6f );
 			}
 		}
 	}

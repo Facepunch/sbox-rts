@@ -48,7 +48,7 @@ namespace Facepunch.RTS
 				bolt.SetPosition( 0, origin );
 				bolt.SetPosition( 1, target.WorldSpaceBounds.Center );
 
-				DamageEntity( (Entity)target, DamageFlags.Shock, 5f, damage );
+				DamageEntity( (Entity)target, "shock", 5f, damage );
 
 				if ( Rand.Float() >= 0.75f )
 				{

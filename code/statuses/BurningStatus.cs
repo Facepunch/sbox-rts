@@ -39,9 +39,10 @@ namespace Facepunch.RTS
 			{
 				var info = new DamageInfo
 				{
-					Flags = DamageFlags.Burn,
 					Damage = Data.Damage
 				};
+
+				info = info.WithTag( "burn" );
 
 				Target.TakeDamage( info );
 				NextTakeDamage = Data.Interval;

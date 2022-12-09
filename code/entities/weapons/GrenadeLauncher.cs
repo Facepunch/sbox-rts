@@ -61,7 +61,7 @@ namespace Facepunch.RTS
 		private void OnGrenadeHit( Projectile grenade, Entity entity )
 		{
 			if ( !entity.IsValid() ) return;
-			DamageEntity( entity, DamageFlags.Blast, Force, GetDamage() );
+			DamageEntity( entity, "blast", Force, GetDamage() );
 		}
 	}
 }

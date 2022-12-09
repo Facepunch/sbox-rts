@@ -1,5 +1,5 @@
 ﻿using System;
-using SandboxEditor;
+using Editor;
 using Sandbox;
 
 namespace Facepunch.RTS

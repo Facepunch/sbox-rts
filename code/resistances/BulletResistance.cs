@@ -8,6 +8,6 @@ namespace Facepunch.RTS
 		public override string Name => "Bullet Resistance";
 		public override string UniqueId => "resistance.bullet";
 		public override Texture Icon => Texture.Load( FileSystem.Mounted, "ui/resistances/bullet.png" );
-		public override DamageFlags Flags => DamageFlags.Bullet;
+		public override string DamageType => "bullet";
 	}
 }

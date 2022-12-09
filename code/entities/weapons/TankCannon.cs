@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 		public override string BulletTracer => null;
 		public override float RotationTolerance => 360f;
 		public override string SoundName => "rocketlauncher.fire";
-		public override DamageFlags DamageType => DamageFlags.Blast;
+		public override string DamageType => "blast";
 		public override float Force => 5f;
 		public virtual float RotateSpeed => 10f;
 

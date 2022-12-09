@@ -33,7 +33,7 @@ namespace Facepunch.RTS
 			return this;
 		}
 
-		public static Ragdoll From( ModelEntity entity, Vector3 velocity, DamageFlags damageFlags, Vector3 forcePos, Vector3 force, int bone )
+		public static Ragdoll From( ModelEntity entity, Vector3 velocity, bool isBullet, bool isBlast, bool isPhysicsImpaact, Vector3 forcePos, Vector3 force, int bone )
 		{
 			var ragdoll = new Ragdoll();
 			var modelName = entity.GetModelName();
@@ -73,8 +73,7 @@ namespace Facepunch.RTS
 				clothing.RenderColor = clothes.RenderColor;
 			}
 
-			if ( damageFlags.HasFlag( DamageFlags.Bullet ) ||
-				 damageFlags.HasFlag( DamageFlags.PhysicsImpact ) )
+			if ( isBullet || isPhysicsImpaact )
 			{
 				var body = bone > 0 ? ragdoll.GetBonePhysicsBody( bone ) : null;
 
@@ -84,7 +83,7 @@ namespace Facepunch.RTS
 					ragdoll.PhysicsGroup.ApplyImpulse( force );
 			}
 
-			if ( damageFlags.HasFlag( DamageFlags.Blast ) )
+			if ( isBlast )
 			{
 				if ( ragdoll.PhysicsGroup != null )
 				{

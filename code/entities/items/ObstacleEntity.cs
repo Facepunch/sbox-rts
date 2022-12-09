@@ -1,7 +1,7 @@
 ﻿using Gamelib.Extensions;
 using Gamelib.FlowFields;
 using Sandbox;
-using SandboxEditor;
+using Editor;
 
 namespace Facepunch.RTS
 {

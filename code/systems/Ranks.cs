@@ -34,7 +34,7 @@ namespace Facepunch.RTS
 
 			var list = new List<BaseRank>();
 
-			foreach ( var type in TypeLibrary.GetDescriptions<BaseRank>() )
+			foreach ( var type in TypeLibrary.GetTypes<BaseRank>() )
 			{
 				if ( !type.IsAbstract && !type.IsGenericType )
 				{

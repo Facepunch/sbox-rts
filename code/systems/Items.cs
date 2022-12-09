@@ -788,7 +788,7 @@ namespace Facepunch.RTS
 
 			var list = new List<BaseItem>();
 
-			foreach ( var type in TypeLibrary.GetDescriptions<BaseItem>() )
+			foreach ( var type in TypeLibrary.GetTypes<BaseItem>() )
 			{
 				if ( !type.IsAbstract && !type.IsGenericType )
 				{

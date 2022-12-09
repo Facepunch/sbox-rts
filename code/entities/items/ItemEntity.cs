@@ -167,13 +167,13 @@ namespace Facepunch.RTS
 
 		public bool HasComponent<C>() where C : ItemComponent
 		{
-			var componentName = TypeLibrary.GetDescription<C>().ClassName;
+			var componentName = TypeLibrary.GetType<C>().ClassName;
 			return ItemComponents.ContainsKey( componentName );
 		}
 
 		public C GetComponent<C>() where C : ItemComponent
 		{
-			var componentName = TypeLibrary.GetDescription<C>().ClassName;
+			var componentName = TypeLibrary.GetType<C>().ClassName;
 
 			if ( ItemComponents.TryGetValue( componentName, out var component ) )
 				return (component as C);
@@ -183,7 +183,7 @@ namespace Facepunch.RTS
 
 		public void RemoveComponent<C>() where C : ItemComponent
 		{
-			var componentName = TypeLibrary.GetDescription<C>().ClassName;
+			var componentName = TypeLibrary.GetType<C>().ClassName;
 
 			if ( ItemComponents.ContainsKey( componentName ) )
 			{
@@ -196,7 +196,7 @@ namespace Facepunch.RTS
 			var component = GetComponent<C>();
 			if ( component != null ) return component;
 
-			var componentName = TypeLibrary.GetDescription<C>().ClassName;
+			var componentName = TypeLibrary.GetType<C>().ClassName;
 			component = TypeLibrary.Create<C>( componentName );
 			ItemComponents.Add( componentName, component );
 
@@ -218,7 +218,7 @@ namespace Facepunch.RTS
 
 		public bool HasStatus<S>() where S : IStatus
 		{
-			var id = TypeLibrary.GetDescription<S>().ClassName;
+			var id = TypeLibrary.GetType<S>().ClassName;
 			return HasStatus( id );
 		}
 
@@ -231,7 +231,7 @@ namespace Facepunch.RTS
 
 			data.Serialize( writer );
 
-			var id = TypeLibrary.GetDescription<S>().ClassName;
+			var id = TypeLibrary.GetType<S>().ClassName;
 
 			ClientApplyStatus( To.Everyone, id, stream.GetBuffer() );
 

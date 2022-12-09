@@ -8,7 +8,7 @@ namespace Facepunch.RTS
 		public override int BaseDamage => 40;
 		public override string MuzzleFlash => "particles/weapons/muzzle_flash_plasma/muzzle_flash_plasma.vpcf";
 		public override string BulletTracer => "particles/weapons/muzzle_flash_plasma/bullet_trace.vpcf";
-		public override DamageFlags DamageType => DamageFlags.Plasma;
+		public override string DamageType => "plasma";
 		public override string SoundName => "sniper.plasma.fire1";
 
 		public override void Attack()

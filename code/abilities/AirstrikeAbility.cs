@@ -101,9 +101,10 @@ namespace Facepunch.RTS
 				var damageInfo = new DamageInfo
 				{
 					Damage = Rand.Float( MinDamage, MaxDamage ),
-					Attacker = (Entity)User,
-					Flags = DamageFlags.Blast
+					Attacker = (Entity)User
 				};
+
+				damageInfo = damageInfo.WithTag( "blast" );
 
 				unit.TakeDamage( damageInfo );
 			}

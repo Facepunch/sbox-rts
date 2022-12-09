@@ -7,7 +7,7 @@ namespace Facepunch.RTS
 	{
 		public override int BaseDamage => 30;
 		public override string BulletTracer => "particles/weapons/electric_bolt/electric_bolt.vpcf";
-		public override DamageFlags DamageType => DamageFlags.Shock;
+		public override string DamageType => "shock";
 		public override string SoundName => "electric.bolt1";
 
 		public override void Attack()

@@ -78,9 +78,10 @@ namespace Facepunch.RTS
 				if ( distance <= 20f )
 				{
 					var damage = new DamageInfo()
-						.WithFlag( DamageFlags.Blast )
 						.WithAttacker( this )
 						.WithWeapon( Weapon );
+
+					damage = damage.WithTag( "blast" );
 
 					damage.Damage = Weapon.GetDamage();
 

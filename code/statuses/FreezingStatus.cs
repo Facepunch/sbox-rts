@@ -49,9 +49,10 @@ namespace Facepunch.RTS
 			{
 				var info = new DamageInfo
 				{
-					Flags = DamageFlags.BlastWaterSurface,
 					Damage = Data.Damage
 				};
+
+				info = info.WithTag( "cold" );
 
 				Target.TakeDamage( info );
 				NextTakeDamage = Data.Interval;

@@ -13,7 +13,6 @@
   ],
   "HasCode": true,
   "CodePath": "code",
-  "RootNamespace": "Facepunch.RTS",
   "Metadata": {
     "MapList": [
       "facepunch.rts_greenlands",

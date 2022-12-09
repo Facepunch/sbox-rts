@@ -1,5 +1,5 @@
 ﻿using Sandbox;
-using SandboxEditor;
+using Editor;
 using System.Threading.Tasks;
 
 namespace Gamelib.DayNight

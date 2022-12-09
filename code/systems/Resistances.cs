@@ -18,7 +18,7 @@ namespace Facepunch.RTS
 		{
 			foreach ( var kv in resistances )
 			{
-				if ( IsApplicable( kv.Key, info.Flags ) )
+				if ( IsApplicable( kv.Key, info ) )
 				{
 					info.Damage *= (1f - kv.Value);
 				}
@@ -43,19 +43,19 @@ namespace Facepunch.RTS
 			return null;
 		}
 
-		public static bool IsApplicable( string id, DamageFlags flags )
+		public static bool IsApplicable( string id, DamageInfo dmg )
 		{
 			var resistance = Find( id );
 			if ( resistance == null ) return false;
 
-			return flags.HasFlag( resistance.Flags );
+			return dmg.HasTag( resistance.DamageType );
 		}
 
 		private static void BuildTable()
 		{
 			var list = new List<BaseResistance>();
 
-			foreach ( var type in TypeLibrary.GetDescriptions<BaseResistance>() )
+			foreach ( var type in TypeLibrary.GetTypes<BaseResistance>() )
 			{
 				if ( !type.IsAbstract && !type.IsGenericType )
 				{

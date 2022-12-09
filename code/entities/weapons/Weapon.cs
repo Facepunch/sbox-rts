@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		[Net] public AnimatedEntity Attacker { get; set; }
 		[Net] public Entity Occupiable { get; set; }
 		[Net] public Entity Target { get; set; }
-		public virtual DamageFlags DamageType => DamageFlags.Bullet;
+		public virtual string DamageType => "bullet";
 		public virtual WeaponTargetType TargetType => WeaponTargetType.Any;
 		public virtual WeaponTargetTeam TargetTeam => WeaponTargetTeam.Enemy;
 		public virtual bool BoneMerge => true;
@@ -167,19 +167,20 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public void DamageEntity( Entity entity, DamageFlags flags, float force, float damage )
+		public void DamageEntity( Entity entity, string damageType, float force, float damage )
 		{
 			var aimRay = GetAimRay();
 			var endPos = entity.WorldSpaceBounds.Center;
 			var damageInfo = new DamageInfo()
 			{
-				Flags = flags,
 				Weapon = this,
 				Position = endPos,
 				Attacker = Attacker,
 				Force = aimRay.Forward * 100f * force,
 				Damage = damage
 			};
+
+			damageInfo = damageInfo.WithTag( damageType );
 
 			entity.TakeDamage( damageInfo );
 
@@ -193,9 +194,9 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public void DamageTarget( DamageFlags flags, float force, float damage )
+		public void DamageTarget( string damageType, float force, float damage )
 		{
-			DamageEntity( Target, flags, force, damage );
+			DamageEntity( Target, damageType, force, damage );
 		}
 
 		public void ShootBullet( float force, float damage )

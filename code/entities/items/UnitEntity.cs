@@ -355,7 +355,7 @@ namespace Facepunch.RTS
 		public void Kill( DamageInfo damageInfo = default )
 		{
 			if ( Item.RagdollOnDeath )
-				BecomeRagdoll( Velocity, damageInfo.Flags, damageInfo.Position, damageInfo.Force, damageInfo.BoneIndex );
+				BecomeRagdoll( Velocity, damageInfo.HasTag( "bullet" ), damageInfo.HasTag( "blast" ), damageInfo.HasTag( "physicsimpact" ), damageInfo.Position, damageInfo.Force, damageInfo.BoneIndex );
 
 			CreateDeathParticles();
 			LifeState = LifeState.Dead;
@@ -1478,9 +1478,9 @@ namespace Facepunch.RTS
 		}
 
 		[ClientRpc]
-		private void BecomeRagdoll( Vector3 velocity, DamageFlags damageFlags, Vector3 forcePos, Vector3 force, int bone )
+		private void BecomeRagdoll( Vector3 velocity, bool isBullet, bool isBlast, bool isPhysicsImpact, Vector3 forcePos, Vector3 force, int bone )
 		{
-			Ragdoll.From( this, velocity, damageFlags, forcePos, force, bone ).FadeOut( 10f );
+			Ragdoll.From( this, velocity, isBullet, isBlast, isPhysicsImpact, forcePos, force, bone ).FadeOut( 10f );
 		}
 
 		private void TryFinishMoveGroup()
