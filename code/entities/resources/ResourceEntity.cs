@@ -145,7 +145,7 @@ namespace Facepunch.RTS
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
-			if ( Local.Pawn is Player player && player.Position.Distance( Position ) <= 1000f )
+			if ( Local.Pawn is RTSPlayer player && player.Position.Distance( Position ) <= 1000f )
 				ShowOutline();
 			else
 				HideOutline();

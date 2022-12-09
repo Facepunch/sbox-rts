@@ -215,7 +215,7 @@ namespace Facepunch.RTS
 			UpdateTextureSize();
 		}
 
-		public static void MakeVisible( Player player, Vector3 position, float radius )
+		public static void MakeVisible( RTSPlayer player, Vector3 position, float radius )
 		{
 			MakeVisible( To.Multiple( player.GetAllTeamClients() ), position, radius );
 		}
@@ -234,17 +234,17 @@ namespace Facepunch.RTS
 			_ = RemoveViewerAfter( viewer, duration );
 		}
 
-		public static void Clear( Player player )
+		public static void Clear( RTSPlayer player )
 		{
 			Clear( To.Single( player ) );
 		}
 
-		public static void Show( Player player )
+		public static void Show( RTSPlayer player )
 		{
 			Show( To.Single( player ) );
 		}
 
-		public static void Hide( Player player )
+		public static void Hide( RTSPlayer player )
 		{
 			Hide( To.Single( player ) );
 		}

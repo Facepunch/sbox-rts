@@ -717,7 +717,7 @@ namespace Facepunch.RTS
 			base.OnQueueItemCompleted( queueItem );
 		}
 
-		protected override void OnPlayerAssigned( Player player )
+		protected override void OnPlayerAssigned( RTSPlayer player )
 		{
 			RenderColor = player.TeamColor;
 

@@ -73,7 +73,7 @@ namespace Facepunch.RTS
 			if ( Items.IsGhostValid() || Abilities.IsSelectingTarget() )
 				return;
 
-			if ( Local.Pawn is not Player player )
+			if ( Local.Pawn is not RTSPlayer player )
 				return;
 
 			if ( !Hud.IsLocalPlaying() )

@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			if ( Local.Pawn is not Player player ) return;
+			if ( Local.Pawn is not RTSPlayer player ) return;
 
 			if ( IdleUnits.Count == 0 ) return;
 
@@ -71,7 +71,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is RTSPlayer player )
 			{
 				if ( NextUpdateList )
 				{

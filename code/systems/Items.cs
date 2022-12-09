@@ -32,7 +32,7 @@ namespace Facepunch.RTS
 
 		public static void FocusCameraOn( ISelectable selectable )
 		{
-			if ( Local.Pawn is not Player player ) return;
+			if ( Local.Pawn is not RTSPlayer player ) return;
 
 			var cameraPosition = selectable.Position;
 
@@ -41,7 +41,7 @@ namespace Facepunch.RTS
 
 		public static void FocusCameraOn( List<ISelectable> selectables )
 		{
-			if ( Local.Pawn is not Player player ) return;
+			if ( Local.Pawn is not RTSPlayer player ) return;
 
 			var cameraPosition = Vector3.Zero;
 			var itemCount = selectables.Count;
@@ -64,13 +64,13 @@ namespace Facepunch.RTS
             Marker = Particles.Create( "particles/movement_marker/movement_marker.vpcf" );
             Marker.SetPosition( 0, position + Vector3.Up * 5f );
 
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is RTSPlayer player )
 			{
 				Marker.SetPosition( 1, player.TeamColor * 255f );
 			}
         }
 
-		public static BuildingEntity Create( Player player, BaseBuilding item )
+		public static BuildingEntity Create( RTSPlayer player, BaseBuilding item )
 		{
 			BuildingEntity building;
 
@@ -84,7 +84,7 @@ namespace Facepunch.RTS
 			return building;
 		}
 
-		public static UnitEntity Create( Player player, BaseUnit item )
+		public static UnitEntity Create( RTSPlayer player, BaseUnit item )
 		{
 			UnitEntity unit;
 
@@ -98,7 +98,7 @@ namespace Facepunch.RTS
 			return unit;
 		}
 
-		public static T Create<T>( Player player, string itemId ) where T : ISelectable, new()
+		public static T Create<T>( RTSPlayer player, string itemId ) where T : ISelectable, new()
 		{
 			T output;
 
@@ -117,7 +117,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void StartBuilding( int workerId, uint itemId, string cursorOrigin, string cursorAim, bool shouldQueue = false )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -174,7 +174,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void Queue( int entityId, uint itemId )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -196,7 +196,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void Unqueue( int entityId, uint queueId )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -220,7 +220,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void Attack( int id, bool shouldQueue = false )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -259,7 +259,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void Evict( int occupiableId, int unitId )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -282,7 +282,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void Occupy( int occupiableId, bool shouldQueue = false )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -323,7 +323,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void RepairOrDeposit( int id, bool shouldQueue )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -398,7 +398,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void Gather( int id, bool shouldQueue = false )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -445,7 +445,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void Construct( int id, bool shouldQueue )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -494,7 +494,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void MoveToLocation( string csv, bool shouldQueue = false )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -585,7 +585,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void RefineSelection( string itemId )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -607,7 +607,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void CancelAction( int id )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -626,7 +626,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void Select( string csv = null, bool isAdditive = false )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -740,7 +740,7 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			if ( Local.Pawn is not Player player )
+			if ( Local.Pawn is not RTSPlayer player )
 				return;
 
 			var cursorOrigin = player.CursorOrigin;

@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 {
 	public class LobbyColorButton : Panel
 	{
-		public Player Player { get; set; }
+		public RTSPlayer Player { get; set; }
 
 		protected override void OnClick( MousePanelEvent e )
 		{
@@ -38,7 +38,7 @@ namespace Facepunch.RTS
 			Name = Add.Label( "", "name" );
 		}
 
-		public void Update( Player player )
+		public void Update( RTSPlayer player )
 		{
 			if ( player == null )
 			{
@@ -93,7 +93,7 @@ namespace Facepunch.RTS
 			for ( var i = 0; i < 4; i++ )
 			{
 				if ( Entity.FindByIndex( i + 1 ) is Client player )
-					Players[i].Update( player.Pawn as Player );
+					Players[i].Update( player.Pawn as RTSPlayer );
 				else
 					Players[i].Update( null );
 			}

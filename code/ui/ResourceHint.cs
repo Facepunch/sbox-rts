@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 			return hint;
 		}
 
-		public static void Send( Player player, float duration, Vector3 position, ResourceType resource, int amount, Color color )
+		public static void Send( RTSPlayer player, float duration, Vector3 position, ResourceType resource, int amount, Color color )
 		{
 			Host.AssertServer();
 
@@ -31,7 +31,7 @@ namespace Facepunch.RTS
 			CreateOnClient( To.Single( player ), duration, position, a, b, color );
 		}
 
-		public static void Send( Player player, float duration, Vector3 position, Dictionary<ResourceType, int> resources, Color color )
+		public static void Send( RTSPlayer player, float duration, Vector3 position, Dictionary<ResourceType, int> resources, Color color )
 		{
 			Host.AssertServer();
 

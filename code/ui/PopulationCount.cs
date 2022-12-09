@@ -38,7 +38,7 @@ namespace Facepunch.RTS
 		{
 			SetClass( "hidden", !Hud.IsLocalPlaying() );
 
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is RTSPlayer player )
 			{
 				Population.Label.Text = player.Population + "/" + player.MaxPopulation;
 				Population.Label.SetClass( "full", player.Population >= player.MaxPopulation );

@@ -12,7 +12,7 @@ namespace Facepunch.RTS.Tech
 			Events.UnitTrained += OnUnitTrained;
 		}
 
-		public override void OnCreated( Player player, ISelectable target )
+		public override void OnCreated( RTSPlayer player, ISelectable target )
 		{
 			var units = player.GetUnits().Where( v => v.Item is T && v.Tags.Has( Tag ) );
 
@@ -24,7 +24,7 @@ namespace Facepunch.RTS.Tech
 			base.OnCreated( player, target );
 		}
 
-		private void OnUnitTrained( Player player, UnitEntity unit )
+		private void OnUnitTrained( RTSPlayer player, UnitEntity unit )
 		{
 			if ( Has( player ) && unit.Item is T && unit.Tags.Has( Tag ) )
 			{

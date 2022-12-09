@@ -49,13 +49,13 @@ namespace Facepunch.RTS.Buildings
 		public virtual bool CanDemolish => true;
 		public virtual string Weapon => "";
 
-		public void PlayPlaceSound( Player player )
+		public void PlayPlaceSound( RTSPlayer player )
 		{
 			if ( PlaceSounds.Length > 0 )
 				Audio.Play( player, Rand.FromArray( PlaceSounds ) );
 		}
 
-		public void PlaySelectSound( Player player )
+		public void PlaySelectSound( RTSPlayer player )
 		{
 			if ( SelectSounds.Length > 0 )
 				Audio.Play( player, Rand.FromArray( SelectSounds ) );
@@ -73,7 +73,7 @@ namespace Facepunch.RTS.Buildings
 				Audio.Play( Rand.FromArray( BuiltSounds ), building.Position );
 		}
 
-		public override bool IsAvailable( Player player, ISelectable target )
+		public override bool IsAvailable( RTSPlayer player, ISelectable target )
 		{
 			if ( MaxConstructed > 0 )
 			{

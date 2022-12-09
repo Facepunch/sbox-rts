@@ -3,7 +3,7 @@
   "Type": "game",
   "Org": "facepunch",
   "Ident": "rts",
-  "Tags": null,
+  "Tags": "",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
@@ -70,6 +70,10 @@
     "RankType": "None",
     "PerMapRanking": false,
     "LeaderboardType": "None",
-    "GameCategory": "None"
+    "GameCategory": "None",
+    "DefaultLeaderboards": null,
+    "Summary": "A competitive real-time strategy game with support for up to 4 players.",
+    "Description": "A competitive real-time strategy game with support for up to 4 players.",
+    "Public": true
   }
 }

@@ -22,7 +22,7 @@ namespace Facepunch.RTS
 			Name = Add.Label( "", "name" );
 		}
 
-		public void Update( Player player )
+		public void Update( RTSPlayer player )
 		{
 			var client = player.Client;
 
@@ -82,7 +82,7 @@ namespace Facepunch.RTS
 		public void SetWinners( int teamGroup )
 		{
 			var winners = Entity.All
-				.OfType<Player>()
+				.OfType<RTSPlayer>()
 				.Where( p => p.TeamGroup == teamGroup );
 
 			foreach ( var winner in winners )

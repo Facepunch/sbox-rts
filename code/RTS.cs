@@ -22,7 +22,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server("rts_kill")]
 		public static void KillSelected()
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			if ( ConsoleSystem.Caller.Pawn is RTSPlayer caller )
 			{
 				caller.ForEachSelected<UnitEntity>( ( unit ) =>
 				{
@@ -35,7 +35,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server( "rts_doitnow" )]
 		public static void SkipAllWaiting()
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			if ( ConsoleSystem.Caller.Pawn is RTSPlayer caller )
 			{
 				caller.SkipAllWaiting = true;
 			}
@@ -44,7 +44,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server( "rts_learnit" )]
 		public static void LearnTechnology( string technology )
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			if ( ConsoleSystem.Caller.Pawn is RTSPlayer caller )
 			{
 				var item = Items.Find<BaseTech>( technology );
 
@@ -56,7 +56,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server( "rts_richboy" )]
 		public static void GiveAllResources()
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player caller )
+			if ( ConsoleSystem.Caller.Pawn is RTSPlayer caller )
 			{
 				caller.SetResource( ResourceType.Stone, 9999 );
 				caller.SetResource( ResourceType.Metal, 9999 );
@@ -101,7 +101,7 @@ namespace Facepunch.RTS
 			Instance = this;
 		}
 
-		public void UpdateRating( Player player )
+		public void UpdateRating( RTSPlayer player )
 		{
 			var client = player.Client;
 			Ratings[client.SteamId] = player.Elo.Rating;
@@ -119,14 +119,14 @@ namespace Facepunch.RTS
 
 		public override void ClientDisconnect( Client client, NetworkDisconnectionReason reason )
 		{
-			Rounds.Current?.OnPlayerLeave( client.Pawn as Player );
+			Rounds.Current?.OnPlayerLeave( client.Pawn as RTSPlayer );
 
 			base.ClientDisconnect( client, reason );
 		}
 
 		public override void ClientJoined( Client client )
 		{
-			var player = new Player();
+			var player = new RTSPlayer();
 
 			if ( Ratings.TryGetValue( client.SteamId, out var rating ) )
 				player.Elo.Rating = rating;

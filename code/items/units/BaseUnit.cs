@@ -59,24 +59,24 @@ namespace Facepunch.RTS.Units
 		public virtual bool UseRenderColor => false;
 		public virtual string Weapon => "";
 
-		public override void OnQueued( Player player, ISelectable target )
+		public override void OnQueued( RTSPlayer player, ISelectable target )
 		{
 			player.AddPopulation( Population );
 		}
 
-		public override void OnUnqueued( Player player, ISelectable target )
+		public override void OnUnqueued( RTSPlayer player, ISelectable target )
 		{
 			player.TakePopulation( Population );
 		}
 
-		public override void OnCreated( Player player, ISelectable target )
+		public override void OnCreated( RTSPlayer player, ISelectable target )
 		{
 			Hud.Toast( player, "Unit Trained", this );
 
 			base.OnCreated( player, target );
 		}
 
-		public override RequirementError CanCreate( Player player, ISelectable target )
+		public override RequirementError CanCreate( RTSPlayer player, ISelectable target )
 		{
 			if ( !player.HasPopulationCapacity( Population ) )
 				return RequirementError.NotEnoughPopulation;
@@ -84,37 +84,37 @@ namespace Facepunch.RTS.Units
 			return base.CanCreate( player, target );
 		}
 
-		public void PlayConstructSound( Player player )
+		public void PlayConstructSound( RTSPlayer player )
 		{
 			if ( ConstructSounds.Length > 0 )
 				Audio.Play( player, Rand.FromArray( ConstructSounds ) );
 		}
 
-		public void PlaySelectSound( Player player )
+		public void PlaySelectSound( RTSPlayer player )
 		{
 			if ( SelectSounds.Length > 0 )
 				Audio.Play( player, Rand.FromArray( SelectSounds ) );
 		}
 
-		public void PlayDepositSound( Player player )
+		public void PlayDepositSound( RTSPlayer player )
 		{
 			if ( DepositSounds.Length > 0 )
 				Audio.Play( player, Rand.FromArray( DepositSounds ) );
 		}
 
-		public void PlayGatherSound( Player player, ResourceType resource )
+		public void PlayGatherSound( RTSPlayer player, ResourceType resource )
 		{
 			if ( GatherSounds.TryGetValue( resource, out var sounds ) )
 				Audio.Play( player, Rand.FromArray( sounds ) );
 		}
 
-		public void PlayAttackSound( Player player )
+		public void PlayAttackSound( RTSPlayer player )
 		{
 			if ( AttackSounds.Length > 0 )
 				Audio.Play( player, Rand.FromArray( AttackSounds ) );
 		}
 
-		public void PlayMoveSound( Player player )
+		public void PlayMoveSound( RTSPlayer player )
 		{
 			if ( MoveSounds.Length > 0 )
 				Audio.Play( player, Rand.FromArray( MoveSounds ) );

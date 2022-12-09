@@ -95,7 +95,7 @@ namespace Facepunch.RTS
 		{
 			if ( IsDisabled ) return;
 
-			var player = (Local.Pawn as Player);
+			var player = (Local.Pawn as RTSPlayer);
 			var status = Item.CanCreate( player, Selectable );
 
 			if ( status != RequirementError.Success )
@@ -457,7 +457,7 @@ namespace Facepunch.RTS
 			Parent.SetClass( "hidden", Buttons.Count == 0 );
 		}
 
-		private void AddQueueables<T>( Player player, HashSet<string> queueables, List<BaseItem> available, List<BaseItem> unavailable ) where T : BaseItem
+		private void AddQueueables<T>( RTSPlayer player, HashSet<string> queueables, List<BaseItem> available, List<BaseItem> unavailable ) where T : BaseItem
 		{
 			available.Clear();
 			unavailable.Clear();
@@ -496,7 +496,7 @@ namespace Facepunch.RTS
 
 		private void UpdateCommands( HashSet<string> queueables, Dictionary<string, BaseAbility> abilities = null )
 		{
-			var player = Local.Pawn as Player;
+			var player = Local.Pawn as RTSPlayer;
 
 			var availableQueueables = new List<BaseItem>();
 			var unavailableQueueables = new List<BaseItem>();

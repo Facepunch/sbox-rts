@@ -1151,7 +1151,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		protected override void OnPlayerAssigned( Player player )
+		protected override void OnPlayerAssigned( RTSPlayer player )
 		{
 			if ( Item.UseRenderColor )
 			{

@@ -9,7 +9,7 @@ using Gamelib.Extensions;
 
 namespace Facepunch.RTS
 {
-	public partial class Player : Entity
+	public partial class RTSPlayer : Entity
 	{
 		private class AttackWarning
 		{
@@ -41,7 +41,7 @@ namespace Facepunch.RTS
 		public HashSet<uint> InstantBuildCache { get; private set; }
 		public TimeSince LastCommandSound { get; set; }
 
-		public Player()
+		public RTSPlayer()
 		{
 			Elo = new();
 			RTSCamera = new RTSCamera();
@@ -216,15 +216,15 @@ namespace Facepunch.RTS
 			AttackWarnings.Add( warning );
 		}
 
-		public IEnumerable<Player> GetAllTeamPlayers()
+		public IEnumerable<RTSPlayer> GetAllTeamPlayers()
 		{
-			return All.OfType<Player>()
+			return All.OfType<RTSPlayer>()
 				.Where( p => p.TeamGroup == TeamGroup );
 		}
 
 		public IEnumerable<Client> GetAllTeamClients()
 		{
-			return All.OfType<Player>()
+			return All.OfType<RTSPlayer>()
 				.Where( p => p.TeamGroup == TeamGroup )
 				.Select( p => p.Client );
 		}
@@ -382,7 +382,7 @@ namespace Facepunch.RTS
 			if ( !Gamemode.Instance.IsValid() )
 				return;
 
-			if ( client.Pawn is not Player player )
+			if ( client.Pawn is not RTSPlayer player )
 				return;
 
 			if ( IsServer && Input.Released( InputButton.Reload ) )

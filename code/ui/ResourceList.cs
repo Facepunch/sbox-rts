@@ -28,7 +28,7 @@ namespace Facepunch.RTS
 		{
 			SetClass( "hidden", !Hud.IsLocalPlaying() );
 
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is RTSPlayer player )
 			{
 				UpdateResource( player, ResourceType.Stone );
 				UpdateResource( player, ResourceType.Beer );
@@ -39,7 +39,7 @@ namespace Facepunch.RTS
 			base.Tick();
 		}
 
-		private void UpdateResource( Player player, ResourceType type )
+		private void UpdateResource( RTSPlayer player, ResourceType type )
 		{
 			var amount = player.GetResource( type );
 			var cached = Cache[type];

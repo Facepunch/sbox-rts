@@ -22,7 +22,7 @@ namespace Facepunch.RTS
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, Change] public uint ItemNetworkId { get; private set; }
 		[Net] public IList<uint> Upgrades { get; private set; }
-		[Net] public Player Player { get; private set; }
+		[Net] public RTSPlayer Player { get; private set; }
 		[Net] public float MaxHealth { get; set; }
 		public EntityHudAnchor Hud { get; private set; }
 		public EntityHudIcon StatusIcon { get; private set; }
@@ -36,7 +36,7 @@ namespace Facepunch.RTS
 		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );
 		public bool IsLocalPlayers => Player.IsValid() && Local.Pawn == Player;
-		public bool IsLocalTeamGroup => Player.IsValid() && (Local.Pawn as Player).TeamGroup == Player.TeamGroup;
+		public bool IsLocalTeamGroup => Player.IsValid() && (Local.Pawn as RTSPlayer).TeamGroup == Player.TeamGroup;
 
 		private T ItemCache;
 
@@ -396,7 +396,7 @@ namespace Facepunch.RTS
 			return (targetPosition.Distance( selfPosition ) < radius);
 		}
 
-		public void Assign( Player player, T item )
+		public void Assign( RTSPlayer player, T item )
 		{
 			Host.AssertServer();
 
@@ -433,7 +433,7 @@ namespace Facepunch.RTS
 
 		public void ClearItemCache() => ItemCache = null;
 
-		public void Assign( Player player, string itemId )
+		public void Assign( RTSPlayer player, string itemId )
 		{
 			Host.AssertServer();
 
@@ -669,7 +669,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		protected virtual void OnPlayerAssigned( Player player) { }
+		protected virtual void OnPlayerAssigned( RTSPlayer player) { }
 
 		protected virtual void OnItemChanged( T item, T oldItem )
 		{

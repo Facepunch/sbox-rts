@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is RTSPlayer player )
 			{
 				LobbyDialog.SetReadyStatus( !player.IsReady );
 			}
@@ -49,7 +49,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is RTSPlayer player )
 			{
 				var isReady = player.IsReady;
 

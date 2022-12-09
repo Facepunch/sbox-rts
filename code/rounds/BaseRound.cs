@@ -10,7 +10,7 @@ namespace Facepunch.RTS
 		public virtual bool ShowTimeLeft => false;
 		public virtual bool ShowRoundInfo => false;
 
-		public List<Player> Players = new();
+		public List<RTSPlayer> Players = new();
 		public RealTimeUntil NextSecondTime { get; private set; }
 		public float RoundEndTime { get; set; }
 
@@ -43,7 +43,7 @@ namespace Facepunch.RTS
 			OnFinish();
 		}
 
-		public void AddPlayer( Player player )
+		public void AddPlayer( RTSPlayer player )
 		{
 			Host.AssertServer();
 
@@ -51,9 +51,9 @@ namespace Facepunch.RTS
 				Players.Add( player );
 		}
 
-		public virtual void OnPlayerJoin( Player player ) { }
+		public virtual void OnPlayerJoin( RTSPlayer player ) { }
 
-		public virtual void OnPlayerLeave( Player player )
+		public virtual void OnPlayerLeave( RTSPlayer player )
 		{
 			Players.Remove( player );
 		}

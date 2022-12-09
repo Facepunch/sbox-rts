@@ -9,7 +9,7 @@ namespace Facepunch.RTS
 		public Vector3 Position { get; }
 		public bool CanOccupyUnits { get; }
 		public int NetworkIdent { get; }
-		public Player Player { get; }
+		public RTSPlayer Player { get; }
 		public bool CanOccupantsAttack();
 		public float GetMaxVerticalRange();
 		public float GetMinVerticalRange();

@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 			Toast( To.Everyone, text, item.NetworkId );
 		}
 
-		public static void Toast( Player player, string text, BaseItem item )
+		public static void Toast( RTSPlayer player, string text, BaseItem item )
 		{
 			Toast( To.Single( player ), text, item.NetworkId );
 		}
@@ -25,7 +25,7 @@ namespace Facepunch.RTS
 			Toast( To.Everyone, text, icon );
 		}
 
-		public static void Toast( Player player, string text, string icon = "" )
+		public static void Toast( RTSPlayer player, string text, string icon = "" )
 		{
 			Toast( To.Single( player ), text, icon );
 		}
@@ -51,7 +51,7 @@ namespace Facepunch.RTS
 		{
 			Host.AssertClient();
 
-			if ( Local.Pawn is not Player player )
+			if ( Local.Pawn is not RTSPlayer player )
 				return false;
 
 			if ( player.IsSpectator )

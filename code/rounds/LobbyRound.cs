@@ -59,7 +59,7 @@ namespace Facepunch.RTS
 		{
 			if ( Host.IsServer )
 			{
-				var players = Client.All.Select( ( client ) => client.Pawn as Player );
+				var players = Client.All.Select( ( client ) => client.Pawn as RTSPlayer );
 
 				foreach ( var player in players )
 					OnPlayerJoin( player );
@@ -90,7 +90,7 @@ namespace Facepunch.RTS
 			base.OnSecond();
 		}
 
-		public override void OnPlayerJoin( Player player )
+		public override void OnPlayerJoin( RTSPlayer player )
 		{
 			if ( Players.Contains( player ) )
 			{

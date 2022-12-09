@@ -15,11 +15,11 @@ namespace Facepunch.RTS
 		public override int RoundDuration => 0;
 		public override bool ShowTimeLeft => true;
 
-		public List<Player> Spectators = new();
+		public List<RTSPlayer> Spectators = new();
 
 		private RealTimeUntil NextWinCheck { get; set; }
 
-		public override void OnPlayerJoin( Player player )
+		public override void OnPlayerJoin( RTSPlayer player )
 		{
 			player.MakeSpectator( true );
 			Spectators.Add( player );
@@ -65,7 +65,7 @@ namespace Facepunch.RTS
 			if ( Host.IsServer )
 			{
 				var spawnpoints = Entity.All.OfType<SpawnPoint>().ToList().Shuffle();
-				var players = Client.All.Select( ( client ) => client.Pawn as Player ).ToList();
+				var players = Client.All.Select( ( client ) => client.Pawn as RTSPlayer ).ToList();
 
 				foreach ( var player in players )
 				{

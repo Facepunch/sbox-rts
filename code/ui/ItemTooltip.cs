@@ -81,7 +81,7 @@ namespace Facepunch.RTS
 
 		public void Update( BaseAbility ability, bool showDependencies = false )
 		{
-			var player = Local.Pawn as Player;
+			var player = Local.Pawn as RTSPlayer;
 
 			Name.Style.FontColor = ability.Color;
 			Name.Style.Dirty();
@@ -186,7 +186,7 @@ namespace Facepunch.RTS
 
 		public void Update( BaseItem item, bool hideCosts = false, bool showDependencies = false )
 		{
-			var player = Local.Pawn as Player;
+			var player = Local.Pawn as RTSPlayer;
 
 			Name.Style.FontColor = item.Color;
 			Name.Style.Dirty();

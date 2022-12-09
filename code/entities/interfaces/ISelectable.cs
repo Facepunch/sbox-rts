@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 		public int NetworkIdent { get; }
 		public string ItemId { get; }
 		public EntityTags Tags { get; }
-		public Player Player { get; }
+		public RTSPlayer Player { get; }
 		public bool IsSelected { get; }
 		public bool CanMultiSelect { get; }
 		public float Health { get; set; }
@@ -48,7 +48,7 @@ namespace Facepunch.RTS
 		public void FinishAbility();
 		public void CancelAbility();
 		public bool IsUsingAbility();
-		public void Assign( Player player, string itemId );
+		public void Assign( RTSPlayer player, string itemId );
 		public bool ShouldUpdateHud();
 		public void UpdateHudComponents();
 		public bool CanBeAttacked();

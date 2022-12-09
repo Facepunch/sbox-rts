@@ -28,7 +28,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void SetNextTeamGroup()
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player player )
+			if ( ConsoleSystem.Caller.Pawn is RTSPlayer player )
 			{
 				var nextTeamGroup = player.TeamGroup + 1;
 
@@ -42,7 +42,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void SetReadyStatus( bool isReady )
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player player )
+			if ( ConsoleSystem.Caller.Pawn is RTSPlayer player )
 			{
 				player.IsReady = isReady;
 

@@ -18,7 +18,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void UseOnTarget( int entityId, string abilityId, int targetId )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -65,7 +65,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void UseAtLocation( int entityId, string abilityId, string origin )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -110,7 +110,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void UseOnSelf( int entityId, string abilityId )
 		{
-			var caller = ConsoleSystem.Caller.Pawn as Player;
+			var caller = ConsoleSystem.Caller.Pawn as RTSPlayer;
 
 			if ( !caller.IsValid() || caller.IsSpectator )
 				return;
@@ -189,7 +189,7 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			if ( Local.Pawn is not Player player )
+			if ( Local.Pawn is not RTSPlayer player )
 				return;
 
 			var cursorOrigin = player.CursorOrigin;

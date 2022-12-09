@@ -22,7 +22,7 @@ namespace Facepunch.RTS
 		public virtual Dictionary<ResourceType, int> Costs => new();
 		public virtual HashSet<string> Dependencies => new();
 
-		public bool HasDependencies( Player player )
+		public bool HasDependencies( RTSPlayer player )
 		{
 			foreach ( var v in Dependencies )
 			{
@@ -38,22 +38,22 @@ namespace Facepunch.RTS
 			return true;
 		}
 
-		public virtual void OnQueued( Player player, ISelectable target )
+		public virtual void OnQueued( RTSPlayer player, ISelectable target )
 		{
 
 		}
 
-		public virtual void OnUnqueued( Player player, ISelectable target )
+		public virtual void OnUnqueued( RTSPlayer player, ISelectable target )
 		{
 
 		}
 
-		public virtual void OnCreated( Player player, ISelectable target )
+		public virtual void OnCreated( RTSPlayer player, ISelectable target )
 		{
 
 		}
 
-		public virtual RequirementError CanCreate( Player player, ISelectable target )
+		public virtual RequirementError CanCreate( RTSPlayer player, ISelectable target )
 		{
 			if ( !HasDependencies( player ) )
 				return RequirementError.Dependencies;
@@ -69,17 +69,17 @@ namespace Facepunch.RTS
 			return RequirementError.Success;
 		}
 
-		public virtual bool Has( Player player )
+		public virtual bool Has( RTSPlayer player )
 		{
 			return player.Dependencies.Contains( NetworkId );
 		}
 
-		public virtual bool Has( Player player, ISelectable target )
+		public virtual bool Has( RTSPlayer player, ISelectable target )
 		{
 			return Has( player );
 		}
 
-		public virtual bool IsAvailable( Player player, ISelectable target )
+		public virtual bool IsAvailable( RTSPlayer player, ISelectable target )
 		{
 			return !Has( player, target );
 		}

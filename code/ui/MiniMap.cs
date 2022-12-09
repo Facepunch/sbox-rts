@@ -66,7 +66,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseMove( MousePanelEvent e )
 		{
-			if ( IsMouseDown && !IsCtrlDown && Local.Pawn is Player player )
+			if ( IsMouseDown && !IsCtrlDown && Local.Pawn is RTSPlayer player )
 			{
 				player.LookAt( PixelToWorld( MousePosition.x, MousePosition.y ) );
 			}
@@ -92,7 +92,7 @@ namespace Facepunch.RTS
 		{
 			base.OnRightClick( e );
 
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is RTSPlayer player )
 			{
 				var worldPosition = PixelToWorld( MousePosition.x, MousePosition.y );
 				Items.MoveToLocation( worldPosition.ToCSV(), IsShiftDown );
@@ -103,7 +103,7 @@ namespace Facepunch.RTS
 		{
 			base.OnClick( e );
 
-			if ( Local.Pawn is Player player )
+			if ( Local.Pawn is RTSPlayer player )
 			{
 				var worldPosition = PixelToWorld( MousePosition.x, MousePosition.y );
 
@@ -300,7 +300,7 @@ namespace Facepunch.RTS
 		[ConCmd.Server]
 		public static void SendPing( string csv )
 		{
-			if ( ConsoleSystem.Caller.Pawn is Player player )
+			if ( ConsoleSystem.Caller.Pawn is RTSPlayer player )
 			{
 				var teamMembers = player.GetAllTeamClients();
 				ReceivePing( To.Multiple( teamMembers ), csv.ToVector3(), player.TeamColor );
