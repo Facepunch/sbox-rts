@@ -15,7 +15,9 @@ namespace Facepunch.RTS
 		{
 			if ( !Enabled || !Fog.IsActive ) return;
 
-			var vertexBuffer = Render.GetDynamicVB( true );
+			var vertexBuffer = new VertexBuffer();
+			vertexBuffer.Init( true );
+
 			var bounds = Fog.Bounds;
 
 			var a = new Vertex( bounds.TopLeft, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );

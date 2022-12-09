@@ -111,7 +111,6 @@ namespace Facepunch.RTS
 			ResistanceList = new List<float>();
 			Resistances = new();
 
-			EnableDrawOverWorld = true;
 			Occupants = new List<UnitEntity>();
 			MoveStack = new();
 
@@ -909,7 +908,6 @@ namespace Facepunch.RTS
 
 			entity.SetModel( modelName );
 			entity.SetParent( this, true );
-			entity.EnableDrawOverWorld = true;
 
 			Clothing.Add( entity );
 
@@ -1277,7 +1275,6 @@ namespace Facepunch.RTS
 			Scale = item.ModelScale;
 			Health = item.MaxHealth;
 			MaxHealth = item.MaxHealth;
-			EyePosition = Position + Vector3.Up * 64;
 			LineOfSightRadius = item.LineOfSightRadius;
 			EnableHitboxes = true;
 
@@ -1332,7 +1329,6 @@ namespace Facepunch.RTS
 
 			Weapon = TypeLibrary.Create<Weapon>( name );
 			Weapon.Attacker = this;
-			Weapon.EnableDrawOverWorld = true;
 
 			var attachment = GetAttachment( "weapon", true );
 
@@ -1362,7 +1358,7 @@ namespace Facepunch.RTS
 			Modifiers = new UnitModifiers();
 		}
 
-		[Event.Frame]
+		[Event.Client.Frame]
 		protected virtual void ClientFrame()
 		{
 			if ( Hud.Style.Opacity != RenderColor.a )

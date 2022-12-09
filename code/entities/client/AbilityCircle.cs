@@ -14,7 +14,8 @@ namespace Facepunch.RTS
 		{
 			if ( !EnableDrawing ) return;
 
-			var vb = Render.GetDynamicVB( true );
+			var vb = new VertexBuffer();
+			vb.Init( true );
 
 			DrawCircle( vb, EffectSize, EffectColor, 0.2f );
 			DrawCircle( vb, TargetSize, TargetColor, 0.3f );
@@ -29,10 +30,12 @@ namespace Facepunch.RTS
 
 			vb.AddQuad( a, b, c, d );
 
-			Render.Attributes.Set( "Opacity", alpha );
-			Render.Attributes.Set( "Color", color );
+			var attributes = new RenderAttributes();
 
-			vb.Draw( CircleMaterial );
+			attributes.Set( "Opacity", alpha );
+			attributes.Set( "Color", color );
+
+			vb.Draw( CircleMaterial, attributes );
 		}
 	}
 }

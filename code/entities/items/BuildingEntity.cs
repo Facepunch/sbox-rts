@@ -547,7 +547,7 @@ namespace Facepunch.RTS
 			UpdateLineOfSight();
 		}
 
-		[Event.Frame]
+		[Event.Client.Frame]
 		protected virtual void ClientFrame()
 		{
 			if ( IsLocalTeamGroup ) return;

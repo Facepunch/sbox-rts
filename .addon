@@ -3,6 +3,7 @@
   "Type": "game",
   "Org": "facepunch",
   "Ident": "rts",
+  "Tags": null,
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",

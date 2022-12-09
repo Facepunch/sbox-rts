@@ -3,62 +3,34 @@ using System;
 
 namespace Facepunch.RTS
 {
-	public partial class RTSCamera : CameraMode
+	public partial class RTSCamera : BaseNetworkable
 	{
 		public float ZoomLevel { get; set; }
 		public Vector3 LookAt { get; set; }
 
-		public override void Activated()
+		public void Update()
 		{
-			var cameraConfig = Config.Current.Camera;
-
-			FieldOfView = cameraConfig.FOV;
-			ZoomLevel = 1f;
-			ZNear = cameraConfig.ZNear;
-			ZFar = cameraConfig.ZFar;
-			Ortho = cameraConfig.Ortho;
-
-			base.Activated();
-		}
-
-		public override void Update()
-		{
-			if ( Local.Pawn is not Player )
-				return;
-
-			var cameraConfig = Config.Current.Camera;
-
-			ZoomLevel += Input.MouseWheel * Time.Delta * 2f;
+			ZoomLevel += Input.MouseWheel * Time.Delta * 8f;
 			ZoomLevel = ZoomLevel.Clamp( 0f, 1f );
 
-			if ( cameraConfig.Ortho )
-			{
-				OrthoSize = 1f + ( (1f - ZoomLevel) * cameraConfig.ZoomScale );
-				ZNear = 1f;
-				Ortho = true;
-			}
-			else
-			{
-				FieldOfView = cameraConfig.FOV;
-				ZNear = cameraConfig.ZNear;
-				ZFar = cameraConfig.ZFar;
-				Ortho = false;
-			}
+			Camera.FieldOfView = 30f;
+			Camera.ZNear = 1000f;
+			Camera.ZFar = 10000f;
 
 			var velocity = Vector3.Zero;
-			var panSpeed = cameraConfig.PanSpeed - (cameraConfig.PanSpeed * ZoomLevel * 0.6f);
+			var panSpeed = 5000f - (5000f * ZoomLevel * 0.6f);
 
 			if ( Input.Down( InputButton.Forward ) )
-				velocity += Rotation.Forward.WithZ( 0f ) * panSpeed;
+				velocity += Camera.Rotation.Forward.WithZ( 0f ) * panSpeed;
 
 			if ( Input.Down( InputButton.Back ) )
-				velocity += Rotation.Backward.WithZ( 0f ) * panSpeed;
+				velocity += Camera.Rotation.Backward.WithZ( 0f ) * panSpeed;
 
 			if ( Input.Down( InputButton.Left ) )
-				velocity += Rotation.Left * panSpeed;
+				velocity += Camera.Rotation.Left * panSpeed;
 
 			if ( Input.Down( InputButton.Right ) )
-				velocity += Rotation.Right * panSpeed;
+				velocity += Camera.Rotation.Right * panSpeed;
 
 			var lookAtPosition = (LookAt + velocity * Time.Delta);
 			var worldSize = Gamemode.Instance.WorldSize.Size.x;
@@ -70,30 +42,21 @@ namespace Facepunch.RTS
 
 			Vector3 eyePos;
 
-			if ( cameraConfig.Ortho )
-			{
-				eyePos = LookAt + Vector3.Backward * cameraConfig.Backward;
-				eyePos += Vector3.Left * cameraConfig.Left;
-				eyePos += Vector3.Up * cameraConfig.Up;
-			}
-			else
-			{
-				eyePos = LookAt + Vector3.Backward * (cameraConfig.Backward - (cameraConfig.Backward * ZoomLevel * cameraConfig.ZoomScale));
-				eyePos += Vector3.Left * (cameraConfig.Left - (cameraConfig.Left * ZoomLevel * cameraConfig.ZoomScale));
-				eyePos += Vector3.Up * (cameraConfig.Up - (cameraConfig.Up * ZoomLevel * cameraConfig.ZoomScale));
-			}
+			eyePos = LookAt + Vector3.Backward * (2500f - (2500f * ZoomLevel * 0.6f));
+			eyePos += Vector3.Left * (2500f - (2500f * ZoomLevel * 0.6f));
+			eyePos += Vector3.Up * (5000f - (5000f * ZoomLevel * 0.6f));
 
-			Position = Position.LerpTo( eyePos, Time.Delta * 4f );
+			Camera.Position = Camera.Position.LerpTo( eyePos, Time.Delta * 4f );
 			var difference = LookAt - eyePos;
-			Rotation = Rotation.Slerp( Rotation, Rotation.LookAt( difference, Vector3.Up ), Time.Delta * 8f );
+			Camera.Rotation = Rotation.Slerp( Camera.Rotation, Rotation.LookAt( difference, Vector3.Up ), Time.Delta * 8f );
 
 			Sound.Listener = new Transform()
 			{
 				Position = lookAtPosition,
-				Rotation = Rotation
+				Rotation = Camera.Rotation
 			};
 
-			Viewer = null;
+			Camera.FirstPersonViewer = null;
 		}
 	}
 }

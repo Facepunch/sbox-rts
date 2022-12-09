@@ -788,11 +788,11 @@ namespace Facepunch.RTS
 
 			var list = new List<BaseItem>();
 
-			foreach ( var type in TypeLibrary.GetTypes<BaseItem>() )
+			foreach ( var type in TypeLibrary.GetDescriptions<BaseItem>() )
 			{
-				if ( !type.IsAbstract && !type.ContainsGenericParameters )
+				if ( !type.IsAbstract && !type.IsGenericType )
 				{
-					var item = TypeLibrary.Create<BaseItem>( type );
+					var item = type.Create<BaseItem>();
 					list.Add( item );
 				}
 			}

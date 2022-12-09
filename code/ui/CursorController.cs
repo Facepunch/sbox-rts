@@ -67,7 +67,7 @@ namespace Facepunch.RTS
 			return InputButton.Slot0;
 		}
 
-		[Event.BuildInput]
+		[Event.Client.BuildInput]
 		private void BuildInput()
 		{
 			if ( Items.IsGhostValid() || Abilities.IsSelectingTarget() )

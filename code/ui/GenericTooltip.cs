@@ -101,7 +101,7 @@ namespace Facepunch.RTS
 				var targetBox = panel.Box.Rect * ScaleFromScreen;
 
 				Style.Left = Length.Pixels( MathF.Ceiling( targetBox.Center.x ) );
-				Style.Top = Length.Pixels( MathF.Ceiling( targetBox.top - 32 ) );
+				Style.Top = Length.Pixels( MathF.Ceiling( targetBox.Top - 32 ) );
 				Style.Dirty();
 			}
 			else if ( Target is Entity entity && entity.IsValid() )

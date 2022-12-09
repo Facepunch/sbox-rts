@@ -55,11 +55,11 @@ namespace Facepunch.RTS
 		{
 			var list = new List<BaseResistance>();
 
-			foreach ( var type in TypeLibrary.GetTypes<BaseResistance>() )
+			foreach ( var type in TypeLibrary.GetDescriptions<BaseResistance>() )
 			{
-				if ( !type.IsAbstract && !type.ContainsGenericParameters )
+				if ( !type.IsAbstract && !type.IsGenericType )
 				{
-					var resistance = TypeLibrary.Create<BaseResistance>( type );
+					var resistance = type.Create<BaseResistance>();
 					list.Add( resistance );
 				}
 			}

@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace Facepunch.RTS
 {
-	[Library( "rts", Title = "RTS" )]
-	public partial class Gamemode : Game
+	public partial class Gamemode : GameManager
 	{
 		public static Gamemode Instance { get; private set; }
 
@@ -105,17 +104,12 @@ namespace Facepunch.RTS
 		public void UpdateRating( Player player )
 		{
 			var client = player.Client;
-			Ratings[client.PlayerId] = player.Elo.Rating;
+			Ratings[client.SteamId] = player.Elo.Rating;
 		}
 
 		public override void DoPlayerNoclip( Client client )
 		{
 			// Do nothing. The player can't noclip in this mode.
-		}
-
-		public override void DoPlayerSuicide( Client client )
-		{
-			// Do nothing. The player can't suicide in this mode.
 		}
 
 		public override void OnKilled( Entity entity )
@@ -134,7 +128,7 @@ namespace Facepunch.RTS
 		{
 			var player = new Player();
 
-			if ( Ratings.TryGetValue( client.PlayerId, out var rating ) )
+			if ( Ratings.TryGetValue( client.SteamId, out var rating ) )
 				player.Elo.Rating = rating;
 
 			client.Pawn = player;

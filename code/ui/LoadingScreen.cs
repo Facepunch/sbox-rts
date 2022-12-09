@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			var isHidden = (Local.Pawn is Player player && player.Camera != null);
+			var isHidden = Local.Pawn.IsValid();
 
 			SetClass( "hidden", isHidden );
 

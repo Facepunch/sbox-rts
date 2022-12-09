@@ -41,7 +41,7 @@ namespace Facepunch.RTS
 			if ( NextVisibilityCheck )
 			{
 				var aimRay = GetAimRay();
-				var trace = Trace.Ray( aimRay.Origin, Target.WorldSpaceBounds.Center )
+				var trace = Trace.Ray( aimRay.Position, Target.WorldSpaceBounds.Center )
 					.EntitiesOnly()
 					.WithoutTags( "obstacle" )
 					.WithoutTags( "building" )
@@ -129,14 +129,14 @@ namespace Facepunch.RTS
 				var transform = attachment.Value;
 
 				return new Ray {
-					Origin = transform.Position,
-					Direction = Target.IsValid() ? (Target.Position - transform.Position).Normal : transform.Rotation.Forward.Normal
+					Position = transform.Position,
+					Forward = Target.IsValid() ? (Target.Position - transform.Position).Normal : transform.Rotation.Forward.Normal
 				};
 			}
 
 			return new Ray {
-				Origin = Position,
-				Direction = Target.IsValid() ? (Target.Position - Position).Normal : Rotation.Forward.Normal
+				Position = Position,
+				Forward = Target.IsValid() ? (Target.Position - Position).Normal : Rotation.Forward.Normal
 			};
 		}
 
@@ -177,7 +177,7 @@ namespace Facepunch.RTS
 				Weapon = this,
 				Position = endPos,
 				Attacker = Attacker,
-				Force = aimRay.Direction * 100f * force,
+				Force = aimRay.Forward * 100f * force,
 				Damage = damage
 			};
 
@@ -186,7 +186,7 @@ namespace Facepunch.RTS
 			if ( entity is IDamageable damageable )
 			{
 				if ( Rand.Float( 1f ) >= 0.5f )
-					damageable.DoImpactEffects( endPos, aimRay.Direction );
+					damageable.DoImpactEffects( endPos, aimRay.Forward );
 
 				if ( Rand.Float( 1f ) > 0.7f )
 					damageable.CreateDamageDecals( endPos );

@@ -8,7 +8,6 @@ namespace Facepunch.RTS
 		{
 			EnableShadowInFirstPerson = true;
 			EnableHideInFirstPerson = true;
-			AddCollisionLayer( CollisionLayer.Debris );
 		}
 	}
 }

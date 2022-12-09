@@ -116,7 +116,7 @@ namespace Facepunch.RTS
 			}
 		}
 
-		[Event.BuildInput]
+		[Event.Client.BuildInput]
 		private void BuildInput()
 		{
 			IsShiftDown = Input.Down( InputButton.Run );
@@ -445,7 +445,7 @@ namespace Facepunch.RTS
 
 			var worldPlane = new Plane( Vector3.Zero, Vector3.Up );
 			var viewDirection = Screen.GetDirection( new Vector2( Screen.Width * 0.5f, Screen.Height * 0.5f ) );
-			var viewRay = new Ray( CurrentView.Position, viewDirection );
+			var viewRay = new Ray( Camera.Position, viewDirection );
 			var viewHitPos = worldPlane.Trace( viewRay ).Value;
 			var viewCoords = Map.WorldToCoords( viewHitPos );
 			var boxSizeX = 0.15f;

@@ -418,7 +418,7 @@ namespace Gamelib.FlowFields
 			var collisionExtents = Vector3.One * collisionSize * 0.5f;
 			var nodeExtents = Vector3.One * nodeSize * 0.5f;
 
-			physicsBody.CollisionEnabled = false;
+			physicsBody.EnableSolidCollisions = false;
 
 			var shape = physicsBody.AddBoxShape( Vector3.Zero, Rotation.Identity, collisionExtents );
 			shape.AddTag( "pathfinder" );

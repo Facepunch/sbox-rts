@@ -135,7 +135,7 @@ namespace Facepunch.RTS
 
 			public void Apply( FogRenderer renderer )
 			{
-				renderer.FogMaterial.OverrideTexture( "Color", Texture );
+				renderer.FogMaterial.Set( "Color", Texture );
 			}
 		}
 

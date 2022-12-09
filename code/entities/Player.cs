@@ -35,19 +35,8 @@ namespace Facepunch.RTS
 
 		private List<AttackWarning> AttackWarnings { get; set; }
 		private TimeSince LastUnderAttack { get; set; }
-
-		public RTSCamera Camera
-		{
-			get => Components.Get<RTSCamera>();
-			set
-			{
-				var current = Camera;
-				if ( current == value ) return;
-
-				Components.RemoveAny<RTSCamera>();
-				Components.Add( value );
-			}
-		}
+		
+		[Net, Predicted] private RTSCamera RTSCamera { get; set; }
 
 		public HashSet<uint> InstantBuildCache { get; private set; }
 		public TimeSince LastCommandSound { get; set; }
@@ -55,7 +44,7 @@ namespace Facepunch.RTS
 		public Player()
 		{
 			Elo = new();
-			Camera = new RTSCamera();
+			RTSCamera = new RTSCamera();
 			Transmit = TransmitType.Always;
 			Resources = new List<int>();
 			Selection = new List<Entity>();
@@ -364,21 +353,28 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public void LookAt( Vector3 position )
 		{
-			Camera.LookAt = position.WithZ( 0f );
+			RTSCamera.LookAt = position.WithZ( 0f );
 		}
 
 		[ClientRpc]
 		public void LookAt( Entity other )
 		{
-			Camera.LookAt = other.Position.WithZ( 0f );
+			RTSCamera.LookAt = other.Position.WithZ( 0f );
 		}
 
 		public override void BuildInput()
 		{
-			CursorDirection = Mouse.Visible ? Screen.GetDirection( Mouse.Position ) : CurrentView.Rotation.Forward;
-			CursorOrigin = CurrentView.Position;
+			CursorDirection = Mouse.Visible ? Screen.GetDirection( Mouse.Position ) : Camera.Rotation.Forward;
+			CursorOrigin = Camera.Position;
 
 			base.BuildInput();
+		}
+
+		public override void FrameSimulate( Client cl )
+		{
+			RTSCamera?.Update();
+
+			base.FrameSimulate( cl );
 		}
 
 		public override void Simulate( Client client )

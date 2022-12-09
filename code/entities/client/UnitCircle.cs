@@ -13,7 +13,9 @@ namespace Facepunch.RTS
 		{
 			if ( !EnableDrawing ) return;
 
-			var vertexBuffer = Render.GetDynamicVB( true );
+			var vertexBuffer = new VertexBuffer();
+			vertexBuffer.Init( true );
+
 			var circleSize = Size;
 
 			var a = new Vertex( new Vector3( -circleSize, -circleSize, 0.1f ), Vector3.Up, Vector3.Right, new Vector4( 0, 1, 0, 0 ) );
@@ -23,10 +25,12 @@ namespace Facepunch.RTS
 
 			vertexBuffer.AddQuad( a, b, c, d );
 
-			Render.Attributes.Set( "Opacity", Alpha );
-			Render.Attributes.Set( "Color", Color );
+			var attributes = new RenderAttributes();
 
-			vertexBuffer.Draw( CircleMaterial );
+			attributes.Set( "Opacity", Alpha );
+			attributes.Set( "Color", Color );
+
+			vertexBuffer.Draw( CircleMaterial, attributes );
 		}
 	}
 }
