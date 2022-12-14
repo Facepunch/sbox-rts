@@ -129,7 +129,7 @@ namespace Facepunch.RTS
 		{
 			base.OnDestroy();
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				MiningSound.Stop();
 				MiningLaser?.Destroy( true );

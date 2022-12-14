@@ -62,7 +62,7 @@ namespace Facepunch.RTS
 				Attacker.SetAnimParameter( "target", TargetDirection );
 			}
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				Attacker.SetAnimParameter( "fire", Recoil );
 				Recoil = Recoil.LerpTo( 0f, Time.Delta * 2f );

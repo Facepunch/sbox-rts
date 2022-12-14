@@ -52,25 +52,25 @@ namespace Facepunch.RTS.Buildings
 		public void PlayPlaceSound( RTSPlayer player )
 		{
 			if ( PlaceSounds.Length > 0 )
-				Audio.Play( player, Rand.FromArray( PlaceSounds ) );
+				Audio.Play( player, Game.Random.FromArray( PlaceSounds ) );
 		}
 
 		public void PlaySelectSound( RTSPlayer player )
 		{
 			if ( SelectSounds.Length > 0 )
-				Audio.Play( player, Rand.FromArray( SelectSounds ) );
+				Audio.Play( player, Game.Random.FromArray( SelectSounds ) );
 		}
 
 		public void PlayDestroySound( BuildingEntity building )
 		{
 			if ( DestroySounds.Length > 0 )
-				Audio.Play( Rand.FromArray( DestroySounds ), building.Position );
+				Audio.Play( Game.Random.FromArray( DestroySounds ), building.Position );
 		}
 
 		public void PlayBuiltSound( BuildingEntity building )
 		{
 			if ( BuiltSounds.Length > 0 )
-				Audio.Play( Rand.FromArray( BuiltSounds ), building.Position );
+				Audio.Play( Game.Random.FromArray( BuiltSounds ), building.Position );
 		}
 
 		public override bool IsAvailable( RTSPlayer player, ISelectable target )

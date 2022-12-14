@@ -26,7 +26,7 @@ namespace Facepunch.RTS
 
 		public void Start()
 		{
-			if ( Host.IsServer && RoundDuration > 0 )
+			if ( Game.IsServer && RoundDuration > 0 )
 				RoundEndTime = Time.Now + RoundDuration;
 			
 			OnStart();
@@ -34,7 +34,7 @@ namespace Facepunch.RTS
 
 		public void Finish()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				RoundEndTime = 0f;
 				Players.Clear();
@@ -45,7 +45,7 @@ namespace Facepunch.RTS
 
 		public void AddPlayer( RTSPlayer player )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( !Players.Contains(player) )
 				Players.Add( player );
@@ -69,7 +69,7 @@ namespace Facepunch.RTS
 
 		public virtual void OnSecond()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				if ( RoundEndTime > 0 && Time.Now >= RoundEndTime )
 				{

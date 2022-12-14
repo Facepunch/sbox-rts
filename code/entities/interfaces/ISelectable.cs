@@ -7,8 +7,8 @@ namespace Facepunch.RTS
 {
 	public interface ISelectable
 	{
-		public Dictionary<string, BaseAbility> Abilities { get; }
-		public Dictionary<string, IStatus> Statuses { get; }
+		public Dictionary<string, BaseAbility> AbilityTable { get; }
+		public Dictionary<string, IStatus> StatusTable { get; }
 		public BBox WorldSpaceBounds { get; }
 		public Vector3 LocalCenter { get; }
 		public uint ItemNetworkId { get; }

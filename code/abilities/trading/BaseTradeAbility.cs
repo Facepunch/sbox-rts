@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 		{
 			base.OnFinished();
 
-			if ( Host.IsClient ) return;
+			if ( Game.IsClient ) return;
 			if ( User is not BuildingEntity building ) return;
 
 			ResourceHint.Send( building.Player, 2f, building.Position, Resource, Amount, Color.Green );

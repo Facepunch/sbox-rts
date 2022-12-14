@@ -87,37 +87,37 @@ namespace Facepunch.RTS.Units
 		public void PlayConstructSound( RTSPlayer player )
 		{
 			if ( ConstructSounds.Length > 0 )
-				Audio.Play( player, Rand.FromArray( ConstructSounds ) );
+				Audio.Play( player, Game.Random.FromArray( ConstructSounds ) );
 		}
 
 		public void PlaySelectSound( RTSPlayer player )
 		{
 			if ( SelectSounds.Length > 0 )
-				Audio.Play( player, Rand.FromArray( SelectSounds ) );
+				Audio.Play( player, Game.Random.FromArray( SelectSounds ) );
 		}
 
 		public void PlayDepositSound( RTSPlayer player )
 		{
 			if ( DepositSounds.Length > 0 )
-				Audio.Play( player, Rand.FromArray( DepositSounds ) );
+				Audio.Play( player, Game.Random.FromArray( DepositSounds ) );
 		}
 
 		public void PlayGatherSound( RTSPlayer player, ResourceType resource )
 		{
 			if ( GatherSounds.TryGetValue( resource, out var sounds ) )
-				Audio.Play( player, Rand.FromArray( sounds ) );
+				Audio.Play( player, Game.Random.FromArray( sounds ) );
 		}
 
 		public void PlayAttackSound( RTSPlayer player )
 		{
 			if ( AttackSounds.Length > 0 )
-				Audio.Play( player, Rand.FromArray( AttackSounds ) );
+				Audio.Play( player, Game.Random.FromArray( AttackSounds ) );
 		}
 
 		public void PlayMoveSound( RTSPlayer player )
 		{
 			if ( MoveSounds.Length > 0 )
-				Audio.Play( player, Rand.FromArray( MoveSounds ) );
+				Audio.Play( player, Game.Random.FromArray( MoveSounds ) );
 		}
 	}
 }

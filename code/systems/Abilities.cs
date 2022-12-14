@@ -189,7 +189,7 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			if ( Local.Pawn is not RTSPlayer player )
+			if ( Game.LocalPawn is not RTSPlayer player )
 				return;
 
 			var cursorOrigin = player.CursorOrigin;

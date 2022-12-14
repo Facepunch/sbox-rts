@@ -5,6 +5,7 @@ using Sandbox.UI.Construct;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/MouseCursor.scss" )]
 	public class MouseCursor : Panel
 	{
 		public static MouseCursor Instance { get; private set; }
@@ -13,8 +14,6 @@ namespace Facepunch.RTS
 
 		public MouseCursor() : base()
 		{
-			StyleSheet.Load( "/ui/MouseCursor.scss" );
-
 			Cursor = Add.Image( "", "cursor" );
 			Cursor.SetTexture( "ui/cursor/normal.png" );
 

@@ -57,9 +57,9 @@ namespace Facepunch.RTS
 
 		protected override void OnStart()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
-				var players = Client.All.Select( ( client ) => client.Pawn as RTSPlayer );
+				var players = Game.Clients.Select( ( client ) => client.Pawn as RTSPlayer );
 
 				foreach ( var player in players )
 					OnPlayerJoin( player );
@@ -72,7 +72,7 @@ namespace Facepunch.RTS
 
 		protected override void OnFinish()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				LobbyDialog.Close();
 			}
@@ -116,7 +116,7 @@ namespace Facepunch.RTS
 			var client = player.Client;
 			var clientEntity = (Entity)player.Client;
 
-			player.TeamColor = Rand.FromList( colors );
+			player.TeamColor = Game.Random.FromList( colors );
 			player.TeamGroup = clientEntity.NetworkIdent;
 
 			// This is a temporary hack.

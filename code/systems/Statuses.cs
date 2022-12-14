@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 
 		public static void Apply<S>( Vector3 position, float radius, StatusData data, Func<ISelectable, bool> filter = null ) where S : IStatus
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			var entities = Entity.FindInSphere( position, radius ).OfType<ISelectable>();
 

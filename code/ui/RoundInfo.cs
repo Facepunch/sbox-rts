@@ -6,6 +6,7 @@ using System;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/RoundInfo.scss" )]
 	public class RoundInfo : Panel
 	{
 		public Panel Container;
@@ -13,8 +14,6 @@ namespace Facepunch.RTS
 
 		public RoundInfo()
 		{
-			StyleSheet.Load( "/ui/RoundInfo.scss" );
-
 			Container = Add.Panel( "container" );
 			RoundName = Container.Add.Label( "Round", "roundName" );
 		}

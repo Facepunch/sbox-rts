@@ -32,7 +32,7 @@ namespace Facepunch.RTS
 
 		public static void FocusCameraOn( ISelectable selectable )
 		{
-			if ( Local.Pawn is not RTSPlayer player ) return;
+			if ( Game.LocalPawn is not RTSPlayer player ) return;
 
 			var cameraPosition = selectable.Position;
 
@@ -41,7 +41,7 @@ namespace Facepunch.RTS
 
 		public static void FocusCameraOn( List<ISelectable> selectables )
 		{
-			if ( Local.Pawn is not RTSPlayer player ) return;
+			if ( Game.LocalPawn is not RTSPlayer player ) return;
 
 			var cameraPosition = Vector3.Zero;
 			var itemCount = selectables.Count;
@@ -64,7 +64,7 @@ namespace Facepunch.RTS
             Marker = Particles.Create( "particles/movement_marker/movement_marker.vpcf" );
             Marker.SetPosition( 0, position + Vector3.Up * 5f );
 
-			if ( Local.Pawn is RTSPlayer player )
+			if ( Game.LocalPawn is RTSPlayer player )
 			{
 				Marker.SetPosition( 1, player.TeamColor * 255f );
 			}
@@ -248,7 +248,7 @@ namespace Facepunch.RTS
 				{
 					StartOrQueue( units, command, shouldQueue );
 
-					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					var randomUnit = units[Game.Random.Int( units.Count - 1 )];
 					randomUnit.Item.PlayAttackSound( caller );
 
 					ShowMarker( To.Single( caller ), target.Position );
@@ -374,7 +374,7 @@ namespace Facepunch.RTS
 
 					StartOrQueue( depositUnits, command, shouldQueue );
 
-					var randomUnit = depositUnits[Rand.Int( depositUnits.Count - 1 )];
+					var randomUnit = depositUnits[Game.Random.Int( depositUnits.Count - 1 )];
 					randomUnit.Item.PlayDepositSound( caller );
 				}
 
@@ -387,7 +387,7 @@ namespace Facepunch.RTS
 
 					StartOrQueue( repairUnits, command, shouldQueue );
 
-					var randomUnit = repairUnits[Rand.Int( repairUnits.Count - 1 )];
+					var randomUnit = repairUnits[Game.Random.Int( repairUnits.Count - 1 )];
 					randomUnit.Item.PlayConstructSound( caller );
 				}
 
@@ -434,7 +434,7 @@ namespace Facepunch.RTS
 				{
 					StartOrQueue( units, command, shouldQueue );
 
-					var randomUnit = units[Rand.Int( units.Count - 1 )];
+					var randomUnit = units[Game.Random.Int( units.Count - 1 )];
 					randomUnit.Item.PlayGatherSound( caller, resourceType );
 
 					ShowMarker( To.Single( caller ), resource.Position );
@@ -482,7 +482,7 @@ namespace Facepunch.RTS
 					{
 						StartOrQueue( units, command, shouldQueue );
 
-						var randomUnit = units[Rand.Int( units.Count - 1 )];
+						var randomUnit = units[Game.Random.Int( units.Count - 1 )];
 						randomUnit.Item.PlayConstructSound( caller );
 
 						ShowMarker( To.Single( caller ), building.Position );
@@ -532,7 +532,7 @@ namespace Facepunch.RTS
 					// Don't play command sounds too frequently.
 					if ( caller.LastCommandSound > 2 )
 					{
-						var randomUnit = units[Rand.Int( units.Count - 1 )];
+						var randomUnit = units[Game.Random.Int( units.Count - 1 )];
 						randomUnit.Item.PlayMoveSound( caller );
 						caller.LastCommandSound = 0;
 					}
@@ -677,7 +677,7 @@ namespace Facepunch.RTS
 
 			if ( eligible.Count > 0 )
 			{
-				var randomItem = eligible[Rand.Int( eligible.Count - 1 )];
+				var randomItem = eligible[Game.Random.Int( eligible.Count - 1 )];
 
 				if ( randomItem is UnitEntity unit )
 					unit.Item.PlaySelectSound( caller );
@@ -740,12 +740,12 @@ namespace Facepunch.RTS
 				return;
 			}
 
-			if ( Local.Pawn is not RTSPlayer player )
+			if ( Game.LocalPawn is not RTSPlayer player )
 				return;
 
 			var cursorOrigin = player.CursorOrigin;
 			var cursorAim = player.CursorDirection;
-			var trace = Ghost.GetPlacementTrace( Local.Client, cursorOrigin, cursorAim );
+			var trace = Ghost.GetPlacementTrace( Game.LocalClient, cursorOrigin, cursorAim );
 			var valid = Ghost.IsPlacementValid( trace );
 
 			Ghost.Position = trace.EndPosition;

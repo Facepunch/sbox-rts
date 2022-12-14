@@ -7,23 +7,24 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/ResourceHint.scss" )]
 	public partial class ResourceHint : Panel
 	{
 		public static ResourceHint Create( float duration, Vector3 position, Dictionary<ResourceType, int> resources, Color color )
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			if ( resources.Count == 0 )
 				return null;
 
-			var hint = Local.Hud.AddChild<ResourceHint>();
+			var hint = Game.RootPanel.AddChild<ResourceHint>();
 			hint.Initialize( duration, position, resources, color );
 			return hint;
 		}
 
 		public static void Send( RTSPlayer player, float duration, Vector3 position, ResourceType resource, int amount, Color color )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			var a = new ResourceType[1] { resource };
 			var b = new int[1] { amount };
@@ -33,7 +34,7 @@ namespace Facepunch.RTS
 
 		public static void Send( RTSPlayer player, float duration, Vector3 position, Dictionary<ResourceType, int> resources, Color color )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( resources.Count == 0 )
 				return;
@@ -68,8 +69,6 @@ namespace Facepunch.RTS
 
 		public ResourceHint()
 		{
-			StyleSheet.Load( "/ui/ResourceHint.scss" );
-
 			Container = Add.Panel( "container" );
 		}
 

@@ -44,7 +44,7 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public override void ShootEffects( Vector3 position )
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			var muzzle = GetMuzzle();
 

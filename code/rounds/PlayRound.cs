@@ -62,10 +62,10 @@ namespace Facepunch.RTS
 
 		protected override void OnStart()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				var spawnpoints = Entity.All.OfType<SpawnPoint>().ToList().Shuffle();
-				var players = Client.All.Select( ( client ) => client.Pawn as RTSPlayer ).ToList();
+				var players = Game.Clients.Select( ( client ) => client.Pawn as RTSPlayer ).ToList();
 
 				foreach ( var player in players )
 				{
@@ -105,7 +105,7 @@ namespace Facepunch.RTS
 
 		protected override void OnFinish()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				Spectators.Clear();
 			}

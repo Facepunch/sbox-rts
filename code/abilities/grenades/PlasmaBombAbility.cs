@@ -26,7 +26,7 @@ namespace Facepunch.RTS
 
 		public override void OnFinished()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				Statuses.Apply<WeakStatus>( TargetInfo.Origin, AreaOfEffectRadius, new ModifierData()
 				{

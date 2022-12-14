@@ -50,12 +50,12 @@ namespace Facepunch.RTS
 
 				DamageEntity( (Entity)target, "shock", 5f, damage );
 
-				if ( Rand.Float() >= 0.75f )
+				if ( Game.Random.Float() >= 0.75f )
 				{
-					PlaySound( $"electric.bolt{Rand.Int(1, 3)}" );
+					PlaySound( $"electric.bolt{Game.Random.Int(1, 3)}" );
 				}
 
-				await GameTask.Delay( Rand.Int( 0, 5 ) );
+				await GameTask.Delay( Game.Random.Int( 0, 5 ) );
 			}
 		}
 	}

@@ -33,7 +33,7 @@ namespace Facepunch.RTS
 
 		public override void OnStarted()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				Reset();
 				Launch();
@@ -67,7 +67,7 @@ namespace Facepunch.RTS
 			Light.Range = 1500f;
 			Light.BrightnessMultiplier = 2f;
 
-			Audio.Play( $"nuke.launch{Rand.Int( 1, 2 )}", User.Position );
+			Audio.Play( $"nuke.launch{Game.Random.Int( 1, 2 )}", User.Position );
 
 			await GameTask.DelaySeconds( Duration * 0.1f );
 

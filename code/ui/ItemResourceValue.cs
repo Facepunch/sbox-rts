@@ -7,6 +7,7 @@ using System;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/ItemResourceValue.scss" )]
 	public class ItemResourceValue : Panel
 	{
 		public Panel Icon { get; private set; }
@@ -33,8 +34,6 @@ namespace Facepunch.RTS
 
 		public ItemResourceValue()
 		{
-			StyleSheet.Load( "/ui/ItemResourceValue.scss" );
-
 			Icon = Add.Panel( "icon" );
 			Label = Add.Label( "", "label" );
 		}

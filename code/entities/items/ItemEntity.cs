@@ -16,8 +16,8 @@ namespace Facepunch.RTS
 		public virtual bool CanMultiSelect => false;
 		public virtual bool HasSelectionGlow => true;
 
-		public Dictionary<string, BaseAbility> Abilities { get; private set; }
-		public Dictionary<string, IStatus> Statuses { get; private set; }
+		public Dictionary<string, BaseAbility> AbilityTable { get; private set; }
+		public Dictionary<string, IStatus> StatusTable { get; private set; }
 		public Dictionary<string, ItemComponent> ItemComponents { get; private set; }
 		public BaseAbility UsingAbility { get; private set; }
 		[Net, Change] public uint ItemNetworkId { get; private set; }
@@ -35,8 +35,8 @@ namespace Facepunch.RTS
 
 		public string ItemId => Item.UniqueId;
 		public bool IsSelected => Tags.Has( "selected" );
-		public bool IsLocalPlayers => Player.IsValid() && Local.Pawn == Player;
-		public bool IsLocalTeamGroup => Player.IsValid() && (Local.Pawn as RTSPlayer).TeamGroup == Player.TeamGroup;
+		public bool IsLocalPlayers => Player.IsValid() && Game.LocalPawn == Player;
+		public bool IsLocalTeamGroup => Player.IsValid() && (Game.LocalPawn as RTSPlayer).TeamGroup == Player.TeamGroup;
 
 		private T ItemCache;
 
@@ -54,7 +54,7 @@ namespace Facepunch.RTS
 		{
 			Transmit = TransmitType.Always;
 			Upgrades = new List<uint>();
-			Statuses = new();
+			StatusTable = new();
 			ItemComponents = new();
 			Queue = new List<QueueItem>();
 		}
@@ -63,7 +63,7 @@ namespace Facepunch.RTS
 
 		public void QueueItem( BaseItem item )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			LastQueueId++;
 
@@ -99,7 +99,7 @@ namespace Facepunch.RTS
 
 		public BaseItem UnqueueItem( uint queueId )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			BaseItem removedItem = default;
 
@@ -205,7 +205,7 @@ namespace Facepunch.RTS
 
 		public BaseAbility GetAbility( string id )
 		{
-			if ( Abilities.TryGetValue( id, out var ability ) )
+			if ( AbilityTable.TryGetValue( id, out var ability ) )
 				return ability;
 
 			return null;
@@ -213,7 +213,7 @@ namespace Facepunch.RTS
 
 		public bool HasStatus( string id )
 		{
-			return Statuses.ContainsKey( id );
+			return StatusTable.ContainsKey( id );
 		}
 
 		public bool HasStatus<S>() where S : IStatus
@@ -224,7 +224,7 @@ namespace Facepunch.RTS
 
 		public S ApplyStatus<S>( StatusData data ) where S : IStatus
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			using var stream = new MemoryStream();
 			using var writer = new BinaryWriter( stream );
@@ -235,7 +235,7 @@ namespace Facepunch.RTS
 
 			ClientApplyStatus( To.Everyone, id, stream.GetBuffer() );
 
-			if ( Statuses.TryGetValue( id, out var status ) )
+			if ( StatusTable.TryGetValue( id, out var status ) )
 			{
 				status.SetData( data );
 				status.Restart();
@@ -243,9 +243,9 @@ namespace Facepunch.RTS
 				return (S)status;
 			}
 
-			status = RTS.Statuses.Create( id );
+			status = Statuses.Create( id );
 
-			Statuses.Add( id, status );
+			StatusTable.Add( id, status );
 
 			status.SetData( data );
 			status.Initialize( id, this );
@@ -256,14 +256,14 @@ namespace Facepunch.RTS
 
 		public void RemoveAllStatuses()
 		{
-			if ( IsServer ) ClientRemoveAllStatuses( To.Everyone );
+			if ( Game.IsServer ) ClientRemoveAllStatuses( To.Everyone );
 
-			foreach ( var kv in Statuses )
+			foreach ( var kv in StatusTable )
 			{
 				kv.Value.OnRemoved();
 			}
 
-			Statuses.Clear();
+			StatusTable.Clear();
 		}
 
 		public bool IsSameTeamGroup( ISelectable other )
@@ -273,12 +273,12 @@ namespace Facepunch.RTS
 
 		public void RemoveStatus( string id )
 		{
-			if ( Statuses.TryGetValue( id, out var status ) )
+			if ( StatusTable.TryGetValue( id, out var status ) )
 			{
-				if ( IsServer )
+				if ( Game.IsServer )
 					ClientRemoveStatus( To.Everyone, id );
 
-				Statuses.Remove( id );
+				StatusTable.Remove( id );
 				status.OnRemoved();
 			}
 		}
@@ -308,7 +308,7 @@ namespace Facepunch.RTS
 
 			ability.OnStarted();
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				ClientStartAbility( To.Single( Player ), ability.UniqueId, (Entity)info.Target, info.Origin );
 			}
@@ -328,7 +328,7 @@ namespace Facepunch.RTS
 				UsingAbility.OnFinished();
 				UsingAbility = null;
 
-				if ( IsServer )
+				if ( Game.IsServer )
 				{
 					ClientFinishAbility( To.Single( Player ) );
 				}
@@ -342,7 +342,7 @@ namespace Facepunch.RTS
 				UsingAbility.OnCancelled();
 				UsingAbility = null;
 
-				if ( IsServer )
+				if ( Game.IsServer )
 				{
 					ClientCancelAbility( To.Single( Player ) );
 				}
@@ -369,7 +369,7 @@ namespace Facepunch.RTS
 				throw new Exception( "[ItemEntity::PlaceNear] Unable to find a free location to spawn the unit!" );
 			}
 
-			var randomLocation = freeLocations[Rand.Int( freeLocations.Count - 1 )];
+			var randomLocation = freeLocations[Game.Random.Int( freeLocations.Count - 1 )];
 			
 			return pathfinder.GetPosition( randomLocation ) + new Vector3( 0f, 0f, pathfinder.GetHeight( randomLocation ) );
 		}
@@ -398,7 +398,7 @@ namespace Facepunch.RTS
 
 		public void Assign( RTSPlayer player, T item )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			var oldItem = Item;
 
@@ -412,7 +412,7 @@ namespace Facepunch.RTS
 
 		public void ChangeTo( T item )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			var oldItem = Item;
 
@@ -435,7 +435,7 @@ namespace Facepunch.RTS
 
 		public void Assign( RTSPlayer player, string itemId )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			var item = Items.Find<T>( itemId );
 
@@ -479,7 +479,7 @@ namespace Facepunch.RTS
 
 		public virtual void UpdateHudComponents()
 		{
-			var status = Statuses.FirstOrDefault();
+			var status = StatusTable.FirstOrDefault();
 
 			if ( status.Value != null && status.Value.Icon != null )
 			{
@@ -533,7 +533,7 @@ namespace Facepunch.RTS
 				UsingAbility.Tick();
 			}
 
-			foreach ( var kv in Statuses )
+			foreach ( var kv in StatusTable )
 			{
 				var status = kv.Value;
 
@@ -551,7 +551,7 @@ namespace Facepunch.RTS
 			{
 				var firstItem = Queue[0];
 
-				if ( firstItem.FinishTime > 0f && Gamemode.Instance.ServerTime >= firstItem.FinishTime )
+				if ( firstItem.FinishTime > 0f && RTSGame.Entity.ServerTime >= firstItem.FinishTime )
 				{
 					OnQueueItemCompleted( firstItem );
 					UnqueueItem( firstItem.Id );
@@ -618,14 +618,14 @@ namespace Facepunch.RTS
 
 		protected override void OnDestroy()
 		{
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				RemoveAllStatuses();
 				CancelAbility();
 				Deselect();
 			}
 
-			if ( IsClient ) Hud.Delete();
+			if ( Game.IsClient ) Hud.Delete();
 
 			base.OnDestroy();
 		}
@@ -687,13 +687,13 @@ namespace Facepunch.RTS
 
 		protected virtual void CreateAbilities()
 		{
-			Abilities = new();
+			AbilityTable = new();
 
 			foreach ( var id in Item.Abilities )
 			{
-				var ability = RTS.Abilities.Create( id );
+				var ability = Abilities.Create( id );
 				ability.Initialize( id, this );
-				Abilities[id] = ability;
+				AbilityTable[id] = ability;
 			}
 		}
 
@@ -750,16 +750,16 @@ namespace Facepunch.RTS
 			using var stream = new MemoryStream( data );
 			using var reader = new BinaryReader( stream );
 
-			if ( Statuses.TryGetValue( id, out var status ) )
+			if ( StatusTable.TryGetValue( id, out var status ) )
 			{
 				status.Deserialize( reader );
 				status.Restart();
 				return;
 			}
 
-			status = RTS.Statuses.Create( id );
+			status = Statuses.Create( id );
 
-			Statuses.Add( id, status );
+			StatusTable.Add( id, status );
 
 			status.Deserialize( reader );
 			status.Initialize( id, this );

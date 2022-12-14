@@ -34,9 +34,9 @@ namespace Facepunch.RTS
 					Debug = false
 				};
 
-				rocket.Initialize( transform.Value.Position, Target, Rand.Float( FireRate * 0.3f, FireRate * 0.6f ), OnMissileHit );
+				rocket.Initialize( transform.Value.Position, Target, Game.Random.Float( FireRate * 0.3f, FireRate * 0.6f ), OnMissileHit );
 
-				await GameTask.Delay( Rand.Int( 100, 200 ) );
+				await GameTask.Delay( Game.Random.Int( 100, 200 ) );
 
 				if ( !Target.IsValid() ) return;
 			}

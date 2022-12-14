@@ -18,7 +18,7 @@ namespace Facepunch.RTS
 
 		public override void OnFinished()
 		{
-			if ( Host.IsServer && TargetInfo.Target is UnitEntity unit )
+			if ( Game.IsServer && TargetInfo.Target is UnitEntity unit )
 			{
 				unit.ApplyStatus<BoostStatus>( new ModifierData()
 				{

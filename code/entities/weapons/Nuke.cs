@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 
 		protected override void OnDestroy()
 		{
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				Fog.RemoveViewer( this );
 			}

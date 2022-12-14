@@ -17,7 +17,7 @@ namespace Facepunch.RTS
 
 		public override void OnFinished()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				Statuses.Apply<HealingStatus>( TargetInfo.Origin, AreaOfEffectRadius, new HealingData()
 				{

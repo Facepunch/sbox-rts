@@ -34,7 +34,7 @@ namespace Facepunch.RTS
 		{
 			Reset();
 
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				FireMissiles();
 			}
@@ -56,7 +56,7 @@ namespace Facepunch.RTS
 		private async void FireMissiles()
 		{
 			var targetInfo = TargetInfo;
-			var rockets = Rand.Int( 10, 14 );
+			var rockets = Game.Random.Int( 10, 14 );
 			var origin = TargetInfo.Origin + Vector3.Up * 3000f;
 
 			Audio.Play( "missile.jetflyby", targetInfo.Origin );
@@ -66,8 +66,8 @@ namespace Facepunch.RTS
 			for ( var i = 0; i < rockets; i++ )
 			{
 				var rocket = new Projectile();
-				var radius = AreaOfEffectRadius * MathF.Sqrt( Rand.Float( 1f ) );
-				var theta = Rand.Float( 1f ) * 2f * MathF.PI;
+				var radius = AreaOfEffectRadius * MathF.Sqrt( Game.Random.Float( 1f ) );
+				var theta = Game.Random.Float( 1f ) * 2f * MathF.PI;
 
 				var startPosition = origin + new Vector3(
 					radius * MathF.Cos( theta ),
@@ -83,9 +83,9 @@ namespace Facepunch.RTS
 				rocket.HitSound = "missile.explode1";
 
 				rocket.SetModel( "models/weapons/missile/missile.vmdl" );
-				rocket.Initialize( startPosition, endPosition, Rand.Float( Duration * 0.1f ), OnRocketHit );
+				rocket.Initialize( startPosition, endPosition, Game.Random.Float( Duration * 0.1f ), OnRocketHit );
 
-				await GameTask.DelaySeconds( Rand.Float( 0f, (Duration * 0.1f) / rockets ) );
+				await GameTask.DelaySeconds( Game.Random.Float( 0f, (Duration * 0.1f) / rockets ) );
 			}
 		}
 
@@ -100,7 +100,7 @@ namespace Facepunch.RTS
 
 				var damageInfo = new DamageInfo
 				{
-					Damage = Rand.Float( MinDamage, MaxDamage ),
+					Damage = Game.Random.Float( MinDamage, MaxDamage ),
 					Attacker = (Entity)User
 				};
 

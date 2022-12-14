@@ -6,20 +6,19 @@ using System;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/LoadingScreen.scss" )]
 	public class LoadingScreen : Panel
 	{
 		public Label Text;
 
 		public LoadingScreen()
 		{
-			StyleSheet.Load( "/ui/LoadingScreen.scss" );
-
 			Text = Add.Label( "Loading", "loading" );
 		}
 
 		public override void Tick()
 		{
-			var isHidden = Local.Pawn.IsValid();
+			var isHidden = Game.LocalPawn.IsValid();
 
 			SetClass( "hidden", isHidden );
 

@@ -38,7 +38,7 @@ namespace Facepunch.RTS
 
 		protected override void OnDestroy()
 		{
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				for ( var i = 0; i < Units.Count; i++ )
 				{
@@ -56,7 +56,7 @@ namespace Facepunch.RTS
 
 		public override void StartTouch( Entity other )
 		{
-			if ( IsServer && other is UnitEntity unit )
+			if ( Game.IsServer && other is UnitEntity unit )
 			{
 				TryAddUnit( unit );
 			}
@@ -66,7 +66,7 @@ namespace Facepunch.RTS
 
 		public override void EndTouch( Entity other )
 		{
-			if ( IsServer && other is UnitEntity unit )
+			if ( Game.IsServer && other is UnitEntity unit )
 			{
 				TryRemoveUnit( unit );
 			}

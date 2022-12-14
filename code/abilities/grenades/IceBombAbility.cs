@@ -22,7 +22,7 @@ namespace Facepunch.RTS
 
 		public override void OnFinished()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				Statuses.Apply<FreezingStatus>( TargetInfo.Origin, AreaOfEffectRadius, new FreezingData()
 				{

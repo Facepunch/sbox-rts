@@ -15,7 +15,7 @@ namespace Facepunch.RTS
 		{
 			base.OnFinished();
 
-			if ( Host.IsClient ) return;
+			if ( Game.IsClient ) return;
 			if ( User is not BuildingEntity building ) return;
 
 			building.Kill();

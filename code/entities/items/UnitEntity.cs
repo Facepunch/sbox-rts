@@ -49,9 +49,9 @@ namespace Facepunch.RTS
 
 		public override bool HasSelectionGlow => false;
 
-		public Dictionary<string, float> Resistances { get; set; }
+		public Dictionary<string, float> ResistancesTable { get; set; }
 		[Net, Change] private IList<float> ResistanceList { get; set; }
-		[Net, Change] public List<UnitEntity> Occupants { get; private set; }
+		[Net, Change] public IList<UnitEntity> Occupants { get; private set; }
 		public bool CanOccupyUnits => Item.Occupiable.Enabled && Occupants.Count < Item.Occupiable.MaxOccupants;
 		public IOccupiableItem OccupiableItem => Item;
 
@@ -103,13 +103,13 @@ namespace Facepunch.RTS
 		{
 			Tags.Add( "unit", "selectable", "ff_ignore" );
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				Carrying = new();
 			}
 
 			ResistanceList = new List<float>();
-			Resistances = new();
+			ResistancesTable = new();
 
 			Occupants = new List<UnitEntity>();
 			MoveStack = new();
@@ -136,7 +136,7 @@ namespace Facepunch.RTS
 
 		public void AddKill()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				Kills += 1;
 				UpdateRank( Ranks.Find( Kills ) );
@@ -246,7 +246,7 @@ namespace Facepunch.RTS
 
 		public void EvictUnit( UnitEntity unit )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( Occupants.Contains( unit ) )
 			{
@@ -268,7 +268,7 @@ namespace Facepunch.RTS
 
 		public void GiveHealth( float health )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			Health = Math.Min( Health + health, MaxHealth );
 		}
@@ -372,16 +372,16 @@ namespace Facepunch.RTS
 
 		public void AddResistance( string id, float amount )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
-			var resistance = RTS.Resistances.Find( id );
+			var resistance = Resistances.Find( id );
 
-			if ( Resistances.ContainsKey( id ) )
-				Resistances[id] += amount;
+			if ( ResistancesTable.ContainsKey( id ) )
+				ResistancesTable[id] += amount;
 			else
-				Resistances[id] = amount;
+				ResistancesTable[id] = amount;
 
-			Resistances[id] = Resistances[id].Clamp( -1f, 1f );
+			ResistancesTable[id] = ResistancesTable[id].Clamp( -1f, 1f );
 
 			var networkId = resistance.NetworkId;
 
@@ -390,7 +390,7 @@ namespace Facepunch.RTS
 				ResistanceList.Add( 0f );
 			}
 
-			ResistanceList[(int)networkId] = Resistances[id];
+			ResistanceList[(int)networkId] = ResistancesTable[id];
 		}
 
 		public bool TakeFrom( ResourceEntity resource )
@@ -481,7 +481,7 @@ namespace Facepunch.RTS
 
 		public override void TakeDamage( DamageInfo info )
 		{
-			info = RTS.Resistances.Apply( info, Resistances );
+			info = Resistances.Apply( info, ResistancesTable );
 
 			LastDamageTaken = info;
 			LastDamageTime = 0;
@@ -514,13 +514,13 @@ namespace Facepunch.RTS
 		{
 			for ( var i = 0; i < ResistanceList.Count; i++ )
 			{
-				var resistance = RTS.Resistances.Find<BaseResistance>( (uint)i );
+				var resistance = Resistances.Find<BaseResistance>( (uint)i );
 				var uniqueId = resistance.UniqueId;
 
 				if ( ResistanceList[i] != 0f )
-					Resistances[uniqueId] = ResistanceList[i];
-				else if ( Resistances.ContainsKey( uniqueId ) )
-					Resistances.Remove( uniqueId );
+					ResistancesTable[uniqueId] = ResistanceList[i];
+				else if ( ResistancesTable.ContainsKey( uniqueId ) )
+					ResistancesTable.Remove( uniqueId );
 			}
 		}
 
@@ -574,7 +574,7 @@ namespace Facepunch.RTS
 
 		public virtual bool OccupyUnit( UnitEntity unit )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( CanOccupyUnits )
 			{
@@ -616,7 +616,7 @@ namespace Facepunch.RTS
 		public void DoImpactEffects( Vector3 position, Vector3 normal )
 		{
 			var impactEffects = Item.ImpactEffects;
-			var particleName = impactEffects[Rand.Int( 0, impactEffects.Count - 1 )];
+			var particleName = impactEffects[Game.Random.Int( 0, impactEffects.Count - 1 )];
 
 			if ( particleName != null )
 			{
@@ -632,10 +632,10 @@ namespace Facepunch.RTS
 
 			if ( damageDecals.Count == 0 ) return;
 
-			var randomDecalName = damageDecals[Rand.Int( 0, damageDecals.Count - 1 )];
+			var randomDecalName = damageDecals[Game.Random.Int( 0, damageDecals.Count - 1 )];
 			var decalMaterial = Material.Load( randomDecalName );
-			var decalRotation = Rotation.LookAt( Vector3.Up ) * Rotation.FromAxis( Vector3.Forward, Rand.Float( 0f, 360f ) );
-			var randomSize = Rand.Float( 50f, 100f );
+			var decalRotation = Rotation.LookAt( Vector3.Up ) * Rotation.FromAxis( Vector3.Forward, Game.Random.Float( 0f, 360f ) );
+			var randomSize = Game.Random.Float( 50f, 100f );
 			var trace = Trace.Ray( position, position + Vector3.Down * 100f ).Ignore( this ).Run();
 
 			Decals.Place( decalMaterial, trace.Entity, trace.Bone, trace.EndPosition, new Vector3( randomSize, randomSize, 4f ), decalRotation );
@@ -1135,9 +1135,9 @@ namespace Facepunch.RTS
 			if ( Item.CanDisband )
 			{
 				var disbandId = "ability_disband";
-				var disband = RTS.Abilities.Create( disbandId );
+				var disband = Abilities.Create( disbandId );
 				disband.Initialize( disbandId, this );
-				Abilities[disbandId] = disband;
+				AbilityTable[disbandId] = disband;
 			}
 		}
 
@@ -1163,7 +1163,7 @@ namespace Facepunch.RTS
 		{
 			base.OnDestroy();
 
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				Circle?.Delete();
 
@@ -1254,7 +1254,7 @@ namespace Facepunch.RTS
 				var materialGroups = MaterialGroupCount;
 
 				if ( materialGroups > 0 )
-					SetMaterialGroup( Rand.Int( 0, materialGroups ) );
+					SetMaterialGroup( Game.Random.Int( 0, materialGroups ) );
 			}
 
 			RemoveClothing();

@@ -13,7 +13,7 @@ namespace Gamelib.Extensions
 
 			for ( var i = 0; i < last; ++i )
 			{
-				var r = Rand.Int( i, last );
+				var r = Game.Random.Int( i, last );
 				var tmp = self[i];
 				self[i] = self[r];
 				self[r] = tmp;

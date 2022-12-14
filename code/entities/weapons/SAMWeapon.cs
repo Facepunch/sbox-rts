@@ -39,9 +39,9 @@ namespace Facepunch.RTS
 					Debug = false
 				};
 
-				rocket.Initialize( transform.Value.Position, Target, Rand.Float( FireRate * 0.3f, FireRate * 0.6f ), OnMissileHit );
+				rocket.Initialize( transform.Value.Position, Target, Game.Random.Float( FireRate * 0.3f, FireRate * 0.6f ), OnMissileHit );
 
-				await GameTask.Delay( Rand.Int( 75, 150 ) );
+				await GameTask.Delay( Game.Random.Int( 75, 150 ) );
 
 				if ( !Target.IsValid() ) return;
 			}
@@ -86,7 +86,7 @@ namespace Facepunch.RTS
 				Attacker.SetAnimParameter( "target", TargetDirection );
 			}
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				Attacker.SetAnimParameter( "fire", Recoil );
 				Recoil = Recoil.LerpTo( 0f, Time.Delta * 2f );

@@ -6,6 +6,7 @@ using System;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/IconWithLabel.scss" )]
 	public class IconWithLabel : Panel
 	{
 		public Panel Icon { get; set; }
@@ -13,8 +14,6 @@ namespace Facepunch.RTS
 
 		public IconWithLabel()
 		{
-			StyleSheet.Load( "/ui/IconWithLabel.scss" );
-
 			Icon = Add.Panel( "icon" );
 			Label = Add.Label( "", "label" );
 		}

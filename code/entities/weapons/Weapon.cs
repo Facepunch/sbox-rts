@@ -143,7 +143,7 @@ namespace Facepunch.RTS
 		[ClientRpc]
 		public virtual void ShootEffects( Vector3 position )
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			if ( IsMelee ) return;
 
@@ -186,10 +186,10 @@ namespace Facepunch.RTS
 
 			if ( entity is IDamageable damageable )
 			{
-				if ( Rand.Float( 1f ) >= 0.5f )
+				if ( Game.Random.Float( 1f ) >= 0.5f )
 					damageable.DoImpactEffects( endPos, aimRay.Forward );
 
-				if ( Rand.Float( 1f ) > 0.7f )
+				if ( Game.Random.Float( 1f ) > 0.7f )
 					damageable.CreateDamageDecals( endPos );
 			}
 		}

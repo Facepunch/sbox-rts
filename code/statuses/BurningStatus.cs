@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 
 		public override void OnApplied()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				var radius = Target.GetDiameterXY( 0.5f, true );
 
@@ -26,7 +26,7 @@ namespace Facepunch.RTS
 
 		public override void OnRemoved()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				Particles?.Destroy();
 				Particles = null;
@@ -35,7 +35,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( Host.IsServer && NextTakeDamage )
+			if ( Game.IsServer && NextTakeDamage )
 			{
 				var info = new DamageInfo
 				{
@@ -47,7 +47,7 @@ namespace Facepunch.RTS
 				Target.TakeDamage( info );
 				NextTakeDamage = Data.Interval;
 			}
-			else if ( Host.IsClient )
+			else if ( Game.IsClient )
 			{
 				Particles.SetPosition( 0, Target.Position );
 			}

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/ItemTooltip.scss" )]
 	public class ItemTooltip : Panel
 	{
 		public static ItemTooltip Instance { get; private set; }
@@ -24,12 +25,10 @@ namespace Facepunch.RTS
 		public ItemLabelValues ItemLabels { get; private set; }
 		public ItemResourceValues Costs { get; private set; }
 		public DependencyList Dependencies { get; private set; }
-		public ResistanceValues Resistances { get; private set; }
+		public ResistanceValues ResistanceValues { get; private set; }
 
 		public ItemTooltip()
 		{
-			StyleSheet.Load( "/ui/ItemTooltip.scss" );
-
 			Name = Add.Label( "", "name" );
 			Desc = Add.Label( "", "desc" );
 
@@ -38,16 +37,16 @@ namespace Facepunch.RTS
 			ItemLabels = AddChild<ItemLabelValues>( "itemlabels" );
 			Costs = AddChild<ItemResourceValues>( "costs" );
 			Dependencies = AddChild<DependencyList>( "dependencies" );
-			Resistances = AddChild<ResistanceValues>( "resistances" );
+			ResistanceValues = AddChild<ResistanceValues>( "resistances" );
 
 			Costs.AddResource( ResourceType.Stone );
 			Costs.AddResource( ResourceType.Beer );
 			Costs.AddResource( ResourceType.Metal );
 			Costs.AddResource( ResourceType.Plasma );
 
-			foreach ( var kv in RTS.Resistances.Table )
+			foreach ( var kv in Resistances.Table )
 			{
-				Resistances.AddResistance( kv.Value );
+				ResistanceValues.AddResistance( kv.Value );
 			}
 
 			Population = AddChild<PopulationLabel>( "population" );
@@ -81,7 +80,7 @@ namespace Facepunch.RTS
 
 		public void Update( BaseAbility ability, bool showDependencies = false )
 		{
-			var player = Local.Pawn as RTSPlayer;
+			var player = Game.LocalPawn as RTSPlayer;
 
 			Name.Style.FontColor = ability.Color;
 			Name.Style.Dirty();
@@ -131,7 +130,7 @@ namespace Facepunch.RTS
 				Costs.SetVisible( false );
 			}
 
-			Resistances.SetVisible( false );
+			ResistanceValues.SetVisible( false );
 
 			Population.SetClass( "hidden", true );
 		}
@@ -148,7 +147,7 @@ namespace Facepunch.RTS
 			Cooldown.SetVisible( false );
 			Dependencies.SetVisible( false );
 			ItemLabels.SetVisible( false );
-			Resistances.SetVisible( false );
+			ResistanceValues.SetVisible( false );
 			Population.SetVisible( false );
 			Costs.SetVisible( false );
 		}
@@ -179,14 +178,14 @@ namespace Facepunch.RTS
 			Cooldown.SetVisible( false );
 			Dependencies.SetVisible( false );
 			ItemLabels.SetVisible( false );
-			Resistances.SetVisible( false );
+			ResistanceValues.SetVisible( false );
 			Population.SetVisible( false );
 			Costs.SetVisible( true );
 		}
 
 		public void Update( BaseItem item, bool hideCosts = false, bool showDependencies = false )
 		{
-			var player = Local.Pawn as RTSPlayer;
+			var player = Game.LocalPawn as RTSPlayer;
 
 			Name.Style.FontColor = item.Color;
 			Name.Style.Dirty();
@@ -195,7 +194,7 @@ namespace Facepunch.RTS
 			Desc.Text = item.Description;
 
 			Dependencies.SetVisible( showDependencies );
-			Resistances.SetVisible( false );
+			ResistanceValues.SetVisible( false );
 			Cooldown.SetVisible( false );
 
 			BuildTime.SetVisible( !hideCosts && !showDependencies );

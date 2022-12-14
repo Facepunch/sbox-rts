@@ -4,14 +4,13 @@ using Sandbox.UI.Construct;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/ItemLabelValue.scss" )]
 	public class ItemLabelValue : Panel
 	{
 		public Label Label { get; set; }
 
 		public ItemLabelValue()
 		{
-			StyleSheet.Load( "/ui/ItemLabelValue.scss" );
-
 			Label = Add.Label( "", "label" );
 		}
 

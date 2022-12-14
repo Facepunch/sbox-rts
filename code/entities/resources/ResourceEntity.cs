@@ -56,7 +56,7 @@ namespace Facepunch.RTS
 			if ( !NextGatherSound ) return;
 
 			if ( GatherSounds.Length > 0 )
-				PlaySound( Rand.FromArray( GatherSounds ) );
+				PlaySound( Game.Random.FromArray( GatherSounds ) );
 
 			NextGatherSound = 0.5f;
 		}
@@ -107,7 +107,7 @@ namespace Facepunch.RTS
 		{
 			base.OnDestroy();
 
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				MiniMap.Instance.RemoveEntity( this );
 				Fog.RemoveCullable( this );
@@ -125,7 +125,7 @@ namespace Facepunch.RTS
 		[Event.Entity.PostSpawn]
 		private void ClientPostSpawn()
 		{
-			if ( IsServer ) return;
+			if ( Game.IsServer ) return;
 
 			// We only want to add the resource to the map if there's no other nearby resources.
 			var others = All.OfType<ResourceEntity>()
@@ -145,7 +145,7 @@ namespace Facepunch.RTS
 		[Event.Tick.Client]
 		private void ClientTick()
 		{
-			if ( Local.Pawn is RTSPlayer player && player.Position.Distance( Position ) <= 1000f )
+			if ( Game.LocalPawn is RTSPlayer player && player.Position.Distance( Position ) <= 1000f )
 				ShowOutline();
 			else
 				HideOutline();

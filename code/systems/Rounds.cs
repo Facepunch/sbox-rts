@@ -1,5 +1,6 @@
 ﻿using Gamelib.Network;
 using Sandbox;
+using Sandbox.Diagnostics;
 
 namespace Facepunch.RTS
 {

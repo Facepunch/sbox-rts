@@ -49,14 +49,14 @@ namespace Facepunch.RTS
 			Building = building;
 			Worker = worker;
 
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				var material = Material.Load( "materials/rts/blueprint.vmat" );
 
 				if ( material != null )
 					SceneObject.SetMaterialOverride( material );
 
-				if ( IsClient )
+				if ( Game.IsClient )
 				{
 					BoundsEntity = new GhostBounds();
 					BoundsEntity.RenderBounds = CollisionBounds * 1.25f;
@@ -92,7 +92,7 @@ namespace Facepunch.RTS
 			glow.Color = Color.Red;
 		}
 
-		public TraceResult GetPlacementTrace( Client client, Vector3 cursorOrigin, Vector3 cursorAim )
+		public TraceResult GetPlacementTrace( IClient client, Vector3 cursorOrigin, Vector3 cursorAim )
 		{
 			return TraceExtension.RayDirection( cursorOrigin, cursorAim )
 				.WorldOnly()
@@ -125,7 +125,7 @@ namespace Facepunch.RTS
 				.Where( e => IsBlockingEntity( e ) );
 
 			/*
-			if ( IsClient && !Fog.IsAreaSeen( position ) )
+			if ( Game.IsClient && !Fog.IsAreaSeen( position ) )
 				return false;
 			*/
 

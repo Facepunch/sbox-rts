@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/ItemLabelValues.scss" )]
 	public class ItemLabelValues : Panel
 	{
 		public List<ItemLabelValue> Values { get; private set; }
 
 		public ItemLabelValues()
 		{
-			StyleSheet.Load( "/ui/ItemLabelValues.scss" );
-
 			Values = new();
 		}
 

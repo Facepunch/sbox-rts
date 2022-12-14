@@ -49,9 +49,9 @@ namespace Facepunch.RTS
 
 		public static bool IsLocalPlaying()
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
-			if ( Local.Pawn is not RTSPlayer player )
+			if ( Game.LocalPawn is not RTSPlayer player )
 				return false;
 
 			if ( player.IsSpectator )
@@ -67,7 +67,7 @@ namespace Facepunch.RTS
 
 		public Hud()
 		{
-			if ( !IsClient )
+			if ( !Game.IsClient )
 				return;
 
 			RootPanel.StyleSheet.Load( "/ui/Hud.scss" );

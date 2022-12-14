@@ -23,14 +23,13 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/PopulationCount.scss" )]
 	public class PopulationCount : Panel
 	{
 		public PopulationLabel Population { get; set; }
 
 		public PopulationCount()
 		{
-			StyleSheet.Load( "/ui/PopulationCount.scss" );
-
 			Population = AddChild<PopulationLabel>( "population" );
 		}
 
@@ -38,7 +37,7 @@ namespace Facepunch.RTS
 		{
 			SetClass( "hidden", !Hud.IsLocalPlaying() );
 
-			if ( Local.Pawn is RTSPlayer player )
+			if ( Game.LocalPawn is RTSPlayer player )
 			{
 				Population.Label.Text = player.Population + "/" + player.MaxPopulation;
 				Population.Label.SetClass( "full", player.Population >= player.MaxPopulation );

@@ -191,7 +191,7 @@ namespace Facepunch.RTS
 
 		public static void Initialize( BBox size, byte seenAlpha = 200, byte unseenAlpha = 240 )
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			Renderer = new FogRenderer
 			{
@@ -409,7 +409,7 @@ namespace Facepunch.RTS
 
 		private static void CheckParticleVisibility( Vector3n position, float range )
 		{
-			var sceneObjects = Map.Scene.SceneObjects;
+			var sceneObjects = Game.SceneWorld.SceneObjects;
 
 			foreach ( var sceneObject in sceneObjects )
 			{
@@ -428,7 +428,7 @@ namespace Facepunch.RTS
 
 		private static void CullParticles()
 		{
-			var sceneObjects = Map.Scene.SceneObjects;
+			var sceneObjects = Game.SceneWorld.SceneObjects;
 
 			foreach ( var sceneObject in sceneObjects )
 			{

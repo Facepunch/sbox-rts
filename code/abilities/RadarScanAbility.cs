@@ -30,7 +30,7 @@ namespace Facepunch.RTS
 
 		public override void OnStarted()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				if ( User.IsLocalTeamGroup )
 				{

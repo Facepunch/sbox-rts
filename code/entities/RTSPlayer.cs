@@ -222,7 +222,7 @@ namespace Facepunch.RTS
 				.Where( p => p.TeamGroup == TeamGroup );
 		}
 
-		public IEnumerable<Client> GetAllTeamClients()
+		public IEnumerable<IClient> GetAllTeamClients()
 		{
 			return All.OfType<RTSPlayer>()
 				.Where( p => p.TeamGroup == TeamGroup )
@@ -279,7 +279,7 @@ namespace Facepunch.RTS
 
 		public bool SetResource( ResourceType type, int amount )
 		{
-			if ( !Host.IsServer ) return false;
+			if ( !Game.IsServer ) return false;
 			if ( Resources == null ) return false;
 
 			while ( Resources.Count <= (int)type )
@@ -293,7 +293,7 @@ namespace Facepunch.RTS
 
 		public bool GiveResource( ResourceType type, int amount )
 		{
-			if ( !Host.IsServer ) return false;
+			if ( !Game.IsServer ) return false;
 			if ( Resources == null ) return false;
 
 			SetResource( type, GetResource( type ) + amount );
@@ -335,7 +335,7 @@ namespace Facepunch.RTS
 
 		public void ClearSelection()
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			var selection = GetAllSelected();
 
@@ -370,22 +370,22 @@ namespace Facepunch.RTS
 			base.BuildInput();
 		}
 
-		public override void FrameSimulate( Client cl )
+		public override void FrameSimulate( IClient cl )
 		{
 			RTSCamera?.Update();
 
 			base.FrameSimulate( cl );
 		}
 
-		public override void Simulate( Client client )
+		public override void Simulate( IClient client )
 		{
-			if ( !Gamemode.Instance.IsValid() )
+			if ( !RTSGame.Entity.IsValid() )
 				return;
 
 			if ( client.Pawn is not RTSPlayer player )
 				return;
 
-			if ( IsServer && Input.Released( InputButton.Reload ) )
+			if ( Game.IsServer && Input.Released( InputButton.Reload ) )
 			{
 				// TODO: This is just for testing, delete later.
 				var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection ).Run();
@@ -409,7 +409,7 @@ namespace Facepunch.RTS
 				*/
 			}
 
-			if ( IsServer && Input.Released( InputButton.Use ) )
+			if ( Game.IsServer && Input.Released( InputButton.Use ) )
 			{
 				// TODO: This is just for testing, delete later.
 				var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection ).Run();

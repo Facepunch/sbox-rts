@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 
 		public override void OnApplied()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				var diameter = Target.GetDiameterXY( 1.25f, false );
 				Particles = Particles.Create( "particles/unit_status/healing/healing_unit.vpcf" );
@@ -25,7 +25,7 @@ namespace Facepunch.RTS
 
 		public override void OnRemoved()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				Particles?.Destroy();
 				Particles = null;
@@ -34,12 +34,12 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( Host.IsServer && NextHealTime )
+			if ( Game.IsServer && NextHealTime )
 			{
 				Target.Health = Math.Clamp( Target.Health + Data.Amount, 0f, Target.MaxHealth );
 				NextHealTime = Data.Interval;
 			}
-			else if ( Host.IsClient )
+			else if ( Game.IsClient )
 			{
 				Particles.SetPosition( 0, Target.Position );
 			}

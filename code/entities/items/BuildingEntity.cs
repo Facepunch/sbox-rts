@@ -69,7 +69,7 @@ namespace Facepunch.RTS
 			TouchingEntities = new();
 			Occupants = new List<UnitEntity>();
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				EnableSolidCollisions = false;
 				IsUnderConstruction = true;
@@ -139,7 +139,7 @@ namespace Facepunch.RTS
 
 		public void UpdateConstruction()
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( IsBlueprint )
 			{
@@ -148,7 +148,7 @@ namespace Facepunch.RTS
 
 			if ( Item.ConstructionSounds.Length > 0 && NextConstructionSound )
 			{
-				var sound = Rand.FromArray( Item.ConstructionSounds );
+				var sound = Game.Random.FromArray( Item.ConstructionSounds );
 
 				ConstructionSound.Stop();
 				ConstructionSound = PlaySound( sound );
@@ -159,11 +159,11 @@ namespace Facepunch.RTS
 
 		public void UpdateRepair()
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( Item.ConstructionSounds.Length > 0 && NextConstructionSound )
 			{
-				var sound = Rand.FromArray( Item.ConstructionSounds );
+				var sound = Game.Random.FromArray( Item.ConstructionSounds );
 
 				ConstructionSound.Stop();
 				ConstructionSound = PlaySound( sound );
@@ -204,7 +204,7 @@ namespace Facepunch.RTS
 
 		public bool OccupyUnit( UnitEntity unit )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( CanOccupyUnits )
 			{
@@ -246,7 +246,7 @@ namespace Facepunch.RTS
 
 		public void EvictUnit( UnitEntity unit )
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( Occupants.Contains( unit ) )
 			{
@@ -293,7 +293,7 @@ namespace Facepunch.RTS
 
 		public void FinishConstruction()
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			if ( IsBlueprint )
 			{
@@ -318,7 +318,7 @@ namespace Facepunch.RTS
 
 		public void FinishRepair()
 		{
-			Host.AssertServer();
+			Game.AssertServer();
 
 			Item.PlayBuiltSound( this );
 		}
@@ -594,9 +594,9 @@ namespace Facepunch.RTS
 			if ( Item.CanDemolish )
 			{
 				var demolishId = "ability_demolish";
-				var demolish = RTS.Abilities.Create( demolishId );
+				var demolish = Abilities.Create( demolishId );
 				demolish.Initialize( demolishId, this );
-				Abilities[demolishId] = demolish;
+				AbilityTable[demolishId] = demolish;
 			}
 		}
 
@@ -821,7 +821,7 @@ namespace Facepunch.RTS
 
 		protected override void OnDestroy()
 		{
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				RemoveDependencies( Item );
 

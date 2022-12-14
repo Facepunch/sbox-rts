@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			if ( Local.Pawn is not RTSPlayer player ) return;
+			if ( Game.LocalPawn is not RTSPlayer player ) return;
 
 			if ( IdleUnits.Count == 0 ) return;
 
@@ -71,7 +71,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( Local.Pawn is RTSPlayer player )
+			if ( Game.LocalPawn is RTSPlayer player )
 			{
 				if ( NextUpdateList )
 				{
@@ -116,14 +116,13 @@ namespace Facepunch.RTS
  		}
 	}
 
+	[StyleSheet( "/ui/IdleUtilityUnits.scss" )]
 	public class IdleUtilityUnits : Panel
 	{
 		public IdleUtilityUnitsButton Button { get; private set; }
 
 		public IdleUtilityUnits()
 		{
-			StyleSheet.Load( "/ui/IdleUtilityUnits.scss" );
-
 			Button = AddChild<IdleUtilityUnitsButton>( "button" );
 		}
 

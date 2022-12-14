@@ -41,6 +41,7 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/summary/GameSummary.scss" )]
 	public partial class GameSummary : Panel
 	{
 		public static GameSummary Instance { get; private set; }
@@ -50,7 +51,7 @@ namespace Facepunch.RTS
 		{
 			Close();
 
-			Instance = Local.Hud.AddChild<GameSummary>();
+			Instance = Game.RootPanel.AddChild<GameSummary>();
 			Instance.SetWinners( teamGroup );
 		}
 
@@ -70,8 +71,6 @@ namespace Facepunch.RTS
 
 		public GameSummary()
 		{
-			StyleSheet.Load( "/ui/summary/GameSummary.scss" );
-
 			Title = Add.Label( "GAME SUMMARY", "title" );
 			WinnersList = Add.Panel( "winners" );
 			WinnersTitle = WinnersList.Add.Label( "WINNERS", "title" );
@@ -96,7 +95,7 @@ namespace Facepunch.RTS
 		{
 			if ( Hud.ChatBox != null )
 			{
-				Hud.ChatBox.Parent = Local.Hud;
+				Hud.ChatBox.Parent = Game.RootPanel;
 			}
 
 			base.OnDeleted();

@@ -5,27 +5,6 @@ namespace Gamelib.Extensions
 {
 	public static class PanelExtension
 	{
-		public static void PositionAtCrosshair( this Panel panel )
-		{
-			panel.PositionAtCrosshair( Local.Pawn as Player );
-		}
-
-		public static void PositionAtCrosshair( this Panel panel, Player player )
-		{
-			if ( !player.IsValid() ) return;
-
-			var eyePos = player.EyePosition;
-			var eyeRot = player.EyeRotation;
-
-			var tr = Trace.Ray( eyePos, eyePos + eyeRot.Forward * 1000 )
-				.Size( 1.0f )
-				.Ignore( player )
-				.UseHitboxes()
-				.Run();
-
-			panel.PositionAtWorld( tr.EndPosition );
-		}
-
 		public static void PositionAtWorld( this Panel panel, Vector3 position )
 		{
 			var screenPos = position.ToScreen();

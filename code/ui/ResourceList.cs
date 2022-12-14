@@ -6,6 +6,7 @@ using System;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/ResourceList.scss" )]
 	public class ResourceList : Panel
 	{
 		public Dictionary<ResourceType, ItemResourceValue> Resources { get; private set; }
@@ -13,8 +14,6 @@ namespace Facepunch.RTS
 
 		public ResourceList()
 		{
-			StyleSheet.Load( "/ui/ResourceList.scss" );
-
 			Cache = new();
 			Resources = new();
 
@@ -28,7 +27,7 @@ namespace Facepunch.RTS
 		{
 			SetClass( "hidden", !Hud.IsLocalPlaying() );
 
-			if ( Local.Pawn is RTSPlayer player )
+			if ( Game.LocalPawn is RTSPlayer player )
 			{
 				UpdateResource( player, ResourceType.Stone );
 				UpdateResource( player, ResourceType.Beer );

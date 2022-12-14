@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 
 		public override void OnApplied()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				var diameter = Target.GetDiameterXY( 1.25f, false );
 				Particles = Particles.Create( "particles/unit_status/boost/boost_unit.vpcf" );
@@ -21,7 +21,7 @@ namespace Facepunch.RTS
 				Particles.SetPosition( 1, new Vector3( diameter / 2f, 0f, 1f ) );
 			}
 
-			if ( Host.IsServer && Target is UnitEntity unit )
+			if ( Game.IsServer && Target is UnitEntity unit )
 			{
 				unit.Modifiers.Speed += Data.Modifier;
 			}
@@ -29,13 +29,13 @@ namespace Facepunch.RTS
 
 		public override void OnRemoved()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				Particles?.Destroy();
 				Particles = null;
 			}
 
-			if ( Host.IsServer && Target is UnitEntity unit )
+			if ( Game.IsServer && Target is UnitEntity unit )
 			{
 				unit.Modifiers.Speed -= Data.Modifier;
 			}
@@ -43,7 +43,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				Particles.SetPosition( 0, Target.Position );
 			}

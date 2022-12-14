@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/GenericTooltip.scss" )]
 	public class GenericTooltip : Panel
 	{
 		public static GenericTooltip Instance { get; private set; }
@@ -23,8 +24,6 @@ namespace Facepunch.RTS
 
 		public GenericTooltip()
 		{
-			StyleSheet.Load( "/ui/GenericTooltip.scss" );
-
 			Name = Add.Label( "", "name" );
 			Desc = Add.Label( "", "desc" );
 

@@ -71,14 +71,13 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/lobby/LobbyPlayerList.scss" )]
 	public class LobbyPlayerList : Panel
 	{
 		public List<LobbyPlayerItem> Players { get; private set; }
 
 		public LobbyPlayerList()
 		{
-			StyleSheet.Load( "/ui/lobby/LobbyPlayerList.scss" );
-
 			Players = new();
 
 			for ( var i = 0; i < 4; i++ )
@@ -92,7 +91,7 @@ namespace Facepunch.RTS
 		{
 			for ( var i = 0; i < 4; i++ )
 			{
-				if ( Entity.FindByIndex( i + 1 ) is Client player )
+				if ( Entity.FindByIndex( i + 1 ) is IClient player )
 					Players[i].Update( player.Pawn as RTSPlayer );
 				else
 					Players[i].Update( null );

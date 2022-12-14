@@ -7,7 +7,7 @@ namespace Gamelib.UI
 	{
 		public static Panel GetHoveredPanel( Panel root = null )
 		{
-			root ??= Local.Hud;
+			root ??= Game.RootPanel;
 
 			if ( root.PseudoClass.HasFlag( PseudoClass.Hover ) )
 			{

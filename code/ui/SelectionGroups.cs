@@ -98,6 +98,7 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/SelectionGroups.scss" )]
 	public class SelectionGroups : Panel
 	{
 		private static SelectionGroups Instance { get; set; }
@@ -126,8 +127,6 @@ namespace Facepunch.RTS
 
 		public SelectionGroups()
 		{
-			StyleSheet.Load( "/ui/SelectionGroups.scss" );
-
 			Container = Add.Panel( "container" );
 
 			for ( var i = 0; i < Groups.Length; i++ )

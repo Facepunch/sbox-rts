@@ -19,7 +19,7 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			if ( Local.Pawn is RTSPlayer player )
+			if ( Game.LocalPawn is RTSPlayer player )
 			{
 				LobbyDialog.SetReadyStatus( !player.IsReady );
 			}
@@ -34,6 +34,7 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/lobby/LobbyReadyButton.scss" )]
 	public class LobbyReadyButton : Panel
 	{
 		public LobbyReadyCheckbox Checkbox { get; private set; }
@@ -41,15 +42,13 @@ namespace Facepunch.RTS
 
 		public LobbyReadyButton()
 		{
-			StyleSheet.Load( "/ui/lobby/LobbyReadyButton.scss" );
-
 			Checkbox = AddChild<LobbyReadyCheckbox>( "checkbox" );
 			Label = Add.Label( "Ready", "label" );
 		}
 
 		public override void Tick()
 		{
-			if ( Local.Pawn is RTSPlayer player )
+			if ( Game.LocalPawn is RTSPlayer player )
 			{
 				var isReady = player.IsReady;
 

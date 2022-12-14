@@ -9,14 +9,13 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/ItemResourceValues.scss" )]
 	public class ItemResourceValues : Panel
 	{
 		public Dictionary<ResourceType, ItemResourceValue> Values { get; private set; }
 
 		public ItemResourceValues()
 		{
-			StyleSheet.Load( "/ui/ItemResourceValues.scss" );
-
 			Values = new();
 		}
 

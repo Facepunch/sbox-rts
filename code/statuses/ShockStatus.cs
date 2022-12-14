@@ -14,7 +14,7 @@ namespace Facepunch.RTS
 
 		public override void OnApplied()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				var radius = Target.GetDiameterXY( 0.5f, true );
 
@@ -23,7 +23,7 @@ namespace Facepunch.RTS
 				Particles.SetPosition( 1, new Vector3( radius, 0f, 0f ) );
 			}
 
-			if ( Host.IsServer && Target is UnitEntity unit )
+			if ( Game.IsServer && Target is UnitEntity unit )
 			{
 				var oldValue = unit.Modifiers.FireRate;
 				unit.Modifiers.FireRate *= Data.Modifier;
@@ -33,13 +33,13 @@ namespace Facepunch.RTS
 
 		public override void OnRemoved()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				Particles?.Destroy();
 				Particles = null;
 			}
 
-			if ( Host.IsServer && Target is UnitEntity unit )
+			if ( Game.IsServer && Target is UnitEntity unit )
 			{
 				unit.Modifiers.FireRate += FireRateDelta;
 			}
@@ -47,7 +47,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( Host.IsClient )
+			if ( Game.IsClient )
 			{
 				Particles.SetPosition( 0, Target.Position );
 			}

@@ -12,6 +12,7 @@ using System.Linq;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/CursorController.scss" )]
 	public class CursorController : Panel
 	{
 		public Vector2 StartSelection { get; private set; }
@@ -26,8 +27,6 @@ namespace Facepunch.RTS
 
 		public CursorController()
 		{
-			StyleSheet.Load( "/ui/CursorController.scss" );
-
 			SelectionArea = Add.Panel( "selection" );
 		}
 
@@ -73,7 +72,7 @@ namespace Facepunch.RTS
 			if ( Items.IsGhostValid() || Abilities.IsSelectingTarget() )
 				return;
 
-			if ( Local.Pawn is not RTSPlayer player )
+			if ( Game.LocalPawn is not RTSPlayer player )
 				return;
 
 			if ( !Hud.IsLocalPlaying() )

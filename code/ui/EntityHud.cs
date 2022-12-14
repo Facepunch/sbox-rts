@@ -112,14 +112,13 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/EntityHud.scss" )]
 	public class EntityHud : Panel
 	{
 		public static EntityHud Instance { get; private set; }
 
 		public EntityHud()
 		{
-			StyleSheet.Load( "/ui/EntityHud.scss" );
-
 			Instance = this;
 		}
 

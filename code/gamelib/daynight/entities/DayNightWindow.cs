@@ -29,11 +29,11 @@ namespace Gamelib.DayNight
 		{
 			if ( section == TimeSection.Dawn )
 			{
-				_ = DisableAsync( Rand.Float( DisableDelay ) );
+				_ = DisableAsync( Game.Random.Float( DisableDelay ) );
 			}
 			else if ( section == TimeSection.Dusk )
 			{
-				_ = EnableAsync( Rand.Float( EnableDelay ) );
+				_ = EnableAsync( Game.Random.Float( EnableDelay ) );
 			}
 		}
 

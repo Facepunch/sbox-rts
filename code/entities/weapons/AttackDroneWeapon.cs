@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 
 		public override Transform? GetMuzzle()
 		{
-			return Attacker.GetAttachment( $"muzzle{Rand.Int(1, 2)}", true );
+			return Attacker.GetAttachment( $"muzzle{Game.Random.Int(1, 2)}", true );
 		}
 	}
 }

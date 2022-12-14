@@ -13,7 +13,7 @@ namespace Facepunch.RTS
 
 		public override void OnStarted()
 		{
-			if ( Host.IsServer && User is UnitEntity unit )
+			if ( Game.IsServer && User is UnitEntity unit )
 			{
 				var target = TargetInfo.Target;
 				var position = target?.WorldSpaceBounds.Center ?? TargetInfo.Origin;
@@ -50,7 +50,7 @@ namespace Facepunch.RTS
 
 		public override void OnFinished()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				if ( !string.IsNullOrEmpty( AreaEffect ) )
 					CreateAreaEffect( TargetInfo.Origin, 1f );

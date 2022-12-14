@@ -22,7 +22,7 @@ namespace Facepunch.RTS
 			var size = Box.Rect.Size;
 			var fractionX = (x / size.x);
 			var fractionY = (y / size.y);
-			var worldSize = Gamemode.Instance.WorldSize.Size;
+			var worldSize = RTSGame.Entity.WorldSize.Size;
 			var largestSide = MathF.Max( worldSize.x, worldSize.y );
 			var positionX = (largestSide * fractionX) - (largestSide * 0.5f);
 			var positionY = (largestSide * fractionY) - (largestSide * 0.5f);
@@ -32,7 +32,7 @@ namespace Facepunch.RTS
 
 		public Vector2 WorldToCoords( Vector3 position )
 		{
-			var worldSize = Gamemode.Instance.WorldSize.Size;
+			var worldSize = RTSGame.Entity.WorldSize.Size;
 			var largestSide = MathF.Max( worldSize.x, worldSize.y );
 			var rotation = (MathF.PI / 180f) * -90f;
 
@@ -56,7 +56,7 @@ namespace Facepunch.RTS
 
 		public float UnitsToPixels( float units )
 		{
-			var worldSize = Gamemode.Instance.WorldSize.Size;
+			var worldSize = RTSGame.Entity.WorldSize.Size;
 			var largestSide = MathF.Max( worldSize.x, worldSize.y );
 			var mapSize = Parent.Box.Rect.Size.x;
 			var fraction = units / largestSide;
@@ -66,7 +66,7 @@ namespace Facepunch.RTS
 
 		protected override void OnMouseMove( MousePanelEvent e )
 		{
-			if ( IsMouseDown && !IsCtrlDown && Local.Pawn is RTSPlayer player )
+			if ( IsMouseDown && !IsCtrlDown && Game.LocalPawn is RTSPlayer player )
 			{
 				player.LookAt( PixelToWorld( MousePosition.x, MousePosition.y ) );
 			}
@@ -92,7 +92,7 @@ namespace Facepunch.RTS
 		{
 			base.OnRightClick( e );
 
-			if ( Local.Pawn is RTSPlayer player )
+			if ( Game.LocalPawn is RTSPlayer player )
 			{
 				var worldPosition = PixelToWorld( MousePosition.x, MousePosition.y );
 				Items.MoveToLocation( worldPosition.ToCSV(), IsShiftDown );
@@ -103,7 +103,7 @@ namespace Facepunch.RTS
 		{
 			base.OnClick( e );
 
-			if ( Local.Pawn is RTSPlayer player )
+			if ( Game.LocalPawn is RTSPlayer player )
 			{
 				var worldPosition = PixelToWorld( MousePosition.x, MousePosition.y );
 
@@ -279,6 +279,7 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/MiniMap.scss" )]
 	public partial class MiniMap : Panel
 	{
 		public static MiniMap Instance { get; private set; }
@@ -288,14 +289,10 @@ namespace Facepunch.RTS
 		public readonly MiniMapImage Map;
 		public readonly Panel RotatedContainer;
 		public readonly Panel CameraBox;
-		public readonly Panel Fog;
+		public readonly Panel FogPanel;
 
 		private List<MiniMapIcon> Icons;
 		private RealTimeUntil NextIconUpdate;
-
-		//public Texture ColorTexture;
-		//public Texture DepthTexture;
-		//public RealTimeUntil NextRender;
 
 		[ConCmd.Server]
 		public static void SendPing( string csv )
@@ -326,21 +323,17 @@ namespace Facepunch.RTS
 
 		public MiniMap()
 		{
-			StyleSheet.Load( "/ui/MiniMap.scss" );
-
-			RTS.Fog.OnActiveChanged += OnFogActiveChanged;
+			Fog.OnActiveChanged += OnFogActiveChanged;
 
 			MapRoot = Add.Panel( "root" );
 			Map = MapRoot.AddChild<MiniMapImage>( "map" );
 			RotatedContainer = MapRoot.AddChild<Panel>( "container" );
-			Fog = RotatedContainer.AddChild<Panel>( "fog" );
+			FogPanel = RotatedContainer.AddChild<Panel>( "fog" );
 			IconContainer = RotatedContainer.AddChild<Panel>( "icons" );
 			CameraBox = RotatedContainer.AddChild<Panel>( "camera" );
 
 			Instance = this;
 			Icons = new();
-
-			//CreateTextureMap();
 		}
 
 		public void RemoveEntity( IMapIconEntity item )
@@ -381,40 +374,6 @@ namespace Facepunch.RTS
 			var ping = RotatedContainer.AddChild<MiniMapPing>( "ping" );
 			ping.Start( Map, position, duration, color );
 		}
-
-		/*
-		public void CreateTextureMap()
-		{
-			ColorTexture = Texture.CreateRenderTarget()
-				.WithSize( 512, 512 )
-				.Create();
-
-			DepthTexture = Texture.CreateRenderTarget()
-				.WithDepthFormat()
-				.WithSize( 512, 512 )
-				.Create();
-
-			Map.Texture = ColorTexture;
-		}
-
-		public override void DrawBackground( ref RenderState state )
-		{
-			if ( Local.Pawn is Player player && NextRender )
-			{
-				var worldSize = Gamemode.Instance.WorldSize.Size;
-				var cameraHeight = MathF.Max( worldSize.x, worldSize.y );
-				var renderSize = new Vector2( 512f, 512f );
-				var position = Vector3.Up * cameraHeight;
-				var angles = Rotation.LookAt( Vector3.Down ).Angles();
-
-				//Render.DrawScene( Map.Texture, DepthTexture, renderSize, SceneWorld.Current, position, angles, 50f, Color.White, Color.Black, 0.1f, cameraHeight );
-
-				NextRender = 0.5f;
-			}
-
-			base.DrawBackground( ref state );
-		}
-		*/
 
 		public override void Tick()
 		{
@@ -476,16 +435,16 @@ namespace Facepunch.RTS
 		{
 			if ( isActive )
 			{
-				var textureBuilder = RTS.Fog.TextureBuilder;
+				var textureBuilder = Fog.TextureBuilder;
 
 				if ( textureBuilder != null )
 				{
-					Fog.Style.SetBackgroundImage( textureBuilder.Texture );
+					FogPanel.Style.SetBackgroundImage( textureBuilder.Texture );
 				}
 			}
 			else
 			{
-				Fog.Style.BackgroundImage = null;
+				FogPanel.Style.BackgroundImage = null;
 			}
 		}
 	}

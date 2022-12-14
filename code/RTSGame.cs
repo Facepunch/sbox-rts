@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Facepunch.RTS
 {
-	public partial class Gamemode : GameManager
+	public partial class RTSGame : GameManager
 	{
-		public static Gamemode Instance { get; private set; }
+		public static RTSGame Entity => Current as RTSGame;
 
 		[Net] public float ServerTime { get; private set; }
 		public BBox WorldSize { get; private set; } = new BBox( Vector3.One * -5000f, Vector3.One * 5000f );
@@ -65,9 +65,9 @@ namespace Facepunch.RTS
 			}
 		}
 
-		public Gamemode()
+		public RTSGame() : base()
 		{
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				LoadRatings();
 
@@ -81,24 +81,22 @@ namespace Facepunch.RTS
 			if ( FlowFieldGround.Exists )
 				WorldSize = FlowFieldGround.Bounds;
 
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				Fog.Initialize( WorldSize );
 			}
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
-				Global.TickRate = 20;
+				Game.TickRate = 20;
 			}
 
 			FlowFieldGround.OnUpdated += OnGroundUpdated;
 
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				_ = StartFogUpdater();
 			}
-
-			Instance = this;
 		}
 
 		public void UpdateRating( RTSPlayer player )
@@ -107,24 +105,19 @@ namespace Facepunch.RTS
 			Ratings[client.SteamId] = player.Elo.Rating;
 		}
 
-		public override void DoPlayerNoclip( Client client )
-		{
-			// Do nothing. The player can't noclip in this mode.
-		}
-
 		public override void OnKilled( Entity entity )
 		{
 			// Do nothing. The player cannot be killed in this mode.
 		}
 
-		public override void ClientDisconnect( Client client, NetworkDisconnectionReason reason )
+		public override void ClientDisconnect( IClient client, NetworkDisconnectionReason reason )
 		{
 			Rounds.Current?.OnPlayerLeave( client.Pawn as RTSPlayer );
 
 			base.ClientDisconnect( client, reason );
 		}
 
-		public override void ClientJoined( Client client )
+		public override void ClientJoined( IClient client )
 		{
 			var player = new RTSPlayer();
 
@@ -141,7 +134,7 @@ namespace Facepunch.RTS
 		[Event.Entity.PostSpawn]
 		private void OnEntityPostSpawn()
 		{
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				InitializePathManager();
 			}
@@ -181,7 +174,7 @@ namespace Facepunch.RTS
 		{
 			WorldSize = FlowFieldGround.Bounds;
 
-			if ( IsClient )
+			if ( Game.IsClient )
 				Fog.UpdateSize( WorldSize );
 		}
 
@@ -208,7 +201,7 @@ namespace Facepunch.RTS
 		[Event.Tick]
 		private void Tick()
 		{
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				PathManager.Update();
 				ServerTime = Time.Now;

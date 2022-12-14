@@ -4,16 +4,14 @@ using Sandbox.UI.Construct;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/ResistanceValue.scss" )]
 	public class ResistanceValue : Panel
 	{
 		public Panel Icon { get; private set; }
 		public Label Label { get; set; }
 
-
 		public ResistanceValue()
 		{
-			StyleSheet.Load( "/ui/ResistanceValue.scss" );
-
 			Icon = Add.Panel( "icon" );
 			Label = Add.Label( "", "label" );
 		}

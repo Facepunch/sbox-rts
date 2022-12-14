@@ -6,6 +6,7 @@ using System;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/lobby/LobbyDialog.scss" )]
 	public class LobbyDialog : Panel
 	{
 		public LobbyPlayerList PlayerList { get; private set; }
@@ -20,7 +21,7 @@ namespace Facepunch.RTS
 				return Instance;
 			}
 
-			Instance = Local.Hud.AddChild<LobbyDialog>();
+			Instance = Game.RootPanel.AddChild<LobbyDialog>();
 
 			return Instance;
 		}
@@ -64,8 +65,6 @@ namespace Facepunch.RTS
 
 		public LobbyDialog()
 		{
-			StyleSheet.Load( "/ui/lobby/LobbyDialog.scss" );
-
 			PlayerList = AddChild<LobbyPlayerList>();
 			ReadyButton = AddChild<LobbyReadyButton>();
 
@@ -76,7 +75,7 @@ namespace Facepunch.RTS
 		{
 			if ( Hud.ChatBox != null )
 			{
-				Hud.ChatBox.Parent = Local.Hud;
+				Hud.ChatBox.Parent = Game.RootPanel;
 			}
 
 			base.OnDeleted();

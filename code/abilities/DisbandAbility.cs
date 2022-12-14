@@ -26,7 +26,7 @@ namespace Facepunch.RTS
 		{
 			base.OnFinished();
 
-			if ( Host.IsClient ) return;
+			if ( Game.IsClient ) return;
 			if ( User is not UnitEntity unit ) return;
 
 			if ( unit.LastDamageTime >= 5 )

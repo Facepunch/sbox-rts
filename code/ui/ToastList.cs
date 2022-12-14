@@ -36,13 +36,13 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/ToastList.scss" )]
 	public class ToastList : Panel
 	{
 		public static ToastList Instance { get; private set; }
 
 		public ToastList()
 		{
-			StyleSheet.Load( "/ui/ToastList.scss" );
 			Instance = this;
 		}
 

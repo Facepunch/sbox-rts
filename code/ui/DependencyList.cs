@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/DependencyList.scss" )]
 	public class DependencyList : Panel
 	{
 		public Dictionary<string, DependencyValue> Dependencies { get; private set; }
@@ -11,8 +12,6 @@ namespace Facepunch.RTS
 
 		public DependencyList()
 		{
-			StyleSheet.Load( "/ui/DependencyList.scss" );
-
 			Header = Add.Label( "", "header" );
 
 			Dependencies = new();

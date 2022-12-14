@@ -6,6 +6,7 @@ using System;
 
 namespace Facepunch.RTS
 {
+	[StyleSheet( "/ui/DependencyValue.scss" )]
 	public class DependencyValue : Panel
 	{
 		public Panel Icon { get; private set; }
@@ -13,8 +14,6 @@ namespace Facepunch.RTS
 
 		public DependencyValue()
 		{
-			StyleSheet.Load( "/ui/DependencyValue.scss" );
-
 			Icon = Add.Panel( "icon" );
 			Label = Add.Label( "", "label" );
 		}

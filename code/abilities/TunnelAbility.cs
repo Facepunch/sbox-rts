@@ -39,7 +39,7 @@ namespace Facepunch.RTS
 
 		public override void OnFinished()
 		{
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				var targetInfo = TargetInfo;
 

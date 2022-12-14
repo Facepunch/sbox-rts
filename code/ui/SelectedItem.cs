@@ -95,7 +95,7 @@ namespace Facepunch.RTS
 		{
 			if ( IsDisabled ) return;
 
-			var player = (Local.Pawn as RTSPlayer);
+			var player = (Game.LocalPawn as RTSPlayer);
 			var status = Item.CanCreate( player, Selectable );
 
 			if ( status != RequirementError.Success )
@@ -449,9 +449,9 @@ namespace Facepunch.RTS
 			if ( selectable != null && selectable.IsLocalPlayers )
 			{
 				if ( selectable is UnitEntity unit )
-					UpdateCommands( unit.Item.Queueables, unit.Abilities );
+					UpdateCommands( unit.Item.Queueables, unit.AbilityTable );
 				else if ( selectable is BuildingEntity building )
-					UpdateCommands( building.Item.Queueables, building.Abilities );
+					UpdateCommands( building.Item.Queueables, building.AbilityTable );
 			}
 
 			Parent.SetClass( "hidden", Buttons.Count == 0 );
@@ -496,7 +496,7 @@ namespace Facepunch.RTS
 
 		private void UpdateCommands( HashSet<string> queueables, Dictionary<string, BaseAbility> abilities = null )
 		{
-			var player = Local.Pawn as RTSPlayer;
+			var player = Game.LocalPawn as RTSPlayer;
 
 			var availableQueueables = new List<BaseItem>();
 			var unavailableQueueables = new List<BaseItem>();
@@ -553,7 +553,7 @@ namespace Facepunch.RTS
 		public ISelectable Selectable { get; private set; }
 		public ItemQueueList QueueList { get; private set; }
 		public ItemLabelValues ItemLabels { get; private set; }
-		public ResistanceValues Resistances { get; private set; }
+		public ResistanceValues ResistanceValues { get; private set; }
 		public ItemOccupantList OccupantList { get; private set; }
 
 
@@ -565,13 +565,13 @@ namespace Facepunch.RTS
 			Health = AddChild<IconWithLabel>( "health" );
 			Damage = AddChild<IconWithLabel>( "damage" );
 			Kills = AddChild<IconWithLabel>( "kills" );
-			Resistances = AddChild<ResistanceValues>( "resistances" );
+			ResistanceValues = AddChild<ResistanceValues>( "resistances" );
 			QueueList = AddChild<ItemQueueList>();
 			OccupantList = AddChild<ItemOccupantList>();
 
-			foreach ( var kv in RTS.Resistances.Table )
+			foreach ( var kv in Resistances.Table )
 			{
-				Resistances.AddResistance( kv.Value );
+				ResistanceValues.AddResistance( kv.Value );
 			}
 		}
 
@@ -652,9 +652,9 @@ namespace Facepunch.RTS
 
 			var resistances = data.Resistances;
 
-			Resistances.SetVisible( resistances.Count > 0 );
+			ResistanceValues.SetVisible( resistances.Count > 0 );
 
-			foreach ( var kv in Resistances.Values )
+			foreach ( var kv in ResistanceValues.Values )
 			{
 				if ( resistances.TryGetValue( kv.Key, out var resistance ) )
 				{
@@ -696,11 +696,11 @@ namespace Facepunch.RTS
 				ItemLabels.SetVisible( false );
 			}
 
-			var resistances = entity.Resistances;
+			var resistances = entity.ResistancesTable;
 
-			Resistances.SetVisible( resistances.Count > 0 );
+			ResistanceValues.SetVisible( resistances.Count > 0 );
 
-			foreach ( var kv in Resistances.Values )
+			foreach ( var kv in ResistanceValues.Values )
 			{
 				if ( resistances.TryGetValue( kv.Key, out var resistance ) )
 				{
@@ -844,6 +844,7 @@ namespace Facepunch.RTS
 		}
 	}
 
+	[StyleSheet( "/ui/SelectedItem.scss" )]
 	public class SelectedItem : Panel
 	{
 		public static SelectedItem Instance { get; private set; }
@@ -858,8 +859,6 @@ namespace Facepunch.RTS
 
 		public SelectedItem()
 		{
-			StyleSheet.Load( "/ui/SelectedItem.scss" );
-
 			Left = Add.Panel( "left" );
 			Right = Add.Panel( "right" );
 
@@ -924,7 +923,7 @@ namespace Facepunch.RTS
 
 		public override void Tick()
 		{
-			if ( Gamemode.Instance == null ) return;
+			if ( !RTSGame.Entity.IsValid() ) return;
 
 			var isHidden = true;
 

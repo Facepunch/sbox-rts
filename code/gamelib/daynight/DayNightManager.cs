@@ -56,7 +56,7 @@ namespace Gamelib.DayNight
 		[ClientRpc]
 		public static void ChangeSectionForClient( TimeSection section )
 		{
-			Host.AssertClient();
+			Game.AssertClient();
 
 			if ( !Initialized || Section != section )
 			{

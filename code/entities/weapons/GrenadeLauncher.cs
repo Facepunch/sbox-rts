@@ -40,7 +40,7 @@ namespace Facepunch.RTS
 			{
 				Grenade = new Projectile()
 				{
-					HitSound = $"grenade.explode{Rand.Int( 1, 3 )}"
+					HitSound = $"grenade.explode{Game.Random.Int( 1, 3 )}"
 				};
 					
 				Grenade.Initialize( muzzle.Value.Position, Target, 1f, OnGrenadeHit );

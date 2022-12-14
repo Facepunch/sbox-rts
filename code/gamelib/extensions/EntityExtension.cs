@@ -16,7 +16,7 @@ namespace Gamelib.Extensions
 		}
 
 
-		public static bool IsClientOwner( this Entity self, Client client )
+		public static bool IsClientOwner( this Entity self, IClient client )
 		{
 			return ( self.Client == client );
 		}

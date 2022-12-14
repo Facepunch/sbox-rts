@@ -141,13 +141,13 @@ namespace Facepunch.RTS
 		{
 			base.OnDestroy();
 
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				Fog.RemoveCullable( this );
 				return;
 			}
 
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				if ( !string.IsNullOrEmpty( DestroySound ) )
 				{
