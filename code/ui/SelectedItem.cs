@@ -738,7 +738,7 @@ namespace Facepunch.RTS
 
 		protected override void OnClick( MousePanelEvent e )
 		{
-			if ( Input.Down( InputButton.Duck ) )
+			if ( Input.Down( "duck" ) )
 				Items.RefineSelection( Selectable.ItemNetworkId.ToString() );
 			else
 				Items.Select( Selectable.NetworkIdent.ToString() );

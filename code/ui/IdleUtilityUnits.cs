@@ -23,7 +23,7 @@ namespace Facepunch.RTS
 
 			if ( IdleUnits.Count == 0 ) return;
 
-			if ( Input.Down( InputButton.Duck ) )
+			if ( Input.Down( "duck" ) )
 			{
 				var list = string.Join( ",", IdleUnits.Select( u => u.NetworkIdent ) );
 				Items.Select( list );
@@ -56,7 +56,7 @@ namespace Facepunch.RTS
 			var idleUnit = IdleUnits[nextIdleUnitIndex];
 			Items.Select( idleUnit.NetworkIdent.ToString() );
 
-			if ( Input.Down( InputButton.Run ) )
+			if ( Input.Down( "run" ) )
 				Items.FocusCameraOn( idleUnit );
 
 			base.OnClick( e );
@@ -97,7 +97,7 @@ namespace Facepunch.RTS
 
 			Items.Select( firstUnit.NetworkIdent.ToString() );
 
-			if ( Input.Down( InputButton.Run ) )
+			if ( Input.Down( "run" ) )
 				Items.FocusCameraOn( firstUnit );
 		}
 

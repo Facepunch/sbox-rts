@@ -37,33 +37,33 @@ namespace Facepunch.RTS
 			base.Tick();
 		}
 
-		private InputButton SlotByIndex( int index )
+		private string SlotByIndex( int index )
 		{
 			switch ( index )
 			{
 				case 0:
-					return InputButton.Slot0;
+					return "slot0";
 				case 1:
-					return InputButton.Slot1;
+					return "slot1";
 				case 2:
-					return InputButton.Slot2;
+					return "slot2";
 				case 3:
-					return InputButton.Slot3;
+					return "slot3";
 				case 4:
-					return InputButton.Slot4;
+					return "slot4";
 				case 5:
-					return InputButton.Slot5;
+					return "slot5";
 				case 6:
-					return InputButton.Slot6;
+					return "slot6";
 				case 7:
-					return InputButton.Slot7;
+					return "slot7";
 				case 8:
-					return InputButton.Slot8;
+					return "slot8";
 				case 9:
-					return InputButton.Slot0;
+					return "slot9";
 			}
 
-			return InputButton.Slot0;
+			return "slot0";
 		}
 
 		[Event.Client.BuildInput]
@@ -78,7 +78,7 @@ namespace Facepunch.RTS
 			if ( !Hud.IsLocalPlaying() )
 				return;
 
-			if ( Input.Pressed( InputButton.PrimaryAttack ) )
+			if ( Input.Pressed( "attack1" ) )
 			{
 				StartSelection = Mouse.Position;
 				IsMultiSelect = false;
@@ -89,7 +89,7 @@ namespace Facepunch.RTS
 			{
 				if ( Input.Pressed( SlotByIndex( i ) ) )
 				{
-					if ( Input.Down( InputButton.Duck ) )
+					if ( Input.Down( "duck" ) )
 					{
 						SelectionGroups.Update( i, player.GetSelected<ISelectable>() );
 						break;
@@ -129,7 +129,7 @@ namespace Facepunch.RTS
 				SlotPressed = -1;
 			}
 
-			if ( Input.Released( InputButton.Jump ) )
+			if ( Input.Released( "jump" ) )
 			{
 				var selectables = player.GetAllSelected();
 
@@ -139,9 +139,9 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( Input.Released( InputButton.SecondaryAttack ) )
+			if ( Input.Released( "attack2" ) )
 			{
-				var isHoldingShift = Input.Down( InputButton.Run );
+				var isHoldingShift = Input.Down( "run" );
 
 				if ( player.Selection.Count > 0 )
 				{
@@ -177,7 +177,7 @@ namespace Facepunch.RTS
 							return;
 						}
 
-						if ( Input.Down( InputButton.Run ) )
+						if ( Input.Down( "run" ) )
 						{
 							if ( selectable is IOccupiableEntity occupiable && occupiable.CanOccupyUnits )
 							{
@@ -215,7 +215,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( Input.Down( InputButton.PrimaryAttack ) && IsSelecting )
+			if ( Input.Down( "attack1" ) && IsSelecting )
 			{
 				var position = Mouse.Position;
 				var selection = new Rect(
@@ -263,7 +263,7 @@ namespace Facepunch.RTS
 
 					var list = string.Join( ",", entities );
 
-					Items.Select( list, Input.Down( InputButton.Run ) );
+					Items.Select( list, Input.Down( "run" ) );
 				}
 				else
 				{
@@ -279,7 +279,7 @@ namespace Facepunch.RTS
 						else
 						{
 							if ( selectable.CanSelect() )
-								Items.Select( trace.Entity.NetworkIdent.ToString(), Input.Down( InputButton.Run ) );
+								Items.Select( trace.Entity.NetworkIdent.ToString(), Input.Down( "run" ) );
 							else
 								Items.CancelAction( trace.Entity.NetworkIdent );
 						}

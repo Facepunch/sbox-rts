@@ -755,13 +755,13 @@ namespace Facepunch.RTS
 			else
 				Ghost.ShowInvalid();
 
-			if ( valid && Input.Down( InputButton.PrimaryAttack ) )
+			if ( valid && Input.Down( "attack2" ) )
 			{
-				var isHoldingShift = Input.Down( InputButton.Run );
+				var isHoldingShift = Input.Down( "run" );
 				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorOrigin.ToCSV(), cursorAim.ToCSV(), isHoldingShift );
 				Ghost.Delete();
 			}
-			else if ( Input.Down( InputButton.SecondaryAttack ) )
+			else if ( Input.Down( "attack2" ) )
 			{
 				Ghost.Delete();
 			}

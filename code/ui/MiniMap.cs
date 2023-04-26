@@ -120,8 +120,8 @@ namespace Facepunch.RTS
 		[Event.Client.BuildInput]
 		private void BuildInput()
 		{
-			IsShiftDown = Input.Down( InputButton.Run );
-			IsCtrlDown = Input.Down( InputButton.Duck );
+			IsShiftDown = Input.Down( "run" );
+			IsCtrlDown = Input.Down( "duck" );
 		}
 	}
 

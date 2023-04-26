@@ -209,7 +209,7 @@ namespace Facepunch.RTS
 					{
 						TargetCircle.TargetColor = Color.Green;
 
-						if ( Input.Down( InputButton.PrimaryAttack ) )
+						if ( Input.Down( "attack1" ) )
 						{
 							StopSelectingTarget();
 							UseAtLocation( ability.User.NetworkIdent, ability.UniqueId, trace.EndPosition.ToCSV() );
@@ -237,7 +237,7 @@ namespace Facepunch.RTS
 
 					if ( ability.IsTargetValid( target ) )
 					{
-						if ( Input.Down( InputButton.PrimaryAttack ) )
+						if ( Input.Down( "attack1" ) )
 						{
 							StopSelectingTarget();
 							UseOnTarget( ability.User.NetworkIdent, ability.UniqueId, target.NetworkIdent );
@@ -259,7 +259,7 @@ namespace Facepunch.RTS
 				}
 			}
 
-			if ( Input.Down( InputButton.SecondaryAttack ) )
+			if ( Input.Down( "attack2" ) )
 			{
 				StopSelectingTarget();
 			}

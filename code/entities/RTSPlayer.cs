@@ -385,53 +385,10 @@ namespace Facepunch.RTS
 			if ( client.Pawn is not RTSPlayer player )
 				return;
 
-			if ( Game.IsServer && Input.Released( InputButton.Reload ) )
-			{
-				// TODO: This is just for testing, delete later.
-				var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection ).Run();
-				var bot = Rounds.Current.Players.Where( player => player.Client != client ).FirstOrDefault();
-
-				/*
-				var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.attackdrone" );
-				worker.Position = trace.EndPosition;
-				*/
-
-				//var worker = Items.Create<UnitEntity>( bot, "unit.assault" );
-				//worker.Position = trace.EndPosition;
-
-				//worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.assault" );
-				//worker.Position = trace.EndPosition;
-
-				/*
-				var building = Items.Create<BuildingEntity>( bot, "building.commandcentre" );
-				building.Position = trace.EndPosition;
-				building.FinishConstruction();
-				*/
-			}
-
-			if ( Game.IsServer && Input.Released( InputButton.Use ) )
-			{
-				// TODO: This is just for testing, delete later.
-				var trace = TraceExtension.RayDirection( player.CursorOrigin, player.CursorDirection ).Run();
-				var bot = Rounds.Current.Players.Where( player => player.Client != client ).FirstOrDefault();
-
-				var worker = Items.Create<UnitEntity>( bot, "unit.worker" );
-				worker.Position = trace.EndPosition;
-
-				//var worker = Items.Create<UnitEntity>( client.Pawn as Player, "unit.tank" );
-				//worker.Position = trace.EndPosition;
-
-				/*
-				var building = Items.Create<BuildingEntity>( bot, "building.commandcentre" );
-				building.Position = trace.EndPosition;
-				building.FinishConstruction();
-				*/
-			}
-
 			if ( IsLocalPawn )
 			{
 				// We have to do this here for now because there's problems detecting it within panels themselves.
-				if ( Input.Released( InputButton.Score ) )
+				if ( Input.Released( "score" ) )
 				{
 					SelectedItem.Instance.Next();
 				}

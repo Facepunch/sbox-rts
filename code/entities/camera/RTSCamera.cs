@@ -20,16 +20,16 @@ namespace Facepunch.RTS
 			var velocity = Vector3.Zero;
 			var panSpeed = 5000f - (5000f * ZoomLevel * 0.6f);
 
-			if ( Input.Down( InputButton.Forward ) )
+			if ( Input.Down( "forward" ) )
 				velocity += Camera.Rotation.Forward.WithZ( 0f ) * panSpeed;
 
-			if ( Input.Down( InputButton.Back ) )
+			if ( Input.Down( "backward" ) )
 				velocity += Camera.Rotation.Backward.WithZ( 0f ) * panSpeed;
 
-			if ( Input.Down( InputButton.Left ) )
+			if ( Input.Down( "left" ) )
 				velocity += Camera.Rotation.Left * panSpeed;
 
-			if ( Input.Down( InputButton.Right ) )
+			if ( Input.Down( "right" ) )
 				velocity += Camera.Rotation.Right * panSpeed;
 
 			var lookAtPosition = (LookAt + velocity * Time.Delta);
