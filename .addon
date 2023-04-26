@@ -13,6 +13,8 @@
   ],
   "HasCode": true,
   "CodePath": "code",
+  "PackageReferences": [],
+  "EditorReferences": null,
   "Metadata": {
     "MapList": [
       "facepunch.rts_greenlands",
@@ -20,7 +22,7 @@
     ],
     "MinPlayers": 1,
     "MaxPlayers": 4,
-    "MapSelect": "Tagged",
+    "MapSelect": "Official",
     "Collision": {
       "Defaults": {
         "solid": "Collide",
@@ -74,6 +76,8 @@
     "DefaultLeaderboards": null,
     "Summary": "A competitive real-time strategy game with support for up to 4 players.",
     "Description": "A competitive real-time strategy game with support for up to 4 players.",
-    "Public": true
+    "Public": true,
+    "CsProjName": "",
+    "HttpAllowList": null
   }
 }
