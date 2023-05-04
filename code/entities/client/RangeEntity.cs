@@ -6,7 +6,21 @@ namespace Facepunch.RTS
 	{
 		public Material CircleMaterial = Material.Load( "materials/rts/ability_circle.vmat" );
 		public Color Color { get; set; }
-		public float Size { get; set; } = 30f;
+
+		public float Size
+		{
+			get => InternalSize;
+			set
+			{
+				if ( value == InternalSize )
+					return;
+
+				InternalSize = value;
+				RenderBounds = new BBox( 0f, value );
+			}
+		}
+
+		private float InternalSize { get; set; } = 30f;
 
 		public override void DoRender( SceneObject sceneObject  )
 		{
