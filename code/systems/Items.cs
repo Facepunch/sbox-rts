@@ -755,7 +755,7 @@ namespace Facepunch.RTS
 			else
 				Ghost.ShowInvalid();
 
-			if ( valid && Input.Down( "attack2" ) )
+			if ( valid && Input.Down( "attack1" ) )
 			{
 				var isHoldingShift = Input.Down( "run" );
 				StartBuilding( Ghost.Worker.NetworkIdent, Ghost.Building.NetworkId, cursorOrigin.ToCSV(), cursorAim.ToCSV(), isHoldingShift );
