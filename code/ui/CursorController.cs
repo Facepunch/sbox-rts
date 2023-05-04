@@ -217,6 +217,7 @@ namespace Facepunch.RTS
 
 			if ( Input.Down( "attack1" ) && IsSelecting )
 			{
+				Log.Info( "IS ATTACK 1 DOWN: " + Input.Down( "attack1" ) );
 				var position = Mouse.Position;
 				var selection = new Rect(
 					Math.Min( StartSelection.x, position.x ),
@@ -236,6 +237,8 @@ namespace Facepunch.RTS
 			}
 			else if ( IsSelecting )
 			{
+				Log.Info( "ATTACK1 IS NOT DOWN" );
+
 				IsSelecting = false;
 
 				if ( IsMultiSelect )
