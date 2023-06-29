@@ -7,10 +7,8 @@
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "ResourcePaths": [
-    "/ui/*",
-    "config/*"
-  ],
+  "Resources": "/ui/*",
+  "MenuResources": null,
   "HasCode": true,
   "CodePath": "code",
   "PackageReferences": [],
